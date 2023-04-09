@@ -1,0 +1,11 @@
+{
+    "name": "cibo",
+    "version": "0.0.1",
+    "license": "MIT",
+    "scripts": {},
+    "private": true,
+    "devDependencies": {
+        "serverless": "3.29.0",
+        "serverless-python-requirements": "6.0.0"
+    }
+}

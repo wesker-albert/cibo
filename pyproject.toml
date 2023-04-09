@@ -1,0 +1,73 @@
+[tool.poetry]
+name = "cibo"
+version = "0.0.1"
+description = "An experimental MUD server, written in Python. Object-oriented and event driven."
+authors = ["Albert Wesker <albert.wesker@umbrellacorp.io>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "3.11.2"
+
+[tool.poetry.dev-dependencies]
+black = "~22.3.0"
+coverage = "~5.5.0"
+pylint = "~2.14.0"
+pytest = "~7.2.0"
+pytest-cov = "~4.0.0"
+pytest-reverse = "~1.5.0"
+pytest-xdist = "~3.0.2"
+python-dotenv = "~0.19.2"
+safety = "~2.3.1"
+
+[tool.coverage.run]
+source = ["."]
+branch = true
+parallel = true
+concurrency = ["multiprocessing"]
+omit = [
+    "*/__init__.py",
+    "src/tests/*"
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    "pytest: no cover",
+    "import"
+]
+
+[tool.black]
+target_version = ["py38"]
+
+[tool.isort]
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+sections = [
+    "FUTURE",
+    "STDLIB",
+    "THIRDPARTY",
+    "FIRSTPARTY",
+    "LOCALFOLDER"
+]
+
+[tool.pylint.master]
+ignore = [
+    "*/.git/*",
+    "*/.venv/*",
+    "*/.serverless/*",
+    "*/node_modules/*",
+    "pyproject.toml"
+]
+
+[tool.pylint.similarities]
+ignore-imports = true
+min-similarity-lines = 8
+
+[tool.pylint.format]
+max-line-length = 88
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,92 @@
+{
+	"name": "cibo",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"args": {
+			"VARIANT": "3.11-bullseye",
+			"NODE_VER": "16",
+			"POETRY_VER": "1.4.2"
+		}
+	},
+	"remoteUser": "vscode",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/cibo,type=bind,consistency=delegated",
+	"workspaceFolder": "/cibo",
+	"postCreateCommand": "bash .devcontainer/postCreate.sh",
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"coverage-gutters.coverageBaseDir": "**",
+				"coverage-gutters.coverageFileNames": [
+					"coverage.xml"
+				],
+				"coverage-gutters.coverageReportFileName": "coverage/**/index.html",
+				"coverage-gutters.ignoredPathGlobs": "**/{node_modules,venv,.venv,vendor}/**",
+				"errorLens.enabledDiagnosticLevels": [
+					"error",
+					"hint",
+					"info",
+					"warning"
+				],
+				"errorLens.exclude": [
+					"\"_.+\" is not accessed",
+					"\"args\" is not accessed",
+					"\"kwargs\" is not accessed"
+				],
+				"files.associations": {
+					".env.*": "env"
+				},
+				"gitlens.currentLine.enabled": false,
+				"[python]": {
+					"editor.codeActionsOnSave": {
+						"source.organizeImports": true
+					},
+					"editor.formatOnSave": true,
+					"editor.rulers": [
+						88
+					]
+				},
+				"python.analysis.extraPaths": [
+					"${workspaceFolder}/src/"
+				],
+				"python.formatting.provider": "black",
+				"python.linting.enabled": true,
+				"python.linting.lintOnSave": true,
+				"python.linting.pylintArgs": [
+					"--rcfile",
+					"src/pyproject.toml"
+				],
+				"python.linting.pylintEnabled": true,
+				"python.testing.pytestArgs": [
+					"src",
+					"-vv"
+				],
+				"python.testing.pytestEnabled": true,
+				"python.testing.unittestEnabled": false,
+				"python.analysis.autoImportCompletions": true,
+				"isort.args": [
+					"--settings-path",
+					"${workspaceFolder}/src/pyproject.toml"
+				],
+				"[json]": {
+					"editor.formatOnSave": true,
+					"editor.detectIndentation": false,
+					"editor.insertSpaces": true,
+					"editor.tabSize": 4
+				}
+			},
+			"extensions": [
+				"eamodio.gitlens",
+				"emeraldwalk.RunOnSave",
+				"IronGeek.vscode-env",
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"magicstack.MagicPython",
+				"ms-python.isort",
+				"ninoseki.vscode-pylens",
+				"ryanluker.vscode-coverage-gutters",
+				"usernamehw.errorlens",
+				"VisualStudioExptTeam.vscodeintellicode"
+			]
+		}
+	}
+}
