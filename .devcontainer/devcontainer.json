@@ -5,22 +5,59 @@
 		"args": {
 			"VARIANT": "3.11-bullseye",
 			"NODE_VER": "16",
+			"NPM_VER": "9.6.4",
+			"PIPX_VER": "1.2.0",
 			"POETRY_VER": "1.4.2"
 		}
 	},
 	"remoteUser": "vscode",
-	"workspaceMount": "source=${localWorkspaceFolder},target=/cibo,type=bind,consistency=delegated",
-	"workspaceFolder": "/cibo",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode/cibo,type=bind,consistency=delegated",
+	"workspaceFolder": "/home/vscode/cibo",
 	"postCreateCommand": "bash .devcontainer/postCreate.sh",
+	"postAttachCommand": "bash .devcontainer/postAttach.sh",
 	"customizations": {
 		"vscode": {
 			"settings": {
+				"[python]": {
+					"editor.codeActionsOnSave": {
+						"source.organizeImports": true
+					},
+					"editor.formatOnSave": true,
+					"editor.rulers": [
+						88
+					]
+				},
+				"python.formatting.provider": "black",
+				"python.linting.enabled": true,
+				"python.linting.lintOnSave": true,
+				"python.linting.pylintArgs": [
+					"--rcfile",
+					"pyproject.toml"
+				],
+				"python.linting.pylintEnabled": true,
+				"python.testing.pytestArgs": [
+					"cibo",
+					"-vv"
+				],
+				"python.testing.pytestEnabled": true,
+				"python.testing.unittestEnabled": false,
+				"python.analysis.autoImportCompletions": true,
+				"isort.args": [
+					"--settings-path",
+					"${workspaceFolder}/pyproject.toml"
+				],
+				"[json]": {
+					"editor.formatOnSave": true,
+					"editor.detectIndentation": false,
+					"editor.insertSpaces": true,
+					"editor.tabSize": 4
+				},
 				"coverage-gutters.coverageBaseDir": "**",
 				"coverage-gutters.coverageFileNames": [
 					"coverage.xml"
 				],
 				"coverage-gutters.coverageReportFileName": "coverage/**/index.html",
-				"coverage-gutters.ignoredPathGlobs": "**/{node_modules,venv,.venv,vendor}/**",
+				"coverage-gutters.ignoredPathGlobs": "**/{node_modules}/**",
 				"errorLens.enabledDiagnosticLevels": [
 					"error",
 					"hint",
@@ -36,52 +73,27 @@
 					".env.*": "env"
 				},
 				"gitlens.currentLine.enabled": false,
-				"[python]": {
-					"editor.codeActionsOnSave": {
-						"source.organizeImports": true
-					},
-					"editor.formatOnSave": true,
-					"editor.rulers": [
-						88
+				"emeraldwalk.runonsave": {
+					"commands": [
+						{
+							"match": "package-lock.json|package.json",
+							"cmd": "make init_node"
+						},
+						{
+							"match": "poetry.lock|pyproject.toml",
+							"cmd": "make init_poetry"
+						}
 					]
-				},
-				"python.analysis.extraPaths": [
-					"${workspaceFolder}/src/"
-				],
-				"python.formatting.provider": "black",
-				"python.linting.enabled": true,
-				"python.linting.lintOnSave": true,
-				"python.linting.pylintArgs": [
-					"--rcfile",
-					"src/pyproject.toml"
-				],
-				"python.linting.pylintEnabled": true,
-				"python.testing.pytestArgs": [
-					"src",
-					"-vv"
-				],
-				"python.testing.pytestEnabled": true,
-				"python.testing.unittestEnabled": false,
-				"python.analysis.autoImportCompletions": true,
-				"isort.args": [
-					"--settings-path",
-					"${workspaceFolder}/src/pyproject.toml"
-				],
-				"[json]": {
-					"editor.formatOnSave": true,
-					"editor.detectIndentation": false,
-					"editor.insertSpaces": true,
-					"editor.tabSize": 4
 				}
 			},
 			"extensions": [
 				"eamodio.gitlens",
 				"emeraldwalk.RunOnSave",
 				"IronGeek.vscode-env",
-				"ms-python.python",
-				"ms-python.vscode-pylance",
 				"magicstack.MagicPython",
 				"ms-python.isort",
+				"ms-python.python",
+				"ms-python.vscode-pylance",
 				"ninoseki.vscode-pylens",
 				"ryanluker.vscode-coverage-gutters",
 				"usernamehw.errorlens",
