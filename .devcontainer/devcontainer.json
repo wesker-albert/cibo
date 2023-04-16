@@ -15,6 +15,7 @@
 	"workspaceFolder": "/home/vscode/cibo",
 	"postCreateCommand": "bash .devcontainer/postCreate.sh",
 	"postAttachCommand": "bash .devcontainer/postAttach.sh",
+	"appPort": 51234,
 	"customizations": {
 		"vscode": {
 			"settings": {

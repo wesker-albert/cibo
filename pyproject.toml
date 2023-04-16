@@ -26,7 +26,7 @@ parallel = true
 concurrency = ["multiprocessing"]
 omit = [
     "*/__init__.py",
-    "src/tests/*"
+    "cibo/tests/*"
 ]
 
 [tool.coverage.report]
@@ -55,7 +55,6 @@ sections = [
 [tool.pylint.master]
 ignore = [
     "*/.git/*",
-    "*/.venv/*",
     "*/.serverless/*",
     "*/node_modules/*",
     "pyproject.toml"
@@ -67,6 +66,14 @@ min-similarity-lines = 8
 
 [tool.pylint.format]
 max-line-length = 88
+
+[tool.pylint.messages_control]
+disable = [
+    "fixme",
+    "missing-module-docstring",
+    "too-many-instance-attributes",
+    "unsubscriptable-object"
+]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

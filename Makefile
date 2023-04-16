@@ -1,6 +1,9 @@
-.PHONY: init init_node init_poetry
+.PHONY: init init_node init_poetry python start_server
 
 .DEFAULT_GOAL := init
+
+
+# Container
 
 init: init_node init_poetry
 
@@ -18,3 +21,15 @@ package-lock.json: package.json
 poetry.lock: pyproject.toml
 	poetry lock
 	@touch $@
+
+
+# Development
+
+python:
+	poetry run python
+
+
+# Server
+
+start:
+	poetry run python ./cibo/server.py
