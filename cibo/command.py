@@ -1,4 +1,3 @@
-# pylint: disable=[invalid-name, missing-function-docstring]
 from cibo.action import Action
 
 
@@ -7,6 +6,7 @@ class Command(Action):
 
     @property
     def directional_aliases(self):
+        """Aliases for directional navigation"""
         directions = {
             "north": ("n", "north"),
             "south": ("s", "south"),
@@ -18,16 +18,18 @@ class Command(Action):
 
     @property
     def aliases(self):
+        """Aliases mapped to specific Actions"""
         return {
             "move": {"aliases": self.directional_aliases, "command": self.move},
             "look": {"aliases": ("l", "look"), "command": self.look},
             "quit": {
-                "aliases": ("exit", "close", "quit", "leave", "log", "logout"),
+                "aliases": ("exit", "quit", "leave", "logout"),
                 "command": self.quit_,
             },
         }
 
     def is_valid_command(self, input_: str) -> bool:
+        """Validates user input against existing aliases"""
         for _key, value in self.aliases.items():
             if " " in input_ and input_[: input_.index(" ")] in value["aliases"]:
                 return True
