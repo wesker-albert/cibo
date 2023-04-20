@@ -85,6 +85,12 @@
 							"cmd": "make init_poetry"
 						}
 					]
+				},
+				"terminal.integrated.defaultProfile.linux": "zsh", 
+				"terminal.integrated.profiles.linux": {
+					"zsh": {
+						"path": "/bin/zsh"
+					}
 				}
 			},
 			"extensions": [
