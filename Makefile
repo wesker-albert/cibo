@@ -1,4 +1,4 @@
-.PHONY: init init_node init_poetry python start_server
+.PHONY: init init_node init_poetry python start
 
 .DEFAULT_GOAL := init
 
@@ -9,8 +9,7 @@ init: init_node init_poetry
 
 init_node: package-lock.json
 
-init_poetry: poetry.lock
-	poetry install
+init_poetry: ../.poetry_check
 
 package-lock.json: package.json
 	npm install
@@ -20,6 +19,10 @@ package-lock.json: package.json
 
 poetry.lock: pyproject.toml
 	poetry lock
+	@touch $@
+
+../.poetry_check: poetry.lock
+	poetry install
 	@touch $@
 
 

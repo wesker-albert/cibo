@@ -91,9 +91,11 @@
 					"zsh": {
 						"path": "/bin/zsh"
 					}
-				}
+				},
+				"autoDocstring.docstringFormat": "google"
 			},
 			"extensions": [
+				"davidhouchin.whitespace-plus",
 				"eamodio.gitlens",
 				"emeraldwalk.RunOnSave",
 				"IronGeek.vscode-env",
@@ -102,7 +104,9 @@
 				"ms-python.python",
 				"ms-python.vscode-pylance",
 				"ninoseki.vscode-pylens",
+				"njpwerner.autodocstring",
 				"ryanluker.vscode-coverage-gutters",
+				"tamasfe.even-better-toml",
 				"usernamehw.errorlens",
 				"VisualStudioExptTeam.vscodeintellicode"
 			]
