@@ -1,3 +1,5 @@
+import threading
+
 from cibo.telnet import TelnetServer
 
 server = TelnetServer(port=51234)
@@ -7,7 +9,8 @@ clients = []
 
 while True:
     # Make the server parse all the new events
-    server.update()
+    server_thread = threading.Thread(target=server.update(), args=[])
+    server_thread.start()
 
     # For each newly connected client
     for new_client in server.get_new_clients():

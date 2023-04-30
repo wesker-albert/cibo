@@ -13,7 +13,7 @@ init_poetry: ../.poetry_check
 
 package-lock.json: package.json
 	npm install
-	rm -rf /home/vscode/node_modules
+	@rm -rf /home/vscode/node_modules
 	@mv /home/vscode/cibo/node_modules /home/vscode/
 	@touch $@
 
@@ -29,10 +29,10 @@ poetry.lock: pyproject.toml
 # Development
 
 python:
-	poetry run python
+	@poetry --quiet run python
 
 
 # Server
 
 start:
-	poetry run python ./cibo/server.py
+	@poetry --quiet run python ./cibo/server.py
