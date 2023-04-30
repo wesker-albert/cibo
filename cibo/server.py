@@ -1,44 +1,104 @@
 import threading
+from enum import Enum
 
 from cibo.telnet import TelnetServer
 
-server = TelnetServer(port=51234)
+
+class ServerStatus(int, Enum):
+    STOPPED = 1
+    RUNNING = 2
 
 
-clients = []
+class Server:
+    def __init__(self, port: int = 51234) -> None:
+        self.server = TelnetServer(port=port)
+        self.status = ServerStatus.STOPPED
+        self.clients = []
 
-while True:
-    # Make the server parse all the new events
-    server_thread = threading.Thread(target=server.update(), args=[])
-    server_thread.start()
+    @property
+    def is_running(self) -> bool:
+        return self.status is ServerStatus.RUNNING
 
-    # For each newly connected client
-    for new_client in server.get_new_clients():
-        # Add them to the client list
-        clients.append(new_client)
-        # Send a welcome message
-        server.send_message(new_client, f"Welcome, you are client {new_client}.")
+    def start(self) -> None:
+        self.status = ServerStatus.RUNNING
 
-    # For each client that has recently disconnected
-    for disconnected_client in server.get_disconnected_clients():
-        if disconnected_client not in clients:
-            continue
+        while self.status is ServerStatus.RUNNING:
+            # Make the server parse all the new events
+            self.server.update()
 
-        # Remove him from the clients list
-        clients.remove(disconnected_client)
+            # For each newly connected client
+            for new_client in self.server.get_new_clients():
+                # Add them to the client list
+                self.clients.append(new_client)
 
-        # Send every client a message saying "Client X disconnected"
-        for client in clients:
-            server.send_message(client, f"Client {disconnected_client} disconnected.")
+                # Send a welcome message
+                self.server.send_message(
+                    new_client, f"Welcome, you are client {new_client}."
+                )
 
-    # For each message a client has sent
-    for sender_client, message in server.get_messages():
-        if sender_client not in clients:
-            continue
+            # For each client that has recently disconnected
+            for disconnected_client in self.server.get_disconnected_clients():
+                if disconnected_client not in self.clients:
+                    continue
 
-        # Send every client a message reading:
-        # "I received "[MESSAGE]" from client [ID OF THE SENDER CLIENT]"
-        for client in clients:
-            server.send_message(
-                client, f'I received "{message}" from client {sender_client}'
-            )
+                # Remove him from the clients list
+                self.clients.remove(disconnected_client)
+
+                # Send every client a message saying "Client X disconnected"
+                for client in self.clients:
+                    self.server.send_message(
+                        client, f"Client {disconnected_client} disconnected."
+                    )
+
+            # For each message a client has sent
+            for sender_client, message in self.server.get_messages():
+                if sender_client not in self.clients:
+                    continue
+
+                # Send every client a message reading:
+                # "I received "[MESSAGE]" from client [ID OF THE SENDER CLIENT]"
+                for client in self.clients:
+                    self.server.send_message(
+                        client, f'I received "{message}" from client {sender_client}'
+                    )
+
+    def stop(self) -> None:
+        self.status = ServerStatus.STOPPED
+        self.server.shutdown()
+
+
+if __name__ == "__main__":
+    server = Server()
+
+    while True:
+        user_input = input().lower()
+
+        if user_input == "start":
+            if not server.is_running:
+                server_thread = threading.Thread(target=server.start)
+                server_thread.start()
+
+                print("Started server.")
+
+                continue
+
+            if server.is_running:
+                print("Server is already running.")
+
+        if user_input == "stop":
+            if server.is_running:
+                server.stop()
+                print("Stopped server.")
+
+                continue
+
+            if not server.is_running:
+                print("Server is not running.")
+
+        if user_input == "exit":
+            if server.is_running:
+                server.stop()
+                print("Stopped server.")
+
+            print("Goodbye!")
+            break
