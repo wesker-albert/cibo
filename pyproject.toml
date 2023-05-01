@@ -70,7 +70,6 @@ max-line-length = 88
 [tool.pylint.messages_control]
 disable = [
     "fixme",
-    "missing-module-docstring",
     "too-many-instance-attributes",
     "unsubscriptable-object"
 ]

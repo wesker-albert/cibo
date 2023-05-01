@@ -1,101 +1,76 @@
+"""Server module"""
+
 import threading
 from enum import Enum
 from time import sleep
 
+from cibo.events import Events
 from cibo.telnet import TelnetServer
 
 
 class ServerStatus(int, Enum):
-    """Represents the current state of the server"""
+    """Represents the current state of the server."""
 
     STOPPED = 1
     RUNNING = 2
 
 
 class Server:
-    """Creates a telnet server isntance that can listen for and respond to events"""
+    """
+    A telnet server that once started, listens for incoming client events and messages.
+    When an event is received, it determines the proper strategy interface then
+    delegates the logic.
+    """
 
     def __init__(self, port: int = 51234) -> None:
+        """
+        Creates a dormant telnet server. Once instantiated, it can be started and
+        stopped.
+
+        Args:
+            port (int, optional): The port for telnet to listen on. Defaults to 51234.
+        """
+
         self.telnet = TelnetServer(port=port)
+        self.events = Events()
+
         self.thread = None
         self.status = ServerStatus.STOPPED
         self.clients = []
 
     @property
     def is_running(self) -> bool:
-        """Check if the server is active and listening
+        """
+        Check if the server is active and listening.
 
         Returns:
-            bool: is the server is running or not
+            bool: Is the server is running or not.
         """
+
         return self.status is ServerStatus.RUNNING
 
-    def __process_connect_event(self) -> None:
-        """Consume new client connection events"""
-
-        for new_client in self.telnet.get_new_clients():
-            # Add them to the client list
-            self.clients.append(new_client)
-
-            # Send a welcome message
-            self.telnet.send_message(
-                new_client, f"Welcome, you are client {new_client}."
-            )
-
-    def __process_disconnect_event(self) -> None:
-        """Consume client disconnection events"""
-
-        # For each client that has recently disconnected
-        for disconnected_client in self.telnet.get_disconnected_clients():
-            if disconnected_client not in self.clients:
-                continue
-
-            # Remove him from the clients list
-            self.clients.remove(disconnected_client)
-
-            # Send every client a message saying "Client X disconnected"
-            for client in self.clients:
-                self.telnet.send_message(
-                    client, f"Client {disconnected_client} disconnected."
-                )
-
-    def __process_message_event(self) -> None:
-        """Consume incoming client messages and input"""
-
-        # For each message a client has sent
-        for sender_client, message in self.telnet.get_messages():
-            if sender_client not in self.clients:
-                continue
-
-            # Send every client a message reading:
-            # "I received "[MESSAGE]" from client [ID OF THE SENDER CLIENT]"
-            for client in self.clients:
-                self.telnet.send_message(
-                    client, f'I received "{message}" from client {sender_client}'
-                )
-
     def __start_server(self) -> None:
+        """Start the telnet server and begin listening for events."""
+
         self.telnet.listen()
 
         self.status = ServerStatus.RUNNING
 
         while self.status is ServerStatus.RUNNING:
             self.telnet.update()
-
-            self.__process_connect_event()
-            self.__process_disconnect_event()
-            self.__process_message_event()
+            self.events.process(telnet=self.telnet, clients=self.clients)
 
             sleep(0.15)
 
     def start(self) -> None:
-        """Create a thread and start the server"""
+        """Create a thread and start the server."""
 
         self.thread = threading.Thread(target=self.__start_server)
         self.thread.start()
 
     def stop(self) -> None:
-        """Stop the currently running server and end the thread"""
+        """Stop the currently running server and end the thread."""
+
         self.status = ServerStatus.STOPPED
 
         self.telnet.shutdown()
