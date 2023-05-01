@@ -90,11 +90,15 @@ class TelnetServer:
         Returns:
             [type]: [description]
         """
+        self.port = port
         self.error_policy = error_policy
         self.encoding = encoding
         self._clients = {}
         self._events = []
         self._new_events = []
+
+    def listen(self):
+        """Configure the socket and begin listening"""
 
         # create a new tcp socket which will be used to listen for new clients
         self._listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -108,7 +112,7 @@ class TelnetServer:
         # this requires root permissions, so we use a higher arbitrary port
         # number instead: 1234. Address 0.0.0.0 means that we will bind to all
         # of the available network interfaces
-        self._listen_socket.bind(("0.0.0.0", port))
+        self._listen_socket.bind(("0.0.0.0", self.port))
 
         # set to non-blocking mode. This means that when we call 'accept', it
         # will return immediately without waiting for a connection
