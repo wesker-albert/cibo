@@ -28,6 +28,9 @@
 						88
 					]
 				},
+				"python.defaultInterpreterPath": "/usr/local/py-utils/venvs/poetry/bin/python3.11",
+				"python.analysis.extraPaths": ["${workspaceFolder}/cibo"],
+				"python.linting.cwd": "${workspaceFolder}/cibo",
 				"python.formatting.provider": "black",
 				"python.linting.enabled": true,
 				"python.linting.lintOnSave": true,

@@ -35,4 +35,4 @@ python:
 # Server
 
 start:
-	@poetry --quiet run python ./cibo/server.py
+	@poetry --quiet run python ./cibo/main.py
