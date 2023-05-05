@@ -4,7 +4,10 @@ import threading
 from enum import Enum
 from time import sleep
 
+from peewee import SqliteDatabase
+
 from cibo.events import Events
+from cibo.models.player import Player
 from cibo.telnet import TelnetServer
 
 
@@ -32,6 +35,7 @@ class Server:
 
         self.telnet = TelnetServer(port=port)
         self.events = Events()
+        self.database = SqliteDatabase("cibo_database.db")
 
         self.thread = None
         self.status = Server.Status.STOPPED
@@ -60,6 +64,12 @@ class Server:
             self.events.process(telnet=self.telnet, clients=self.clients)
 
             sleep(0.15)
+
+    def create_db(self) -> None:
+        """Create the sqlite DB and necessary tables."""
+
+        self.database.connect()
+        self.database.create_tables([Player])
 
     def start(self) -> None:
         """Create a thread and start the server."""

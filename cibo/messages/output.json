@@ -1,5 +1,5 @@
 {
     "connect": "Hello!",
     "disconnect": "Goodbye.",
-    "prompt": "> "
+    "prompt": "\n> "
 }

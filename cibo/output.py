@@ -1,6 +1,9 @@
+"""Output module"""
+
 from textwrap import TextWrapper
 
 from cibo.models.messages import Messages
+from cibo.telnet import TelnetServer
 
 
 class Output:
@@ -22,13 +25,15 @@ class Output:
     def _wrap(self, value: str) -> str:
         return self.textwrap.fill(value)
 
-    def prompt(self):
+    def prompt(self, telnet: TelnetServer, client):
         """Prints a command prompt to the specified client"""
-        return
 
-    def private(self):
+        telnet.send_message(client, self.messages.prompt)
+
+    def private(self, telnet: TelnetServer, client, body: str):
         """Prints a message only to the specified client"""
-        return
+
+        telnet.send_message(client, body)
 
     def local(self):
         """Prints a message to all clients within the room"""

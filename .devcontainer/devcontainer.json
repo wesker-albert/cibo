@@ -30,7 +30,6 @@
 				},
 				"python.defaultInterpreterPath": "/usr/local/py-utils/venvs/poetry/bin/python3.11",
 				"python.analysis.extraPaths": ["${workspaceFolder}/cibo"],
-				"python.linting.cwd": "${workspaceFolder}/cibo",
 				"python.formatting.provider": "black",
 				"python.linting.enabled": true,
 				"python.linting.lintOnSave": true,
@@ -39,6 +38,7 @@
 					"pyproject.toml"
 				],
 				"python.linting.pylintEnabled": true,
+				"python.linting.pylintPath": "/usr/local/py-utils/venvs/poetry/bin/pylint",
 				"python.testing.pytestArgs": [
 					"cibo",
 					"-vv"

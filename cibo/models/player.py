@@ -1,14 +1,12 @@
 """Player model"""
 
-from dataclasses import dataclass
-from datetime import datetime
-from uuid import uuid4
+from peewee import AutoField, CharField
+
+from cibo.models.database import DatabaseModel
 
 
-@dataclass
-class Player:
+class Player(DatabaseModel):
     """Represents a human-controlled player character"""
 
-    uuid: uuid4
-    name: str
-    created_at: datetime
+    id_ = AutoField()
+    name = CharField(max_length=15)

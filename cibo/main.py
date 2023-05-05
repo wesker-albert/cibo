@@ -14,13 +14,17 @@ if __name__ == "__main__":
 
     print(
         "Accepted commands:\n\n"
-        "start    start the server\n"
-        "stop     stop the server\n"
-        "exit     stop the server if running, and exit this program\n"
+        "create_db    create the necessary db and tables\n"
+        "start        start the server\n"
+        "stop         stop the server\n"
+        "exit         stop the server if running, and exit this program\n"
     )
 
     while True:
         user_input = input("> ").lower()
+
+        if user_input == "create_db":
+            server.create_db()
 
         if user_input == "start":
             if not server.is_running:
