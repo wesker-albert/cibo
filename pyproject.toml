@@ -6,7 +6,7 @@ authors = ["Albert Wesker <albert.wesker@umbrellacorp.io>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "3.11.3"
+python = "3.11.4"
 peewee = "3.16.2"
 
 [tool.poetry.dev-dependencies]

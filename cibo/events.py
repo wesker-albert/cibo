@@ -19,7 +19,7 @@ class Connect:
 
 
 class Disconnect:
-    """Contains logic for client ddisconnection events."""
+    """Contains logic for client disconnection events."""
 
     def process(self, telnet: TelnetServer, clients: list) -> None:
         """Process client disconnection events."""

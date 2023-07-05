@@ -7,7 +7,7 @@ from cibo.telnet import TelnetServer
 
 
 class Output:
-    """Responsible for constructing messages thar are sent to a client"""
+    """Responsible for constructing messages that are sent to a client"""
 
     def __init__(self, messages: Messages):
         super().__init__()
