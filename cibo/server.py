@@ -8,7 +8,7 @@ from typing import Optional
 from peewee import SqliteDatabase
 
 from cibo.events import Events
-from cibo.models.messages import Messages
+from cibo.messages import Messages
 from cibo.models.player import Player
 from cibo.output import Output
 from cibo.telnet import TelnetServer

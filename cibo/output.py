@@ -2,7 +2,7 @@
 
 from textwrap import TextWrapper
 
-from cibo.models.messages import Messages
+from cibo.messages import Messages
 from cibo.telnet import TelnetServer
 
 

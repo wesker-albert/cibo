@@ -1,3 +1,6 @@
+"""Actions module"""
+
+
 class Action:
     """Available interactions with the world"""
 

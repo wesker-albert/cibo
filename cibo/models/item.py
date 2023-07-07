@@ -1,3 +1,5 @@
+"""Item model"""
+
 from dataclasses import dataclass
 
 

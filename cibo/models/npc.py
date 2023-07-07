@@ -1,3 +1,5 @@
+"""NPC Model"""
+
 from dataclasses import dataclass
 from typing import List
 from uuid import UUID

@@ -1,3 +1,5 @@
+"""Commands module"""
+
 from cibo.action import Action
 
 

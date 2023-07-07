@@ -1,3 +1,5 @@
+"""Terminal color and style models"""
+
 from enum import Enum
 
 
