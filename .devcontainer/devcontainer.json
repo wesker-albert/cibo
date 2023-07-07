@@ -5,9 +5,9 @@
 		"args": {
 			"VARIANT": "3.11-bullseye",
 			"NODE_VER": "16",
-			"NPM_VER": "9.6.4",
+			"NPM_VER": "9.7.2",
 			"PIPX_VER": "1.2.0",
-			"POETRY_VER": "1.4.2"
+			"POETRY_VER": "1.5.1"
 		}
 	},
 	"remoteUser": "vscode",
@@ -15,6 +15,7 @@
 	"workspaceFolder": "/home/vscode/cibo",
 	"postCreateCommand": "bash .devcontainer/postCreate.sh",
 	"postAttachCommand": "bash .devcontainer/postAttach.sh",
+	"appPort": 51234,
 	"customizations": {
 		"vscode": {
 			"settings": {
@@ -27,6 +28,8 @@
 						88
 					]
 				},
+				"python.defaultInterpreterPath": "/usr/local/py-utils/venvs/poetry/bin/python3.11",
+				"python.analysis.extraPaths": ["${workspaceFolder}/cibo"],
 				"python.formatting.provider": "black",
 				"python.linting.enabled": true,
 				"python.linting.lintOnSave": true,
@@ -35,13 +38,17 @@
 					"pyproject.toml"
 				],
 				"python.linting.pylintEnabled": true,
+				"python.linting.pylintPath": "/usr/local/py-utils/venvs/poetry/bin/pylint",
 				"python.testing.pytestArgs": [
 					"cibo",
-					"-vv"
+					"-vv",
+					"-p",
+					"no:cacheprovider"
 				],
 				"python.testing.pytestEnabled": true,
 				"python.testing.unittestEnabled": false,
 				"python.analysis.autoImportCompletions": true,
+				"python.analysis.typeCheckingMode": "basic",
 				"isort.args": [
 					"--settings-path",
 					"${workspaceFolder}/pyproject.toml"
@@ -84,9 +91,17 @@
 							"cmd": "make init_poetry"
 						}
 					]
-				}
+				},
+				"terminal.integrated.defaultProfile.linux": "zsh", 
+				"terminal.integrated.profiles.linux": {
+					"zsh": {
+						"path": "/bin/zsh"
+					}
+				},
+				"autoDocstring.docstringFormat": "google"
 			},
 			"extensions": [
+				"davidhouchin.whitespace-plus",
 				"eamodio.gitlens",
 				"emeraldwalk.RunOnSave",
 				"IronGeek.vscode-env",
@@ -95,7 +110,10 @@
 				"ms-python.python",
 				"ms-python.vscode-pylance",
 				"ninoseki.vscode-pylens",
+				"njpwerner.autodocstring",
+				"qwtel.sqlite-viewer",
 				"ryanluker.vscode-coverage-gutters",
+				"tamasfe.even-better-toml",
 				"usernamehw.errorlens",
 				"VisualStudioExptTeam.vscodeintellicode"
 			]
