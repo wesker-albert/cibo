@@ -1,7 +1,10 @@
 """Client model"""
 
 from dataclasses import dataclass
-from uuid import uuid4
+from typing import Optional
+from uuid import UUID
+
+from _socket import socket
 
 from cibo.models.player import Player
 
@@ -10,7 +13,9 @@ from cibo.models.player import Player
 class Client:
     """Represents a client connected to the server"""
 
-    uuid: uuid4
-    host_address: str
-    port: int
-    player: Player
+    id_: UUID
+    socket: socket
+    address: str
+    buffer: str
+    last_check: float
+    player: Optional[Player]

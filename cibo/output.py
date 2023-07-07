@@ -9,8 +9,10 @@ from cibo.telnet import TelnetServer
 class Output:
     """Responsible for constructing messages that are sent to a client"""
 
-    def __init__(self, messages: Messages):
+    def __init__(self, telnet: TelnetServer, messages: Messages):
         super().__init__()
+
+        self.telnet = telnet
 
         self.textwrap = TextWrapper(
             width=76,
@@ -25,15 +27,15 @@ class Output:
     def _wrap(self, value: str) -> str:
         return self.textwrap.fill(value)
 
-    def prompt(self, telnet: TelnetServer, client):
+    def prompt(self, client):
         """Prints a command prompt to the specified client"""
 
-        telnet.send_message(client, self.messages.prompt)
+        self.telnet.send_message(client, self.messages.prompt)
 
-    def private(self, telnet: TelnetServer, client, body: str):
+    def private(self, client, body: str):
         """Prints a message only to the specified client"""
 
-        telnet.send_message(client, body)
+        self.telnet.send_message(client, body)
 
     def local(self):
         """Prints a message to all clients within the room"""

@@ -1,11 +1,16 @@
-# pylint: disable=too-few-public-methods
 """Events module"""
 
+from cibo.output import Output
 from cibo.telnet import TelnetServer
+
+# TODO: think about using abstract classes for these
 
 
 class Connect:
     """Contains logic for client connection events."""
+
+    def __init__(self, output: Output) -> None:
+        self.output = output
 
     def process(self, telnet: TelnetServer, clients: list) -> None:
         """Process new client connection events."""
@@ -15,11 +20,17 @@ class Connect:
             clients.append(new_client)
 
             # Send a welcome message
-            telnet.send_message(new_client, f"Welcome, you are client {new_client}.")
+            self.output.private(
+                new_client,
+                f"Welcome, you are client {new_client}.",
+            )
 
 
 class Disconnect:
     """Contains logic for client disconnection events."""
+
+    def __init__(self, output: Output) -> None:
+        self.output = output
 
     def process(self, telnet: TelnetServer, clients: list) -> None:
         """Process client disconnection events."""
@@ -29,33 +40,33 @@ class Disconnect:
             if disconnected_client not in clients:
                 continue
 
-            # Remove him from the clients list
+            # Remove them from the clients list
             clients.remove(disconnected_client)
 
             # Send every client a message saying "Client X disconnected"
             for client in clients:
-                telnet.send_message(
+                self.output.private(
                     client, f"Client {disconnected_client} disconnected."
                 )
 
 
-class Message:
-    """Contains logic for incoming client messages and input."""
+class Input:
+    """Contains logic for incoming client input."""
+
+    def __init__(self, output: Output) -> None:
+        self.output = output
 
     def process(self, telnet: TelnetServer, clients: list) -> None:
-        """Process incoming client messages and input."""
+        """Process incoming client input."""
 
-        # For each message a client has sent
-        for sender_client, message in telnet.get_messages():
+        # For each input message a client has sent
+        for sender_client, input_ in telnet.get_input():
             if sender_client not in clients:
                 continue
 
-            # Send every client a message reading:
-            # "I received "[MESSAGE]" from client [ID OF THE SENDER CLIENT]"
+            # Send every client the message.
             for client in clients:
-                telnet.send_message(
-                    client, f'I received "{message}" from client {sender_client}'
-                )
+                self.output.private(client, f'{sender_client} says, "{input_}"')
 
 
 class Events:
@@ -64,14 +75,16 @@ class Events:
     for each event type.
     """
 
-    def __init__(self) -> None:
-        self.connect = Connect()
-        self.disconnect = Disconnect()
-        self.message = Message()
+    def __init__(self, output: Output) -> None:
+        self.output = output
+
+        self.connect = Connect(output=self.output)
+        self.disconnect = Disconnect(output=self.output)
+        self.input = Input(output=self.output)
 
     def process(self, telnet: TelnetServer, clients: list) -> None:
         """Processes any new server events, of all types."""
 
         self.connect.process(telnet, clients)
         self.disconnect.process(telnet, clients)
-        self.message.process(telnet, clients)
+        self.input.process(telnet, clients)

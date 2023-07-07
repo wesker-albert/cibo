@@ -2,6 +2,7 @@
 
 import json
 from dataclasses import dataclass
+from pathlib import Path
 
 from cibo.models.terminal import TerminalColors, TerminalStyle
 
@@ -12,11 +13,11 @@ class Messages:
 
     prompt: str
 
-    def __init__(self, filename: str) -> dict:
+    def __init__(self, filename: str):
         super().__init__()
 
-        self.color = TerminalColors()
-        self.style = TerminalStyle()
+        self.color = TerminalColors
+        self.style = TerminalStyle
         self.json_data = self.__load_json_data(filename)
 
         self.prompt = self.json_data["prompt"]
@@ -27,7 +28,9 @@ class Messages:
         return
 
     def __load_json_data(self, filename) -> dict:
-        with open(filename, encoding="utf-8") as file:
-            json_data: dict = json.load(file)
+        path = Path(__file__).parent.resolve()
+
+        with open(f"{path}/../{filename}", encoding="utf-8") as file:
+            json_data = json.load(file)
 
         return json_data

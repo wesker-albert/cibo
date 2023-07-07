@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from typing import List
-from uuid import uuid4
+from uuid import UUID
 
 
 @dataclass
 class Npc:
     """Represents a non-player character"""
 
-    uuid: uuid4
+    uuid: UUID
     name: str
     prefix: str
     description: str

@@ -57,7 +57,7 @@ class RoomExit:
 
 @dataclass
 class Room:
-    """Represents a single room withint the world"""
+    """Represents a single room within the world"""
 
     id_: int
     name: str
