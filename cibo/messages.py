@@ -33,7 +33,7 @@ class Messages:
     def __load_json_data(self, filename) -> dict:
         path = Path(__file__).parent.resolve()
 
-        with open(f"{path}/../{filename}", encoding="utf-8") as file:
+        with open(f"{path}/{filename}", encoding="utf-8") as file:
             json_data = json.load(file)
 
         return json_data
