@@ -7,7 +7,7 @@ from pathlib import Path
 from cibo.models.terminal import TerminalColors, TerminalStyle
 
 # TODO: I would favor loading static message strings from the db rather than a JSON file
-# so this is likely a temporary module providing convience during early development
+# so this is likely a temporary module providing convenience during early development
 
 
 @dataclass
