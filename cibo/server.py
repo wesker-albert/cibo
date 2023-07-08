@@ -40,13 +40,12 @@ class Server:
 
         self.telnet = TelnetServer(port=port)
         self.database = SqliteDatabase("cibo_database.db")
-        self.messages = Messages(filename="resources/output.json")
+        self.messages = Messages("resources/output.json")
         self.output = Output(telnet=self.telnet, messages=self.messages)
-        self.events = Events(output=self.output)
+        self.events = Events(telnet=self.telnet, output=self.output)
 
         self.thread: Optional[threading.Thread] = None
         self.status = Server.Status.STOPPED
-        self.clients = []
 
     @property
     def is_running(self) -> bool:
@@ -68,7 +67,7 @@ class Server:
 
         while self.is_running:
             self.telnet.update()
-            self.events.process(telnet=self.telnet, clients=self.clients)
+            self.events.process()
 
             sleep(0.15)
 

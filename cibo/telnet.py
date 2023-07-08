@@ -18,7 +18,7 @@ from cibo.models.client import Client, ClientLoginState
 
 
 class TelnetEventType(int, Enum):
-    """Different types of incoming events."""
+    """Different types of incoming events from clients."""
 
     NEW_CLIENT = 1
     CLIENT_LEFT = 2
@@ -144,6 +144,16 @@ class TelnetServer:
         ]
 
         return client_ids
+
+    def get_connected_clients(self) -> Dict[UUID, Client]:
+        """
+        Returns the mapping containing data for all currently connected clients.
+
+        Returns:
+            Dict[UUID, Client]: The client IDs mapped to their respective Client objects
+        """
+
+        return self._clients
 
     def get_disconnected_clients(self) -> List[UUID]:
         """
