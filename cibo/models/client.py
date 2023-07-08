@@ -2,10 +2,9 @@
 
 from dataclasses import dataclass
 from enum import Enum
+from socket import socket
 from typing import Optional
 from uuid import UUID
-
-from _socket import socket
 
 from cibo.models.player import Player
 

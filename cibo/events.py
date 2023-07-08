@@ -60,7 +60,7 @@ class Input:
         """Process incoming client input."""
 
         # For each input message a client has sent
-        for sender_client, input_ in telnet.get_input():
+        for sender_client, input_ in telnet.get_client_input():
             if sender_client not in clients:
                 continue
 
