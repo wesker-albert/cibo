@@ -1,5 +1,4 @@
-"""
-This code is intended as temporary, while the meat and potatoes of the
+""" This code is intended as temporary, while the meat and potatoes of the
 server are being developed. TODO: instead use a daemonization approach where
 the server is started and stopped from the commandline, and not while a loop is
 running.

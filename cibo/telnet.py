@@ -1,7 +1,7 @@
-"""
-Basic Telnet server module.
+"""Basic Telnet server module.
 
 Based on a generalization made by Oliver L. Sanz from Mark Frimston's mud-py server.
+https://github.com/OliverLSanz/python-telnetserver/blob/master/telnetserver
 
 Further modified as needed, to accomodate the cibo project.
 """
@@ -35,8 +35,7 @@ class TelnetEvent:
 
 
 class TelnetServer:
-    """
-    A basic Telnet server.
+    """A basic Telnet server.
 
     Once created, the server will listen for clients connecting using Telnet. Messages
     can then be sent to and from multiple connected clients.
@@ -64,17 +63,16 @@ class TelnetServer:
         SUBNEGOTIATION_END = 240
 
     def __init__(
-        self, encoding: str = "utf-8", error_policy: str = "replace", port: int = 1234
+        self, port: int, encoding: str = "utf-8", error_policy: str = "replace"
     ) -> None:
-        """
-        Constructs the TelnetServer object and starts listening for new clients.
+        """Constructs the TelnetServer object and starts listening for new clients.
 
         Valid arg values specified here: https://docs.python.org/3/howto/unicode.html
 
         Args:
+            port (int): Port for the server
             encoding (str, optional): Encoding of the data to be processed
             error_policy (str, optional): What to do when a character cannot be decoded
-            port (int, optional): Port for the server
         """
         self._encoding = encoding
         self._error_policy = error_policy
@@ -110,8 +108,7 @@ class TelnetServer:
         self._listen_socket.listen(1)
 
     def update(self) -> None:
-        """
-        Checks for new clients, disconnected clients, and new messages sent from
+        """Checks for new clients, disconnected clients, and new messages sent from
         clients. This method must be called before up-to-date info can be obtained
         from the 'get_new_clients', 'get_disconnected_clients' and 'get_messages'
         methods. It should be called in a loop to keep the server running.
@@ -129,9 +126,8 @@ class TelnetServer:
         self._new_events = []
 
     def get_new_clients(self) -> List[UUID]:
-        """
-        Returns a list containing the IDs of any new clients that have connected to the
-        server since the last call to 'update'.
+        """Returns a list containing the IDs of any new clients that have connected to
+        the server since the last call to 'update'.
 
         Returns:
             List[UUID]: Each item is a client ID number
@@ -146,8 +142,7 @@ class TelnetServer:
         return client_ids
 
     def get_connected_clients(self) -> Dict[UUID, Client]:
-        """
-        Returns the mapping containing data for all currently connected clients.
+        """Returns the mapping containing data for all currently connected clients.
 
         Returns:
             Dict[UUID, Client]: The client IDs mapped to their respective Client objects
@@ -156,9 +151,8 @@ class TelnetServer:
         return self._clients
 
     def get_disconnected_clients(self) -> List[UUID]:
-        """
-        Returns a list containing the IDs of any clients that have left the server since
-        the last call to 'update'.
+        """Returns a list containing the IDs of any clients that have left the server
+        since the last call to 'update'.
 
         Returns:
             List[UUID]: Each item is a client ID number
@@ -172,14 +166,13 @@ class TelnetServer:
 
         return client_ids
 
-    # pylint: disable=line-too-long
     def get_client_input(self) -> List[Tuple[UUID, Optional[str]]]:
-        """
-        Returns a list containing any messages sent from clients since the last call
+        """Returns a list containing any messages sent from clients since the last call
         to 'update'.
 
         Returns:
-            List[Tuple[UUID, Optional[str]]]: The client ID, and the incoming message they sent
+            List[Tuple[UUID, Optional[str]]]: The client ID, and the incoming message
+                they sent
         """
 
         client_messages = [
@@ -191,8 +184,7 @@ class TelnetServer:
         return client_messages
 
     def send_message(self, client_id: UUID, message: str) -> None:
-        """
-        Sends the text in the 'message' parameter to the client with the id number
+        """Sends the text in the 'message' parameter to the client with the id number
         given in the 'to' parameter. The text will be printed out in the client's
         terminal.
 
@@ -206,8 +198,8 @@ class TelnetServer:
         self._attempt_send(client_id, f"{message}\n\r")
 
     def shutdown(self) -> None:
-        """
-        Closes down the server, disconnecting all clients and closing the listen socket.
+        """Closes down the server, disconnecting all clients and closing the listen
+        socket.
         """
 
         # for each client

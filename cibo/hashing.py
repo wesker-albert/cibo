@@ -22,7 +22,7 @@ class Password:
         return self._hasher.hash(password_plaintext)
 
     def verify(self, password_plaintext: str, password_hashed: str) -> bool:
-        """Verifys the password against a hash.
+        """Verifies the password against a hash.
 
         Args:
             password_plaintext (str): The plaintext password to be verified

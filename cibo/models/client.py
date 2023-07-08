@@ -31,8 +31,7 @@ class Client:
 
     @property
     def is_logged_in(self) -> bool:
-        """
-        Check if the client is logged in.
+        """Check if the client is logged in.
 
         Returns:
             bool: Is the client logged in or not
