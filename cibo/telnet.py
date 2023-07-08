@@ -76,9 +76,9 @@ class TelnetServer:
             error_policy (str, optional): What to do when a character cannot be decoded
             port (int, optional): Port for the server
         """
-        self.encoding = encoding
-        self.error_policy = error_policy
-        self.port = port
+        self._encoding = encoding
+        self._error_policy = error_policy
+        self._port = port
 
         self._listen_socket: Optional[socket.socket] = None
         self._clients: Dict[UUID, Client] = {}
@@ -100,7 +100,7 @@ class TelnetServer:
         # this requires root permissions, so we use a higher arbitrary port
         # number instead: 1234. Address 0.0.0.0 means that we will bind to all
         # of the available network interfaces
-        self._listen_socket.bind(("0.0.0.0", self.port))
+        self._listen_socket.bind(("0.0.0.0", self._port))
 
         # set to non-blocking mode. This means that when we call 'accept', it
         # will return immediately without waiting for a connection
@@ -225,7 +225,7 @@ class TelnetServer:
             # look up the client in the client map and use 'sendall' to send
             # the message string on the socket. 'sendall' ensures that all of
             # the data is sent in one go
-            self._clients[client_id].socket.sendall(bytearray(data, self.encoding))
+            self._clients[client_id].socket.sendall(bytearray(data, self._encoding))
 
         # KeyError will be raised if there is no client with the given id in
         # the map
@@ -313,7 +313,9 @@ class TelnetServer:
 
             try:
                 # read data from the socket, using a max length of 4096
-                data = client.socket.recv(4096).decode(self.encoding, self.error_policy)
+                data = client.socket.recv(4096).decode(
+                    self._encoding, self._error_policy
+                )
 
                 # process the data, stripping out any special Telnet messages
                 message = self._process_sent_data(client, data)

@@ -8,7 +8,7 @@ class Password:
 
     # pylint: disable=line-too-long
     def __init__(self):
-        self.hasher: bcrypt = bcrypt.using(rounds=13)  # type: ignore[reportGeneralTypeIssues]
+        self._hasher: bcrypt = bcrypt.using(rounds=13)  # type: ignore[reportGeneralTypeIssues]
 
     def hash_(self, password_plaintext: str) -> str:
         """Hashes the provided password.
@@ -19,7 +19,7 @@ class Password:
         Returns:
             str: The salted and hashed password.
         """
-        return self.hasher.hash(password_plaintext)
+        return self._hasher.hash(password_plaintext)
 
     def verify(self, password_plaintext: str, password_hashed: str) -> bool:
         """Verifys the password against a hash.
@@ -31,4 +31,4 @@ class Password:
         Returns:
             bool: Returns true if password matches the hash
         """
-        return self.hasher.verify(password_plaintext, password_hashed)
+        return self._hasher.verify(password_plaintext, password_hashed)

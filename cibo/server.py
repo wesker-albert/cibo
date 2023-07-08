@@ -38,10 +38,10 @@ class Server:
 
         self.telnet = TelnetServer(port=port)
         self.database = SqliteDatabase("cibo_database.db")
-        self.event_processor = EventProcessor(self.telnet)
+        self._event_processor = EventProcessor(self.telnet)
 
-        self.thread: Optional[threading.Thread] = None
-        self.status = Server.Status.STOPPED
+        self._thread: Optional[threading.Thread] = None
+        self._status = Server.Status.STOPPED
 
     @property
     def is_running(self) -> bool:
@@ -52,18 +52,18 @@ class Server:
             bool: Is the server is running or not
         """
 
-        return self.status is Server.Status.RUNNING
+        return self._status is Server.Status.RUNNING
 
-    def __start_server(self) -> None:
+    def _start_server(self) -> None:
         """Start the telnet server and begin listening for events."""
 
-        self.status = Server.Status.STARTING_UP
+        self._status = Server.Status.STARTING_UP
         self.telnet.listen()
-        self.status = Server.Status.RUNNING
+        self._status = Server.Status.RUNNING
 
         while self.is_running:
             self.telnet.update()
-            self.event_processor.process()
+            self._event_processor.process()
 
             sleep(0.15)
 
@@ -76,17 +76,17 @@ class Server:
     def start(self) -> None:
         """Create a thread and start the server."""
 
-        if self.status is Server.Status.STOPPED:
-            self.thread = threading.Thread(target=self.__start_server)
-            self.thread.start()
+        if self._status is Server.Status.STOPPED:
+            self._thread = threading.Thread(target=self._start_server)
+            self._thread.start()
 
     def stop(self) -> None:
         """Stop the currently running server and end the thread."""
 
-        if self.is_running and self.thread:
-            self.status = Server.Status.SHUTTING_DOWN
+        if self.is_running and self._thread:
+            self._status = Server.Status.SHUTTING_DOWN
 
             self.telnet.shutdown()
-            self.thread.join()
+            self._thread.join()
 
-            self.status = Server.Status.STOPPED
+            self._status = Server.Status.STOPPED

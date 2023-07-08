@@ -17,7 +17,7 @@ class Event(ABC):
 
     @abstractmethod
     def process(self) -> None:
-        """Abstract method."""
+        """Abstract method for event processing."""
 
         pass  # pylint: disable=unnecessary-pass
 
@@ -65,13 +65,13 @@ class EventProcessor(Event):
     def __init__(self, telnet: TelnetServer) -> None:
         super().__init__(telnet)
 
-        self.connect = Connect(self.telnet)
-        self.disconnect = Disconnect(self.telnet)
-        self.input = Input(self.telnet)
+        self._connect = Connect(self.telnet)
+        self._disconnect = Disconnect(self.telnet)
+        self._input = Input(self.telnet)
 
     def process(self) -> None:
         """Processes any new server events, of all types."""
 
-        self.connect.process()
-        self.disconnect.process()
-        self.input.process()
+        self._connect.process()
+        self._disconnect.process()
+        self._input.process()
