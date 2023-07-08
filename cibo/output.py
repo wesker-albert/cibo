@@ -2,16 +2,13 @@
 
 from textwrap import TextWrapper
 
-from cibo.messages import Messages
 from cibo.telnet import TelnetServer
 
 
 class Output:
     """Responsible for constructing messages that are sent to a client."""
 
-    def __init__(self, telnet: TelnetServer, messages: Messages):
-        super().__init__()
-
+    def __init__(self, telnet: TelnetServer):
         self.telnet = telnet
 
         self.textwrap = TextWrapper(
@@ -22,15 +19,13 @@ class Output:
             subsequent_indent="  ",
         )
 
-        self.messages = messages
-
     def _wrap(self, value: str) -> str:
         return self.textwrap.fill(value)
 
     def prompt(self, client):
         """Prints a command prompt to the specified client."""
 
-        self.telnet.send_message(client, self.messages.prompt)
+        self.telnet.send_message(client, "> \n")
 
     def private(self, client, body: str):
         """Prints a message only to the specified client."""

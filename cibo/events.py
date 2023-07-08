@@ -1,17 +1,29 @@
 """Events module"""
 
+from abc import ABC, abstractmethod
+
 from cibo.output import Output
 from cibo.telnet import TelnetServer
 
-# TODO: think about using abstract classes for these
 
+class Event(ABC):
+    """
+    The base interface used by other event classes.
+    """
 
-class Connect:
-    """Contains logic for client connection events."""
-
-    def __init__(self, telnet: TelnetServer, output: Output) -> None:
+    def __init__(self, telnet: TelnetServer) -> None:
         self.telnet = telnet
-        self.output = output
+        self.output = Output(self.telnet)
+
+    @abstractmethod
+    def process(self) -> None:
+        """Abstract method."""
+
+        pass  # pylint: disable=unnecessary-pass
+
+
+class Connect(Event):
+    """Contains logic for client connection events."""
 
     def process(self) -> None:
         """Process new client connection events."""
@@ -20,12 +32,8 @@ class Connect:
             self.output.private(new_client, f"Welcome, you are client {new_client}.")
 
 
-class Disconnect:
+class Disconnect(Event):
     """Contains logic for client disconnection events."""
-
-    def __init__(self, telnet: TelnetServer, output: Output) -> None:
-        self.telnet = telnet
-        self.output = output
 
     def process(self) -> None:
         """Process client disconnection events."""
@@ -37,12 +45,8 @@ class Disconnect:
                 )
 
 
-class Input:
+class Input(Event):
     """Contains logic for incoming client input."""
-
-    def __init__(self, telnet: TelnetServer, output: Output) -> None:
-        self.telnet = telnet
-        self.output = output
 
     def process(self) -> None:
         """Process incoming client input."""
@@ -52,19 +56,18 @@ class Input:
                 self.output.private(client, f'{sender_client} says, "{input_}"')
 
 
-class Events:
+class EventProcessor(Event):
     """
     Event processor for the server. Kicks off the consumption and processing logic
     for each event type.
     """
 
-    def __init__(self, telnet: TelnetServer, output: Output) -> None:
-        self.telnet = telnet
-        self.output = output
+    def __init__(self, telnet: TelnetServer) -> None:
+        super().__init__(telnet)
 
-        self.connect = Connect(telnet=self.telnet, output=self.output)
-        self.disconnect = Disconnect(telnet=self.telnet, output=self.output)
-        self.input = Input(telnet=self.telnet, output=self.output)
+        self.connect = Connect(self.telnet)
+        self.disconnect = Disconnect(self.telnet)
+        self.input = Input(self.telnet)
 
     def process(self) -> None:
         """Processes any new server events, of all types."""

@@ -7,10 +7,8 @@ from typing import Optional
 
 from peewee import SqliteDatabase
 
-from cibo.events import Events
-from cibo.messages import Messages
+from cibo.events import EventProcessor
 from cibo.models.player import Player
-from cibo.output import Output
 from cibo.telnet import TelnetServer
 
 
@@ -40,9 +38,7 @@ class Server:
 
         self.telnet = TelnetServer(port=port)
         self.database = SqliteDatabase("cibo_database.db")
-        self.messages = Messages("resources/output.json")
-        self.output = Output(telnet=self.telnet, messages=self.messages)
-        self.events = Events(telnet=self.telnet, output=self.output)
+        self.event_processor = EventProcessor(self.telnet)
 
         self.thread: Optional[threading.Thread] = None
         self.status = Server.Status.STOPPED
@@ -67,7 +63,7 @@ class Server:
 
         while self.is_running:
             self.telnet.update()
-            self.events.process()
+            self.event_processor.process()
 
             sleep(0.15)
 
