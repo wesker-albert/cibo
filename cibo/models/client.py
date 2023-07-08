@@ -29,3 +29,14 @@ class Client:
     last_check: float
     login_state: ClientLoginState
     player: Optional[Player]
+
+    @property
+    def is_logged_in(self) -> bool:
+        """
+        Check if the client is logged in.
+
+        Returns:
+            bool: Is the client logged in or not
+        """
+
+        return self.login_state is ClientLoginState.LOGGED_IN
