@@ -1,4 +1,5 @@
-"""Basic Telnet server module.
+"""
+Basic Telnet server module.
 
 Contains one class, TelnetServer, which can be instantiated to start a
 server running then used to send and receive messages from clients.
@@ -16,7 +17,7 @@ from enum import Enum
 from typing import Dict
 from uuid import UUID, uuid4
 
-from cibo.models.client import Client
+from cibo.models.client import Client, ClientLoginState
 
 
 class TelnetServer:
@@ -39,22 +40,14 @@ class TelnetServer:
         MESSAGE = 3
 
     class ReadState(int, Enum):
-        """
-        Different states we can be in while reading data from client.
-
-        See _process_sent_data function.
-        """
+        """Different states we can be in while reading data from client."""
 
         NORMAL = 1
         MESSAGE = 2
         SUBNEG = 3
 
     class Protocol(int, Enum):
-        """
-        Command codes used by Telnet protocol.
-
-        See _process_sent_data function.
-        """
+        """Command codes used by Telnet protocol."""
 
         INTERPRET_AS_MESSAGE = 255
         ARE_YOU_THERE = 246
@@ -65,17 +58,18 @@ class TelnetServer:
         SUBNEGOTIATION_START = 250
         SUBNEGOTIATION_END = 240
 
-    # pylint: disable=line-too-long
     def __init__(
         self, encoding: str = "utf-8", error_policy: str = "replace", port: int = 1234
     ):
         """
         Constructs the TelnetServer object and starts listening for new clients.
 
+        Valid arg values specified here: https://docs.python.org/3/howto/unicode.html
+
         Args:
-            encoding (str, optional): Encoding of the data to be processed. Valid values are specified here: https://docs.python.org/3/howto/unicode.html. Defaults to "utf-8".
-            error_policy (str, optional): What to do when a character cannot be decoded. Valid values are specified here: https://docs.python.org/3/howto/unicode.html. Defaults to 'replace'.
-            port (int, optional): port for the server.
+            encoding (str, optional): Encoding of the data to be processed
+            error_policy (str, optional): What to do when a character cannot be decoded
+            port (int, optional): port for the server
         """
         self.encoding = encoding
         self.error_policy = error_policy
@@ -250,6 +244,7 @@ class TelnetServer:
                 address=addr[0],
                 buffer="",
                 last_check=time.time(),
+                login_state=ClientLoginState.PRE_LOGIN,
                 player=None,
             )
 

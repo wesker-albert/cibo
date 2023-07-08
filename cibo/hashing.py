@@ -17,12 +17,12 @@ class Password:
             password_plaintext (str): The plaintext password to be hashed
 
         Returns:
-            str: The salted and hashed password
+            str: The salted and hashed password.
         """
         return self.hasher.hash(password_plaintext)
 
     def verify(self, password_plaintext: str, password_hashed: str) -> bool:
-        """Verifys the password against a hash
+        """Verifys the password against a hash.
 
         Args:
             password_plaintext (str): The plaintext password to be verified

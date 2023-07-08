@@ -7,7 +7,7 @@ from uuid import UUID
 
 @dataclass
 class Npc:
-    """Represents a non-player character"""
+    """Represents a non-player character."""
 
     uuid: UUID
     name: str

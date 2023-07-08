@@ -6,7 +6,7 @@ from cibo.models.database import DatabaseModel
 
 
 class Player(DatabaseModel):
-    """Represents a human-controlled player character"""
+    """Represents a human-controlled player character."""
 
     id_ = AutoField()
     name = CharField(max_length=15)

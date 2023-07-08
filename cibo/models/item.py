@@ -5,4 +5,4 @@ from dataclasses import dataclass
 
 @dataclass
 class Item:
-    """Represents an interactive item"""
+    """Represents an interactive item."""

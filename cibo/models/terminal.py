@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class TerminalColors(str, Enum):
-    """Codes to display color in terminal output"""
+    """Codes to display color in terminal output."""
 
     BLACK = "\033[30m"
     RED = "\033[31m"
@@ -26,7 +26,7 @@ class TerminalColors(str, Enum):
 
 
 class TerminalStyle(str, Enum):
-    """Codes to display text styles in terminal output"""
+    """Codes to display text styles in terminal output."""
 
     BOLD = "\033[1m"
     NO_STYLE = "\033[22m"

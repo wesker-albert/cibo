@@ -35,7 +35,7 @@ class Server:
         stopped.
 
         Args:
-            port (int, optional): The port for telnet to listen on. Defaults to 51234.
+            port (int, optional): The port for telnet to listen on. Defaults to 51234
         """
 
         self.telnet = TelnetServer(port=port)
@@ -54,7 +54,7 @@ class Server:
         Check if the server is active and listening.
 
         Returns:
-            bool: Is the server is running or not.
+            bool: Is the server is running or not
         """
 
         return self.status is Server.Status.RUNNING

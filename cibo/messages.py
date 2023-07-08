@@ -12,7 +12,7 @@ from cibo.models.terminal import TerminalColors, TerminalStyle
 
 @dataclass
 class Messages:
-    """Formatted messages that are available for output to a client"""
+    """Formatted messages that are available for output to a client."""
 
     prompt: str
 

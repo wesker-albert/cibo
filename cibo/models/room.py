@@ -6,7 +6,7 @@ from typing import List, Optional
 
 
 class Direction(str, Enum):
-    """Available directions of travel between rooms"""
+    """Available directions of travel between rooms."""
 
     NORTH = "north"
     SOUTH = "south"
@@ -18,7 +18,7 @@ class Direction(str, Enum):
 
 @dataclass
 class Sector:
-    """A subset of rooms with certain shared behaviors"""
+    """A subset of rooms with certain shared behaviors."""
 
     name: str
     # flags: List[Flags]
@@ -26,7 +26,7 @@ class Sector:
 
 @dataclass
 class Region:
-    """A large group of rooms"""
+    """A large group of rooms."""
 
     name: str
     # flags: List[Flags]
@@ -34,7 +34,7 @@ class Region:
 
 @dataclass
 class RoomDescription:
-    """Descriptions of the room from different perspectives"""
+    """Descriptions of the room from different perspectives."""
 
     normal: str
     extra: Optional[str]
@@ -48,7 +48,7 @@ class RoomDescription:
 
 @dataclass
 class RoomExit:
-    """Flags that govern exit behavior"""
+    """Flags that govern exit behavior."""
 
     direction: Direction
     to_: int
@@ -59,7 +59,7 @@ class RoomExit:
 
 @dataclass
 class Room:
-    """Represents a single room within the world"""
+    """Represents a single room within the world."""
 
     id_: int
     name: str

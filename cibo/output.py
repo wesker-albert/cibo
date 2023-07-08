@@ -7,7 +7,7 @@ from cibo.telnet import TelnetServer
 
 
 class Output:
-    """Responsible for constructing messages that are sent to a client"""
+    """Responsible for constructing messages that are sent to a client."""
 
     def __init__(self, telnet: TelnetServer, messages: Messages):
         super().__init__()
@@ -28,27 +28,27 @@ class Output:
         return self.textwrap.fill(value)
 
     def prompt(self, client):
-        """Prints a command prompt to the specified client"""
+        """Prints a command prompt to the specified client."""
 
         self.telnet.send_message(client, self.messages.prompt)
 
     def private(self, client, body: str):
-        """Prints a message only to the specified client"""
+        """Prints a message only to the specified client."""
 
         self.telnet.send_message(client, body)
 
     def local(self):
-        """Prints a message to all clients within the room"""
+        """Prints a message to all clients within the room."""
         return
 
     def sector(self):
-        """Prints a message to all clients within the sector"""
+        """Prints a message to all clients within the sector."""
         return
 
     def region(self):
-        """Prints a message to all clients within the sector"""
+        """Prints a message to all clients within the sector."""
         return
 
     def server(self):
-        """Prints a message to all clients on the server"""
+        """Prints a message to all clients on the server."""
         return
