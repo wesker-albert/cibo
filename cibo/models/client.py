@@ -1,8 +1,8 @@
 """Client models"""
 
+import socket as socket_
 from dataclasses import dataclass
 from enum import Enum
-from socket import socket
 from typing import Optional
 from uuid import UUID
 
@@ -22,7 +22,7 @@ class Client:
     """Represents a client connected to the server."""
 
     id_: UUID
-    socket: socket
+    socket: socket_.socket
     address: str
     buffer: str
     last_check: float
@@ -38,3 +38,19 @@ class Client:
         """
 
         return self.login_state is ClientLoginState.LOGGED_IN
+
+    def send_message(self, message: str) -> None:
+        """Sends the message text to the client. The text will be printed out in
+        the client's terminal.
+
+        Args:
+            message (str): The body text of the message
+        """
+
+        try:
+            self.socket.sendall(bytearray(f"{message}\n\r", "utf-8"))
+
+        # a socket error will be raised if the client has already disconnected,
+        # in which case we want to silently fail
+        except socket_.error:
+            return

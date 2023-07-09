@@ -186,19 +186,6 @@ class TelnetServer:
 
         return client_messages
 
-    def send_message(self, client: Client, message: str) -> None:
-        """Sends the message text to the given client. The text will be printed out in
-        the client's terminal.
-
-        Args:
-            client (Client): The client to send the message to
-            message (str): The body text of the message
-        """
-
-        # we make sure to put a newline on the end so the client receives the
-        # message on its own line
-        self._attempt_send(client, f"{message}\n\r")
-
     def shutdown(self) -> None:
         """Closes down the server, disconnecting all clients and closing the listen
         socket.
@@ -213,17 +200,6 @@ class TelnetServer:
         # stop listening for new clients
         if self._listen_socket:
             self._listen_socket.close()
-
-    def _attempt_send(self, client: Client, data: str) -> None:
-        try:
-            # use 'sendall' to send the message string on the socket. 'sendall'
-            # ensures that all of the data is sent in one go
-            client.socket.sendall(bytearray(data, self._encoding))
-
-        # If there is a connection problem with the client (e.g. they have
-        # disconnected) a socket error will be raised
-        except socket.error:
-            self._handle_disconnect(client)
 
     def _check_for_new_connections(self) -> None:
         # 'select' is used to check whether there is data waiting to be read
@@ -280,7 +256,15 @@ class TelnetServer:
             # matter what we send, we're really just checking that data can
             # still be written to the socket. If it can't, an error will be
             # raised and we'll know that the client has disconnected.
-            self._attempt_send(client, "\x00")
+            try:
+                # use 'sendall' to send the message string on the socket. 'sendall'
+                # ensures that all of the data is sent in one go
+                client.socket.sendall(bytearray("\x00", self._encoding))
+
+            # If there is a connection problem with the client (e.g. they have
+            # disconnected) a socket error will be raised
+            except socket.error:
+                self._handle_disconnect(client)
 
             # update the last check time
             client.last_check = time.time()

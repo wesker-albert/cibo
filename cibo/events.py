@@ -2,7 +2,6 @@
 
 from abc import ABC, abstractmethod
 
-from cibo.output import Output
 from cibo.telnet import TelnetServer
 
 
@@ -11,7 +10,6 @@ class Event(ABC):
 
     def __init__(self, telnet: TelnetServer) -> None:
         self.telnet = telnet
-        self.output = Output(self.telnet)
 
     @abstractmethod
     def process(self) -> None:
@@ -55,7 +53,7 @@ class Connect(Event):
         """Process new client connection events."""
 
         for client in self.telnet.get_new_clients():
-            self.output.private(client, f"Welcome, you are client {client.id_}.")
+            client.send_message(f"Welcome, you are client {client.id_}.")
 
 
 class Disconnect(Event):
@@ -66,7 +64,7 @@ class Disconnect(Event):
 
         for dc_client in self.telnet.get_disconnected_clients():
             for client in self.telnet.get_connected_clients():
-                self.output.private(client, f"Client {dc_client.id_} disconnected.")
+                client.send_message(f"Client {dc_client.id_} disconnected.")
 
 
 class Input(Event):
@@ -77,4 +75,4 @@ class Input(Event):
 
         for sender_client, input_ in self.telnet.get_client_input():
             for client in self.telnet.get_connected_clients():
-                self.output.private(client, f'{sender_client.id_} says, "{input_}"')
+                client.send_message(f'{sender_client.id_} says, "{input_}"')
