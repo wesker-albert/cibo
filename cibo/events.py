@@ -19,6 +19,7 @@ class Event(ABC):
 
         pass  # pylint: disable=unnecessary-pass
 
+
 class EventProcessor(Event):
     """Event processor for the server. Kicks off the consumption and processing logic
     for each event type.

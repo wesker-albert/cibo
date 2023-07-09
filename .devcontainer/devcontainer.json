@@ -19,52 +19,25 @@
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"[python]": {
-					"editor.codeActionsOnSave": {
-						"source.organizeImports": true
-					},
-					"editor.formatOnSave": true,
-					"editor.rulers": [
-						88
-					]
-				},
-				"python.defaultInterpreterPath": "/usr/local/py-utils/venvs/poetry/bin/python3.11",
-				"python.analysis.extraPaths": ["${workspaceFolder}/cibo"],
-				"python.formatting.provider": "black",
-				"python.linting.enabled": true,
-				"python.linting.lintOnSave": true,
-				"python.linting.pylintArgs": [
-					"--rcfile",
-					"pyproject.toml"
-				],
-				"python.linting.pylintEnabled": true,
-				"python.linting.pylintPath": "/usr/local/py-utils/venvs/poetry/bin/pylint",
-				"python.testing.pytestArgs": [
-					"cibo",
-					"-vv",
-					"-p",
-					"no:cacheprovider"
-				],
-				"python.testing.pytestEnabled": true,
-				"python.testing.unittestEnabled": false,
-				"python.analysis.autoImportCompletions": true,
-				"python.analysis.typeCheckingMode": "basic",
-				"isort.args": [
-					"--settings-path",
-					"${workspaceFolder}/pyproject.toml"
-				],
-				"[json]": {
-					"editor.formatOnSave": true,
-					"editor.detectIndentation": false,
-					"editor.insertSpaces": true,
-					"editor.tabSize": 4
-				},
+				"autoDocstring.docstringFormat": "google",
 				"coverage-gutters.coverageBaseDir": "**",
 				"coverage-gutters.coverageFileNames": [
 					"coverage.xml"
 				],
 				"coverage-gutters.coverageReportFileName": "coverage/**/index.html",
 				"coverage-gutters.ignoredPathGlobs": "**/{node_modules}/**",
+				"emeraldwalk.runonsave": {
+					"commands": [
+						{
+							"match": "package-lock.json|package.json",
+							"cmd": "make init_node"
+						},
+						{
+							"match": "poetry.lock|pyproject.toml",
+							"cmd": "make init_poetry"
+						}
+					]
+				},
 				"errorLens.enabledDiagnosticLevels": [
 					"error",
 					"hint",
@@ -80,25 +53,59 @@
 					".env.*": "env"
 				},
 				"gitlens.currentLine.enabled": false,
-				"emeraldwalk.runonsave": {
-					"commands": [
-						{
-							"match": "package-lock.json|package.json",
-							"cmd": "make init_node"
-						},
-						{
-							"match": "poetry.lock|pyproject.toml",
-							"cmd": "make init_poetry"
-						}
-					]
-				},
-				"terminal.integrated.defaultProfile.linux": "zsh", 
+				"isort.args": [
+					"--settings-path",
+					"${workspaceFolder}/pyproject.toml",
+					"--profile",
+					"black"
+				],
+				"python.analysis.autoImportCompletions": true,
+				"python.analysis.fixAll": [
+					"source.convertImportFormat",
+					"source.unusedImports"
+				],
+				"python.analysis.importFormat": "absolute",
+				"python.analysis.typeCheckingMode": "basic",
+				"python.defaultInterpreterPath": "/usr/local/py-utils/venvs/poetry/bin/python3.11",
+				"python.formatting.provider": "black",
+				"python.linting.enabled": true,
+				"python.linting.lintOnSave": true,
+				"python.linting.pylintArgs": [
+					"--rcfile",
+					"pyproject.toml"
+				],
+				"python.linting.pylintEnabled": true,
+				"python.linting.pylintPath": "/usr/local/py-utils/venvs/poetry/bin/pylint",
+				"python.testing.pytestArgs": [
+					"cibo"
+				],
+				"python.testing.pytestEnabled": true,
+				"python.testing.unittestEnabled": false,
+				"terminal.integrated.defaultProfile.linux": "zsh",
 				"terminal.integrated.profiles.linux": {
 					"zsh": {
 						"path": "/bin/zsh"
 					}
 				},
-				"autoDocstring.docstringFormat": "google"
+				"workbench.editorAssociations": {
+					"*.db": "sqlite-viewer.option"
+				},
+				"[python]": {
+					"editor.codeActionsOnSave": {
+						"source.fixAll": true,
+						"source.organizeImports": true
+					},
+					"editor.formatOnSave": true,
+					"editor.rulers": [
+						88
+					]
+				},
+				"[json]": {
+					"editor.detectIndentation": false,
+					"editor.formatOnSave": true,
+					"editor.insertSpaces": true,
+					"editor.tabSize": 4
+				}
 			},
 			"extensions": [
 				"davidhouchin.whitespace-plus",
