@@ -66,6 +66,7 @@
 				],
 				"python.analysis.importFormat": "absolute",
 				"python.analysis.typeCheckingMode": "basic",
+				"python.createEnvironment.contentButton":"hide",
 				"python.defaultInterpreterPath": "/usr/local/py-utils/venvs/poetry/bin/python3.11",
 				"python.formatting.provider": "black",
 				"python.linting.enabled": true,

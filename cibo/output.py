@@ -1,8 +1,8 @@
 """Output module"""
 
 from textwrap import TextWrapper
-from uuid import UUID
 
+from cibo.models.client import Client
 from cibo.telnet import TelnetServer
 
 
@@ -23,15 +23,15 @@ class Output:
     def _wrap(self, value: str) -> str:
         return self.textwrap.fill(value)
 
-    def prompt(self, client_id: UUID):
+    def prompt(self, client: Client):
         """Prints a command prompt to the specified client."""
 
-        self.telnet.send_message(client_id, "> \n")
+        self.telnet.send_message(client, "> \n")
 
-    def private(self, client_id: UUID, body: str):
+    def private(self, client: Client, body: str):
         """Prints a message only to the specified client."""
 
-        self.telnet.send_message(client_id, body)
+        self.telnet.send_message(client, body)
 
     def local(self):
         """Prints a message to all clients within the room."""

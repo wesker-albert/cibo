@@ -6,11 +6,11 @@ https://github.com/OliverLSanz/python-telnetserver/blob/master/telnetserver
 Further modified as needed, to accomodate the cibo project.
 """
 
-import select
 import socket
 import time
 from dataclasses import dataclass
 from enum import Enum
+from select import select
 from typing import Dict, List, Optional, Tuple
 from uuid import UUID, uuid4
 
@@ -31,6 +31,7 @@ class TelnetEvent:
 
     type_: TelnetEventType
     client_id: UUID
+    client: Client
     message: Optional[str] = None
 
 
@@ -79,9 +80,10 @@ class TelnetServer:
         self._port = port
 
         self._listen_socket: Optional[socket.socket] = None
-        self._clients: Dict[UUID, Client] = {}
         self._events: List[TelnetEvent] = []
         self._new_events: List[TelnetEvent] = []
+
+        self._clients: Dict[UUID, Client] = {}
 
     def listen(self) -> None:
         """Configure the socket and begin listening."""
@@ -122,10 +124,10 @@ class TelnetServer:
         # move the new events into the main events list so that they can be
         # obtained with 'get_new_clients', 'get_disconnected_clients' and
         # 'get_messages'. The previous events are discarded
-        self._events = list(self._new_events)
+        self._events = self._new_events
         self._new_events = []
 
-    def get_new_clients(self) -> List[UUID]:
+    def get_new_clients(self) -> List[Client]:
         """Returns a list containing the IDs of any new clients that have connected to
         the server since the last call to 'update'.
 
@@ -133,24 +135,24 @@ class TelnetServer:
             List[UUID]: Each item is a client ID number
         """
 
-        client_ids = [
-            event.client_id
+        clients = [
+            event.client
             for event in self._events
             if event.type_ is TelnetEventType.NEW_CLIENT
         ]
 
-        return client_ids
+        return clients
 
-    def get_connected_clients(self) -> Dict[UUID, Client]:
+    def get_connected_clients(self) -> List[Client]:
         """Returns the mapping containing data for all currently connected clients.
 
         Returns:
             Dict[UUID, Client]: The client IDs mapped to their respective Client objects
         """
 
-        return self._clients
+        return list(self._clients.values())
 
-    def get_disconnected_clients(self) -> List[UUID]:
+    def get_disconnected_clients(self) -> List[Client]:
         """Returns a list containing the IDs of any clients that have left the server
         since the last call to 'update'.
 
@@ -158,15 +160,15 @@ class TelnetServer:
             List[UUID]: Each item is a client ID number
         """
 
-        client_ids = [
-            event.client_id
+        clients = [
+            event.client
             for event in self._events
             if event.type_ is TelnetEventType.CLIENT_LEFT
         ]
 
-        return client_ids
+        return clients
 
-    def get_client_input(self) -> List[Tuple[UUID, Optional[str]]]:
+    def get_client_input(self) -> List[Tuple[Client, Optional[str]]]:
         """Returns a list containing any messages sent from clients since the last call
         to 'update'.
 
@@ -176,14 +178,14 @@ class TelnetServer:
         """
 
         client_messages = [
-            (event.client_id, event.message)
+            (event.client, event.message)
             for event in self._events
             if event.type_ is TelnetEventType.MESSAGE
         ]
 
         return client_messages
 
-    def send_message(self, client_id: UUID, message: str) -> None:
+    def send_message(self, client: Client, message: str) -> None:
         """Sends the text in the 'message' parameter to the client with the id number
         given in the 'to' parameter. The text will be printed out in the client's
         terminal.
@@ -195,7 +197,7 @@ class TelnetServer:
 
         # we make sure to put a newline on the end so the client receives the
         # message on its own line
-        self._attempt_send(client_id, f"{message}\n\r")
+        self._attempt_send(client, f"{message}\n\r")
 
     def shutdown(self) -> None:
         """Closes down the server, disconnecting all clients and closing the listen
@@ -212,12 +214,12 @@ class TelnetServer:
         if self._listen_socket:
             self._listen_socket.close()
 
-    def _attempt_send(self, client_id: UUID, data: str) -> None:
+    def _attempt_send(self, client: Client, data: str) -> None:
         try:
             # look up the client in the client map and use 'sendall' to send
             # the message string on the socket. 'sendall' ensures that all of
             # the data is sent in one go
-            self._clients[client_id].socket.sendall(bytearray(data, self._encoding))
+            client.socket.sendall(bytearray(data, self._encoding))
 
         # KeyError will be raised if there is no client with the given id in
         # the map
@@ -227,7 +229,7 @@ class TelnetServer:
         # If there is a connection problem with the client (e.g. they have
         # disconnected) a socket error will be raised
         except socket.error:
-            self._handle_disconnect(client_id)
+            self._handle_disconnect(client)
 
     def _check_for_new_connections(self) -> None:
         # 'select' is used to check whether there is data waiting to be read
@@ -235,7 +237,7 @@ class TelnetServer:
         # to check for readability. It returns 3 lists, the first being
         # the sockets that are readable. The last parameter is how long to wait
         # - we pass in 0 so that it returns immediately without waiting
-        rlist, _wlist, _xlist = select.select([self._listen_socket], [], [], 0)
+        rlist, _wlist, _xlist = select([self._listen_socket], [], [], 0)
 
         # if the socket wasn't in the readable list, there's no data available,
         # meaning no clients waiting to connect, and so we can exit the method
@@ -252,13 +254,10 @@ class TelnetServer:
             # 'recv' will return immediately without waiting
             joined_socket.setblocking(False)
 
-            # generate a uuid that serves as the client id
-            client_id = uuid4()
-
             # construct a new Client object to hold info about the newly connected
-            # client. Use 'client_id' as the new client's id number
-            self._clients[client_id] = Client(
-                id_=client_id,
+            # client. Use a UUID as the new client's id number
+            new_client = Client(
+                id_=uuid4(),
                 socket=joined_socket,
                 address=addr[0],
                 buffer="",
@@ -267,13 +266,17 @@ class TelnetServer:
                 player=None,
             )
 
+            self._clients[new_client.id_] = new_client
+
             # add a new client occurence to the new events list with the client's
             # id number
-            self._new_events.append(TelnetEvent(TelnetEventType.NEW_CLIENT, client_id))
+            self._new_events.append(
+                TelnetEvent(TelnetEventType.NEW_CLIENT, new_client.id_, new_client)
+            )
 
     def _check_for_disconnected(self) -> None:
         # go through all the clients
-        for id_, client in list(self._clients.items()):
+        for client in list(self._clients.values()):
             # if we last checked the client less than 5 seconds ago, skip this
             # client and move on to the next one
             if time.time() - client.last_check < 5.0:
@@ -283,19 +286,19 @@ class TelnetServer:
             # matter what we send, we're really just checking that data can
             # still be written to the socket. If it can't, an error will be
             # raised and we'll know that the client has disconnected.
-            self._attempt_send(id_, "\x00")
+            self._attempt_send(client, "\x00")
 
             # update the last check time
             client.last_check = time.time()
 
     def _check_for_messages(self) -> None:
         # go through all the clients
-        for client_id, client in list(self._clients.items()):
+        for client in list(self._clients.values()):
             # we use 'select' to test whether there is data waiting to be read
             # from the client socket. The function takes 3 lists of sockets,
             # the first being those to test for readability. It returns 3 list
             # of sockets, the first being those that are actually readable.
-            rlist, _wlist, _xlist = select.select([client.socket], [], [], 0)
+            rlist, _wlist, _xlist = select([client.socket], [], [], 0)
 
             # if the client socket wasn't in the readable list, there is no
             # new data from the client - we can skip it and move on to the next
@@ -321,21 +324,25 @@ class TelnetServer:
                     # add a message occurence to the new events list with the
                     # client's id number, and the message
                     self._new_events.append(
-                        TelnetEvent(TelnetEventType.MESSAGE, client_id, message)
+                        TelnetEvent(
+                            TelnetEventType.MESSAGE, client.id_, client, message
+                        )
                     )
 
             # if there is a problem reading from the socket (e.g. the client
             # has disconnected) a socket error will be raised
             except socket.error:
-                self._handle_disconnect(client_id)
+                self._handle_disconnect(client)
 
-    def _handle_disconnect(self, client_id: UUID) -> None:
+    def _handle_disconnect(self, client: Client) -> None:
         # remove the client from the clients map
-        del self._clients[client_id]
+        del self._clients[client.id_]
 
         # add a 'client left' occurence to the new events list, with the
         # client's id number
-        self._new_events.append(TelnetEvent(TelnetEventType.CLIENT_LEFT, client_id))
+        self._new_events.append(
+            TelnetEvent(TelnetEventType.CLIENT_LEFT, client.id_, client)
+        )
 
     def _process_sent_data(self, client: Client, data: str) -> str:
         # the Telnet protocol allows special message codes to be inserted into

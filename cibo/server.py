@@ -16,8 +16,8 @@ from cibo.telnet import TelnetServer
 
 class Server:
     """A telnet server that once started, listens for incoming client events and input.
-    When an event is received, it determines the proper strategy interface then
-    delegates the logic.
+    When a new event is received upon update, it calls upon the event processor to
+    determine event type and then carry out the event logic.
     """
 
     class Status(int, Enum):
@@ -57,7 +57,9 @@ class Server:
         return self._status is self.Status.RUNNING
 
     def _start_server(self) -> None:
-        """Start the telnet server and begin listening for events."""
+        """Start the telnet server and begin listening for events. Process any new
+        events received using the event processor.
+        """
 
         self._status = self.Status.STARTING_UP
         self.telnet.listen()

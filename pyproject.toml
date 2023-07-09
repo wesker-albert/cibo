@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cibo"
-version = "0.0.1"
+version = "0.0.0"
 description = "An experimental MUD server, written in Python. Object-oriented and event driven."
 authors = ["Albert Wesker <albert.wesker@umbrellacorp.io>"]
 license = "MIT"

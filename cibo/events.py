@@ -21,8 +21,8 @@ class Event(ABC):
 
 
 class EventProcessor(Event):
-    """Event processor for the server. Kicks off the consumption and processing logic
-    for each event type.
+    """Event processor abstraction layer for the server. Kicks off the consumption
+    and processing logic for each event type.
     """
 
     def __init__(self, telnet: TelnetServer) -> None:
@@ -54,8 +54,8 @@ class Connect(Event):
     def process(self) -> None:
         """Process new client connection events."""
 
-        for new_client in self.telnet.get_new_clients():
-            self.output.private(new_client, f"Welcome, you are client {new_client}.")
+        for client in self.telnet.get_new_clients():
+            self.output.private(client, f"Welcome, you are client {client.id_}.")
 
 
 class Disconnect(Event):
@@ -64,11 +64,9 @@ class Disconnect(Event):
     def process(self) -> None:
         """Process client disconnection events."""
 
-        for disconnected_client in self.telnet.get_disconnected_clients():
+        for dc_client in self.telnet.get_disconnected_clients():
             for client in self.telnet.get_connected_clients():
-                self.output.private(
-                    client, f"Client {disconnected_client} disconnected."
-                )
+                self.output.private(client, f"Client {dc_client.id_} disconnected.")
 
 
 class Input(Event):
@@ -79,4 +77,4 @@ class Input(Event):
 
         for sender_client, input_ in self.telnet.get_client_input():
             for client in self.telnet.get_connected_clients():
-                self.output.private(client, f'{sender_client} says, "{input_}"')
+                self.output.private(client, f'{sender_client.id_} says, "{input_}"')

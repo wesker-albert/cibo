@@ -32,7 +32,7 @@ class Command(Action):
 
     def is_valid_command(self, input_: str) -> bool:
         """Validates user input against existing aliases."""
-        for _key, value in self.aliases.items():
+        for value in self.aliases.values():
             if " " in input_ and input_[: input_.index(" ")] in value["aliases"]:
                 return True
 
