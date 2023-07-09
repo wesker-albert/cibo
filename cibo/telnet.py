@@ -128,11 +128,11 @@ class TelnetServer:
         self._new_events = []
 
     def get_new_clients(self) -> List[Client]:
-        """Returns a list containing the IDs of any new clients that have connected to
-        the server since the last call to 'update'.
+        """Returns a list containing any new clients that have connected to the server
+        since the last call to 'update'.
 
         Returns:
-            List[UUID]: Each item is a client ID number
+            List[Client]: All newly connected clients
         """
 
         clients = [
@@ -144,20 +144,21 @@ class TelnetServer:
         return clients
 
     def get_connected_clients(self) -> List[Client]:
-        """Returns the mapping containing data for all currently connected clients.
+        """Returns a list of all currently connected clients, as of last call to
+        'update'.
 
         Returns:
-            Dict[UUID, Client]: The client IDs mapped to their respective Client objects
+            List[Client]: All cuurently connected clients
         """
 
         return list(self._clients.values())
 
     def get_disconnected_clients(self) -> List[Client]:
-        """Returns a list containing the IDs of any clients that have left the server
-        since the last call to 'update'.
+        """Returns a list containing the clients that have left the server since the
+        last call to 'update'.
 
         Returns:
-            List[UUID]: Each item is a client ID number
+            List[Client]: Clients who have disconnected
         """
 
         clients = [
@@ -173,7 +174,7 @@ class TelnetServer:
         to 'update'.
 
         Returns:
-            List[Tuple[UUID, Optional[str]]]: The client ID, and the incoming message
+            List[Tuple[Client, Optional[str]]]: The client and the incoming message
                 they sent
         """
 
@@ -186,12 +187,11 @@ class TelnetServer:
         return client_messages
 
     def send_message(self, client: Client, message: str) -> None:
-        """Sends the text in the 'message' parameter to the client with the id number
-        given in the 'to' parameter. The text will be printed out in the client's
-        terminal.
+        """Sends the message text to the given client. The text will be printed out in
+        the client's terminal.
 
         Args:
-            client_id (UUID): The ID of the client to send the message to
+            client (Client): The client to send the message to
             message (str): The body text of the message
         """
 
@@ -216,15 +216,9 @@ class TelnetServer:
 
     def _attempt_send(self, client: Client, data: str) -> None:
         try:
-            # look up the client in the client map and use 'sendall' to send
-            # the message string on the socket. 'sendall' ensures that all of
-            # the data is sent in one go
+            # use 'sendall' to send the message string on the socket. 'sendall'
+            # ensures that all of the data is sent in one go
             client.socket.sendall(bytearray(data, self._encoding))
-
-        # KeyError will be raised if there is no client with the given id in
-        # the map
-        except KeyError:
-            pass
 
         # If there is a connection problem with the client (e.g. they have
         # disconnected) a socket error will be raised

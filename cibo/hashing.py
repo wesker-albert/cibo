@@ -7,7 +7,7 @@ class Password:
     """Contains methods to hash and verify login passwords."""
 
     # pylint: disable=line-too-long
-    def __init__(self):
+    def __init__(self) -> None:
         self._hasher: bcrypt = bcrypt.using(rounds=13)  # type: ignore[reportGeneralTypeIssues]
 
     def hash_(self, password_plaintext: str) -> str:
