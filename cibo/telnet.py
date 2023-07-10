@@ -217,7 +217,7 @@ class TelnetServer:
             joined_socket.setblocking(False)
 
             # construct a new Client object to hold info about the newly connected
-            # client. Use a UUID as the new client's id number
+            # client.
             new_client = Client(
                 socket=joined_socket,
                 address=addr[0],
@@ -225,6 +225,8 @@ class TelnetServer:
                 buffer="",
                 last_check=time.time(),
                 login_state=ClientLoginState.PRE_LOGIN,
+                registration_name=None,
+                registration_password_hash=None,
                 player=None,
             )
 

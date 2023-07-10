@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 
 from cibo.command import CommandProcessor
-from cibo.exceptions import UnrecognizedCommand
+from cibo.exceptions import CommandMissingArguments, UnrecognizedCommand
 from cibo.telnet import TelnetServer
 
 
@@ -56,8 +56,8 @@ class Connect(Event):
         for client in self.telnet.get_new_clients():
             client.send_message(
                 "Welcome to cibo.\n"
-                "Enter 'create' to create a new player.\n"
-                "Enter 'login' to log in to an existing player."
+                "Enter 'register name password' to create a new player.\n"
+                "Enter 'login name password' to log in to an existing player."
             )
 
 
@@ -88,5 +88,5 @@ class Input(Event):
                 try:
                     self._command_processor.execute_action(client, input_)
 
-                except UnrecognizedCommand as ex:
+                except (UnrecognizedCommand, CommandMissingArguments) as ex:
                     client.send_message(ex.message)

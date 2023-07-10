@@ -1,10 +1,10 @@
 """Commands module"""
 
 from dataclasses import dataclass
-from typing import Callable, List, Optional
+from typing import List, Optional, Type
 
-from cibo.action import ActionProcessor
-from cibo.exceptions import UnrecognizedCommand
+from cibo.action import Action, Finalize, Login, Look, Move, Quit, Register, Say
+from cibo.exceptions import CommandMissingArguments, UnrecognizedCommand
 from cibo.models.client import Client
 from cibo.telnet import TelnetServer
 
@@ -14,7 +14,7 @@ class Command:
     """Maps command alias to the action they should call."""
 
     aliases: List[str]
-    action: Callable
+    action: Type[Action]
 
 
 class CommandProcessor:
@@ -30,21 +30,10 @@ class CommandProcessor:
         """
 
         self.telnet = telnet
-        self._action_processor = ActionProcessor(self.telnet)
-
-    @property
-    def _directional_aliases(self) -> List[str]:
-        """Aliases for directional navigation.
-
-        Returns:
-            List[str]: Directional navigation aliases
-        """
-
-        return ["n", "north", "s", "south", "e", "east", "w", "west"]
 
     @property
     def _commands(self) -> List[Command]:
-        """Commands, their aliases, and the action methods the are mapped to.
+        """Commands, their aliases, and the Action class they are mapped to.
 
         Returns:
             List[CommandAlias]: Commands available to the client
@@ -52,27 +41,32 @@ class CommandProcessor:
 
         return [
             Command(
-                aliases=self._directional_aliases, action=self._action_processor.move
+                aliases=["n", "north", "s", "south", "e", "east", "w", "west"],
+                action=Move,
             ),
-            Command(aliases=["look", "l"], action=self._action_processor.look),
             Command(
-                aliases=["quit", "exit", "leave", "logout"],
-                action=self._action_processor.quit_,
+                aliases=["look", "l"],
+                action=Look,
             ),
-            Command(aliases=["login"], action=self._action_processor.login),
-            Command(aliases=["register"], action=self._action_processor.register),
-            Command(aliases=["say"], action=self._action_processor.say),
+            Command(
+                aliases=["quit", "leave", "logout"],
+                action=Quit,
+            ),
+            Command(aliases=["login"], action=Login),
+            Command(aliases=["register"], action=Register),
+            Command(aliases=["finalize"], action=Finalize),
+            Command(aliases=["say"], action=Say),
         ]
 
-    def _get_command_action(self, client_command: str) -> Optional[Callable]:
-        """Returns the action for the command identified in the client input, if the
+    def _get_command_action(self, client_command: str) -> Optional[Type[Action]]:
+        """Returns the Action for the command identified in the client input, if the
         command alias exists.
 
         Args:
             _input (str): The client input text
 
         Returns:
-            Optional[Callable]: The action method, if the command is valid
+            Optional[Callable]: The action class, if the command is valid
         """
         for mapped_command in self._commands:
             if client_command in mapped_command.aliases:
@@ -81,7 +75,8 @@ class CommandProcessor:
         return None
 
     def execute_action(self, client: Client, input_: str) -> None:
-        """Calls the action that is mapped to the command that the client sent.
+        """Instantiates the Action that is mapped to the command that the client sent
+        and then processes the associated logic.
 
         Args:
             input_ (str): The client input
@@ -91,10 +86,21 @@ class CommandProcessor:
         """
 
         command, _separator, args = input_.partition(" ")
+        args = args.split(" ")
 
         action = self._get_command_action(command)
 
         if action is None:
             raise UnrecognizedCommand(command)
 
-        action(client, args)
+        action_instance = action(self.telnet)
+
+        try:
+            action_instance.process(client, args)
+
+        # and IndexError means that the client's command was missing an argument index
+        # that this specific action requires
+        except IndexError as ex:
+            raise CommandMissingArguments(
+                command, action_instance.required_args()
+            ) from ex

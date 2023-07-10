@@ -12,8 +12,7 @@ class ClientLoginState(int, Enum):
     """The different login states a client can be in."""
 
     PRE_LOGIN = 1
-    ACCOUNT_CREATION = 2
-    LOGGED_IN = 3
+    LOGGED_IN = 2
 
 
 @dataclass
@@ -26,6 +25,8 @@ class Client:
     buffer: str
     last_check: float
     login_state: ClientLoginState
+    registration_name: Optional[str]
+    registration_password_hash: Optional[str]
     player: Optional[Player]
 
     @property
