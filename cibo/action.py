@@ -13,7 +13,7 @@ class Action(ABC):
     """The base interface used by other action classes."""
 
     def __init__(self, telnet: TelnetServer) -> None:
-        self.telnet = telnet
+        self._telnet = telnet
         self._password_hasher = Password()
 
     def _join_args(self, args: List[str]) -> str:
@@ -21,7 +21,7 @@ class Action(ABC):
         delimiter.
 
         Args:
-            args (str): The list of args
+            args (List[str]): The list of args
 
         Returns:
             str: All the args as one big string
@@ -32,23 +32,28 @@ class Action(ABC):
     @abstractmethod
     def required_args(self) -> List[str]:
         """Descriptions of the args required for the action. If no arguments are
-        necessary for the action, you should return an empty list.
+        necessary for the action, return an empty list.
 
         Returns:
             List[str]: Descriptions for each required argument
         """
 
-        pass  # pylint: disable=unnecessary-pass
+        pass
 
     @abstractmethod
     def process(self, client: Client, args: List[str]) -> None:
-        """Process the logic for the action."""
+        """Process the logic for the action.
 
-        pass  # pylint: disable=unnecessary-pass
+        Args:
+            client (Client): The client who triggered the action
+            args (List[str]): The args included with the command maped to the action
+        """
+
+        pass
 
 
 class Say(Action):
-    """Contains logic for the 'say' action."""
+    """Say something to the current room."""
 
     def required_args(self) -> List[str]:
         """Descriptions of the args required for the action."""
@@ -56,16 +61,16 @@ class Say(Action):
         return []
 
     def process(self, client: Client, args: List[str]):
-        """Say something to the current room."""
+        """Process the logic for the action."""
 
-        for connected_client in self.telnet.get_connected_clients():
+        for connected_client in self._telnet.get_connected_clients():
             connected_client.send_message(
                 f'{client.address} says, "{self._join_args(args)}"'
             )
 
 
 class Register(Action):
-    """Contains logic for the 'register' action."""
+    """Register a new player with the server."""
 
     def required_args(self) -> List[str]:
         """Descriptions of the args required for the action."""
@@ -73,7 +78,7 @@ class Register(Action):
         return ["name", "password"]
 
     def process(self, client: Client, args: List[str]):
-        """Register a new player with the server."""
+        """Process the logic for the action."""
 
         if client.is_logged_in:
             client.send_message(
@@ -89,10 +94,12 @@ class Register(Action):
             client.send_message("Please try again with an *actual* name.")
             return
 
-        if player_name == "password":
+        if password == "password":
             client.send_message("Please try again with an *actual* password.")
             return
 
+        # the username and hashed password are set to temporary vars on the client,
+        # to be used if they call the Finalize action
         client.registration_name = player_name
         client.registration_password_hash = self._password_hasher.hash_(password)
 
@@ -105,7 +112,7 @@ class Register(Action):
 
 
 class Finalize(Action):
-    """Contains logic for the 'finalize' action."""
+    """Finalizes the creation of a new player."""
 
     def required_args(self) -> List[str]:
         """Descriptions of the args required for the action."""
@@ -113,7 +120,7 @@ class Finalize(Action):
         return []
 
     def process(self, client: Client, args: List[str]):
-        """Finalizes the creation of a new player."""
+        """Process the logic for the action."""
 
         if client.is_logged_in:
             client.send_message(
@@ -130,7 +137,7 @@ class Finalize(Action):
 
 
 class Login(Action):
-    """Contains logic for the 'login' action."""
+    """Log in to an existing player on the server."""
 
     def required_args(self) -> List[str]:
         """Descriptions of the args required for the action."""
@@ -138,13 +145,13 @@ class Login(Action):
         return ["name", "password"]
 
     def process(self, client: Client, args: List[str]):
-        """Log in to an existing player on the server."""
+        """Process the logic for the action."""
 
         _ = client, args
 
 
 class Move(Action):
-    """Contains logic for movement actions."""
+    """Moves a client between available rooms."""
 
     def required_args(self) -> List[str]:
         """Descriptions of the args required for the action."""
@@ -152,27 +159,27 @@ class Move(Action):
         return []
 
     def process(self, client: Client, args: List[str]):
-        """Moves a client between available rooms."""
+        """Process the logic for the action."""
 
         _ = client, args
 
 
 class Look(Action):
-    """Contains logic for the 'look' action."""
+    """Returns information about the room or object targeted."""
 
     def required_args(self) -> List[str]:
         """Descriptions of the args required for the action."""
 
-        return ["direction/item"]
+        return []
 
     def process(self, client: Client, args: List[str]):
-        """Returns information about the room or object targeted."""
+        """Process the logic for the action."""
 
         _ = client, args
 
 
 class Exits(Action):
-    """Contains logic for the 'exits' action."""
+    """Returns the available exits."""
 
     def required_args(self) -> List[str]:
         """Descriptions of the args required for the action."""
@@ -180,13 +187,13 @@ class Exits(Action):
         return []
 
     def process(self, client: Client, args: List[str]):
-        """Returns the available exits."""
+        """Process the logic for the action."""
 
         _ = client, args
 
 
 class Quit(Action):
-    """Contains logic for the 'quit' action."""
+    """Quits the game and disconnects the client."""
 
     def required_args(self) -> List[str]:
         """Descriptions of the args required for the action."""
@@ -194,6 +201,6 @@ class Quit(Action):
         return []
 
     def process(self, client: Client, args: List[str]):
-        """Quits the game and disconnects the client."""
+        """Process the logic for the action."""
 
         _ = client, args

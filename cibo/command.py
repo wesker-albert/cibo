@@ -4,14 +4,14 @@ from dataclasses import dataclass
 from typing import List, Optional, Type
 
 from cibo.action import Action, Finalize, Login, Look, Move, Quit, Register, Say
-from cibo.exceptions import CommandMissingArguments, UnrecognizedCommand
+from cibo.exception import CommandMissingArguments, UnrecognizedCommand
 from cibo.models.client import Client
 from cibo.telnet import TelnetServer
 
 
 @dataclass
 class Command:
-    """Maps command alias to the action they should call."""
+    """Maps command aliases to the action they should call."""
 
     aliases: List[str]
     action: Type[Action]
@@ -29,16 +29,17 @@ class CommandProcessor:
             telnet (TelnetServer):  The Telnet server to use when executing the action
         """
 
-        self.telnet = telnet
+        self._telnet = telnet
 
     @property
     def _commands(self) -> List[Command]:
         """Commands, their aliases, and the Action class they are mapped to.
 
         Returns:
-            List[CommandAlias]: Commands available to the client
+            List[Command]: Commands available to the client
         """
 
+        # TODO: the alias strings should live in the db, not be hardcoded
         return [
             Command(
                 aliases=["n", "north", "s", "south", "e", "east", "w", "west"],
@@ -63,10 +64,10 @@ class CommandProcessor:
         command alias exists.
 
         Args:
-            _input (str): The client input text
+            client_command (str): The command the client sent
 
         Returns:
-            Optional[Callable]: The action class, if the command is valid
+            Optional[Type[Action]]: The action class, if the command is valid
         """
         for mapped_command in self._commands:
             if client_command in mapped_command.aliases:
@@ -74,17 +75,21 @@ class CommandProcessor:
 
         return None
 
-    def execute_action(self, client: Client, input_: str) -> None:
+    def process(self, client: Client, input_: str) -> None:
         """Instantiates the Action that is mapped to the command that the client sent
         and then processes the associated logic.
 
         Args:
-            input_ (str): The client input
+            client (Client): The client who sent the command input
+            input_ (str): The client command and args
 
         Raises:
-            UnrecognizedCommand: Raise if the command is unrecognized
+            UnrecognizedCommand: The client command is unrecognized
+            CommandMissingArguments: The client command is missing required args
         """
 
+        # separate the command from the args, then also split each of the individual
+        # args into a list
         command, _separator, args = input_.partition(" ")
         args = args.split(" ")
 
@@ -93,12 +98,12 @@ class CommandProcessor:
         if action is None:
             raise UnrecognizedCommand(command)
 
-        action_instance = action(self.telnet)
+        action_instance = action(self._telnet)
 
         try:
             action_instance.process(client, args)
 
-        # and IndexError means that the client's command was missing an argument index
+        # an IndexError means that the client's command was missing an argument index
         # that this specific action requires
         except IndexError as ex:
             raise CommandMissingArguments(
