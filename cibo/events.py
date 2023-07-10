@@ -2,6 +2,8 @@
 
 from abc import ABC, abstractmethod
 
+from cibo.command import CommandProcessor
+from cibo.exceptions import UnrecognizedCommand
 from cibo.telnet import TelnetServer
 
 
@@ -24,8 +26,7 @@ class EventProcessor(Event):
     """
 
     def __init__(self, telnet: TelnetServer) -> None:
-        """Creates the event processor instance, used to kick off the processing logic
-        for each of the different event types we expect.
+        """Creates the event processor instance.
 
         Args:
             telnet (TelnetServer): The Telnet server to use for event query and
@@ -53,7 +54,11 @@ class Connect(Event):
         """Process new client connection events."""
 
         for client in self.telnet.get_new_clients():
-            client.send_message(f"Welcome, you are client {client.id_}.")
+            client.send_message(
+                "Welcome to cibo.\n"
+                "Enter 'create' to create a new player.\n"
+                "Enter 'login' to log in to an existing player."
+            )
 
 
 class Disconnect(Event):
@@ -64,15 +69,24 @@ class Disconnect(Event):
 
         for dc_client in self.telnet.get_disconnected_clients():
             for client in self.telnet.get_connected_clients():
-                client.send_message(f"Client {dc_client.id_} disconnected.")
+                client.send_message(f"Client {dc_client.address} disconnected.")
 
 
 class Input(Event):
     """Contains logic for incoming client input."""
 
+    def __init__(self, telnet: TelnetServer) -> None:
+        super().__init__(telnet)
+
+        self._command_processor = CommandProcessor(self.telnet)
+
     def process(self) -> None:
         """Process incoming client input."""
 
-        for sender_client, input_ in self.telnet.get_client_input():
-            for client in self.telnet.get_connected_clients():
-                client.send_message(f'{sender_client.id_} says, "{input_}"')
+        for client, input_ in self.telnet.get_client_input():
+            if input_:
+                try:
+                    self._command_processor.execute_action(client, input_)
+
+                except UnrecognizedCommand as ex:
+                    client.send_message(ex.message)

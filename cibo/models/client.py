@@ -4,7 +4,6 @@ import socket as socket_
 from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
-from uuid import UUID
 
 from cibo.models.player import Player
 
@@ -21,9 +20,9 @@ class ClientLoginState(int, Enum):
 class Client:
     """Represents a client connected to the server."""
 
-    id_: UUID
     socket: socket_.socket
     address: str
+    encoding: str
     buffer: str
     last_check: float
     login_state: ClientLoginState
@@ -48,9 +47,15 @@ class Client:
         """
 
         try:
-            self.socket.sendall(bytearray(f"{message}\n\r", "utf-8"))
+            self.socket.sendall(bytearray(f"{message}\n\r", self.encoding))
 
         # a socket error will be raised if the client has already disconnected,
         # in which case we want to silently fail
         except socket_.error:
             return
+
+    def disconnect(self) -> None:
+        """Disconnect the client from the server."""
+
+        self.socket.shutdown(socket_.SHUT_RDWR)
+        self.socket.close()

@@ -1,42 +1,100 @@
 """Commands module"""
 
-from cibo.action import Action
+from dataclasses import dataclass
+from typing import Callable, List, Optional
+
+from cibo.action import ActionProcessor
+from cibo.exceptions import UnrecognizedCommand
+from cibo.models.client import Client
+from cibo.telnet import TelnetServer
 
 
-class Command(Action):
-    """Aliases mapped to actions, available for client execution."""
+@dataclass
+class Command:
+    """Maps command alias to the action they should call."""
+
+    aliases: List[str]
+    action: Callable
+
+
+class CommandProcessor:
+    """Command processing abstraction layer. Establishes the allowed client commands and
+    command aliases, and maps them to action methods.
+    """
+
+    def __init__(self, telnet: TelnetServer) -> None:
+        """Creates the command processor instance.
+
+        Args:
+            telnet (TelnetServer):  The Telnet server to use when executing the action
+        """
+
+        self.telnet = telnet
+        self._action_processor = ActionProcessor(self.telnet)
 
     @property
-    def directional_aliases(self):
-        """Aliases for directional navigation."""
-        directions = {
-            "north": ("n", "north"),
-            "south": ("s", "south"),
-            "east": ("e", "east"),
-            "west": ("w", "west"),
-        }
+    def _directional_aliases(self) -> List[str]:
+        """Aliases for directional navigation.
 
-        return tuple(item for sublist in directions.values() for item in sublist)
+        Returns:
+            List[str]: Directional navigation aliases
+        """
+
+        return ["n", "north", "s", "south", "e", "east", "w", "west"]
 
     @property
-    def aliases(self):
-        """Aliases mapped to specific Actions."""
-        return {
-            "move": {"aliases": self.directional_aliases, "command": self.move},
-            "look": {"aliases": ("l", "look"), "command": self.look},
-            "quit": {
-                "aliases": ("exit", "quit", "leave", "logout"),
-                "command": self.quit_,
-            },
-        }
+    def _commands(self) -> List[Command]:
+        """Commands, their aliases, and the action methods the are mapped to.
 
-    def is_valid_command(self, input_: str) -> bool:
-        """Validates user input against existing aliases."""
-        for value in self.aliases.values():
-            if " " in input_ and input_[: input_.index(" ")] in value["aliases"]:
-                return True
+        Returns:
+            List[CommandAlias]: Commands available to the client
+        """
 
-            if input_ in value["aliases"]:
-                return True
+        return [
+            Command(
+                aliases=self._directional_aliases, action=self._action_processor.move
+            ),
+            Command(aliases=["look", "l"], action=self._action_processor.look),
+            Command(
+                aliases=["quit", "exit", "leave", "logout"],
+                action=self._action_processor.quit_,
+            ),
+            Command(aliases=["login"], action=self._action_processor.login),
+            Command(aliases=["register"], action=self._action_processor.register),
+            Command(aliases=["say"], action=self._action_processor.say),
+        ]
 
-        return False
+    def _get_command_action(self, client_command: str) -> Optional[Callable]:
+        """Returns the action for the command identified in the client input, if the
+        command alias exists.
+
+        Args:
+            _input (str): The client input text
+
+        Returns:
+            Optional[Callable]: The action method, if the command is valid
+        """
+        for mapped_command in self._commands:
+            if client_command in mapped_command.aliases:
+                return mapped_command.action
+
+        return None
+
+    def execute_action(self, client: Client, input_: str) -> None:
+        """Calls the action that is mapped to the command that the client sent.
+
+        Args:
+            input_ (str): The client input
+
+        Raises:
+            UnrecognizedCommand: Raise if the command is unrecognized
+        """
+
+        command, _separator, args = input_.partition(" ")
+
+        action = self._get_command_action(command)
+
+        if action is None:
+            raise UnrecognizedCommand(command)
+
+        action(client, args)
