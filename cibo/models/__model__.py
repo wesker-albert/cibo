@@ -2,11 +2,12 @@
 
 
 from marshmallow import Schema
-from peewee import Model, SqliteDatabase
+from peewee import Model as Model_
+from peewee import SqliteDatabase
 
 
-class DatabaseModel(Model):
-    """Base model for inheritance by other DB models."""
+class Model(Model_):
+    """Base model for inheritance by other database models."""
 
     class Meta:
         """Meta class that specifies the database."""

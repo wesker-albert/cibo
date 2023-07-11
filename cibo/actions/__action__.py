@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from cibo.models.client import Client
+from cibo.models import Client
 from cibo.password import Password
 from cibo.telnet import TelnetServer
 

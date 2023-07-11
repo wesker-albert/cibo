@@ -3,7 +3,7 @@
 from typing import List
 
 from cibo.actions import Action
-from cibo.models.client import Client
+from cibo.models import Client
 
 
 class Move(Action):

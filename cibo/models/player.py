@@ -7,10 +7,10 @@ to resume their adventure where they left offE.
 from marshmallow import Schema, fields, validate
 from peewee import AutoField, CharField, TextField
 
-from cibo.models.database import DatabaseModel
+from cibo.models import Model
 
 
-class Player(DatabaseModel):
+class Player(Model):
     """Represents a human-controlled player character."""
 
     id_ = AutoField()

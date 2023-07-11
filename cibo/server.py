@@ -12,7 +12,7 @@ from peewee import SqliteDatabase
 
 from cibo.decorator import load_environment_variables
 from cibo.event import EventProcessor
-from cibo.models.player import Player
+from cibo.models import Player
 from cibo.telnet import TelnetServer
 
 

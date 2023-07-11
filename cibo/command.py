@@ -7,7 +7,7 @@ from typing import List, Optional, Type
 
 from cibo.actions import Action, Finalize, Login, Look, Move, Quit, Register, Say
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
-from cibo.models.client import Client
+from cibo.models import Client
 from cibo.telnet import TelnetServer
 
 
