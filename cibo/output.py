@@ -3,7 +3,7 @@
 from textwrap import TextWrapper
 from typing import List
 
-from cibo.models import Client
+from cibo.client import Client
 
 # TODO: figure out what to do with this
 

@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from typing import List, Optional, Type
 
 from cibo.actions import Action, Finalize, Login, Look, Move, Quit, Register, Say
+from cibo.client import Client
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
-from cibo.models import Client
 from cibo.telnet import TelnetServer
 
 

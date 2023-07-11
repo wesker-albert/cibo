@@ -13,7 +13,7 @@ from enum import Enum
 from select import select
 from typing import List, Optional, Tuple
 
-from cibo.models import Client, ClientLoginState
+from cibo.client import Client, ClientLoginState
 
 
 class TelnetEventType(int, Enum):

@@ -1,4 +1,4 @@
-"""Database model meta and methods, for inheritance by all database models."""
+"""Data model meta and methods, for inheritance by all data models."""
 
 import os
 
@@ -9,7 +9,7 @@ from peewee import SqliteDatabase
 
 
 class Model(Model_):
-    """Base model for inheritance by other database models."""
+    """Base model for inheritance by other data models."""
 
     class Meta:
         """Meta class that specifies the database."""

@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
-from cibo.models.player import Player
+from cibo.models import Player
 
 
 class ClientLoginState(int, Enum):
@@ -41,7 +41,11 @@ class Client:
 
         return self.login_state is ClientLoginState.LOGGED_IN
 
-    def send_message(self, message: str) -> None:
+    @property
+    def _prompt(self) -> str:
+        return "> "
+
+    def _send_message(self, message: str) -> None:
         """Sends the message text to the client. The text will be printed out in
         the client's terminal.
 
@@ -50,12 +54,26 @@ class Client:
         """
 
         try:
-            self.socket.sendall(bytearray(f"{message}\n\r> ", self.encoding))
+            self.socket.sendall(bytearray(message, self.encoding))
 
         # a socket error will be raised if the client has already disconnected,
         # in which case we want to silently fail
         except socket_.error:
             return
+
+    def send_message(self, message: str) -> None:
+        """Sends the message text to the client, and apends a prompt at the end.
+
+        Args:
+            message (str): The body text of the message
+        """
+
+        self._send_message(f"{message}\n\r{self._prompt}")
+
+    def send_prompt(self) -> None:
+        """Sends a prompt to the client."""
+
+        self._send_message(self._prompt)
 
     def disconnect(self) -> None:
         """Disconnect the client from the server."""

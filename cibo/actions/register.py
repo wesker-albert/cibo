@@ -5,7 +5,8 @@ from typing import List
 from marshmallow import ValidationError
 
 from cibo.actions import Action
-from cibo.models import Client, Player, PlayerSchema
+from cibo.client import Client
+from cibo.models import Player, PlayerSchema
 
 
 class Register(Action):
