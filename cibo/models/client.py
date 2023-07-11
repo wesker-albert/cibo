@@ -25,8 +25,7 @@ class Client:
     buffer: str
     last_check: float
     login_state: ClientLoginState
-    registration_name: Optional[str]
-    registration_password_hash: Optional[str]
+    registration: Optional[Player]
     player: Optional[Player]
 
     @property
@@ -48,7 +47,7 @@ class Client:
         """
 
         try:
-            self.socket.sendall(bytearray(f"{message}\n\r", self.encoding))
+            self.socket.sendall(bytearray(f"{message}\n\r> ", self.encoding))
 
         # a socket error will be raised if the client has already disconnected,
         # in which case we want to silently fail

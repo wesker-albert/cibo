@@ -1,10 +1,19 @@
-"""Actions module"""
+"""Actions module.
+
+Any newly added Action classes will also need to have a Command() map added to the
+cibo.command.CommandProcessor _commands() method. Only then will the new Action be
+available to clients.
+"""
 
 
 from abc import ABC, abstractmethod
+from sqlite3 import IntegrityError
 from typing import List
 
+from marshmallow import ValidationError
+
 from cibo.models.client import Client
+from cibo.models.player import Player, PlayerSchema
 from cibo.password import Password
 from cibo.telnet import TelnetServer
 
@@ -90,25 +99,31 @@ class Register(Action):
         player_name = args[0]
         password = args[1]
 
-        if player_name == "name":
-            client.send_message("Please try again with an *actual* name.")
-            return
+        try:
+            Player(name=player_name, password=password).validate(PlayerSchema)
 
-        if password == "password":
-            client.send_message("Please try again with an *actual* password.")
-            return
+            # a temporary Player model is set on the client, to be created in the db if
+            # they call the Finalize action
+            client.registration = Player(
+                name=player_name, password=self._password_hasher.hash_(password)
+            )
 
-        # the username and hashed password are set to temporary vars on the client,
-        # to be used if they call the Finalize action
-        client.registration_name = player_name
-        client.registration_password_hash = self._password_hasher.hash_(password)
+            client.send_message(
+                f"Are you sure you want to create the player named '{player_name}'?\n"
+                "Type 'finalize' to finalize the player creation.\n"
+                "If you want to use a different name or password, you can 'register' "
+                "again.\n"
+                "Otherwise, feel free to 'login' to an already existing player."
+            )
 
-        client.send_message(
-            f"Are you sure you want to create the player named {player_name}?\n"
-            "Type 'finalize' to finalize the player creation. If you want to use a "
-            "different name or password, you can 'register' again.\n"
-            "Otherwise, feel free to 'login' to an already existing player."
-        )
+        except ValidationError:
+            client.send_message(
+                "Your player name or password don't meet criteria:\n"
+                "* Names must be 3-15 chars and only contain letters, numbers, or "
+                "underscores.\n"
+                "* Passwords must be minimum 8 chars.\n"
+                "Please 'register' again."
+            )
 
 
 class Finalize(Action):
@@ -129,11 +144,26 @@ class Finalize(Action):
             )
             return
 
-        if not client.registration_name or not client.registration_password_hash:
+        if not client.registration:
             client.send_message("You'll need to 'register' before you can 'finalize'.")
             return
 
-        _ = args
+        try:
+            client.registration.save()
+
+            client.send_message(
+                f"{client.registration.name} has been created. "
+                "You can now 'login' with this player."
+            )
+
+        except IntegrityError:
+            client.send_message(
+                f"Sorry, turns out the name '{client.registration.name}' is already "
+                "taken.\n"
+                "Please 'register' again with a different name."
+            )
+
+        client.registration = None
 
 
 class Login(Action):

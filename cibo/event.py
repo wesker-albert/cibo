@@ -90,5 +90,8 @@ class Input(Event):
                 try:
                     self._command_processor.process(client, input_)
 
-                except (UnrecognizedCommand, CommandMissingArguments) as ex:
+                except (
+                    UnrecognizedCommand,
+                    CommandMissingArguments,
+                ) as ex:
                     client.send_message(ex.message)
