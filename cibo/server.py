@@ -1,4 +1,4 @@
-"""Instantiates a telnet server, and then supplies event processing for the server, as
+"""Instantiates a telnet server. Provides event processing for the telnet server, as
 well as methods to control the server state.
 """
 
