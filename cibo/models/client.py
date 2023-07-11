@@ -1,4 +1,7 @@
-"""Client models"""
+"""A client is created by the server any time a user connection is established. It
+contains nonpersistent session information, necessary to carry out interactions
+between the user and the server.
+"""
 
 import socket as socket_
 from dataclasses import dataclass

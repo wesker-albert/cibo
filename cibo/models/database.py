@@ -1,4 +1,4 @@
-"""Database model"""
+"""Database model meta and methods, for inheritance by all database models."""
 
 
 from marshmallow import Schema

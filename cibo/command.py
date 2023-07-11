@@ -1,9 +1,11 @@
-"""Commands module"""
+"""Commands are specific strings of input a client can send to the server, that
+will in turn trigger the Action mapped to that Command.
+"""
 
 from dataclasses import dataclass
 from typing import List, Optional, Type
 
-from cibo.action import Action, Finalize, Login, Look, Move, Quit, Register, Say
+from cibo.actions import Action, Finalize, Login, Look, Move, Quit, Register, Say
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
 from cibo.models.client import Client
 from cibo.telnet import TelnetServer

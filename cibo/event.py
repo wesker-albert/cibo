@@ -1,10 +1,39 @@
-"""Event module"""
+"""Events that occur when a client interacts with the server, and a processor class
+that allows for the different event types to be processed as a batch.
+"""
 
 from abc import ABC, abstractmethod
 
 from cibo.command import CommandProcessor
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
 from cibo.telnet import TelnetServer
+
+
+class EventProcessor:
+    """Event processor abstraction layer for the server. Kicks off the consumption
+    and processing logic for each event type.
+    """
+
+    def __init__(self, telnet: TelnetServer) -> None:
+        """Creates the event processor instance.
+
+        Args:
+            telnet (TelnetServer): The Telnet server to use for event query and
+                processing
+        """
+
+        self._telnet = telnet
+
+        self._connect = Connect(self._telnet)
+        self._disconnect = Disconnect(self._telnet)
+        self._input = Input(self._telnet)
+
+    def process(self) -> None:
+        """Processes any new server events, of all types."""
+
+        self._connect.process()
+        self._disconnect.process()
+        self._input.process()
 
 
 class Event(ABC):
@@ -18,33 +47,6 @@ class Event(ABC):
         """Processes the logic for the specific event type."""
 
         pass
-
-
-class EventProcessor(Event):
-    """Event processor abstraction layer for the server. Kicks off the consumption
-    and processing logic for each event type.
-    """
-
-    def __init__(self, telnet: TelnetServer) -> None:
-        """Creates the event processor instance.
-
-        Args:
-            telnet (TelnetServer): The Telnet server to use for event query and
-                processing
-        """
-
-        super().__init__(telnet)
-
-        self._connect = Connect(self._telnet)
-        self._disconnect = Disconnect(self._telnet)
-        self._input = Input(self._telnet)
-
-    def process(self) -> None:
-        """Processes any new server events, of all types."""
-
-        self._connect.process()
-        self._disconnect.process()
-        self._input.process()
 
 
 class Connect(Event):

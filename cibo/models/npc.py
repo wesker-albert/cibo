@@ -1,4 +1,6 @@
-"""NPC Model"""
+"""An Npc is a non-player character, that a player might encounter while exploring
+the world. Some Npcs can be interacted with, in varying ways.
+"""
 
 from dataclasses import dataclass
 from typing import List

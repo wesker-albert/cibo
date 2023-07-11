@@ -1,4 +1,4 @@
-"""Decorator module"""
+"""Decorators that are useful to bootstrap class methods."""
 
 from functools import wraps
 from typing import Callable

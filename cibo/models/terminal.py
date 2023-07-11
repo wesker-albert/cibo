@@ -2,6 +2,8 @@
 
 from enum import Enum
 
+# TODO: figure out what to do with this
+
 
 class TerminalColors(str, Enum):
     """Codes to display color in terminal output."""

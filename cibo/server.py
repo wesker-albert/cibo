@@ -1,4 +1,6 @@
-"""Server module"""
+"""Instantiates a telnet server, and then supplies event processing for the server, as
+well as methods to control the server state.
+"""
 
 import os
 import threading

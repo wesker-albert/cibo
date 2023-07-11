@@ -1,4 +1,4 @@
-"""Hashing module"""
+"""Provides password hashing and verification."""
 
 from passlib.hash import bcrypt
 
@@ -19,6 +19,7 @@ class Password:
         Returns:
             str: The salted and hashed password.
         """
+
         return self._bcrypt.hash(password_plaintext)
 
     def verify(self, password_plaintext: str, password_hashed: str) -> bool:
@@ -31,4 +32,5 @@ class Password:
         Returns:
             bool: Returns true if password matches the hash
         """
+
         return self._bcrypt.verify(password_plaintext, password_hashed)

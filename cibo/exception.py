@@ -1,5 +1,6 @@
-"""Exception module"""
-
+"""Custom exceptions that can be raised under specific circumstances, to more clearly
+convey useful information that is particular to our server.
+"""
 
 from typing import List
 
@@ -25,7 +26,7 @@ class CommandMissingArguments(Exception):
 
         Args:
             command (str): The command the client sent
-            required_args (List[str]): Descriptions of the required args
+            required_args (List[str]): Descriptions of the required args for the command
         """
         joined_args = " ".join([str(x) for x in required_args])
 

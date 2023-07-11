@@ -1,4 +1,6 @@
-"""Room Models"""
+"""A Room is a space that exists within the world, and which Players and Npcs can
+occupy as well as navigate through.
+"""
 
 from dataclasses import dataclass
 from enum import Enum
