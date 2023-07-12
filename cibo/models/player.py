@@ -1,6 +1,6 @@
 """A Player represents a playable character, which a client logs into and assumes in
 order to interact with the world. Player information is persistent, allowing the client
-to resume their adventure where they left offE.
+to resume their adventure where they left off.
 """
 
 
