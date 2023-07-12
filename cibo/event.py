@@ -1,5 +1,8 @@
-"""Events occur when a client interacts with the server. The event processor allows for
-the different Event types to be processed as a batch.
+"""Events are server occurances of different types. Events can happen as a result of
+client interactions with the server, or (in future) can be scheduled based upon a
+tick timer or cron.
+
+The EventProcessor allows for the different Event types to be processed as a batch.
 """
 
 from cibo.command import CommandProcessor
@@ -8,8 +11,8 @@ from cibo.telnet import TelnetServer
 
 
 class EventProcessor:
-    """Event processor abstraction layer for the server. Kicks off the consumption
-    and processing logic for each Event type.
+    """Event processing abstraction layer for the server. Kicks off the processing
+    logic for each included Event type.
     """
 
     def __init__(
@@ -32,7 +35,7 @@ class EventProcessor:
         self._input = Input(self._telnet, self._command_processor)
 
     def process(self) -> None:
-        """Processes any new server Events, of all types."""
+        """Processes the different Event types."""
 
         self._connect.process()
         self._disconnect.process()

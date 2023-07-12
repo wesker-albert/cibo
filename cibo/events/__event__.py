@@ -1,3 +1,5 @@
+"""Abstraction to be used as a base class for every Event."""
+
 from abc import ABC, abstractmethod
 
 from cibo.telnet import TelnetServer
@@ -11,6 +13,6 @@ class Event(ABC):
 
     @abstractmethod
     def process(self) -> None:
-        """Processes the logic for the specific event type."""
+        """Processes the logic for the specific Event type."""
 
         pass

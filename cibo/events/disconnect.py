@@ -1,11 +1,13 @@
+"""Clients who have disconnected from the server, since last update poll."""
+
 from cibo.events import Event
 
 
 class Disconnect(Event):
-    """Client disconnection Event."""
+    """Clients who have disconnected from the server, since last update poll."""
 
     def process(self) -> None:
-        """Process client disconnection events."""
+        """Process client disconnection Events."""
 
         for dc_client in self._telnet.get_disconnected_clients():
             for client in self._telnet.get_connected_clients():

@@ -1,3 +1,7 @@
+"""Input send from clients since the last poll, that needs to be processed by the
+CommandProcessor. If the input contains a valid Command, further logic will be carried
+out."""
+
 from cibo.command import CommandProcessor
 from cibo.events import Event
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
@@ -5,8 +9,9 @@ from cibo.telnet import TelnetServer
 
 
 class Input(Event):
-    """Incoming client input Event. Kicks off the Command processor, to process
-    the input.
+    """Input send from clients since the last poll, that needs to be processed by the
+    CommandProcessor. If the input contains a valid Command, further logic will be
+    carried out.
     """
 
     def __init__(

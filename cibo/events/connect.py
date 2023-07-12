@@ -1,8 +1,10 @@
+"""Clients who have connected to the server, since last update poll."""
+
 from cibo.events import Event
 
 
 class Connect(Event):
-    """Client connection Event."""
+    """Clients who have connected to the server, since last update poll."""
 
     def process(self) -> None:
         """Process new client connection Events."""
