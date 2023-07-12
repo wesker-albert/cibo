@@ -1,42 +1,121 @@
-"""Commands module"""
+"""Commands are specific strings of input a client can send to the server, that
+will in turn trigger the Action mapped to that Command.
+"""
 
-from cibo.action import Action
+from dataclasses import dataclass
+from typing import List, Optional, Type
+
+from cibo.actions import (
+    Action,
+    Finalize,
+    Login,
+    Logout,
+    Look,
+    Move,
+    Quit,
+    Register,
+    Say,
+)
+from cibo.client import Client
+from cibo.exception import CommandMissingArguments, UnrecognizedCommand
+from cibo.telnet import TelnetServer
 
 
-class Command(Action):
-    """Aliases mapped to actions, available for client execution"""
+@dataclass
+class Command:
+    """Maps command aliases to the action they should call."""
+
+    aliases: List[str]
+    action: Type[Action]
+
+
+class CommandProcessor:
+    """Command processing abstraction layer. Establishes the allowed client commands and
+    command aliases, and maps them to action methods.
+    """
+
+    def __init__(self, telnet: TelnetServer) -> None:
+        """Creates the command processor instance.
+
+        Args:
+            telnet (TelnetServer):  The Telnet server to use when executing the action
+        """
+
+        self._telnet = telnet
 
     @property
-    def directional_aliases(self):
-        """Aliases for directional navigation"""
-        directions = {
-            "north": ("n", "north"),
-            "south": ("s", "south"),
-            "east": ("e", "east"),
-            "west": ("w", "west"),
-        }
+    def _commands(self) -> List[Command]:
+        """Commands, their aliases, and the Action class they are mapped to.
 
-        return tuple(item for sublist in directions.values() for item in sublist)
+        Returns:
+            List[Command]: Commands available to the client
+        """
 
-    @property
-    def aliases(self):
-        """Aliases mapped to specific Actions"""
-        return {
-            "move": {"aliases": self.directional_aliases, "command": self.move},
-            "look": {"aliases": ("l", "look"), "command": self.look},
-            "quit": {
-                "aliases": ("exit", "quit", "leave", "logout"),
-                "command": self.quit_,
-            },
-        }
+        # TODO: the alias strings should live in the db, not be hardcoded
+        return [
+            Command(
+                aliases=["n", "north", "s", "south", "e", "east", "w", "west"],
+                action=Move,
+            ),
+            Command(
+                aliases=["look", "l"],
+                action=Look,
+            ),
+            Command(aliases=["quit"], action=Quit),
+            Command(aliases=["login"], action=Login),
+            Command(aliases=["logout"], action=Logout),
+            Command(aliases=["register"], action=Register),
+            Command(aliases=["finalize"], action=Finalize),
+            Command(aliases=["say"], action=Say),
+        ]
 
-    def is_valid_command(self, input_: str) -> bool:
-        """Validates user input against existing aliases"""
-        for _key, value in self.aliases.items():
-            if " " in input_ and input_[: input_.index(" ")] in value["aliases"]:
-                return True
+    def _get_command_action(self, client_command: str) -> Optional[Type[Action]]:
+        """Returns the Action for the command identified in the client input, if the
+        command alias exists.
 
-            if input_ in value["aliases"]:
-                return True
+        Args:
+            client_command (str): The command the client sent
 
-        return False
+        Returns:
+            Optional[Type[Action]]: The action class, if the command is valid
+        """
+        for mapped_command in self._commands:
+            if client_command in mapped_command.aliases:
+                return mapped_command.action
+
+        return None
+
+    def process(self, client: Client, input_: str) -> None:
+        """Instantiates the Action that is mapped to the command that the client sent
+        and then processes the associated logic.
+
+        Args:
+            client (Client): The client who sent the command input
+            input_ (str): The client command and args
+
+        Raises:
+            UnrecognizedCommand: The client command is unrecognized
+            CommandMissingArguments: The client command is missing required args
+        """
+
+        # separate the command from the args, then also split each of the individual
+        # args into a list
+        command, _separator, args = input_.partition(" ")
+        args = args.split(" ")
+
+        action = self._get_command_action(command)
+
+        if action is None:
+            raise UnrecognizedCommand(command)
+
+        action_instance = action(self._telnet)
+
+        try:
+            action_instance.process(client, args)
+
+        # an IndexError means that the client's command was missing an argument index
+        # that this specific action requires
+        except IndexError as ex:
+            raise CommandMissingArguments(
+                command, action_instance.required_args()
+            ) from ex

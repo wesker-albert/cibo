@@ -1,5 +1,8 @@
-"""Server module"""
+"""Instantiates a telnet server. Provides event processing for the telnet server, as
+well as methods to control the server state.
+"""
 
+import os
 import threading
 from enum import Enum
 from time import sleep
@@ -7,18 +10,16 @@ from typing import Optional
 
 from peewee import SqliteDatabase
 
-from cibo.events import Events
-from cibo.messages import Messages
-from cibo.models.player import Player
-from cibo.output import Output
+from cibo.decorator import load_environment_variables
+from cibo.event import EventProcessor
+from cibo.models import Player
 from cibo.telnet import TelnetServer
 
 
 class Server:
-    """
-    A telnet server that once started, listens for incoming client events and input.
-    When an event is received, it determines the proper strategy interface then
-    delegates the logic.
+    """A telnet server that once started, listens for incoming client events and input.
+    When a new event is received upon update, it calls upon the event processor to
+    determine event type and then carry out the event logic.
     """
 
     class Status(int, Enum):
@@ -29,46 +30,46 @@ class Server:
         SHUTTING_DOWN = 3
         STOPPED = 4
 
-    def __init__(self, port: int = 51234) -> None:
-        """
-        Creates a dormant telnet server. Once instantiated, it can be started and
+    @load_environment_variables
+    def __init__(self, port: Optional[int] = None) -> None:
+        """Creates a dormant telnet server. Once instantiated, it can be started and
         stopped.
 
         Args:
-            port (int, optional): The port for telnet to listen on. Defaults to 51234.
+            port (int, optional): The port for telnet to listen on. Defaults to 51234
         """
 
-        self.telnet = TelnetServer(port=port)
-        self.database = SqliteDatabase("cibo_database.db")
-        self.messages = Messages(filename="resources/output.json")
-        self.output = Output(telnet=self.telnet, messages=self.messages)
-        self.events = Events(output=self.output)
+        self.database = SqliteDatabase(os.getenv("DATABASE_PATH", "cibo_database.db"))
 
-        self.thread: Optional[threading.Thread] = None
-        self.status = Server.Status.STOPPED
-        self.clients = []
+        self._port = port or int(os.getenv("SERVER_PORT", "51234"))
+        self._telnet = TelnetServer(port=self._port)
+        self._event_processor = EventProcessor(self._telnet)
+
+        self._thread: Optional[threading.Thread] = None
+        self._status = self.Status.STOPPED
 
     @property
     def is_running(self) -> bool:
-        """
-        Check if the server is active and listening.
+        """Check if the server is active and listening.
 
         Returns:
-            bool: Is the server is running or not.
+            bool: Is the server is running or not
         """
 
-        return self.status is Server.Status.RUNNING
+        return self._status is self.Status.RUNNING
 
-    def __start_server(self) -> None:
-        """Start the telnet server and begin listening for events."""
+    def _start_server(self) -> None:
+        """Start the telnet server and begin listening for events. Process any new
+        events received using the event processor.
+        """
 
-        self.status = Server.Status.STARTING_UP
-        self.telnet.listen()
-        self.status = Server.Status.RUNNING
+        self._status = self.Status.STARTING_UP
+        self._telnet.listen()
+        self._status = self.Status.RUNNING
 
         while self.is_running:
-            self.telnet.update()
-            self.events.process(telnet=self.telnet, clients=self.clients)
+            self._telnet.update()
+            self._event_processor.process()
 
             sleep(0.15)
 
@@ -81,17 +82,17 @@ class Server:
     def start(self) -> None:
         """Create a thread and start the server."""
 
-        if self.status is Server.Status.STOPPED:
-            self.thread = threading.Thread(target=self.__start_server)
-            self.thread.start()
+        if self._status is self.Status.STOPPED:
+            self._thread = threading.Thread(target=self._start_server)
+            self._thread.start()
 
     def stop(self) -> None:
         """Stop the currently running server and end the thread."""
 
-        if self.is_running and self.thread:
-            self.status = Server.Status.SHUTTING_DOWN
+        if self.is_running and self._thread:
+            self._status = self.Status.SHUTTING_DOWN
 
-            self.telnet.shutdown()
-            self.thread.join()
+            self._telnet.shutdown()
+            self._thread.join()
 
-            self.status = Server.Status.STOPPED
+            self._status = self.Status.STOPPED
