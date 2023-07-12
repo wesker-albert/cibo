@@ -1,4 +1,4 @@
-"""Exits Action"""
+"""Returns the available exits."""
 
 from typing import List
 

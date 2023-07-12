@@ -1,4 +1,4 @@
-"""Move Action"""
+"""Navigates a player between available rooms."""
 
 from typing import List
 
@@ -7,7 +7,7 @@ from cibo.client import Client
 
 
 class Move(Action):
-    """Moves a client between available rooms."""
+    """Navigates a player between available rooms."""
 
     def required_args(self) -> List[str]:
         """Descriptions of the args required for the action."""

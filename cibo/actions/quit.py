@@ -1,4 +1,4 @@
-"""Quit Action"""
+"""Quits the game and disconnects the client."""
 
 from typing import List
 

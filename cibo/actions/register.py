@@ -1,8 +1,9 @@
-"""Register Action"""
+"""Register a new player with the server."""
 
 from typing import List
 
 from marshmallow import ValidationError
+from peewee import DoesNotExist
 
 from cibo.actions import Action
 from cibo.client import Client
@@ -22,13 +23,26 @@ class Register(Action):
 
         if client.is_logged_in:
             client.send_message(
-                "If you want to create a new player, you'll need to log out of your "
-                "current player session."
+                "You register to vote, even though both candidates aren't that great."
             )
             return
 
         player_name = args[0]
         password = args[1]
+
+        # verify a Player with the same name doesn't already exist
+        try:
+            _existing_player = Player.get(Player.name == player_name)
+
+            client.send_message(
+                f"Sorry, turns out the name '{player_name}' is already "
+                "taken.\n"
+                "Please 'register' again with a different name."
+            )
+            return
+
+        except DoesNotExist:
+            pass
 
         try:
             Player(name=player_name, password=password).validate(PlayerSchema)
@@ -41,12 +55,13 @@ class Register(Action):
 
             client.send_message(
                 f"Are you sure you want to create the player named '{player_name}'?\n"
-                "Type 'finalize' to finalize the player creation.\n"
-                "If you want to use a different name or password, you can 'register' "
+                "* Type 'finalize' to finalize the player creation.\n"
+                "* If you want to use a different name or password, you can 'register' "
                 "again.\n"
-                "Otherwise, feel free to 'login' to an already existing player."
+                "* Otherwise, feel free to 'login' to an already existing player."
             )
 
+        # schema validation failed for the Player model
         except ValidationError:
             client.send_message(
                 "Your player name or password don't meet criteria:\n"

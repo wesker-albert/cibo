@@ -1,6 +1,6 @@
 """A client is created by the server any time a user connection is established. It
-contains nonpersistent session information, necessary to carry out interactions
-between the user and the server.
+contains nonpersistent session information and relationships, necessary to carry
+out interactions between the user and the server.
 """
 
 import socket as socket_
@@ -43,6 +43,12 @@ class Client:
 
     @property
     def _prompt(self) -> str:
+        """The prompt that appears before the client's terminal input.
+
+        Returns:
+            str: The prompt text
+        """
+
         return "> "
 
     def _send_message(self, message: str) -> None:
@@ -68,12 +74,12 @@ class Client:
             message (str): The body text of the message
         """
 
-        self._send_message(f"{message}\n\r{self._prompt}")
+        self._send_message(f"\n\r\n\r{message}\n\r\n\r{self._prompt}")
 
     def send_prompt(self) -> None:
         """Sends a prompt to the client."""
 
-        self._send_message(self._prompt)
+        self._send_message(f"\n\r{self._prompt}")
 
     def disconnect(self) -> None:
         """Disconnect the client from the server."""

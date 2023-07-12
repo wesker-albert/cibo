@@ -10,10 +10,11 @@ from cibo.actions.__action__ import Action
 from cibo.actions.exits import Exits
 from cibo.actions.finalize import Finalize
 from cibo.actions.login import Login
+from cibo.actions.logout import Logout
 from cibo.actions.look import Look
 from cibo.actions.move import Move
 from cibo.actions.quit import Quit
 from cibo.actions.register import Register
 from cibo.actions.say import Say
 
-_ = Action, Exits, Finalize, Login, Look, Move, Quit, Register, Say
+_ = Action, Exits, Finalize, Login, Logout, Look, Move, Quit, Register, Say

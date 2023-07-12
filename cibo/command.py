@@ -5,7 +5,17 @@ will in turn trigger the Action mapped to that Command.
 from dataclasses import dataclass
 from typing import List, Optional, Type
 
-from cibo.actions import Action, Finalize, Login, Look, Move, Quit, Register, Say
+from cibo.actions import (
+    Action,
+    Finalize,
+    Login,
+    Logout,
+    Look,
+    Move,
+    Quit,
+    Register,
+    Say,
+)
 from cibo.client import Client
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
 from cibo.telnet import TelnetServer
@@ -51,11 +61,9 @@ class CommandProcessor:
                 aliases=["look", "l"],
                 action=Look,
             ),
-            Command(
-                aliases=["quit", "leave", "logout"],
-                action=Quit,
-            ),
+            Command(aliases=["quit"], action=Quit),
             Command(aliases=["login"], action=Login),
+            Command(aliases=["logout"], action=Logout),
             Command(aliases=["register"], action=Register),
             Command(aliases=["finalize"], action=Finalize),
             Command(aliases=["say"], action=Say),

@@ -1,4 +1,4 @@
-"""Finalize Action"""
+"""Finalizes the creation of a new player."""
 
 from sqlite3 import IntegrityError
 from typing import List
@@ -20,8 +20,7 @@ class Finalize(Action):
 
         if client.is_logged_in:
             client.send_message(
-                "If you want to create a new player, you'll need to log out of your "
-                "current player session."
+                "You finalize your written will, leaving your whole estate to your cat."
             )
             return
 
@@ -37,6 +36,7 @@ class Finalize(Action):
                 "You can now 'login' with this player."
             )
 
+        # a Player with the same name already exists
         except IntegrityError:
             client.send_message(
                 f"Sorry, turns out the name '{client.registration.name}' is already "

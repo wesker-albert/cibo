@@ -1,4 +1,4 @@
-"""Look Action"""
+"""Returns information about the room or object targeted."""
 
 from typing import List
 
