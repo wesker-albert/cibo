@@ -11,37 +11,41 @@ class Finalize(Action):
     """Finalizes the creation of a new player."""
 
     def required_args(self) -> List[str]:
-        """Descriptions of the args required for the action."""
-
         return []
 
     def process(self, client: Client, args: List[str]):
-        """Process the logic for the action."""
-
         if client.is_logged_in:
-            client.send_message(
-                "You finalize your written will, leaving your whole estate to your cat."
+            self._send.private(
+                client,
+                "You finalize your written will, leaving your whole estate "
+                "to your cat.",
             )
             return
 
         if not client.registration:
-            client.send_message("You'll need to 'register' before you can 'finalize'.")
+            self._send.private(
+                client,
+                "You'll need to #GREEN#register#NOCOLOR# before you can "
+                "#GREEN#finalize#NOCLOR#.",
+            )
             return
 
         try:
             client.registration.save()
 
-            client.send_message(
+            self._send.private(
+                client,
                 f"{client.registration.name} has been created. "
-                "You can now 'login' with this player."
+                "You can now #GREEN#login#NOCOLOR# with this player.",
             )
 
         # a Player with the same name already exists
         except IntegrityError:
-            client.send_message(
-                f"Sorry, turns out the name '{client.registration.name}' is already "
-                "taken.\n"
-                "Please 'register' again with a different name."
+            self._send.private(
+                client,
+                "Sorry, turns out the name "
+                f"#MAGENTA#{client.registration.name}#NOCOLOR# is already "
+                "taken. Please #GREEN#register#NOCOLOR# again with a different name.",
             )
 
         client.registration = None

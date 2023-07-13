@@ -2,6 +2,7 @@
 CommandProcessor. If the input contains a valid Command, further logic will be carried
 out."""
 
+from cibo.actions import _Error
 from cibo.command import CommandProcessor
 from cibo.events import Event
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
@@ -22,8 +23,6 @@ class Input(Event):
         self._command_processor = command_processor
 
     def process(self) -> None:
-        """Process incoming client input."""
-
         for client, input_ in self._telnet.get_client_input():
             if input_:
                 try:
@@ -33,4 +32,4 @@ class Input(Event):
                     UnrecognizedCommand,
                     CommandMissingArguments,
                 ) as ex:
-                    client.send_message(ex.message)
+                    _Error(self._telnet).process(client, [ex.message])

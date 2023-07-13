@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from cibo.client import Client
+from cibo.output import Output
 from cibo.password import Password
 from cibo.telnet import TelnetServer
 
@@ -13,6 +14,7 @@ class Action(ABC):
 
     def __init__(self, telnet: TelnetServer) -> None:
         self._telnet = telnet
+        self._send = Output(self._telnet)
         self._password_hasher = Password()
 
     def _join_args(self, args: List[str]) -> str:
@@ -31,7 +33,7 @@ class Action(ABC):
     @abstractmethod
     def required_args(self) -> List[str]:
         """Descriptions of the args required for the Action. If no arguments are
-        necessary for the Action, return an empty list.
+        necessary for the Action, returns an empty list.
 
         Returns:
             List[str]: Descriptions for each required argument
@@ -45,7 +47,7 @@ class Action(ABC):
 
         Args:
             client (Client): The client who triggered the Action
-            args (List[str]): The args included with the command maped to the Action
+            args (List[str]): The args necessary to the Action
         """
 
         pass

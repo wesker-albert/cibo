@@ -10,25 +10,22 @@ class Say(Action):
     """Say something to the current room."""
 
     def required_args(self) -> List[str]:
-        """Descriptions of the args required for the action."""
-
         return []
 
     def process(self, client: Client, args: List[str]):
-        """Process the logic for the action."""
-
         if not client.is_logged_in or not client.player:
             client.send_prompt()
             return
 
         if len(self._join_args(args)) == 0:
-            client.send_message(
-                "You try to think of something clever to say, but fail."
+            self._send.private(
+                client, "You try to think of something clever to say, but fail."
             )
             return
 
-        for connected_client in self._telnet.get_connected_clients():
-            if connected_client.is_logged_in:
-                connected_client.send_message(
-                    f'{client.player.name} says, "{self._join_args(args)}"'
-                )
+        self._send.local(
+            f'#MAGENTA#{client.player.name}#NOCOLOR# says, "{self._join_args(args)}"',
+            [client],
+        )
+
+        self._send.private(client, f'You say, "{self._join_args(args)}"')

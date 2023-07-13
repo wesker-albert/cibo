@@ -13,17 +13,14 @@ class Login(Action):
     """Log in to an existing player on the server."""
 
     def required_args(self) -> List[str]:
-        """Descriptions of the args required for the action."""
-
         return ["name", "password"]
 
     def process(self, client: Client, args: List[str]):
-        """Process the logic for the action."""
-
         if client.is_logged_in:
-            client.send_message(
+            self._send.private(
+                client,
                 "You login to Facebook, to make sure your ex isn't doing better "
-                "than you are."
+                "than you are.",
             )
             return
 
@@ -35,15 +32,17 @@ class Login(Action):
 
         # a Player doesn't exist with the entered name
         except DoesNotExist:
-            client.send_message(
-                f"A player by the name '{player_name}' does not exist.\n"
-                "If you want, you can 'register' a new player with that name."
+            self._send.private(
+                client,
+                f"A player by the name #MAGENTA#{player_name}#NOCOLOR# does not exist. "
+                "If you want, you can #GREEN#register#NOCOLOR# a new player with "
+                "that name.",
             )
             return
 
         # the password the client entered doesn't match the one in the Player entry
         if not self._password_hasher.verify(password, existing_player.password):
-            client.send_message("Incorrect password.")
+            self._send.private(client, "#LRED#Incorrect password.#NOCOLOR#")
             return
 
         # check to see if another client is already logged in with the Player
@@ -53,16 +52,24 @@ class Login(Action):
                 and connected_client.player
                 and connected_client.player.name == player_name
             ):
-                client.send_message(
-                    f"The player '{player_name}' is already logged in. If this "
-                    "player belongs to you and you think it's been stolen, please "
-                    "contact the admin."
+                self._send.private(
+                    client,
+                    f"The player #MAGENTA#{player_name}#NOCOLOR# is already logged in. "
+                    "If this player belongs to you and you think it's been stolen, "
+                    "please contact the admin.",
                 )
                 return
 
         client.player = existing_player
         client.login_state = ClientLoginState.LOGGED_IN
 
-        client.send_message(
-            "You awaken from a pleasant dream, and find yourself amongst friends."
+        self._send.private(
+            client,
+            "You awaken from a pleasant dream, and find yourself amongst friends.",
+        )
+
+        self._send.local(
+            f"#MAGENTA#{client.player.name}#NOCOLOR# falls from heaven. It looks like "
+            "it hurt.",
+            [client],
         )
