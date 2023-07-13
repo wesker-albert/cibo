@@ -10,6 +10,7 @@ from typing import Optional
 
 from peewee import SqliteDatabase
 
+from cibo.command import CommandProcessor
 from cibo.decorator import load_environment_variables
 from cibo.event import EventProcessor
 from cibo.models import Player
@@ -39,11 +40,13 @@ class Server:
             port (int, optional): The port for telnet to listen on. Defaults to 51234
         """
 
-        self.database = SqliteDatabase(os.getenv("DATABASE_PATH", "cibo_database.db"))
+        self._database = SqliteDatabase(os.getenv("DATABASE_PATH", "cibo_database.db"))
 
         self._port = port or int(os.getenv("SERVER_PORT", "51234"))
         self._telnet = TelnetServer(port=self._port)
-        self._event_processor = EventProcessor(self._telnet)
+
+        self._command_processor = CommandProcessor(self._telnet)
+        self._event_processor = EventProcessor(self._telnet, self._command_processor)
 
         self._thread: Optional[threading.Thread] = None
         self._status = self.Status.STOPPED
@@ -76,8 +79,8 @@ class Server:
     def create_db(self) -> None:
         """Create the sqlite DB and necessary tables."""
 
-        self.database.connect()
-        self.database.create_tables([Player])
+        self._database.connect()
+        self._database.create_tables([Player])
 
     def start(self) -> None:
         """Create a thread and start the server."""

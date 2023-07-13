@@ -49,7 +49,7 @@ class Client:
             str: The prompt text
         """
 
-        return "> "
+        return "\r\n> "
 
     def _send_message(self, message: str) -> None:
         """Sends the message text to the client. The text will be printed out in
@@ -74,12 +74,12 @@ class Client:
             message (str): The body text of the message
         """
 
-        self._send_message(f"\n\r\n\r{message}\n\r\n\r{self._prompt}")
+        self._send_message(message)
 
     def send_prompt(self) -> None:
         """Sends a prompt to the client."""
 
-        self._send_message(f"\n\r{self._prompt}")
+        self._send_message(self._prompt)
 
     def disconnect(self) -> None:
         """Disconnect the client from the server."""

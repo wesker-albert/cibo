@@ -1,99 +1,42 @@
-"""Events that occur when a client interacts with the server, and a processor class
-that allows for the different event types to be processed as a batch.
+"""Events are server occurances of different types. Events can happen as a result of
+client interactions with the server, or (in future) can be scheduled based upon a
+tick timer or cron.
+
+The EventProcessor allows for the different Event types to be processed as a batch.
 """
 
-from abc import ABC, abstractmethod
-
 from cibo.command import CommandProcessor
-from cibo.exception import CommandMissingArguments, UnrecognizedCommand
+from cibo.events import Connect, Disconnect, Input
 from cibo.telnet import TelnetServer
 
 
 class EventProcessor:
-    """Event processor abstraction layer for the server. Kicks off the consumption
-    and processing logic for each event type.
+    """Event processing abstraction layer for the server. Kicks off the processing
+    logic for each included Event type.
     """
 
-    def __init__(self, telnet: TelnetServer) -> None:
-        """Creates the event processor instance.
+    def __init__(
+        self, telnet: TelnetServer, command_processor: CommandProcessor
+    ) -> None:
+        """Creates the Event processor instance.
 
         Args:
             telnet (TelnetServer): The Telnet server to use for event query and
                 processing
+            command_processor (CommandProcessor): The CommandProcessor used for
+                processing client input
         """
 
         self._telnet = telnet
+        self._command_processor = command_processor
 
         self._connect = Connect(self._telnet)
         self._disconnect = Disconnect(self._telnet)
-        self._input = Input(self._telnet)
+        self._input = Input(self._telnet, self._command_processor)
 
     def process(self) -> None:
-        """Processes any new server events, of all types."""
+        """Processes the different Event types."""
 
         self._connect.process()
         self._disconnect.process()
         self._input.process()
-
-
-class Event(ABC):
-    """The base interface used by other event classes."""
-
-    def __init__(self, telnet: TelnetServer) -> None:
-        self._telnet = telnet
-
-    @abstractmethod
-    def process(self) -> None:
-        """Processes the logic for the specific event type."""
-
-        pass
-
-
-class Connect(Event):
-    """Client connection event."""
-
-    def process(self) -> None:
-        """Process new client connection events."""
-
-        for client in self._telnet.get_new_clients():
-            client.send_message(
-                "Welcome to cibo.\n"
-                "* Enter 'register name password' to create a new player.\n"
-                "* Enter 'login name password' to log in to an existing player."
-            )
-
-
-class Disconnect(Event):
-    """Client disconnection event."""
-
-    def process(self) -> None:
-        """Process client disconnection events."""
-
-        for dc_client in self._telnet.get_disconnected_clients():
-            for client in self._telnet.get_connected_clients():
-                client.send_message(f"Client {dc_client.address} disconnected.")
-
-
-class Input(Event):
-    """Incoming client input event. Kicks off the command processor, to process
-    the input.
-    """
-
-    def __init__(self, telnet: TelnetServer) -> None:
-        super().__init__(telnet)
-
-        self._command_processor = CommandProcessor(self._telnet)
-
-    def process(self) -> None:
-        """Process incoming client input."""
-
-        for client, input_ in self._telnet.get_client_input():
-            if input_:
-                try:
-                    self._command_processor.process(client, input_)
-
-                except (
-                    UnrecognizedCommand,
-                    CommandMissingArguments,
-                ) as ex:
-                    client.send_message(ex.message)

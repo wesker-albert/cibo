@@ -79,6 +79,7 @@ class CommandProcessor:
         Returns:
             Optional[Type[Action]]: The action class, if the command is valid
         """
+
         for mapped_command in self._commands:
             if client_command in mapped_command.aliases:
                 return mapped_command.action

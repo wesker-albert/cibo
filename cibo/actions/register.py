@@ -14,16 +14,13 @@ class Register(Action):
     """Register a new player with the server."""
 
     def required_args(self) -> List[str]:
-        """Descriptions of the args required for the action."""
-
         return ["name", "password"]
 
     def process(self, client: Client, args: List[str]):
-        """Process the logic for the action."""
-
         if client.is_logged_in:
-            client.send_message(
-                "You register to vote, even though both candidates aren't that great."
+            self._send.private(
+                client,
+                "You register to vote, even though both candidates aren't that great.",
             )
             return
 
@@ -34,10 +31,10 @@ class Register(Action):
         try:
             _existing_player = Player.get(Player.name == player_name)
 
-            client.send_message(
-                f"Sorry, turns out the name '{player_name}' is already "
-                "taken.\n"
-                "Please 'register' again with a different name."
+            self._send.private(
+                client,
+                f"Sorry, turns out the name #MAGENTA#{player_name}#NOCOLOR# is already "
+                "taken. Please #GREEN#register#NOCOLOR# again with a different name.",
             )
             return
 
@@ -53,20 +50,42 @@ class Register(Action):
                 name=player_name, password=self._password_hasher.hash_(password)
             )
 
-            client.send_message(
-                f"Are you sure you want to create the player named '{player_name}'?\n"
-                "* Type 'finalize' to finalize the player creation.\n"
-                "* If you want to use a different name or password, you can 'register' "
-                "again.\n"
-                "* Otherwise, feel free to 'login' to an already existing player."
+            self._send.private(
+                client,
+                "Are you sure you want to create the player named "
+                f"#MAGENTA#{player_name}#NOCOLOR#?",
+                prompt=False,
+            )
+            self._send.private(
+                client,
+                "Type #GREEN#finalize#NOCOLOR# to finalize the player creation. "
+                "If you want to use a different name or password, you can "
+                "#GREEN#register#NOCOLOR# again.",
+                prompt=False,
+            )
+            self._send.private(
+                client,
+                "Otherwise, feel free to #GREEN#login#NOCOLOR# to an already "
+                "existing player.",
             )
 
         # schema validation failed for the Player model
         except ValidationError:
-            client.send_message(
-                "Your player name or password don't meet criteria:\n"
-                "* Names must be 3-15 chars and only contain letters, numbers, or "
-                "underscores.\n"
-                "* Passwords must be minimum 8 chars.\n"
-                "Please 'register' again."
+            self._send.private(
+                client,
+                "#LRED#Your player name or password don't meet criteria.#NOCOLOR#",
+                prompt=False,
             )
+            self._send.private(
+                client,
+                "Names must be 3-15 chars and only contain letters, numbers, or "
+                "underscores.",
+                prompt=False,
+            )
+            self._send.private(
+                client,
+                "Passwords must be minimum 8 chars.",
+                newline=False,
+                prompt=False,
+            )
+            self._send.private(client, "Please #GREEN#register#NOCOLOR# again.")
