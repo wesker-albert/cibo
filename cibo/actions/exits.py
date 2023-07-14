@@ -9,6 +9,9 @@ from cibo.client import Client
 class Exits(Action):
     """Returns the available exits."""
 
+    def aliases(self) -> List[str]:
+        return []
+
     def required_args(self) -> List[str]:
         return []
 

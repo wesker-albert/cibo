@@ -9,6 +9,9 @@ from cibo.client import Client
 class _Connect(Action):
     """Inform the client they have connected to the server."""
 
+    def aliases(self) -> List[str]:
+        return []
+
     def required_args(self) -> List[str]:
         return []
 

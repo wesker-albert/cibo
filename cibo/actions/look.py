@@ -9,6 +9,9 @@ from cibo.client import Client
 class Look(Action):
     """Returns information about the room or object targeted."""
 
+    def aliases(self) -> List[str]:
+        return []
+
     def required_args(self) -> List[str]:
         return []
 

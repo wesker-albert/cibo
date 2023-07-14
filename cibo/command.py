@@ -5,17 +5,7 @@ will in turn trigger the Action mapped to that Command.
 from dataclasses import dataclass
 from typing import List, Optional, Type
 
-from cibo.actions import (
-    Action,
-    Finalize,
-    Login,
-    Logout,
-    Look,
-    Move,
-    Quit,
-    Register,
-    Say,
-)
+from cibo.actions import ACTIONS, Action
 from cibo.client import Client
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
 from cibo.telnet import TelnetServer
@@ -51,22 +41,9 @@ class CommandProcessor:
             List[Command]: Commands available to the client
         """
 
-        # TODO: the alias strings should live in the db, not be hardcoded
         return [
-            Command(
-                aliases=["n", "north", "s", "south", "e", "east", "w", "west"],
-                action=Move,
-            ),
-            Command(
-                aliases=["look", "l"],
-                action=Look,
-            ),
-            Command(aliases=["quit"], action=Quit),
-            Command(aliases=["login"], action=Login),
-            Command(aliases=["logout"], action=Logout),
-            Command(aliases=["register"], action=Register),
-            Command(aliases=["finalize"], action=Finalize),
-            Command(aliases=["say"], action=Say),
+            Command(aliases=action(self._telnet).aliases(), action=action)
+            for action in ACTIONS
         ]
 
     def _get_command_action(self, client_command: str) -> Optional[Type[Action]]:

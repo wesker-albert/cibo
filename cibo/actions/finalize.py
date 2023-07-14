@@ -10,6 +10,9 @@ from cibo.client import Client
 class Finalize(Action):
     """Finalizes the creation of a new player."""
 
+    def aliases(self) -> List[str]:
+        return ["finalize"]
+
     def required_args(self) -> List[str]:
         return []
 

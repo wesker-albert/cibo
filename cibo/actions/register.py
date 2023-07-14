@@ -13,6 +13,9 @@ from cibo.models import Player, PlayerSchema
 class Register(Action):
     """Register a new player with the server."""
 
+    def aliases(self) -> List[str]:
+        return ["register"]
+
     def required_args(self) -> List[str]:
         return ["name", "password"]
 

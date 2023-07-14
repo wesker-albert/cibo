@@ -9,6 +9,9 @@ from cibo.client import Client
 class _Error(Action):
     """Alert the client an error occurred."""
 
+    def aliases(self) -> List[str]:
+        return []
+
     def required_args(self) -> List[str]:
         return ["message"]
 

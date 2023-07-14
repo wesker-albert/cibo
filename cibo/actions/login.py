@@ -12,6 +12,9 @@ from cibo.models import Player
 class Login(Action):
     """Log in to an existing player on the server."""
 
+    def aliases(self) -> List[str]:
+        return ["login"]
+
     def required_args(self) -> List[str]:
         return ["name", "password"]
 

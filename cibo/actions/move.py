@@ -9,6 +9,9 @@ from cibo.client import Client
 class Move(Action):
     """Navigates a player between available rooms."""
 
+    def aliases(self) -> List[str]:
+        return []
+
     def required_args(self) -> List[str]:
         return []
 

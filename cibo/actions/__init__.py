@@ -3,9 +3,8 @@ them directly, or a client sends the server a particular Command, associated wit
 specific Action.
 
 Any newly added Action classes that will be driven by Command from the client will
-also need to have a Command() map added to the
-`cibo.command.CommandProcessor._commands()` method. Only then will the new Action be
-available to clients.
+need to be added to the ACTIONS list. Only then will the new Action be available to
+clients.
 
 Actions that are called directly by an Event should have a filename prefixed with a
 singular underscore.
@@ -25,11 +24,9 @@ from cibo.actions.quit import Quit
 from cibo.actions.register import Register
 from cibo.actions.say import Say
 
-_ = (
-    _Connect,
-    _Disconnect,
-    _Error,
-    Action,
+_ = Action, _Connect, _Disconnect, _Error
+
+ACTIONS = [
     Exits,
     Finalize,
     Login,
@@ -39,4 +36,4 @@ _ = (
     Quit,
     Register,
     Say,
-)
+]

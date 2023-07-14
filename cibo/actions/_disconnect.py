@@ -9,6 +9,9 @@ from cibo.client import Client
 class _Disconnect(Action):
     """Make others aware that a player has abruptly disconnected."""
 
+    def aliases(self) -> List[str]:
+        return []
+
     def required_args(self) -> List[str]:
         return []
 

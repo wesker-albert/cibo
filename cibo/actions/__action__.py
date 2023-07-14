@@ -31,9 +31,24 @@ class Action(ABC):
         return " ".join([str(x) for x in args])
 
     @abstractmethod
+    def aliases(self) -> List[str]:
+        """Command aliases mapped to the Action. Clients can input these text
+        commands, to trigger this Action.
+
+        If the action isn't intended to be directly available as a client Command,
+        returns an empty list.
+
+        Returns:
+            List[str]: Aliases associated with the Action
+        """
+
+        pass
+
+    @abstractmethod
     def required_args(self) -> List[str]:
-        """Descriptions of the args required for the Action. If no arguments are
-        necessary for the Action, returns an empty list.
+        """Descriptions of the args required for the Action.
+
+        If no arguments are necessary for the Action, returns an empty list.
 
         Returns:
             List[str]: Descriptions for each required argument

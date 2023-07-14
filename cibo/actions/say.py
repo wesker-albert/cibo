@@ -9,6 +9,9 @@ from cibo.client import Client
 class Say(Action):
     """Say something to the current room."""
 
+    def aliases(self) -> List[str]:
+        return ["say"]
+
     def required_args(self) -> List[str]:
         return []
 

@@ -117,7 +117,7 @@ class Output:
 
     # TODO: when we implement the concept of "rooms", make this method only send to
     # the clients in the room specified
-    def local(self, message: str, ignore_clients: List[Client]):
+    def local(self, message: str, ignore_clients: List[Client]) -> None:
         """Prints a message to all clients whose plater are within the room.
 
         Args:
@@ -132,17 +132,21 @@ class Output:
                 client.send_message(f"\r{formatted_message}\r\n")
                 client.send_prompt()
 
-    def sector(self, _sector: int, _message: str, _ignore_clients: List[Client]):
+    def sector(
+        self, _sector: int, _message: str, _ignore_clients: List[Client]
+    ) -> None:
         """Prints a message to all clients within the sector."""
 
         pass
 
-    def region(self, _region: int, _message: str, _ignore_clients: List[Client]):
+    def region(
+        self, _region: int, _message: str, _ignore_clients: List[Client]
+    ) -> None:
         """Prints a message to all clients within the sector."""
 
         pass
 
-    def server(self, _message: str, _ignore_clients: List[Client]):
+    def server(self, _message: str, _ignore_clients: List[Client]) -> None:
         """Prints a message to all clients on the server."""
 
         pass

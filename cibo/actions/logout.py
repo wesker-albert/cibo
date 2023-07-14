@@ -9,6 +9,9 @@ from cibo.client import Client, ClientLoginState
 class Logout(Action):
     """Log out of the current player session."""
 
+    def aliases(self) -> List[str]:
+        return ["logout"]
+
     def required_args(self) -> List[str]:
         return []
 

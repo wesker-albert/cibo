@@ -9,6 +9,9 @@ from cibo.client import Client
 class Quit(Action):
     """Quits the game and disconnects the client."""
 
+    def aliases(self) -> List[str]:
+        return []
+
     def required_args(self) -> List[str]:
         return []
 
