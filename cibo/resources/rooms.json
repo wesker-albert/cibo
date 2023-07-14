@@ -1,0 +1,81 @@
+{
+    "rooms": [
+        {
+            "id": 1,
+            "name": "A Room Marked #1",
+            "description": {
+                "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
+            },
+            "exits": [
+                {
+                    "direction": "n",
+                    "to": 2
+                },
+                {
+                    "direction": "e",
+                    "to": 3
+                },
+                {
+                    "direction": "s",
+                    "to": 4
+                },
+                {
+                    "direction": "w",
+                    "to": 5
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "A Room Marked #2",
+            "description": {
+                "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
+            },
+            "exits": [
+                {
+                    "direction": "s",
+                    "to": 1
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "A Room Marked #3",
+            "description": {
+                "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
+            },
+            "exits": [
+                {
+                    "direction": "w",
+                    "to": 1
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "A Room Marked #4",
+            "description": {
+                "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
+            },
+            "exits": [
+                {
+                    "direction": "n",
+                    "to": 1
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "A Room Marked #5",
+            "description": {
+                "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
+            },
+            "exits": [
+                {
+                    "direction": "e",
+                    "to": 1
+                }
+            ]
+        }
+    ]
+}

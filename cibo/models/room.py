@@ -4,23 +4,23 @@ occupy as well as navigate through.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import List, Optional
+from typing import List
 
 
 class Direction(str, Enum):
-    """Available directions of travel between rooms."""
+    """Available directions of travel between Rooms."""
 
-    NORTH = "north"
-    SOUTH = "south"
-    EAST = "east"
-    WEST = "west"
-    UP = "up"
-    DOWN = "down"
+    NORTH = "n"
+    SOUTH = "s"
+    EAST = "e"
+    WEST = "w"
+    UP = "u"
+    DOWN = "d"
 
 
 @dataclass
 class Sector:
-    """A subset of rooms with certain shared behaviors."""
+    """A subset of Rooms with certain shared behaviors."""
 
     name: str
     # flags: List[Flags]
@@ -28,7 +28,7 @@ class Sector:
 
 @dataclass
 class Region:
-    """A large group of rooms."""
+    """A large group of Rooms."""
 
     name: str
     # flags: List[Flags]
@@ -36,16 +36,16 @@ class Region:
 
 @dataclass
 class RoomDescription:
-    """Descriptions of the room from different perspectives."""
+    """Descriptions of the Room from different perspectives."""
 
     normal: str
-    extra: Optional[str]
-    night: Optional[str]
-    under: Optional[str]
-    behind: Optional[str]
-    above: Optional[str]
-    smell: Optional[str]
-    listen: Optional[str]
+    # extra: Optional[str]
+    # night: Optional[str]
+    # under: Optional[str]
+    # behind: Optional[str]
+    # above: Optional[str]
+    # smell: Optional[str]
+    # listen: Optional[str]
 
 
 @dataclass
@@ -54,19 +54,19 @@ class RoomExit:
 
     direction: Direction
     to_: int
-    description: str
+    # description: str
     # door: str
     # door_flags: List[Flags]
 
 
 @dataclass
 class Room:
-    """Represents a single room within the world."""
+    """Represents a single Room within the world."""
 
     id_: int
     name: str
     description: RoomDescription
     exits: List[RoomExit]
-    sector: Sector
-    regions: List[Region]
+    # sector: Sector
+    # regions: List[Region]
     # flags: List[Flags]
