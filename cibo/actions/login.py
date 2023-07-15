@@ -18,7 +18,7 @@ class Login(Action):
     def required_args(self) -> List[str]:
         return ["name", "password"]
 
-    def process(self, client: Client, args: List[str]):
+    def process(self, client: Client, _command: str, args: List[str]):
         if client.is_logged_in:
             self._send.private(
                 client,

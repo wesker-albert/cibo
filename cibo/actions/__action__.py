@@ -1,7 +1,7 @@
 """Abstraction to be used as a base class for every Action."""
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 
 from cibo.client import Client
 from cibo.output import Output
@@ -57,11 +57,12 @@ class Action(ABC):
         pass
 
     @abstractmethod
-    def process(self, client: Client, args: List[str]) -> None:
+    def process(self, client: Client, command: Optional[str], args: List[str]) -> None:
         """Process the logic for the Action.
 
         Args:
             client (Client): The client who triggered the Action
+            command (str): The command that the client sent
             args (List[str]): The args necessary to the Action
         """
 

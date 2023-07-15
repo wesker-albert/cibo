@@ -15,7 +15,7 @@ class Logout(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, client: Client, args: List[str]):
+    def process(self, client: Client, command: str, args: List[str]):
         if not client.is_logged_in or not client.player:
             self._send.prompt(client)
             return
@@ -40,4 +40,4 @@ class Logout(Action):
 
         # process the connection Action, so the client knows they can now register
         # or login again
-        _Connect(self._telnet).process(client, [])
+        _Connect(self._telnet).process(client, command, args)

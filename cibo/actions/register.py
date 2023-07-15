@@ -19,7 +19,7 @@ class Register(Action):
     def required_args(self) -> List[str]:
         return ["name", "password"]
 
-    def process(self, client: Client, args: List[str]):
+    def process(self, client: Client, _command: str, args: List[str]):
         if client.is_logged_in:
             self._send.private(
                 client,
@@ -70,7 +70,7 @@ class Register(Action):
                 client,
                 "[bright_red]Your player name or password don't meet criteria.[/]\n\n"
                 "Names must be 3-15 chars and only contain letters, numbers, or "
-                "underscores.\n\n"
+                "underscores. They are case-sensitive.\n\n"
                 "Passwords must be minimum 8 chars.\n\n"
                 "Please [green]register[/] again.",
             )

@@ -16,7 +16,7 @@ class Finalize(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, client: Client, args: List[str]):
+    def process(self, client: Client, _command: str, _args: List[str]):
         if client.is_logged_in:
             self._send.private(
                 client,

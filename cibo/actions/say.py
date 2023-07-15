@@ -15,7 +15,7 @@ class Say(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, client: Client, args: List[str]):
+    def process(self, client: Client, _command: str, args: List[str]):
         if not client.is_logged_in or not client.player:
             self._send.prompt(client)
             return

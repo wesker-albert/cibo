@@ -89,7 +89,7 @@ class CommandProcessor:
         action_instance = action(self._telnet)
 
         try:
-            action_instance.process(client, args)
+            action_instance.process(client, command, args)
 
         # an IndexError means that the client's command was missing an argument index
         # that this specific action requires

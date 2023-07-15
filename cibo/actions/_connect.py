@@ -1,7 +1,7 @@
 """Inform the client they have connected to the server."""
 
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from rich.panel import Panel
 
@@ -27,7 +27,7 @@ class _Connect(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, client: Client, args: List[str]):
+    def process(self, client: Client, _command: Optional[str], _args: List[str]):
         self._send.private(
             client,
             Panel(

@@ -15,5 +15,5 @@ class Exits(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, client: Client, args: List[str]):
-        _ = client, args
+    def process(self, _client: Client, _command: str, _args: List[str]):
+        pass

@@ -32,4 +32,4 @@ class Input(Event):
                     UnrecognizedCommand,
                     CommandMissingArguments,
                 ) as ex:
-                    _Error(self._telnet).process(client, [ex.message])
+                    _Error(self._telnet).process(client, None, [ex.message])
