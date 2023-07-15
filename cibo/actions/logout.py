@@ -17,7 +17,7 @@ class Logout(Action):
 
     def process(self, client: Client, args: List[str]):
         if not client.is_logged_in or not client.player:
-            client.send_prompt()
+            self._send.prompt(client)
             return
 
         player_name = client.player.name
@@ -27,7 +27,7 @@ class Logout(Action):
 
         self._send.local(
             "A black van pulls up, and 2 large men in labcoats abduct "
-            f"#MAGENTA#{player_name}#NOCOLOR#. The van speeds away. You wonder if "
+            f"[magenta]{player_name}[/]. The van speeds away. You wonder if "
             "you'll ever see your friend again...",
             [client],
         )

@@ -1,6 +1,9 @@
 """Inform the client they have connected to the server."""
 
+from pathlib import Path
 from typing import List
+
+from rich.panel import Panel
 
 from cibo.actions import Action
 from cibo.client import Client
@@ -9,6 +12,15 @@ from cibo.client import Client
 class _Connect(Action):
     """Inform the client they have connected to the server."""
 
+    @property
+    def _motd(self) -> str:
+        path = Path(__file__).parent.resolve()
+
+        with open(f"{path}/../resources/motd.txt", encoding="utf-8") as file:
+            motd = file.read()
+
+        return motd
+
     def aliases(self) -> List[str]:
         return []
 
@@ -16,16 +28,15 @@ class _Connect(Action):
         return []
 
     def process(self, client: Client, args: List[str]):
-        self._send.private(client, "#BLUE#Welcome to cibo.#NOCOLOR#", prompt=False)
         self._send.private(
             client,
-            "Enter #GREEN#register name password#NOCOLOR# to create a new player.",
-            newline=False,
-            prompt=False,
-        )
-        self._send.private(
-            client,
-            "Enter #GREEN#login name password#NOCOLOR# to log in to an existing "
-            "player.",
-            newline=False,
+            Panel(
+                f"{self._motd}\n\n"
+                "Enter [green]register name password[/] to create a new player.\n"
+                "Enter [green]login name password[/] to log in to an existing player.",
+                title="Welcome to",
+                title_align="left",
+                padding=(1, 4),
+            ),
+            justify="center",
         )

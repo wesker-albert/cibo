@@ -37,15 +37,15 @@ class Login(Action):
         except DoesNotExist:
             self._send.private(
                 client,
-                f"A player by the name #MAGENTA#{player_name}#NOCOLOR# does not exist. "
-                "If you want, you can #GREEN#register#NOCOLOR# a new player with "
+                f"A player by the name [magenta]{player_name}[/] does not exist. "
+                "If you want, you can [green]register[/] a new player with "
                 "that name.",
             )
             return
 
         # the password the client entered doesn't match the one in the Player entry
         if not self._password_hasher.verify(password, existing_player.password):
-            self._send.private(client, "#LRED#Incorrect password.#NOCOLOR#")
+            self._send.private(client, "[bright_red]Incorrect password.[/]")
             return
 
         # check to see if another client is already logged in with the Player
@@ -57,7 +57,7 @@ class Login(Action):
             ):
                 self._send.private(
                     client,
-                    f"The player #MAGENTA#{player_name}#NOCOLOR# is already logged in. "
+                    f"The player [magenta]{player_name}[/] is already logged in. "
                     "If this player belongs to you and you think it's been stolen, "
                     "please contact the admin.",
                 )
@@ -72,7 +72,7 @@ class Login(Action):
         )
 
         self._send.local(
-            f"#MAGENTA#{client.player.name}#NOCOLOR# falls from heaven. It looks like "
+            f"[magenta]{client.player.name}[/] falls from heaven. It looks like "
             "it hurt.",
             [client],
         )

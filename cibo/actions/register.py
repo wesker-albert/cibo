@@ -36,8 +36,8 @@ class Register(Action):
 
             self._send.private(
                 client,
-                f"Sorry, turns out the name #MAGENTA#{player_name}#NOCOLOR# is already "
-                "taken. Please #GREEN#register#NOCOLOR# again with a different name.",
+                f"Sorry, turns out the name [magenta]{player_name}[/] is already "
+                "taken. Please [green]register[/] again with a different name.",
             )
             return
 
@@ -56,19 +56,11 @@ class Register(Action):
             self._send.private(
                 client,
                 "Are you sure you want to create the player named "
-                f"#MAGENTA#{player_name}#NOCOLOR#?",
-                prompt=False,
-            )
-            self._send.private(
-                client,
-                "Type #GREEN#finalize#NOCOLOR# to finalize the player creation. "
+                f"[magenta]{player_name}[/]?\n\n"
+                "Type [green]finalize[/] to finalize the player creation. "
                 "If you want to use a different name or password, you can "
-                "#GREEN#register#NOCOLOR# again.",
-                prompt=False,
-            )
-            self._send.private(
-                client,
-                "Otherwise, feel free to #GREEN#login#NOCOLOR# to an already "
+                "[green]register[/] again.\n\n"
+                "Otherwise, feel free to [green]login[/] to an already "
                 "existing player.",
             )
 
@@ -76,19 +68,9 @@ class Register(Action):
         except ValidationError:
             self._send.private(
                 client,
-                "#LRED#Your player name or password don't meet criteria.#NOCOLOR#",
-                prompt=False,
-            )
-            self._send.private(
-                client,
+                "[bright_red]Your player name or password don't meet criteria.[/]\n\n"
                 "Names must be 3-15 chars and only contain letters, numbers, or "
-                "underscores.",
-                prompt=False,
+                "underscores.\n\n"
+                "Passwords must be minimum 8 chars.\n\n"
+                "Please [green]register[/] again.",
             )
-            self._send.private(
-                client,
-                "Passwords must be minimum 8 chars.",
-                newline=False,
-                prompt=False,
-            )
-            self._send.private(client, "Please #GREEN#register#NOCOLOR# again.")

@@ -18,7 +18,7 @@ class _Disconnect(Action):
     def process(self, client: Client, args: List[str]):
         if client.player:
             self._send.local(
-                f"You watch in horror as #MAGENTA#{client.player.name}#NOCOLOR# "
+                f"You watch in horror as [magenta]{client.player.name}[/] "
                 "proceeds to slowly eat their own head. They eventually disappear "
                 "into nothingness.",
                 [client],

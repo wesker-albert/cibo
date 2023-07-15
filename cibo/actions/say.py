@@ -17,7 +17,7 @@ class Say(Action):
 
     def process(self, client: Client, args: List[str]):
         if not client.is_logged_in or not client.player:
-            client.send_prompt()
+            self._send.prompt(client)
             return
 
         if len(self._join_args(args)) == 0:
@@ -27,7 +27,7 @@ class Say(Action):
             return
 
         self._send.local(
-            f'#MAGENTA#{client.player.name}#NOCOLOR# says, "{self._join_args(args)}"',
+            f'[magenta]{client.player.name}[/] says, "{self._join_args(args)}"',
             [client],
         )
 
