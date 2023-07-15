@@ -14,6 +14,7 @@ from cibo.actions.__action__ import Action
 from cibo.actions._connect import _Connect
 from cibo.actions._disconnect import _Disconnect
 from cibo.actions._error import _Error
+from cibo.actions._prompt import _Prompt
 from cibo.actions.exits import Exits
 from cibo.actions.finalize import Finalize
 from cibo.actions.login import Login
@@ -24,7 +25,7 @@ from cibo.actions.quit import Quit
 from cibo.actions.register import Register
 from cibo.actions.say import Say
 
-_ = Action, _Connect, _Disconnect, _Error
+_ = Action, _Connect, _Disconnect, _Error, _Prompt
 
 ACTIONS = [
     Exits,

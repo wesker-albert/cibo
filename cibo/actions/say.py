@@ -20,7 +20,7 @@ class Say(Action):
             self._send.prompt(client)
             return
 
-        if len(self._join_args(args)) == 0:
+        if not args:
             self._send.private(
                 client, "You try to think of something clever to say, but fail."
             )

@@ -1,21 +1,34 @@
 """Abstraction to be used as a base class for every Action."""
 
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List
 
 from cibo.client import Client
 from cibo.output import Output
 from cibo.password import Password
+from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
 
 class Action(ABC):
     """The base interface used by all Action classes."""
 
-    def __init__(self, telnet: TelnetServer) -> None:
+    def __init__(self, telnet: TelnetServer, world: World) -> None:
         self._telnet = telnet
         self._send = Output(self._telnet)
         self._password_hasher = Password()
+
+        self._world = world
+
+    @property
+    def world(self) -> World:
+        """You've got the whole World, in your hands.
+
+        Returns:
+            World: The heavy weight of the World.
+        """
+
+        return self._world
 
     def _join_args(self, args: List[str]) -> str:
         """Join the list of args into a singular string, using a space as the
@@ -57,7 +70,7 @@ class Action(ABC):
         pass
 
     @abstractmethod
-    def process(self, client: Client, command: Optional[str], args: List[str]) -> None:
+    def process(self, client: Client, command: str, args: List[str]) -> None:
         """Process the logic for the Action.
 
         Args:

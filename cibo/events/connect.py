@@ -9,4 +9,4 @@ class Connect(Event):
 
     def process(self) -> None:
         for client in self._telnet.get_new_clients():
-            _Connect(self._telnet).process(client, None, [])
+            _Connect(self._telnet, self._world).process(client, None, [])

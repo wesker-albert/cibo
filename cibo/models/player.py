@@ -5,7 +5,7 @@ to resume their adventure where they left off.
 
 
 from marshmallow import Schema, fields, validate
-from peewee import AutoField, CharField, TextField
+from peewee import AutoField, CharField, IntegerField, TextField
 
 from cibo.models import Model
 
@@ -16,6 +16,7 @@ class Player(Model):
     id_ = AutoField()
     name = CharField(unique=True)
     password = TextField()
+    room = IntegerField()
 
 
 class PlayerSchema(Schema):
@@ -26,3 +27,4 @@ class PlayerSchema(Schema):
         validate=[validate.Length(min=3, max=15), validate.Regexp("^[a-zA-Z0-9_]*$")]
     )
     password = fields.Str(validate=validate.Length(min=8))
+    room = fields.Int()

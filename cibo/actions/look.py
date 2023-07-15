@@ -10,10 +10,12 @@ class Look(Action):
     """Returns information about the room or object targeted."""
 
     def aliases(self) -> List[str]:
-        return []
+        return ["l", "look"]
 
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, _client: Client, _command: str, _args: List[str]):
-        pass
+    def process(self, _client: Client, _command: str, args: List[str]):
+        if not args:
+            # TODO: return the room details
+            return

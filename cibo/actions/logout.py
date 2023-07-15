@@ -40,4 +40,4 @@ class Logout(Action):
 
         # process the connection Action, so the client knows they can now register
         # or login again
-        _Connect(self._telnet).process(client, command, args)
+        _Connect(self._telnet, self._world).process(client, command, args)

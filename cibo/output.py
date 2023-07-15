@@ -34,7 +34,8 @@ class Output:
         """Leverages the rich library to pad, stylize, and format messages. Accepts
         plain strings, or a number of "renderables" that rich offers.
 
-        Rich will process a number of color and styling markup codes.
+        Rich will process a number of color and styling markup codes, if included in
+        the message.
 
         For more information and to reference ways to use rich in conjunction with
         cibo's message formatter, visit:
