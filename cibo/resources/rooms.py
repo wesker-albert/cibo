@@ -63,7 +63,7 @@ class Rooms:
             ],
         )
 
-    def get_room(self, id_: int) -> Optional[Room]:
+    def get(self, id_: int) -> Optional[Room]:
         """Get a Room by its ID. Returns None if not found.
 
         Args:
@@ -78,3 +78,21 @@ class Rooms:
                 return room
 
         return None
+
+    def get_exits(self, id_: int) -> List[str]:
+        """Get the text values of the exits for the given Room, in alphabetical order.
+        Returns empty if no room by that ID exists, or if the room has no exits.
+
+        Args:
+            id_ (int): The Room ID you're looking for.
+
+        Returns:
+            List[str]: The Room exits in str format.
+        """
+
+        room = self.get(id_)
+
+        if not room:
+            return []
+
+        return sorted([exit_.direction.name.lower() for exit_ in room.exits])

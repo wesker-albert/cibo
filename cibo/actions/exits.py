@@ -1,6 +1,6 @@
 """Returns the available exits."""
 
-from typing import List
+from typing import List, Optional
 
 from cibo.actions import Action
 from cibo.client import Client
@@ -10,10 +10,46 @@ class Exits(Action):
     """Returns the available exits."""
 
     def aliases(self) -> List[str]:
-        return []
+        return ["exits"]
 
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, _client: Client, _command: str, _args: List[str]):
-        pass
+    def get_formatted_exits(self, client: Client) -> Optional[str]:
+        """Formats the exits into a pretty, stylized string.
+
+        Args:
+            client (Client): The Client to look up the room for.
+
+        Returns:
+            Optional[str]: The exits.
+        """
+
+        if not client.is_logged_in or not client.player:
+            return None
+
+        player = client.player.asdict()
+        room = self._world.rooms.get(player["room"])
+
+        if room:
+            exits = self._world.rooms.get_exits(player["room"])
+
+            if not exits:
+                return "[green]Exits:[/] none"
+
+            if len(exits) == 1:
+                return f"[green]Exit:[/] {exits[0]}"
+
+            formatted_exits = ", ".join([str(exit_) for exit_ in exits])
+            return f"[green]Exits:[/] {formatted_exits}"
+
+        return None
+
+    def process(self, client: Client, _command: Optional[str], _args: List[str]):
+        exits = self.get_formatted_exits(client)
+
+        if not exits:
+            self._send.prompt(client)
+            return
+
+        self._send.private(client, exits)

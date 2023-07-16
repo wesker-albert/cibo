@@ -5,6 +5,7 @@ from typing import List
 from peewee import DoesNotExist
 
 from cibo.actions import Action
+from cibo.actions.look import Look
 from cibo.client import Client, ClientLoginState
 from cibo.models import Player
 
@@ -66,11 +67,16 @@ class Login(Action):
         client.player = existing_player
         client.login_state = ClientLoginState.LOGGED_IN
 
+        # join the world and look at the room we left off in
         self._send.private(
             client,
-            "You awaken from a pleasant dream, and find yourself amongst friends.",
+            "You awaken from a pleasant dream, disappointed. You have a look around...",
+            prompt=False,
         )
 
+        Look(self._telnet, self._world).process(client, None, [])
+
+        # tell everyone we've arrived
         self._send.local(
             f"[magenta]{client.player.name}[/] falls from heaven. It looks like "
             "it hurt.",
