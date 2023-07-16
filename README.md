@@ -11,7 +11,7 @@ An experimental MUD server, written in Python. Object-oriented and event driven.
 
 ## Why?
 
-I loved MUDs as a teen. They were live living, breathing choose your own adventure books.
+I loved MUDs as a teen. They were like living, breathing choose your own adventure books.
 
 When I first started my career as a software engineer, I knew there was a possibility
 that I'd be working in Python, but at that point I had virtually no experience in it.
@@ -30,10 +30,16 @@ about but haven't gotten the professional opportunity to try.
 
 ## Current state:
 
+### 2023-07-15
+* New commands available: `look, exits, north, south, east, west`
+* A small set of sample rooms were created to test navigation.
+* Basic player navigation has been implemented, with the exceptions of `up` and `down`.
+* "Local" messages have been completed, and now only print to occupants of the room they were executed within.
+
 ### 2023-07-13
 * The project can be loaded via Dev Container in VSCode.
 * In terminal, `make start` will fire up the server.
-* Once fired up, you'll can control the server. Make sure to `create_db` before trying
+* Once fired up, you can control the server. Make sure to `create_db` before trying
 to `start` the server.
 * Connect via telnet to: `127.0.0.1 51234`
 * Currently available commands:  `register, finalize, login, say, logout`

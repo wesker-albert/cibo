@@ -9,22 +9,26 @@ from cibo.client import Client
 class Say(Action):
     """Say something to the current room."""
 
+    def aliases(self) -> List[str]:
+        return ["say"]
+
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, client: Client, args: List[str]):
+    def process(self, client: Client, _command: str, args: List[str]):
         if not client.is_logged_in or not client.player:
-            client.send_prompt()
+            self._send.prompt(client)
             return
 
-        if len(self._join_args(args)) == 0:
+        if not args:
             self._send.private(
                 client, "You try to think of something clever to say, but fail."
             )
             return
 
         self._send.local(
-            f'#MAGENTA#{client.player.name}#NOCOLOR# says, "{self._join_args(args)}"',
+            client.player.current_room_id,
+            f'[cyan]{client.player.name}[/] says, "{self._join_args(args)}"',
             [client],
         )
 

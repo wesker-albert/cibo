@@ -10,10 +10,10 @@ from typing import Optional
 
 from peewee import SqliteDatabase
 
-from cibo.command import CommandProcessor
 from cibo.decorator import load_environment_variables
 from cibo.event import EventProcessor
 from cibo.models import Player
+from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
 
@@ -44,9 +44,9 @@ class Server:
 
         self._port = port or int(os.getenv("SERVER_PORT", "51234"))
         self._telnet = TelnetServer(port=self._port)
+        self._world = World()
 
-        self._command_processor = CommandProcessor(self._telnet)
-        self._event_processor = EventProcessor(self._telnet, self._command_processor)
+        self._event_processor = EventProcessor(self._telnet, self._world)
 
         self._thread: Optional[threading.Thread] = None
         self._status = self.Status.STOPPED

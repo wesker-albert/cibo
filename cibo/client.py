@@ -42,14 +42,14 @@ class Client:
         return self.login_state is ClientLoginState.LOGGED_IN
 
     @property
-    def _prompt(self) -> str:
+    def prompt(self) -> str:
         """The prompt that appears before the client's terminal input.
 
         Returns:
             str: The prompt text
         """
 
-        return "\r\n> "
+        return "> "
 
     def _send_message(self, message: str) -> None:
         """Sends the message text to the client. The text will be printed out in
@@ -75,11 +75,6 @@ class Client:
         """
 
         self._send_message(message)
-
-    def send_prompt(self) -> None:
-        """Sends a prompt to the client."""
-
-        self._send_message(self._prompt)
 
     def disconnect(self) -> None:
         """Disconnect the client from the server."""

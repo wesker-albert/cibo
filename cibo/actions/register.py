@@ -13,10 +13,13 @@ from cibo.models import Player, PlayerSchema
 class Register(Action):
     """Register a new player with the server."""
 
+    def aliases(self) -> List[str]:
+        return ["register"]
+
     def required_args(self) -> List[str]:
         return ["name", "password"]
 
-    def process(self, client: Client, args: List[str]):
+    def process(self, client: Client, _command: str, args: List[str]):
         if client.is_logged_in:
             self._send.private(
                 client,
@@ -33,8 +36,8 @@ class Register(Action):
 
             self._send.private(
                 client,
-                f"Sorry, turns out the name #MAGENTA#{player_name}#NOCOLOR# is already "
-                "taken. Please #GREEN#register#NOCOLOR# again with a different name.",
+                f"Sorry, turns out the name [cyan]{player_name}[/] is already "
+                "taken. Please [green]register[/] again with a different name.",
             )
             return
 
@@ -47,25 +50,19 @@ class Register(Action):
             # a temporary Player model is set on the client, to be created in the db if
             # they call the Finalize action
             client.registration = Player(
-                name=player_name, password=self._password_hasher.hash_(password)
+                name=player_name,
+                password=self._password_hasher.hash_(password),
+                current_room_id=1,
             )
 
             self._send.private(
                 client,
                 "Are you sure you want to create the player named "
-                f"#MAGENTA#{player_name}#NOCOLOR#?",
-                prompt=False,
-            )
-            self._send.private(
-                client,
-                "Type #GREEN#finalize#NOCOLOR# to finalize the player creation. "
+                f"[cyan]{player_name}[/]?\n\n"
+                "Type [green]finalize[/] to finalize the player creation. "
                 "If you want to use a different name or password, you can "
-                "#GREEN#register#NOCOLOR# again.",
-                prompt=False,
-            )
-            self._send.private(
-                client,
-                "Otherwise, feel free to #GREEN#login#NOCOLOR# to an already "
+                "[green]register[/] again.\n\n"
+                "Otherwise, feel free to [green]login[/] to an already "
                 "existing player.",
             )
 
@@ -73,19 +70,9 @@ class Register(Action):
         except ValidationError:
             self._send.private(
                 client,
-                "#LRED#Your player name or password don't meet criteria.#NOCOLOR#",
-                prompt=False,
-            )
-            self._send.private(
-                client,
+                "[bright_red]Your player name or password don't meet criteria.[/]\n\n"
                 "Names must be 3-15 chars and only contain letters, numbers, or "
-                "underscores.",
-                prompt=False,
+                "underscores. They are case-sensitive.\n\n"
+                "Passwords must be minimum 8 chars.\n\n"
+                "Please [green]register[/] again.",
             )
-            self._send.private(
-                client,
-                "Passwords must be minimum 8 chars.",
-                newline=False,
-                prompt=False,
-            )
-            self._send.private(client, "Please #GREEN#register#NOCOLOR# again.")

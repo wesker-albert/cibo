@@ -5,19 +5,10 @@ will in turn trigger the Action mapped to that Command.
 from dataclasses import dataclass
 from typing import List, Optional, Type
 
-from cibo.actions import (
-    Action,
-    Finalize,
-    Login,
-    Logout,
-    Look,
-    Move,
-    Quit,
-    Register,
-    Say,
-)
+from cibo.actions import ACTIONS, Action
 from cibo.client import Client
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
+from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
 
@@ -34,7 +25,7 @@ class CommandProcessor:
     command aliases, and maps them to action methods.
     """
 
-    def __init__(self, telnet: TelnetServer) -> None:
+    def __init__(self, telnet: TelnetServer, world: World) -> None:
         """Creates the command processor instance.
 
         Args:
@@ -42,6 +33,7 @@ class CommandProcessor:
         """
 
         self._telnet = telnet
+        self._world = world
 
     @property
     def _commands(self) -> List[Command]:
@@ -51,22 +43,9 @@ class CommandProcessor:
             List[Command]: Commands available to the client
         """
 
-        # TODO: the alias strings should live in the db, not be hardcoded
         return [
-            Command(
-                aliases=["n", "north", "s", "south", "e", "east", "w", "west"],
-                action=Move,
-            ),
-            Command(
-                aliases=["look", "l"],
-                action=Look,
-            ),
-            Command(aliases=["quit"], action=Quit),
-            Command(aliases=["login"], action=Login),
-            Command(aliases=["logout"], action=Logout),
-            Command(aliases=["register"], action=Register),
-            Command(aliases=["finalize"], action=Finalize),
-            Command(aliases=["say"], action=Say),
+            Command(aliases=action(self._telnet, self._world).aliases(), action=action)
+            for action in ACTIONS
         ]
 
     def _get_command_action(self, client_command: str) -> Optional[Type[Action]]:
@@ -102,17 +81,21 @@ class CommandProcessor:
         # separate the command from the args, then also split each of the individual
         # args into a list
         command, _separator, args = input_.partition(" ")
-        args = args.split(" ")
+        # convert the command to lowercase, to avoid case sensitivity
+        command = command.lower()
+        # partition returns a blank string if no args are found after the command
+        # in that case, we want to drop the blank string and just return an empty list
+        args = args.split(" ") if args else []
 
         action = self._get_command_action(command)
 
         if action is None:
             raise UnrecognizedCommand(command)
 
-        action_instance = action(self._telnet)
+        action_instance = action(self._telnet, self._world)
 
         try:
-            action_instance.process(client, args)
+            action_instance.process(client, command, args)
 
         # an IndexError means that the client's command was missing an argument index
         # that this specific action requires
