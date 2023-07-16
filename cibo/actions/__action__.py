@@ -51,6 +51,9 @@ class Action(ABC):
         If the action isn't intended to be directly available as a client Command,
         returns an empty list.
 
+        IMPORTANT: All aliases should be lowercase, to avoid case sensitivity conflicts
+        with entered commands from Clients.
+
         Returns:
             List[str]: Aliases associated with the Action
         """

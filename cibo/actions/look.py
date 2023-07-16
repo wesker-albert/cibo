@@ -23,11 +23,9 @@ class Look(Action):
             self._send.prompt(client)
             return
 
-        player = client.player.asdict()
-
         # the player is just looking at the room in general
         if not args:
-            room = self._world.rooms.get(player["room"])
+            room = self._world.rooms.get(client.player.room)
 
             if room:
                 exits = Exits(self._telnet, self._world).get_formatted_exits(client)
@@ -43,4 +41,5 @@ class Look(Action):
                         padding=(1, 4),
                     ),
                 )
+
             return

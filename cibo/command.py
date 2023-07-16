@@ -81,6 +81,8 @@ class CommandProcessor:
         # separate the command from the args, then also split each of the individual
         # args into a list
         command, _separator, args = input_.partition(" ")
+        # convert the command to lowercase, to avoid case sensitivity
+        command = command.lower()
         # partition returns a blank string if no args are found after the command
         # in that case, we want to drop the blank string and just return an empty list
         args = args.split(" ") if args else []

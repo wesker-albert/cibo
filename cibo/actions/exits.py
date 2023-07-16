@@ -28,12 +28,12 @@ class Exits(Action):
         if not client.is_logged_in or not client.player:
             return None
 
-        player = client.player.asdict()
-        room = self._world.rooms.get(player["room"])
+        room = self._world.rooms.get(client.player.room)
 
         if room:
-            exits = self._world.rooms.get_exits(player["room"])
+            exits = self._world.rooms.get_exits(client.player.room)
 
+            # plurality is important...
             if not exits:
                 return "[green]Exits:[/] none"
 
@@ -46,6 +46,10 @@ class Exits(Action):
         return None
 
     def process(self, client: Client, _command: Optional[str], _args: List[str]):
+        if not client.is_logged_in or not client.player:
+            self._send.prompt(client)
+            return
+
         exits = self.get_formatted_exits(client)
 
         if not exits:
