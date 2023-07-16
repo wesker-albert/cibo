@@ -50,7 +50,9 @@ class Register(Action):
             # a temporary Player model is set on the client, to be created in the db if
             # they call the Finalize action
             client.registration = Player(
-                name=player_name, password=self._password_hasher.hash_(password), room=1
+                name=player_name,
+                password=self._password_hasher.hash_(password),
+                current_room_id=1,
             )
 
             self._send.private(

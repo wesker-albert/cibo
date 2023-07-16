@@ -16,7 +16,7 @@ class Player(Model):
     id_ = AutoField()
     name = CharField(unique=True)
     password = TextField()
-    room = IntegerField()
+    current_room_id = IntegerField()
 
 
 class PlayerSchema(Schema):
@@ -27,4 +27,4 @@ class PlayerSchema(Schema):
         validate=[validate.Length(min=3, max=15), validate.Regexp("^[a-zA-Z0-9_]*$")]
     )
     password = fields.Str(validate=validate.Length(min=8))
-    room = fields.Int()
+    current_room_id = fields.Int()

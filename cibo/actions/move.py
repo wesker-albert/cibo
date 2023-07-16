@@ -21,13 +21,13 @@ class Move(Action):
             self._send.prompt(client)
             return
 
-        room = self._world.rooms.get(client.player.room)
+        previous_room = self._world.rooms.get(client.player.current_room_id)
 
-        if room:
-            for exit_ in room.exits:
+        if previous_room:
+            for exit_ in previous_room.exits:
                 if command == (exit_.direction.value or exit_.direction.name.lower()):
                     # update the player's current room to the one they're navigating to
-                    client.player.room = exit_.id_
+                    client.player.current_room_id = exit_.id_
 
                     self._send.private(
                         client,
@@ -38,7 +38,7 @@ class Move(Action):
 
                     # announce player departure to anyone in the previous room
                     self._send.local(
-                        room.id_,
+                        previous_room.id_,
                         f"[cyan]{client.player.name}[/] leaves "
                         f"{exit_.direction.name.lower()}.",
                         [client],
@@ -46,7 +46,7 @@ class Move(Action):
 
                     # announce player arrival to anyone in the current room
                     self._send.local(
-                        exit_.id_,
+                        client.player.current_room_id,
                         f"[cyan]{client.player.name}[/] arrives.",
                         [client],
                     )

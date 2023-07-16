@@ -30,6 +30,12 @@ about but haven't gotten the professional opportunity to try.
 
 ## Current state:
 
+### 2023-07-15
+* New commands available: `look, exits, north, south, east, west`
+* A small set of sample rooms were created to test navigation.
+* Basic player navigation has been implemented, with the exceptions of `up` and `down`.
+* "Local" messages have been completed, and now only print to occupants of the room they were executed within.
+
 ### 2023-07-13
 * The project can be loaded via Dev Container in VSCode.
 * In terminal, `make start` will fire up the server.

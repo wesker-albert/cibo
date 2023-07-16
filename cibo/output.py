@@ -122,8 +122,9 @@ class Output:
         """Prints a message to all clients whose plater are within the room.
 
         Args:
-            message (str): The body of the message
-            ignore_clients (List[Client]): Clients that should not receive the message
+            room_id (int): The room to send the message to.
+            message (str): The body of the message.
+            ignore_clients (List[Client]): Clients that should not receive the message.
         """
 
         formatted_message = self._format_message(message)
@@ -131,7 +132,7 @@ class Output:
         for client in self._telnet.get_connected_clients():
             if (
                 client.is_logged_in
-                and client.player.room == room_id
+                and client.player.current_room_id == room_id
                 and client not in ignore_clients
             ):
                 client.send_message(f"\r{formatted_message}")

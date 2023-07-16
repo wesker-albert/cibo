@@ -27,7 +27,7 @@ class Say(Action):
             return
 
         self._send.local(
-            client.player.room,
+            client.player.current_room_id,
             f'[cyan]{client.player.name}[/] says, "{self._join_args(args)}"',
             [client],
         )

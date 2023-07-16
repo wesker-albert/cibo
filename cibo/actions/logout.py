@@ -21,7 +21,7 @@ class Logout(Action):
             return
 
         player_name = client.player.name
-        player_room = client.player.room
+        player_room = client.player.current_room_id
 
         client.login_state = ClientLoginState.PRE_LOGIN
         client.player = None

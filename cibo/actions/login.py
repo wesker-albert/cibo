@@ -78,7 +78,7 @@ class Login(Action):
 
         # tell everyone we've arrived
         self._send.local(
-            client.player.room,
+            client.player.current_room_id,
             f"[cyan]{client.player.name}[/] falls from heaven. It looks like "
             "it hurt.",
             [client],

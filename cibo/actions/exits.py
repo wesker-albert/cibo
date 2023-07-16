@@ -28,10 +28,10 @@ class Exits(Action):
         if not client.is_logged_in or not client.player:
             return None
 
-        room = self._world.rooms.get(client.player.room)
+        room = self._world.rooms.get(client.player.current_room_id)
 
         if room:
-            exits = self._world.rooms.get_exits(client.player.room)
+            exits = self._world.rooms.get_exits(client.player.current_room_id)
 
             # plurality is important...
             if not exits:
