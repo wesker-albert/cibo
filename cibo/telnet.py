@@ -262,6 +262,12 @@ class TelnetServer:
     def _check_for_messages(self) -> None:
         # go through all the clients
         for client in self._clients:
+            # do an initial check to see if the client disconnected, but we just
+            # haven't processed it yet.
+            if client.socket.fileno() < 0:
+                self._handle_disconnect(client)
+                continue
+
             # we use 'select' to test whether there is data waiting to be read
             # from the client socket. The function takes 3 lists of sockets,
             # the first being those to test for readability. It returns 3 list

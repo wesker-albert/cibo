@@ -1,5 +1,6 @@
 """Log out of the current player session."""
 
+from time import sleep
 from typing import List
 
 from cibo.actions import Action, _Connect
@@ -24,6 +25,7 @@ class Logout(Action):
         player_room = client.player.current_room_id
 
         client.login_state = ClientLoginState.PRE_LOGIN
+        client.player.save()
         client.player = None
 
         self._send.local(
@@ -39,6 +41,8 @@ class Logout(Action):
             "You slowly fade away into obscurity, like you always feared you would...",
             prompt=False,
         )
+
+        sleep(1)
 
         # process the connection Action, so the client knows they can now register
         # or login again
