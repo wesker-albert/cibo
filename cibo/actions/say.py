@@ -27,7 +27,8 @@ class Say(Action):
             return
 
         self._send.local(
-            f'[magenta]{client.player.name}[/] says, "{self._join_args(args)}"',
+            client.player.room,
+            f'[cyan]{client.player.name}[/] says, "{self._join_args(args)}"',
             [client],
         )
 

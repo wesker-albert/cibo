@@ -9,19 +9,19 @@
             "exits": [
                 {
                     "direction": "n",
-                    "to": 2
+                    "id": 2
                 },
                 {
                     "direction": "e",
-                    "to": 3
+                    "id": 3
                 },
                 {
                     "direction": "s",
-                    "to": 4
+                    "id": 4
                 },
                 {
                     "direction": "w",
-                    "to": 5
+                    "id": 5
                 }
             ]
         },
@@ -34,7 +34,7 @@
             "exits": [
                 {
                     "direction": "s",
-                    "to": 1
+                    "id": 1
                 }
             ]
         },
@@ -47,7 +47,7 @@
             "exits": [
                 {
                     "direction": "w",
-                    "to": 1
+                    "id": 1
                 }
             ]
         },
@@ -60,7 +60,7 @@
             "exits": [
                 {
                     "direction": "n",
-                    "to": 1
+                    "id": 1
                 }
             ]
         },
@@ -73,7 +73,7 @@
             "exits": [
                 {
                     "direction": "e",
-                    "to": 1
+                    "id": 1
                 }
             ]
         }

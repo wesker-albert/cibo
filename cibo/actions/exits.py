@@ -22,7 +22,7 @@ class Exits(Action):
             client (Client): The Client to look up the room for.
 
         Returns:
-            Optional[str]: The exits.
+            Optional[str]: The exits for the current room.
         """
 
         if not client.is_logged_in or not client.player:

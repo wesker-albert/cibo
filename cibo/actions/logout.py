@@ -21,14 +21,16 @@ class Logout(Action):
             return
 
         player_name = client.player.name
+        player_room = client.player.room
 
         client.login_state = ClientLoginState.PRE_LOGIN
         client.player = None
 
         self._send.local(
+            player_room,
             "A black van pulls up, and 2 large men in labcoats abduct "
-            f"[magenta]{player_name}[/]. The van speeds away. You wonder if "
-            "you'll ever see your friend again...",
+            f"[cyan]{player_name}[/]. The van speeds away. You wonder if "
+            "you'll ever see your them again...",
             [client],
         )
 

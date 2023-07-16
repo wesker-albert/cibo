@@ -53,7 +53,7 @@ class RoomExit:
     """Flags that govern exit behavior."""
 
     direction: Direction
-    to_: int
+    id_: int
     # description: str
     # door: str
     # door_flags: List[Flags]

@@ -38,7 +38,7 @@ class Login(Action):
         except DoesNotExist:
             self._send.private(
                 client,
-                f"A player by the name [magenta]{player_name}[/] does not exist. "
+                f"A player by the name [cyan]{player_name}[/] does not exist. "
                 "If you want, you can [green]register[/] a new player with "
                 "that name.",
             )
@@ -58,7 +58,7 @@ class Login(Action):
             ):
                 self._send.private(
                     client,
-                    f"The player [magenta]{player_name}[/] is already logged in. "
+                    f"The player [cyan]{player_name}[/] is already logged in. "
                     "If this player belongs to you and you think it's been stolen, "
                     "please contact the admin.",
                 )
@@ -78,7 +78,8 @@ class Login(Action):
 
         # tell everyone we've arrived
         self._send.local(
-            f"[magenta]{client.player.name}[/] falls from heaven. It looks like "
+            client.player.room,
+            f"[cyan]{client.player.name}[/] falls from heaven. It looks like "
             "it hurt.",
             [client],
         )

@@ -58,7 +58,7 @@ class Rooms:
             name=room["name"],
             description=RoomDescription(normal=room["description"]["normal"]),
             exits=[
-                RoomExit(direction=Direction(exit_["direction"]), to_=exit_["to"])
+                RoomExit(direction=Direction(exit_["direction"]), id_=exit_["id"])
                 for exit_ in room["exits"]
             ],
         )

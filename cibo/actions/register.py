@@ -36,7 +36,7 @@ class Register(Action):
 
             self._send.private(
                 client,
-                f"Sorry, turns out the name [magenta]{player_name}[/] is already "
+                f"Sorry, turns out the name [cyan]{player_name}[/] is already "
                 "taken. Please [green]register[/] again with a different name.",
             )
             return
@@ -56,7 +56,7 @@ class Register(Action):
             self._send.private(
                 client,
                 "Are you sure you want to create the player named "
-                f"[magenta]{player_name}[/]?\n\n"
+                f"[cyan]{player_name}[/]?\n\n"
                 "Type [green]finalize[/] to finalize the player creation. "
                 "If you want to use a different name or password, you can "
                 "[green]register[/] again.\n\n"

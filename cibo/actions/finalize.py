@@ -47,7 +47,7 @@ class Finalize(Action):
             self._send.private(
                 client,
                 "Sorry, turns out the name "
-                f"[magenta]{client.registration.name}[/] is already "
+                f"[cyan]{client.registration.name}[/] is already "
                 "taken. Please [green]register[/] again with a different name.",
             )
 

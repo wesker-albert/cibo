@@ -118,9 +118,7 @@ class Output:
         if prompt:
             self.prompt(client)
 
-    # TODO: when we implement the concept of "rooms", make this method only send to
-    # the clients in the room specified
-    def local(self, message: str, ignore_clients: List[Client]) -> None:
+    def local(self, room_id: int, message: str, ignore_clients: List[Client]) -> None:
         """Prints a message to all clients whose plater are within the room.
 
         Args:
@@ -131,7 +129,11 @@ class Output:
         formatted_message = self._format_message(message)
 
         for client in self._telnet.get_connected_clients():
-            if client.is_logged_in and client not in ignore_clients:
+            if (
+                client.is_logged_in
+                and client.player.room == room_id
+                and client not in ignore_clients
+            ):
                 client.send_message(f"\r{formatted_message}")
                 self.prompt(client)
 
