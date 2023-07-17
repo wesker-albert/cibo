@@ -1,4 +1,5 @@
-name: Linting and Testing
+name: Lint and Test
+run-name: ${{ github.actor }} ran linting and tests
 
 on: [push]
 
@@ -6,16 +7,14 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
+  lint-and-test:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python 3.11
+    - name: Set up Python 3.11.4
       uses: actions/setup-python@v3
       with:
-        python-version: "3.11"
+        python-version: "3.11.4"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
