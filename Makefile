@@ -48,7 +48,7 @@ coverage:
 	@poetry run pytest --cov-report term --cov-report xml:coverage.xml --cov=cibo
 
 safety_check:
-	@poetry export --without-hashes --dev -o requirements.txt && cat requirements.txt \
+	@poetry export --without-hashes --with dev -o requirements.txt && cat requirements.txt \
 		| poetry run safety check --stdin --full-report && poetry check -n
 
 
