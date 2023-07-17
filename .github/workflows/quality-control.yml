@@ -1,5 +1,5 @@
-name: Lint and Test
-run-name: ${{ github.actor }} ran linting and tests
+name: Quality Control
+run-name: ${{ github.actor }} ran some tests
 
 on: [push]
 
@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 jobs:
-  lint-and-test:
+  lint-format-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,7 +35,7 @@ jobs:
     - name: Tests
       run: |
         make test
-        
+
     - name: Coverage
       run: |
         make coverage
