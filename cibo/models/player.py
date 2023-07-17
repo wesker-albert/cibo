@@ -7,7 +7,7 @@ to resume their adventure where they left off.
 from marshmallow import Schema, fields, validate
 from peewee import AutoField, CharField, IntegerField, TextField
 
-from cibo.models import Model
+from cibo.models.__model__ import Model
 
 
 class Player(Model):

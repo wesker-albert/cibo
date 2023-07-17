@@ -2,7 +2,7 @@
 
 from typing import List
 
-from cibo.actions import Action
+from cibo.actions.__action__ import Action
 from cibo.actions.look import Look
 from cibo.client import Client
 

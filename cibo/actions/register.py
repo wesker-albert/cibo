@@ -5,9 +5,9 @@ from typing import List
 from marshmallow import ValidationError
 from peewee import DoesNotExist
 
-from cibo.actions import Action
+from cibo.actions.__action__ import Action
 from cibo.client import Client
-from cibo.models import Player, PlayerSchema
+from cibo.models.player import Player, PlayerSchema
 
 
 class Register(Action):

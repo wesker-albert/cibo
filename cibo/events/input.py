@@ -2,9 +2,10 @@
 CommandProcessor. If the input contains a valid Command, further logic will be carried
 out."""
 
-from cibo.actions import _Error, _Prompt
+from cibo.actions._error import _Error
+from cibo.actions._prompt import _Prompt
 from cibo.command import CommandProcessor
-from cibo.events import Event
+from cibo.events.__event__ import Event
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer

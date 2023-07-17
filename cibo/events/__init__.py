@@ -5,11 +5,3 @@ tick timer or cron.
 Some Events call Actions directly. Others, like user input, will be ran through the
 CommandProcessor to determine which Action should be called.
 """
-
-from cibo.events.__event__ import Event
-from cibo.events.connect import Connect
-from cibo.events.disconnect import Disconnect
-from cibo.events.input import Input
-from cibo.events.tick import Tick
-
-_ = Event, Connect, Disconnect, Input, Tick

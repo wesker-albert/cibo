@@ -31,6 +31,9 @@ poetry.lock: pyproject.toml
 python:
 	@poetry --quiet run python
 
+lint:
+	@poetry run pylint ./cibo
+
 
 # Server
 

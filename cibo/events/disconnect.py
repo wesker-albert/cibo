@@ -1,7 +1,7 @@
 """Clients who have disconnected from the server, since last update poll."""
 
-from cibo.actions import _Disconnect
-from cibo.events import Event
+from cibo.actions._disconnect import _Disconnect
+from cibo.events.__event__ import Event
 
 
 class Disconnect(Event):

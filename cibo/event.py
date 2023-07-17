@@ -5,7 +5,9 @@ tick timer or cron.
 The EventProcessor allows for the different Event types to be processed as a batch.
 """
 
-from cibo.events import Connect, Disconnect, Input
+from cibo.events.connect import Connect
+from cibo.events.disconnect import Disconnect
+from cibo.events.input import Input
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 

@@ -5,8 +5,10 @@ from threading import Thread
 
 from schedule import every, run_pending
 
-from cibo.actions import Action, _TickMinute, _TickSecond
-from cibo.events import Event
+from cibo.actions.__action__ import Action
+from cibo.actions._tick_minute import _TickMinute
+from cibo.actions._tick_second import _TickSecond
+from cibo.events.__event__ import Event
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
