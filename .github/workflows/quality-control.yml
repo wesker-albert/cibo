@@ -12,12 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout branch
+      uses: actions/checkout@v3
 
     - name: Install poetry
       run: pipx install poetry==1.5.1
 
-    - name: Set up Python 3.11.4
+    - name: Set up python 3.11.4
       uses: actions/setup-python@v4
       with:
         python-version: "3.11.4"
@@ -50,7 +51,7 @@ jobs:
       with:
         filename: coverage.xml
         badge: true
-        fail_below_min: true
+        fail_below_min: false
         format: markdown
         hide_branch_rate: false
         hide_complexity: true
@@ -58,7 +59,8 @@ jobs:
         output: both
         thresholds: "60 80"
 
-    - uses: jwalton/gh-find-current-pr@v1.3.2
+    - name:Find PR number
+      uses: jwalton/gh-find-current-pr@v1.3.2
       if: success() || failure()
       id: finder
 

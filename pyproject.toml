@@ -32,7 +32,7 @@ parallel = true
 concurrency = ["multiprocessing"]
 omit = [
     "*/__init__.py",
-    "tests/*",
+    "*/tests/*",
     "*/__main__.py"
 ]
 

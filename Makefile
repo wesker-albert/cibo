@@ -1,4 +1,4 @@
-.PHONY: init init_node init_poetry python start
+.PHONY: init init_node init_poetry python lint formatting test coverage start
 
 .DEFAULT_GOAL := init
 
