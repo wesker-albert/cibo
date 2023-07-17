@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
-from cibo.models import Player
+from cibo.models.player import Player
 
 
 class ClientLoginState(int, Enum):

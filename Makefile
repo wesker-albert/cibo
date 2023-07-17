@@ -31,6 +31,17 @@ poetry.lock: pyproject.toml
 python:
 	@poetry --quiet run python
 
+lint:
+	@poetry run pylint ./cibo
+
+formatting:
+	@poetry run black --diff --check --verbose cibo/
+
+test:
+	@poetry run pytest --durations=5
+
+coverage:
+	@poetry run pytest --cov=cibo
 
 # Server
 

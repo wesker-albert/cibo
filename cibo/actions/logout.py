@@ -3,7 +3,8 @@
 from time import sleep
 from typing import List
 
-from cibo.actions import Action, _Connect
+from cibo.actions.__action__ import Action
+from cibo.actions._connect import _Connect
 from cibo.client import Client, ClientLoginState
 
 

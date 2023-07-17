@@ -32,7 +32,8 @@ parallel = true
 concurrency = ["multiprocessing"]
 omit = [
     "*/__init__.py",
-    "cibo/tests/*"
+    "tests/*",
+    "*/__main__.py"
 ]
 
 [tool.coverage.report]

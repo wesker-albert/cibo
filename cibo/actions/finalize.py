@@ -3,7 +3,7 @@
 from sqlite3 import IntegrityError
 from typing import List
 
-from cibo.actions import Action
+from cibo.actions.__action__ import Action
 from cibo.client import Client
 
 
