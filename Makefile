@@ -1,4 +1,5 @@
-.PHONY: init init_node init_poetry python lint formatting test coverage start
+.PHONY: init init_node init_poetry python lint formatting test coverage safety_check \
+	start
 
 .DEFAULT_GOAL := init
 
@@ -31,6 +32,9 @@ poetry.lock: pyproject.toml
 python:
 	@poetry --quiet run python
 
+
+# Quality Control
+
 lint:
 	@poetry run pylint ./cibo
 
@@ -42,6 +46,11 @@ test:
 
 coverage:
 	@poetry run pytest --cov-report term --cov-report xml:coverage.xml --cov=cibo
+
+safety_check:
+	@poetry export --without-hashes --dev -o requirements.txt && cat requirements.txt \
+		| poetry run safety check --stdin --full-report && poetry check -n
+
 
 # Server
 

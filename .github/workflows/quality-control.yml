@@ -18,7 +18,7 @@ jobs:
     - name: Install poetry
       run: pipx install poetry==1.5.1
 
-    - name: Set up python 3.11.4
+    - name: Set up python
       uses: actions/setup-python@v4
       with:
         python-version: "3.11.4"
@@ -30,27 +30,31 @@ jobs:
       run: |
         poetry install
 
-    - name: Lint
+    - name: Safety check dependencies
+      run: |
+        make safety_check
+
+    - name: Lint codebase
       run: |
         make lint
 
-    - name: Formatting
+    - name: Validate formatting
       run: |
         make formatting
 
-    - name: Tests
+    - name: Run tests
       run: |
         make test
 
-    - name: Coverage
+    - name: Generate coverage report
       run: |
         make coverage
 
-    - name: Coverage Report
+    - name: Format coverage report
       uses: irongut/CodeCoverageSummary@v1.3.0
       with:
         filename: coverage.xml
-        badge: true
+        badge: false
         fail_below_min: false
         format: markdown
         hide_branch_rate: false
@@ -64,7 +68,7 @@ jobs:
       if: success() || failure()
       id: finder
 
-    - name: Add Coverage PR Comment
+    - name: Post coverage report as PR comment
       uses: marocchino/sticky-pull-request-comment@v2.6.2
       if: success() || failure()
       with:
