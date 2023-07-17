@@ -34,6 +34,9 @@ python:
 lint:
 	@poetry run pylint ./cibo
 
+formatting:
+	@poetry run black --diff --check --verbose cibo/
+
 test:
 	@poetry run pytest --durations=5
 
