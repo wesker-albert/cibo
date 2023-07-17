@@ -41,7 +41,7 @@ test:
 	@poetry run pytest --durations=5
 
 coverage:
-	@poetry run pytest --cove-report term --cov-report xml:coverage.xml --cov=cibo
+	@poetry run pytest --cov-report term --cov-report xml:coverage.xml --cov=cibo
 
 # Server
 
