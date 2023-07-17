@@ -59,7 +59,7 @@ jobs:
         output: both
         thresholds: "60 80"
 
-    - name:Find PR number
+    - name: Find PR number
       uses: jwalton/gh-find-current-pr@v1.3.2
       if: success() || failure()
       id: finder
