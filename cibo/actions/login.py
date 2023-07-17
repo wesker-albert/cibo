@@ -70,7 +70,8 @@ class Login(Action):
         # join the world and look at the room we left off in
         self._send.private(
             client,
-            "You awaken from a pleasant dream, disappointed. You have a look around...",
+            "You take the [red]red pill[/]. You have a look around, to see how deep "
+            "the rabbit hole goes...",
             prompt=False,
         )
 

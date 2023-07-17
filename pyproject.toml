@@ -12,6 +12,7 @@ peewee = "3.16.2"
 python = "3.11.4"
 python-dotenv = "1.0.0"
 rich = "13.4.2"
+schedule = "1.2.0"
 
 [tool.poetry.dev-dependencies]
 black = "23.3.0"

@@ -15,7 +15,7 @@ if __name__ == "__main__":
         "Accepted commands:\n\n"
         "create_db    create the necessary db and tables\n"
         "start        start the server\n"
-        "stop         stop the server\n"
+        "stop         stop the server (currently broken, can't be started again)\n"
         "exit         stop the server if running, and exit this program\n"
     )
 

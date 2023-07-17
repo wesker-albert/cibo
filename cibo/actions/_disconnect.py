@@ -16,7 +16,9 @@ class _Disconnect(Action):
         return []
 
     def process(self, client: Client, _command: Optional[str], _args: List[str]):
-        if client.player:
+        if client.is_logged_in and client.player:
+            client.player.save()
+
             self._send.local(
                 client.player.current_room_id,
                 f"You watch in horror as [cyan]{client.player.name}[/] "

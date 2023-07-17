@@ -30,11 +30,25 @@ about but haven't gotten the professional opportunity to try.
 
 ## Current state:
 
+### 2023-07-16
+* New command available: `quit`
+* Server now has the ability to schedule "tick" timers, that are processed with varying
+frequency.
+* The current player room is persisted every minute, if a disconnection occurs, or when
+`quit` and `logout` are used.
+* Thanks to the above, when a player reconnects they will spawn in the last room they
+occupied.
+* Server command `stop` was discovered to be broken, in the sense that once stopped,
+the server cannot be `start`ed again without terminating the program and running it
+again. This will be fixed later, as it doesn't currently pose a development
+complication.
+
 ### 2023-07-15
 * New commands available: `look, exits, north, south, east, west`
 * A small set of sample rooms were created to test navigation.
 * Basic player navigation has been implemented, with the exceptions of `up` and `down`.
-* "Local" messages have been completed, and now only print to occupants of the room they were executed within.
+* "Local" messages have been completed, and now only print to occupants of the room they
+were executed within.
 
 ### 2023-07-13
 * The project can be loaded via Dev Container in VSCode.

@@ -3,8 +3,8 @@ well as methods to control the server state.
 """
 
 import os
-import threading
 from enum import Enum
+from threading import Thread
 from time import sleep
 from typing import Optional
 
@@ -12,6 +12,7 @@ from peewee import SqliteDatabase
 
 from cibo.decorator import load_environment_variables
 from cibo.event import EventProcessor
+from cibo.events.tick import Tick
 from cibo.models import Player
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
@@ -48,7 +49,10 @@ class Server:
 
         self._event_processor = EventProcessor(self._telnet, self._world)
 
-        self._thread: Optional[threading.Thread] = None
+        self._tick = Tick(self._telnet, self._world)
+        self._tick_thread = Thread(target=self._start_tick_timers)
+
+        self._thread = Thread(target=self._start_server)
         self._status = self.Status.STOPPED
 
     @property
@@ -61,6 +65,14 @@ class Server:
 
         return self._status is self.Status.RUNNING
 
+    def _start_tick_timers(self) -> None:
+        """Start the tick timers, that carry out schedules Actions."""
+
+        while self.is_running:
+            self._tick.process()
+
+            sleep(1)
+
     def _start_server(self) -> None:
         """Start the telnet server and begin listening for events. Process any new
         events received using the event processor.
@@ -70,11 +82,13 @@ class Server:
         self._telnet.listen()
         self._status = self.Status.RUNNING
 
+        self._tick_thread.start()
+
         while self.is_running:
             self._telnet.update()
             self._event_processor.process()
 
-            sleep(0.15)
+            sleep(0.05)
 
     def create_db(self) -> None:
         """Create the sqlite DB and necessary tables."""
@@ -86,7 +100,6 @@ class Server:
         """Create a thread and start the server."""
 
         if self._status is self.Status.STOPPED:
-            self._thread = threading.Thread(target=self._start_server)
             self._thread.start()
 
     def stop(self) -> None:
@@ -94,6 +107,8 @@ class Server:
 
         if self.is_running and self._thread:
             self._status = self.Status.SHUTTING_DOWN
+
+            self._tick_thread.join()
 
             self._telnet.shutdown()
             self._thread.join()
