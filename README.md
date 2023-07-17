@@ -38,6 +38,10 @@ frequency.
 `quit` and `logout` are used.
 * Thanks to the above, when a player reconnects they will spawn in the last room they
 occupied.
+* Server command `stop` was discovered to be broken, in the sense that once stopped,
+the server cannot be `start`ed again without terminating the program and running it
+again. This will be fixed later, as it doesn't currently pose a development
+complication.
 
 ### 2023-07-15
 * New commands available: `look, exits, north, south, east, west`
