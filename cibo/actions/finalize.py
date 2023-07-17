@@ -29,7 +29,7 @@ class Finalize(Action):
             self._send.private(
                 client,
                 "You'll need to [green]register[/] before you can "
-                "[green]finalize#NOCLOR#.",
+                "[green]finalize[/].",
             )
             return
 
