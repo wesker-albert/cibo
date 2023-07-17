@@ -34,6 +34,11 @@ python:
 lint:
 	@poetry run pylint ./cibo
 
+test:
+	@poetry run pytest --durations=5
+
+coverage:
+	@poetry run pytest --cov=cibo
 
 # Server
 

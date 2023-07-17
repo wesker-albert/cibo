@@ -24,3 +24,9 @@ jobs:
     - name: Lint
       run: |
         make lint
+    - name: Tests
+      run: |
+        make test
+    - name: Coverage
+      run: |
+        make coverage
