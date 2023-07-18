@@ -4,7 +4,7 @@ occupy as well as navigate through.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
+from typing import List, Optional
 
 
 class Direction(str, Enum):
@@ -22,6 +22,7 @@ class Direction(str, Enum):
 class Sector:
     """A subset of Rooms with certain shared behaviors."""
 
+    id_: int
     name: str
     # flags: List[Flags]
 
@@ -30,6 +31,7 @@ class Sector:
 class Region:
     """A large group of Rooms."""
 
+    id_: int
     name: str
     # flags: List[Flags]
 
@@ -39,13 +41,13 @@ class RoomDescription:
     """Descriptions of the Room from different perspectives."""
 
     normal: str
-    # extra: Optional[str]
-    # night: Optional[str]
-    # under: Optional[str]
-    # behind: Optional[str]
-    # above: Optional[str]
-    # smell: Optional[str]
-    # listen: Optional[str]
+    extra: Optional[str] = None
+    night: Optional[str] = None
+    under: Optional[str] = None
+    behind: Optional[str] = None
+    above: Optional[str] = None
+    smell: Optional[str] = None
+    listen: Optional[str] = None
 
 
 @dataclass
@@ -54,8 +56,8 @@ class RoomExit:
 
     direction: Direction
     id_: int
-    # description: str
-    # door: str
+    description: Optional[str] = None
+    door: Optional[str] = None
     # door_flags: List[Flags]
 
 

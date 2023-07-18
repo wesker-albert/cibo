@@ -11,7 +11,20 @@ class Move(Action):
     """Navigates a player between available rooms."""
 
     def aliases(self) -> List[str]:
-        return ["e", "east", "n", "north", "s", "south", "w", "west"]
+        return [
+            "d",
+            "down",
+            "e",
+            "east",
+            "n",
+            "north",
+            "s",
+            "south",
+            "u",
+            "up",
+            "w",
+            "west",
+        ]
 
     def required_args(self) -> List[str]:
         return []
