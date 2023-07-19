@@ -1,0 +1,24 @@
+{
+    "doors": [
+        {
+            "name": "small trapdoor",
+            "room_ids": [
+                1,
+                7
+            ],
+            "flags": [
+                "closed"
+            ]
+        },
+        {
+            "name": "rooftop escape passage",
+            "room_ids": [
+                6,
+                8
+            ],
+            "flags": [
+                "locked"
+            ]
+        }
+    ]
+}

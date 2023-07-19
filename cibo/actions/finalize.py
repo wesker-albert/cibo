@@ -38,7 +38,7 @@ class Finalize(Action):
 
             self._send.private(
                 client,
-                f"{client.registration.name} has been created. "
+                f"[cyan]{client.registration.name}[/] has been created. "
                 "You can now [green]login[/] with this player.",
             )
 

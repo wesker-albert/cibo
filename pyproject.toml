@@ -15,15 +15,15 @@ rich = "13.4.2"
 schedule = "1.2.0"
 
 [tool.poetry.dev-dependencies]
-black = "23.3.0"
-coverage = "7.2.5"
+black = "23.7.0"
+coverage = "7.2.7"
 pylint = "2.17.4"
-pytest = "7.3.1"
-pytest-cov = "4.0.0"
-pytest-reverse = "1.5.0"
-pytest-xdist = "3.2.1"
+pytest = "7.4.0"
+pytest-cov = "4.1.0"
+pytest-reverse = "1.7.0"
+pytest-xdist = "3.3.1"
 python-dotenv = "1.0.0"
-safety = "2.3.1"
+safety = "2.3.4"
 
 [tool.coverage.run]
 source = ["."]
@@ -32,7 +32,7 @@ parallel = true
 concurrency = ["multiprocessing"]
 omit = [
     "*/__init__.py",
-    "tests/*",
+    "*/tests/*",
     "*/__main__.py"
 ]
 
