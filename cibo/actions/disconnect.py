@@ -6,7 +6,7 @@ from cibo.actions.__action__ import Action
 from cibo.client import Client
 
 
-class _Disconnect(Action):
+class Disconnect(Action):
     """Make others aware that a player has abruptly disconnected."""
 
     def aliases(self) -> List[str]:

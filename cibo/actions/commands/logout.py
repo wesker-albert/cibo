@@ -4,7 +4,7 @@ from time import sleep
 from typing import List
 
 from cibo.actions.__action__ import Action
-from cibo.actions._connect import _Connect
+from cibo.actions.connect import Connect
 from cibo.client import Client, ClientLoginState
 
 
@@ -47,4 +47,4 @@ class Logout(Action):
 
         # process the connection Action, so the client knows they can now register
         # or login again
-        _Connect(self._telnet, self._world).process(client, command, args)
+        Connect(self._telnet, self._world).process(client, command, args)

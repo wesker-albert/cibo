@@ -12,7 +12,7 @@ from peewee import SqliteDatabase
 
 from cibo.decorator import load_environment_variables
 from cibo.event import EventProcessor
-from cibo.events.tick import Tick
+from cibo.events.tick import TickEvent
 from cibo.models.player import Player
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
@@ -49,7 +49,7 @@ class Server:
 
         self._event_processor = EventProcessor(self._telnet, self._world)
 
-        self._tick = Tick(self._telnet, self._world)
+        self._tick = TickEvent(self._telnet, self._world)
         self._tick_thread = Thread(target=self._start_tick_timers)
 
         self._thread = Thread(target=self._start_server)

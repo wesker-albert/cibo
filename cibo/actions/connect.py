@@ -9,7 +9,7 @@ from cibo.actions.__action__ import Action
 from cibo.client import Client
 
 
-class _Connect(Action):
+class Connect(Action):
     """Inform the client they have connected to the server."""
 
     @property

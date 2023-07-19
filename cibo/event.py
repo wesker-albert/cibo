@@ -5,9 +5,9 @@ tick timer or cron.
 The EventProcessor allows for the different Event types to be processed as a batch.
 """
 
-from cibo.events.connect import Connect
-from cibo.events.disconnect import Disconnect
-from cibo.events.input import Input
+from cibo.events.connect import ConnectEvent
+from cibo.events.disconnect import DisconnectEvent
+from cibo.events.input import InputEvent
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
@@ -30,9 +30,9 @@ class EventProcessor:
         self._telnet = telnet
         self._world = world
 
-        self._connect = Connect(self._telnet, self._world)
-        self._disconnect = Disconnect(self._telnet, self._world)
-        self._input = Input(self._telnet, self._world)
+        self._connect = ConnectEvent(self._telnet, self._world)
+        self._disconnect = DisconnectEvent(self._telnet, self._world)
+        self._input = InputEvent(self._telnet, self._world)
 
     def process(self) -> None:
         """Processes the different Event types."""

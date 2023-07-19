@@ -6,7 +6,7 @@ from cibo.actions.__action__ import Action
 from cibo.client import Client
 
 
-class _Error(Action):
+class Error(Action):
     """Alert the client an error occurred."""
 
     def aliases(self) -> List[str]:

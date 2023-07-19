@@ -6,14 +6,14 @@ from threading import Thread
 from schedule import every, run_pending
 
 from cibo.actions.__action__ import Action
-from cibo.actions.scheduled._every_minute import _EveryMinute
-from cibo.actions.scheduled._every_second import _EverySecond
+from cibo.actions.scheduled.every_minute import EveryMinute
+from cibo.actions.scheduled.every_second import EverySecond
 from cibo.events.__event__ import Event
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
 
-class Tick(Event):
+class TickEvent(Event):
     """Tick timers, that execute recurring Actions with varying frequency."""
 
     def __init__(self, telnet: TelnetServer, world: World):
@@ -46,14 +46,14 @@ class Tick(Event):
         """A tick scheduled for every second."""
 
         for client in telnet.get_connected_clients():
-            _EverySecond(telnet, world).process(client, None, [])
+            EverySecond(telnet, world).process(client, None, [])
 
     @staticmethod
     def _every_minute(telnet: TelnetServer, world: World):
         """A tick scheduled for every minute."""
 
         for client in telnet.get_connected_clients():
-            _EveryMinute(telnet, world).process(client, None, [])
+            EveryMinute(telnet, world).process(client, None, [])
 
     def process(
         self,
