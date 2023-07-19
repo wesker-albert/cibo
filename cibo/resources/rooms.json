@@ -95,6 +95,10 @@
                 {
                     "direction": "d",
                     "id": 1
+                },
+                {
+                    "direction": "u",
+                    "id": 8
                 }
             ]
         },
@@ -108,6 +112,19 @@
                 {
                     "direction": "u",
                     "id": 1
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "name": "A Room Marked #8",
+            "description": {
+                "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
+            },
+            "exits": [
+                {
+                    "direction": "d",
+                    "id": 6
                 }
             ]
         }

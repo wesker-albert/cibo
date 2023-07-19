@@ -4,61 +4,50 @@ occupy as well as navigate through.
 This is a collection of all the Rooms that exist in the world.
 """
 
-import json
-from pathlib import Path
 from typing import List, Optional
 
 from cibo.models.room import Direction, Room, RoomDescription, RoomExit
+from cibo.resources.__resource__ import Resource
 
 
-class Rooms:
+class Rooms(Resource):
     """All the Rooms that exist in the world."""
 
     def __init__(self):
         self._rooms_file = "rooms.json"
-        self._rooms = self._generate_rooms()
+        self._rooms: List[Room] = self._generate_resources(self._rooms_file)
 
-    def _generate_rooms(self) -> List[Room]:
-        """Generate all the Rooms, from the local JSON file that houses them,
-
-        Returns:
-            List[Room]: Rooms, lots of rooms.
-        """
-
-        return [
-            self._create_room_from_dict(room) for room in self._get_rooms_from_file()
-        ]
-
-    def _get_rooms_from_file(self) -> List[dict]:
-        """Loads the JSON file into a dict, then compiles each room object into a list.
-
-        Returns:
-            List[dict]: The Rooms in raw dict format.
-        """
-
-        path = Path(__file__).parent.resolve()
-
-        with open(f"{path}/{self._rooms_file}", encoding="utf-8") as file:
-            room_data = json.load(file)
-
-        return room_data["rooms"]
-
-    def _create_room_from_dict(self, room: dict) -> Room:
-        """Takes an individual room in raw dict format, and constructs a Room out of it.
+    def _create_resource_from_dict(self, resource: dict) -> Room:
+        """Takes an individual Room in raw dict format, and constructs a Room out of it.
 
         Args:
-            room (dict): The room as a raw dict.
+            resource (dict): The Room as a raw dict.
 
         Returns:
-            Room: The fully constructed room.
+            Room: The fully constructed Room.
         """
+
+        room = resource
 
         return Room(
             id_=room["id"],
             name=room["name"],
-            description=RoomDescription(normal=room["description"]["normal"]),
+            description=RoomDescription(
+                normal=room["description"]["normal"],
+                extra=room["description"].get("extra", None),
+                night=room["description"].get("night", None),
+                under=room["description"].get("under", None),
+                behind=room["description"].get("behind", None),
+                above=room["description"].get("above", None),
+                smell=room["description"].get("smell", None),
+                listen=room["description"].get("listen", None),
+            ),
             exits=[
-                RoomExit(direction=Direction(exit_["direction"]), id_=exit_["id"])
+                RoomExit(
+                    direction=Direction(exit_["direction"]),
+                    id_=exit_["id"],
+                    description=exit_.get("description", None),
+                )
                 for exit_ in room["exits"]
             ],
         )

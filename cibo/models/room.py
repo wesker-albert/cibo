@@ -41,13 +41,13 @@ class RoomDescription:
     """Descriptions of the Room from different perspectives."""
 
     normal: str
-    extra: Optional[str] = None
-    night: Optional[str] = None
-    under: Optional[str] = None
-    behind: Optional[str] = None
-    above: Optional[str] = None
-    smell: Optional[str] = None
-    listen: Optional[str] = None
+    extra: Optional[str]
+    night: Optional[str]
+    under: Optional[str]
+    behind: Optional[str]
+    above: Optional[str]
+    smell: Optional[str]
+    listen: Optional[str]
 
 
 @dataclass
@@ -56,9 +56,7 @@ class RoomExit:
 
     direction: Direction
     id_: int
-    description: Optional[str] = None
-    door: Optional[str] = None
-    # door_flags: List[Flags]
+    description: Optional[str]
 
 
 @dataclass

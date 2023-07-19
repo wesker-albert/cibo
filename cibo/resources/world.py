@@ -2,6 +2,7 @@
 Rooms, Items, Npcs.
 """
 
+from cibo.resources.doors import Doors
 from cibo.resources.rooms import Rooms
 
 
@@ -12,3 +13,4 @@ class World:
 
     def __init__(self):
         self.rooms = Rooms()
+        self.doors = Doors()
