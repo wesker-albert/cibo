@@ -3,7 +3,7 @@
 from typing import List
 
 from cibo.actions.__action__ import Action
-from cibo.actions.look import Look
+from cibo.actions.commands.look import Look
 from cibo.client import Client
 from cibo.models.door import DoorFlag
 

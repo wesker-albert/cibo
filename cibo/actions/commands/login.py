@@ -5,7 +5,7 @@ from typing import List
 from peewee import DoesNotExist
 
 from cibo.actions.__action__ import Action
-from cibo.actions.look import Look
+from cibo.actions.commands.look import Look
 from cibo.client import Client, ClientLoginState
 from cibo.models.player import Player
 

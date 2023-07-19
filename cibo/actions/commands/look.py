@@ -5,7 +5,7 @@ from typing import List, Optional
 from rich.panel import Panel
 
 from cibo.actions.__action__ import Action
-from cibo.actions.exits import Exits
+from cibo.actions.commands.exits import Exits
 from cibo.client import Client
 
 
