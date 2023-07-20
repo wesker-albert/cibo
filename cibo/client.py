@@ -36,7 +36,7 @@ class Client:
         """Check if the client is logged in.
 
         Returns:
-            bool: Is the client logged in or not
+            bool: Is the client logged in or not.
         """
 
         return self.login_state is ClientLoginState.LOGGED_IN
@@ -46,7 +46,7 @@ class Client:
         """The prompt that appears before the client's terminal input.
 
         Returns:
-            str: The prompt text
+            str: The prompt text.
         """
 
         return "> "
@@ -56,7 +56,7 @@ class Client:
         the client's terminal.
 
         Args:
-            message (str): The body text of the message
+            message (str): The body text of the message.
         """
 
         try:
@@ -71,7 +71,7 @@ class Client:
         """Sends the message text to the client, and apends a prompt at the end.
 
         Args:
-            message (str): The body text of the message
+            message (str): The body text of the message.
         """
 
         self._send_message(message)

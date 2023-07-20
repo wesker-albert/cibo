@@ -30,7 +30,8 @@ class CommandProcessor:
         """Creates the command processor instance.
 
         Args:
-            telnet (TelnetServer):  The Telnet server to use when executing the action
+            telnet (TelnetServer):  The Telnet server to use when executing the action.
+            world (World): The world, and all its resources.
         """
 
         self._telnet = telnet
@@ -41,7 +42,7 @@ class CommandProcessor:
         """Commands, their aliases, and the Action class they are mapped to.
 
         Returns:
-            List[Command]: Commands available to the client
+            List[Command]: Commands available to the client.
         """
 
         return [
@@ -54,10 +55,10 @@ class CommandProcessor:
         command alias exists.
 
         Args:
-            client_command (str): The command the client sent
+            client_command (str): The command the client sent.
 
         Returns:
-            Optional[Type[Action]]: The action class, if the command is valid
+            Optional[Type[Action]]: The action class, if the command is valid.
         """
 
         for mapped_command in self._commands:
@@ -71,12 +72,12 @@ class CommandProcessor:
         and then processes the associated logic.
 
         Args:
-            client (Client): The client who sent the command input
-            input_ (str): The client command and args
+            client (Client): The client who sent the command input.
+            input_ (str): The client command and args.
 
         Raises:
-            UnrecognizedCommand: The client command is unrecognized
-            CommandMissingArguments: The client command is missing required args
+            UnrecognizedCommand: The client command is unrecognized.
+            CommandMissingArguments: The client command is missing required args.
         """
 
         # separate the command from the args, then also split each of the individual

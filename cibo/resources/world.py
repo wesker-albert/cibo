@@ -8,7 +8,7 @@ from cibo.resources.rooms import Rooms
 
 class World:
     """The whole world. Or rather, everything that exists within it.
-    Rooms, Items, Npcs.
+    Rooms, Items, Npcs, etc.
     """
 
     def __init__(self):

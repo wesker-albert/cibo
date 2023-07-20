@@ -6,7 +6,6 @@ import os
 from enum import Enum
 from threading import Thread
 from time import sleep
-from typing import Optional
 
 from peewee import SqliteDatabase
 
@@ -33,19 +32,19 @@ class Server:
         STOPPED = 4
 
     @load_environment_variables
-    def __init__(self, port: Optional[int] = None) -> None:
+    def __init__(self, telnet: TelnetServer, world: World) -> None:
         """Creates a dormant telnet server. Once instantiated, it can be started and
         stopped.
 
         Args:
-            port (int, optional): The port for telnet to listen on. Defaults to 51234
+            telnet (TelnetServer): The TelnetServer instance to use.
+            world (World): The world, and all its resources.
         """
 
         self._database = SqliteDatabase(os.getenv("DATABASE_PATH", "cibo_database.db"))
 
-        self._port = port or int(os.getenv("SERVER_PORT", "51234"))
-        self._telnet = TelnetServer(port=self._port)
-        self._world = World()
+        self._telnet = telnet
+        self._world = world
 
         self._event_processor = EventProcessor(self._telnet, self._world)
 
@@ -60,7 +59,7 @@ class Server:
         """Check if the server is active and listening.
 
         Returns:
-            bool: Is the server is running or not
+            bool: Is the server is running or not.
         """
 
         return self._status is self.Status.RUNNING

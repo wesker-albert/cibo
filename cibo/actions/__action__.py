@@ -35,10 +35,10 @@ class Action(ABC):
         delimiter.
 
         Args:
-            args (List[str]): The list of args
+            args (List[str]): The list of args.
 
         Returns:
-            str: All the args as one big string
+            str: All the args as one big string.
         """
 
         return " ".join([str(x) for x in args])
@@ -55,7 +55,7 @@ class Action(ABC):
         with entered commands from Clients.
 
         Returns:
-            List[str]: Aliases associated with the Action
+            List[str]: Aliases associated with the Action.
         """
 
         pass
@@ -67,7 +67,7 @@ class Action(ABC):
         If no arguments are necessary for the Action, returns an empty list.
 
         Returns:
-            List[str]: Descriptions for each required argument
+            List[str]: Descriptions for each required argument.
         """
 
         pass
@@ -77,9 +77,9 @@ class Action(ABC):
         """Process the logic for the Action.
 
         Args:
-            client (Client): The client who triggered the Action
-            command (str): The command that the client sent
-            args (List[str]): The args necessary to the Action
+            client (Client): The client who triggered the Action.
+            command (str): The command that the client sent.
+            args (List[str]): The args necessary to the Action.
         """
 
         pass

@@ -2,7 +2,8 @@
 client interactions with the server, or (in future) can be scheduled based upon a
 tick timer or cron.
 
-The EventProcessor allows for the different Event types to be processed as a batch.
+The EventProcessor allows for the different Event types to be processed as a batch,
+in a FIFO order.
 """
 
 from cibo.events.connect import ConnectEvent
@@ -22,9 +23,8 @@ class EventProcessor:
 
         Args:
             telnet (TelnetServer): The Telnet server to use for event query and
-                processing
-            command_processor (CommandProcessor): The CommandProcessor used for
-                processing client input
+                processing.
+            world (World): The world, and all its resources.
         """
 
         self._telnet = telnet

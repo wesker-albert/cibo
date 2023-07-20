@@ -12,7 +12,7 @@ from cibo.telnet import TelnetServer
 
 
 class InputEvent(Event):
-    """Input send from clients since the last poll, that needs to be processed by the
+    """Input sent from clients since the last poll, that needs to be processed by the
     CommandProcessor. If the input contains a valid Command, further logic will be
     carried out.
     """

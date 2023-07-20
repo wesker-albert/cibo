@@ -14,7 +14,7 @@ class Password:
         """Hashes the provided password.
 
         Args:
-            password_plaintext (str): The plaintext password to be hashed
+            password_plaintext (str): The plaintext password to be hashed.
 
         Returns:
             str: The salted and hashed password.
@@ -26,11 +26,11 @@ class Password:
         """Verifies the password against a hash.
 
         Args:
-            password_plaintext (str): The plaintext password to be verified
-            password_hashed (str): The hashed password to be verified against
+            password_plaintext (str): The plaintext password to be verified.
+            password_hashed (str): The hashed password to be verified against.
 
         Returns:
-            bool: Returns true if password matches the hash
+            bool: Returns true if password matches the hash.
         """
 
         return self._bcrypt.verify(password_plaintext, password_hashed)
