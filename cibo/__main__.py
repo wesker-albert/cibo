@@ -4,7 +4,7 @@ the server is started and stopped from the commandline, and not while a loop is
 running.
 """
 
-import os
+from os import getenv
 from time import sleep
 
 from dotenv import load_dotenv
@@ -16,7 +16,7 @@ from cibo.telnet import TelnetServer
 load_dotenv()
 
 if __name__ == "__main__":
-    telnet = TelnetServer(port=os.getenv("SERVER_PORT", "51234"))
+    telnet = TelnetServer(port=int(getenv("SERVER_PORT", "51234")))
     world = World()
 
     server = Server(telnet, world)

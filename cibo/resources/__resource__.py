@@ -36,9 +36,7 @@ class Resource(ABC):
             List[dict]: The resources in raw dict format.
         """
 
-        path = Path(__file__).parent.resolve()
-
-        with open(f"{path}/{filename}", encoding="utf-8") as file:
+        with open(f"{Path.cwd()}/{filename}", encoding="utf-8") as file:
             data = json.load(file)
 
         return next(iter(data.values()))

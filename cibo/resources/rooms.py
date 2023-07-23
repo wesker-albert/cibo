@@ -13,9 +13,8 @@ from cibo.resources.__resource__ import Resource
 class Rooms(Resource):
     """All the Rooms that exist in the world."""
 
-    def __init__(self):
-        self._rooms_file = "rooms.json"
-        self._rooms: List[Room] = self._generate_resources(self._rooms_file)
+    def __init__(self, rooms_file: str):
+        self._rooms: List[Room] = self._generate_resources(rooms_file)
 
     def _create_resource_from_dict(self, resource: dict) -> Room:
         """Takes an individual Room in raw dict format, and constructs a Room out of it.

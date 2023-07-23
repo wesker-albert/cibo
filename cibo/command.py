@@ -62,7 +62,8 @@ class CommandProcessor:
         """
 
         for mapped_command in self._commands:
-            if client_command in mapped_command.aliases:
+            # we convert aliases to lowercase, to avoid case sensitivity
+            if client_command in [alias.lower() for alias in mapped_command.aliases]:
                 return mapped_command.action
 
         return None

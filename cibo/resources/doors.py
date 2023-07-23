@@ -14,9 +14,8 @@ from cibo.resources.__resource__ import Resource
 class Doors(Resource):
     """All the Doors that exist in the world."""
 
-    def __init__(self):
-        self._doors_file = "doors.json"
-        self._doors: List[Door] = self._generate_resources(self._doors_file)
+    def __init__(self, doors_file: str):
+        self._doors: List[Door] = self._generate_resources(doors_file)
 
     def _create_resource_from_dict(self, resource: dict) -> Door:
         """Takes an individual Door in raw dict format, and constructs a Door out of it.
