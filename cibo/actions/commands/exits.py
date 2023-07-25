@@ -25,13 +25,13 @@ class Exits(Action):
             Optional[str]: The exits for the current room.
         """
 
-        if not client.is_logged_in or not client.player:
+        if not client.is_logged_in:
             return None
 
-        room = self._world.rooms.get(client.player.current_room_id)
+        room = self.rooms.get_by_id(client.player.current_room_id)
 
         if room:
-            exits = self._world.rooms.get_exits(client.player.current_room_id)
+            exits = self.rooms.get_exits(client.player.current_room_id)
 
             # plurality is important...
             if not exits:
@@ -46,7 +46,7 @@ class Exits(Action):
         return None
 
     def process(self, client: Client, _command: Optional[str], _args: List[str]):
-        if not client.is_logged_in or not client.player:
+        if not client.is_logged_in:
             self._send.prompt(client)
             return
 

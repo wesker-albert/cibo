@@ -51,3 +51,33 @@ class Doors(Resource):
                 return door
 
         return None
+
+    def is_door_closed(self, door: Door) -> bool:
+        if not door:
+            return False
+
+        return (
+            not door.flags
+            or DoorFlag.CLOSED in door.flags
+            or DoorFlag.LOCKED in door.flags
+        )
+
+    def is_door_open(self, door: Door) -> bool:
+        if not door:
+            return False
+
+        return DoorFlag.OPEN in door.flags
+
+    def is_door_locked(self, door: Door) -> bool:
+        if not door:
+            return False
+
+        return DoorFlag.LOCKED in door.flags
+
+    def close_door(self, door: Door) -> None:
+        door.flags.remove(DoorFlag.OPEN)
+        door.flags.append(DoorFlag.CLOSED)
+
+    def open_door(self, door: Door) -> None:
+        door.flags.remove(DoorFlag.CLOSED)
+        door.flags.append(DoorFlag.OPEN)

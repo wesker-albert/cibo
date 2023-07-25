@@ -42,13 +42,13 @@ class Look(Action):
         return "\n".join([str(occupant) for occupant in occupants])
 
     def process(self, client: Client, _command: Optional[str], args: List[str]):
-        if not client.is_logged_in or not client.player:
+        if not client.is_logged_in:
             self._send.prompt(client)
             return
 
         # the player is just looking at the room in general
         if not args:
-            room = self._world.rooms.get(client.player.current_room_id)
+            room = self.rooms.get_by_id(client.player.current_room_id)
 
             if room:
                 exits = Exits(self._telnet, self._world).get_formatted_exits(client)

@@ -4,7 +4,7 @@ from time import sleep
 from typing import List
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client, ClientLoginState
+from cibo.client import Client
 
 
 class Quit(Action):
@@ -17,13 +17,11 @@ class Quit(Action):
         return []
 
     def process(self, client: Client, _command: str, _args: List[str]):
-        if client.is_logged_in and client.player:
+        if client.is_logged_in:
             player_name = client.player.name
             player_room = client.player.current_room_id
 
-            client.login_state = ClientLoginState.PRE_LOGIN
-            client.player.save()
-            client.player = None
+            client.log_out()
 
             self._send.local(
                 player_room,

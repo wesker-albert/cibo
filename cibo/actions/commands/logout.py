@@ -5,7 +5,7 @@ from typing import List
 
 from cibo.actions.__action__ import Action
 from cibo.actions.connect import Connect
-from cibo.client import Client, ClientLoginState
+from cibo.client import Client
 
 
 class Logout(Action):
@@ -18,16 +18,14 @@ class Logout(Action):
         return []
 
     def process(self, client: Client, command: str, args: List[str]):
-        if not client.is_logged_in or not client.player:
+        if not client.is_logged_in:
             self._send.prompt(client)
             return
 
         player_name = client.player.name
         player_room = client.player.current_room_id
 
-        client.login_state = ClientLoginState.PRE_LOGIN
-        client.player.save()
-        client.player = None
+        client.log_out()
 
         self._send.local(
             player_room,

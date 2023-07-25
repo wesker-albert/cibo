@@ -3,7 +3,6 @@
 from typing import List
 
 from marshmallow import ValidationError
-from peewee import DoesNotExist
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
@@ -19,6 +18,15 @@ class Register(Action):
     def required_args(self) -> List[str]:
         return ["name", "password"]
 
+    def is_registration_valid(self, name: str, password: str) -> bool:
+        try:
+            Player(name=name, password=password).validate(PlayerSchema)
+
+            return True
+
+        except ValidationError:
+            return False
+
     def process(self, client: Client, _command: str, args: List[str]):
         if client.is_logged_in:
             self._send.private(
@@ -31,43 +39,17 @@ class Register(Action):
         password = args[1]
 
         # verify a Player with the same name doesn't already exist
-        try:
-            _existing_player = Player.get(Player.name == player_name)
+        existing_player = Player.get_by_name(player_name)
 
+        if existing_player:
             self._send.private(
                 client,
-                f"Sorry, turns out the name [cyan]{player_name}[/] is already "
-                "taken. Please [green]register[/] again with a different name.",
+                f"Sorry, the name [cyan]{player_name}[/] is already taken. "
+                "Please [green]register[/] again with a different name.",
             )
             return
 
-        except DoesNotExist:
-            pass
-
-        try:
-            Player(name=player_name, password=password).validate(PlayerSchema)
-
-            # a temporary Player model is set on the client, to be created in the db if
-            # they call the Finalize action
-            client.registration = Player(
-                name=player_name,
-                password=self._password_hasher.hash_(password),
-                current_room_id=1,
-            )
-
-            self._send.private(
-                client,
-                "Are you sure you want to create the player named "
-                f"[cyan]{player_name}[/]?\n\n"
-                "Type [green]finalize[/] to finalize the player creation. "
-                "If you want to use a different name or password, you can "
-                "[green]register[/] again.\n\n"
-                "Otherwise, feel free to [green]login[/] to an already "
-                "existing player.",
-            )
-
-        # schema validation failed for the Player model
-        except ValidationError:
+        if not self.is_registration_valid(player_name, password):
             self._send.private(
                 client,
                 "[bright_red]Your player name or password don't meet criteria.[/]\n\n"
@@ -76,3 +58,23 @@ class Register(Action):
                 "Passwords must be minimum 8 chars.\n\n"
                 "Please [green]register[/] again.",
             )
+            return
+
+        # a temporary Player model is set on the client, to be created in the db if
+        # they call the Finalize action
+        client.registration = Player(
+            name=player_name,
+            password=self._password_hasher.hash_(password),
+            current_room_id=1,
+        )
+
+        self._send.private(
+            client,
+            "Are you sure you want to create the player named "
+            f"[cyan]{player_name}[/]?\n\n"
+            "Type [green]finalize[/] to finalize the player creation. "
+            "If you want to use a different name or password, you can "
+            "[green]register[/] again.\n\n"
+            "Otherwise, feel free to [green]login[/] to an already "
+            "existing player.",
+        )

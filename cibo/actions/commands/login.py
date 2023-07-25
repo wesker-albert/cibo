@@ -2,11 +2,9 @@
 
 from typing import List
 
-from peewee import DoesNotExist
-
 from cibo.actions.__action__ import Action
 from cibo.actions.commands.look import Look
-from cibo.client import Client, ClientLoginState
+from cibo.client import Client
 from cibo.models.player import Player
 
 
@@ -18,6 +16,13 @@ class Login(Action):
 
     def required_args(self) -> List[str]:
         return ["name", "password"]
+
+    def is_player_logged_in(self, name: str) -> bool:
+        for client in self._telnet.get_connected_clients():
+            if client.is_logged_in and client.player.name == name:
+                return True
+
+        return False
 
     def process(self, client: Client, _command: str, args: List[str]):
         if client.is_logged_in:
@@ -31,11 +36,9 @@ class Login(Action):
         player_name = args[0]
         password = args[1]
 
-        try:
-            existing_player = Player.get(Player.name == player_name)
+        player = Player.get_by_name(player_name)
 
-        # a Player doesn't exist with the entered name
-        except DoesNotExist:
+        if not player:
             self._send.private(
                 client,
                 f"A player by the name [cyan]{player_name}[/] does not exist. "
@@ -44,28 +47,22 @@ class Login(Action):
             )
             return
 
-        # the password the client entered doesn't match the one in the Player entry
-        if not self._password_hasher.verify(password, existing_player.password):
+        # the password the client entered doesn't match the one in the Player record
+        if not self._password_hasher.verify(password, player.password):
             self._send.private(client, "[bright_red]Incorrect password.[/]")
             return
 
         # check to see if another client is already logged in with the Player
-        for connected_client in self._telnet.get_connected_clients():
-            if (
-                connected_client.is_logged_in
-                and connected_client.player
-                and connected_client.player.name == player_name
-            ):
-                self._send.private(
-                    client,
-                    f"The player [cyan]{player_name}[/] is already logged in. "
-                    "If this player belongs to you and you think it's been stolen, "
-                    "please contact the admin.",
-                )
-                return
+        if self.is_player_logged_in(player.name):
+            self._send.private(
+                client,
+                f"The player [cyan]{player_name}[/] is already logged in. "
+                "If this player belongs to you and you think it's been stolen, "
+                "please contact the admin.",
+            )
+            return
 
-        client.player = existing_player
-        client.login_state = ClientLoginState.LOGGED_IN
+        client.log_in(player)
 
         # join the world and look at the room we left off in
         self._send.private(

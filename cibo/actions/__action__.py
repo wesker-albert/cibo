@@ -6,6 +6,8 @@ from typing import List
 from cibo.client import Client
 from cibo.output import Output
 from cibo.password import Password
+from cibo.resources.doors import Doors
+from cibo.resources.rooms import Rooms
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
@@ -29,6 +31,14 @@ class Action(ABC):
         """
 
         return self._world
+
+    @property
+    def rooms(self) -> Rooms:
+        return self._world.rooms
+
+    @property
+    def doors(self) -> Doors:
+        return self._world.doors
 
     def _join_args(self, args: List[str]) -> str:
         """Join the list of args into a singular string, using a space as the

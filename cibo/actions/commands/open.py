@@ -4,7 +4,6 @@ from typing import List
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
-from cibo.models.door import DoorFlag
 
 
 class Open(Action):
@@ -17,7 +16,7 @@ class Open(Action):
         return []
 
     def process(self, client: Client, _command: str, args: List[str]):
-        if not client.is_logged_in or not client.player:
+        if not client.is_logged_in:
             self._send.prompt(client)
             return
 
@@ -34,42 +33,30 @@ class Open(Action):
             )
             return
 
-        room = self._world.rooms.get(client.player.current_room_id)
+        room = self.rooms.get_by_id(client.player.current_room_id)
+        exit_ = self.rooms.get_direction_exit(room, args[0])
 
-        if room:
-            for exit_ in room.exits:
-                if args[0] == (exit_.direction.value or exit_.direction.name.lower()):
-                    door = self._world.doors.get_by_room_ids(room.id_, exit_.id_)
-
-                    if door:
-                        if DoorFlag.LOCKED in door.flags:
-                            self._send.private(
-                                client, f"The [magenta]{door.name}[/] is locked."
-                            )
-                            return
-
-                        if not door.flags or DoorFlag.CLOSED in door.flags:
-                            door.flags.remove(DoorFlag.CLOSED)
-                            door.flags.append(DoorFlag.OPEN)
-
-                            self._send.private(
-                                client, f"You open the [magenta]{door.name}[/]."
-                            )
-                            self._send.local(
-                                room.id_,
-                                f"[cyan]{client.player.name}[/] opens a "
-                                f"[magenta]{door.name}[/].",
-                                [client],
-                            )
-                            self._send.local(
-                                exit_.id_, f"A [magenta]{door.name}[/] opens.", [client]
-                            )
-                            return
-
-                        if DoorFlag.OPEN in door.flags:
-                            self._send.private(
-                                client, f"The [magenta]{door.name}[/] is already open."
-                            )
-                            return
-
+        if not exit_:
             self._send.private(client, "There's nothing to open.")
+            return
+
+        door = self.doors.get_by_room_ids(room.id_, exit_.id_)
+
+        if self.doors.is_door_locked(door):
+            self._send.private(client, f"The [magenta]{door.name}[/] is locked.")
+            return
+
+        if self.doors.is_door_closed(door):
+            self.doors.open_door(door)
+
+            self._send.private(client, f"You open the [magenta]{door.name}[/].")
+            self._send.local(
+                room.id_,
+                f"[cyan]{client.player.name}[/] opens a " f"[magenta]{door.name}[/].",
+                [client],
+            )
+            self._send.local(exit_.id_, f"A [magenta]{door.name}[/] opens.", [client])
+            return
+
+        if self.doors.is_door_open(door):
+            self._send.private(client, f"The [magenta]{door.name}[/] is already open.")

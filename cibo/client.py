@@ -39,7 +39,7 @@ class Client:
             bool: Is the client logged in or not.
         """
 
-        return self.login_state is ClientLoginState.LOGGED_IN
+        return self.login_state is ClientLoginState.LOGGED_IN and self.player
 
     @property
     def prompt(self) -> str:
@@ -81,3 +81,12 @@ class Client:
 
         self.socket.shutdown(socket_.SHUT_RDWR)
         self.socket.close()
+
+    def log_out(self) -> None:
+        self.login_state = ClientLoginState.PRE_LOGIN
+        self.player.save()
+        self.player = None
+
+    def log_in(self, player: Player) -> None:
+        self.player = player
+        self.login_state = ClientLoginState.LOGGED_IN

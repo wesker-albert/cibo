@@ -51,7 +51,7 @@ class Rooms(Resource):
             ],
         )
 
-    def get(self, id_: int) -> Optional[Room]:
+    def get_by_id(self, id_: int) -> Optional[Room]:
         """Get a Room by its ID. Returns None if not found.
 
         Args:
@@ -78,9 +78,16 @@ class Rooms(Resource):
             List[str]: The Room exits in str format.
         """
 
-        room = self.get(id_)
+        room = self.get_by_id(id_)
 
         if not room:
             return []
 
         return sorted([exit_.direction.name.lower() for exit_ in room.exits])
+
+    def get_direction_exit(self, room: Room, direction: str) -> Optional[RoomExit]:
+        for exit_ in room.exits:
+            if direction == (exit_.direction.value or exit_.direction.name.lower()):
+                return exit_
+
+        return None
