@@ -23,22 +23,33 @@ class Action(ABC):
         self._world = world
 
     @property
-    def world(self) -> World:
-        """You've got the whole World, in your hands.
+    def rooms(self) -> Rooms:
+        """All the Rooms in the World.
 
         Returns:
-            World: The heavy weight of the World.
+            Rooms: The Rooms.
         """
-
-        return self._world
-
-    @property
-    def rooms(self) -> Rooms:
         return self._world.rooms
 
     @property
     def doors(self) -> Doors:
+        """All the Doors in the World.
+
+        Returns:
+            Doors: The Doors, without Jim Morrison.
+        """
+
         return self._world.doors
+
+    @property
+    def send(self) -> Output:
+        """Access the Output formatter, to send messages to clients.
+
+        Returns:
+            Output: The Output formatter instance, and its methods.
+        """
+
+        return self._send
 
     def _join_args(self, args: List[str]) -> str:
         """Join the list of args into a singular string, using a space as the

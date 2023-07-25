@@ -23,14 +23,14 @@ class Quit(Action):
 
             client.log_out()
 
-            self._send.local(
+            self.send.local(
                 player_room,
                 f'[cyan]{player_name}[/] yells, "Thank you Wisconsin!" They '
                 "then proceed to drop their microphone, and walk off the stage.",
                 [client],
             )
 
-        self._send.private(
+        self.send.private(
             client,
             "You take the [blue]blue pill[/]. You wake up in your bed and believe "
             "whatever you want to believe. You choose to believe that your parents are "

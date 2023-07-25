@@ -19,7 +19,7 @@ class Disconnect(Action):
         if client.is_logged_in:
             client.player.save()
 
-            self._send.local(
+            self.send.local(
                 client.player.current_room_id,
                 f"You watch in horror as [cyan]{client.player.name}[/] "
                 "proceeds to slowly eat their own head. They eventually disappear "

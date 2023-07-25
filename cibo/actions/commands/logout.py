@@ -19,7 +19,7 @@ class Logout(Action):
 
     def process(self, client: Client, command: str, args: List[str]):
         if not client.is_logged_in:
-            self._send.prompt(client)
+            self.send.prompt(client)
             return
 
         player_name = client.player.name
@@ -27,7 +27,7 @@ class Logout(Action):
 
         client.log_out()
 
-        self._send.local(
+        self.send.local(
             player_room,
             "A black van pulls up, and 2 large men in labcoats abduct "
             f"[cyan]{player_name}[/]. The van speeds away. You wonder if "
@@ -35,7 +35,7 @@ class Logout(Action):
             [client],
         )
 
-        self._send.private(
+        self.send.private(
             client,
             "You slowly fade away into obscurity, like you always feared you would...",
             prompt=False,

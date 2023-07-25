@@ -17,11 +17,11 @@ class Close(Action):
 
     def process(self, client: Client, _command: str, args: List[str]):
         if not client.is_logged_in:
-            self._send.prompt(client)
+            self.send.prompt(client)
             return
 
         if not args:
-            self._send.private(
+            self.send.private(
                 client,
                 "You close your eyes and daydream about money and success.",
             )
@@ -31,13 +31,13 @@ class Close(Action):
         exit_ = self.rooms.get_direction_exit(room, args[0])
 
         if not exit_:
-            self._send.private(client, "There's nothing to close.")
+            self.send.private(client, "There's nothing to close.")
             return
 
         door = self.doors.get_by_room_ids(room.id_, exit_.id_)
 
         if self.doors.is_door_closed(door):
-            self._send.private(
+            self.send.private(
                 client,
                 f"The [magenta]{door.name}[/] is already closed.",
             )
@@ -46,13 +46,13 @@ class Close(Action):
         if self.doors.is_door_open(door):
             self.doors.close_door(door)
 
-            self._send.private(client, f"You close the [magenta]{door.name}[/].")
-            self._send.local(
+            self.send.private(client, f"You close the [magenta]{door.name}[/].")
+            self.send.local(
                 room.id_,
                 f"[cyan]{client.player.name}[/] closes a " f"[magenta]{door.name}[/].",
                 [client],
             )
-            self._send.local(
+            self.send.local(
                 exit_.id_,
                 f"A [magenta]{door.name}[/] closes.",
                 [client],

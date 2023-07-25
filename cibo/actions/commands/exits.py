@@ -15,45 +15,15 @@ class Exits(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def get_formatted_exits(self, client: Client) -> Optional[str]:
-        """Formats the exits into a pretty, stylized string.
-
-        Args:
-            client (Client): The Client to look up the room for.
-
-        Returns:
-            Optional[str]: The exits for the current room.
-        """
-
+    def process(self, client: Client, _command: Optional[str], _args: List[str]):
         if not client.is_logged_in:
-            return None
+            self.send.prompt(client)
+            return
 
         room = self.rooms.get_by_id(client.player.current_room_id)
 
-        if room:
-            exits = self.rooms.get_exits(client.player.current_room_id)
-
-            # plurality is important...
-            if not exits:
-                return "[green]Exits:[/] none"
-
-            if len(exits) == 1:
-                return f"[green]Exit:[/] {exits[0]}"
-
-            formatted_exits = ", ".join([str(exit_) for exit_ in exits])
-            return f"[green]Exits:[/] {formatted_exits}"
-
-        return None
-
-    def process(self, client: Client, _command: Optional[str], _args: List[str]):
-        if not client.is_logged_in:
-            self._send.prompt(client)
+        if not room:
+            self.send.prompt(client)
             return
 
-        exits = self.get_formatted_exits(client)
-
-        if not exits:
-            self._send.prompt(client)
-            return
-
-        self._send.private(client, exits)
+        self.send.private(client, self.rooms.get_formatted_exits(room))

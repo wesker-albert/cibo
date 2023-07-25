@@ -19,6 +19,17 @@ class Register(Action):
         return ["name", "password"]
 
     def is_registration_valid(self, name: str, password: str) -> bool:
+        """Validates the supplied Player information, to see if it follows the
+        requirements established by the schema.
+
+        Args:
+            name (str): The Player name to validate.
+            password (str): The password to validate.
+
+        Returns:
+            bool: True if the validation was successful.
+        """
+
         try:
             Player(name=name, password=password).validate(PlayerSchema)
 
@@ -29,7 +40,7 @@ class Register(Action):
 
     def process(self, client: Client, _command: str, args: List[str]):
         if client.is_logged_in:
-            self._send.private(
+            self.send.private(
                 client,
                 "You register to vote, even though both candidates aren't that great.",
             )
@@ -42,7 +53,7 @@ class Register(Action):
         existing_player = Player.get_by_name(player_name)
 
         if existing_player:
-            self._send.private(
+            self.send.private(
                 client,
                 f"Sorry, the name [cyan]{player_name}[/] is already taken. "
                 "Please [green]register[/] again with a different name.",
@@ -50,7 +61,7 @@ class Register(Action):
             return
 
         if not self.is_registration_valid(player_name, password):
-            self._send.private(
+            self.send.private(
                 client,
                 "[bright_red]Your player name or password don't meet criteria.[/]\n\n"
                 "Names must be 3-15 chars and only contain letters, numbers, or "
@@ -68,7 +79,7 @@ class Register(Action):
             current_room_id=1,
         )
 
-        self._send.private(
+        self.send.private(
             client,
             "Are you sure you want to create the player named "
             f"[cyan]{player_name}[/]?\n\n"

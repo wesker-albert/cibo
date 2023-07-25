@@ -5,7 +5,6 @@ from typing import List, Optional
 from rich.panel import Panel
 
 from cibo.actions.__action__ import Action
-from cibo.actions.commands.exits import Exits
 from cibo.client import Client
 
 
@@ -39,34 +38,32 @@ class Look(Action):
             )
         ]
 
-        return "\n".join([str(occupant) for occupant in occupants])
+        joined_occupants = "\n".join([str(occupant) for occupant in occupants])
+
+        # only include leading new lines if there are actual occupants
+        return f"\n\n{joined_occupants}" if len(occupants) > 0 else ""
 
     def process(self, client: Client, _command: Optional[str], args: List[str]):
-        if not client.is_logged_in:
-            self._send.prompt(client)
+        if not client.is_logged_in or args:
+            self.send.prompt(client)
             return
 
         # the player is just looking at the room in general
-        if not args:
-            room = self.rooms.get_by_id(client.player.current_room_id)
+        room = self.rooms.get_by_id(client.player.current_room_id)
 
-            if room:
-                exits = Exits(self._telnet, self._world).get_formatted_exits(client)
-
-                occupants = self.get_formatted_occupants(client)
-                # only include new lines if there are actual occupants
-                occupants = f"\n\n{occupants}" if len(occupants) > 0 else ""
-
-                self._send.private(
-                    client,
-                    Panel(
-                        f"  {room.description.normal}{occupants}",
-                        title=f"[blue]{room.name}[/]",
-                        title_align="left",
-                        subtitle=exits,
-                        subtitle_align="right",
-                        padding=(1, 4),
-                    ),
-                )
-
+        if not room:
+            self.send.prompt(client)
             return
+
+        self.send.private(
+            client,
+            Panel(
+                f"  {room.description.normal}"
+                f"{self.get_formatted_occupants(client)}",
+                title=f"[blue]{room.name}[/]",
+                title_align="left",
+                subtitle=self.rooms.get_formatted_exits(room),
+                subtitle_align="right",
+                padding=(1, 4),
+            ),
+        )

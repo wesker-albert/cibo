@@ -16,4 +16,4 @@ class Prompt(Action):
         return []
 
     def process(self, client: Client, _command: Optional[str], _args: List[str]):
-        self._send.prompt(client)
+        self.send.prompt(client)

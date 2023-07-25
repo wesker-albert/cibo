@@ -22,6 +22,15 @@ class Player(Model):
 
     @classmethod
     def get_by_name(cls, name: str) -> Optional[Self]:
+        """Find a Player by name, if they already exist.
+
+        Args:
+            name (str): The Player name to search.
+
+        Returns:
+            Optional[Self]: The Player, if one exists with the gien name.
+        """
+
         try:
             player = cls.get(cls.name == name)
             return player

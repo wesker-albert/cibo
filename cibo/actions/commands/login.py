@@ -18,6 +18,16 @@ class Login(Action):
         return ["name", "password"]
 
     def is_player_logged_in(self, name: str) -> bool:
+        """Checks to see if the Player is already logged into and active session, by
+        a different client.
+
+        Args:
+            name (str): The Player name to check.
+
+        Returns:
+            bool: True if the player is already logged in.
+        """
+
         for client in self._telnet.get_connected_clients():
             if client.is_logged_in and client.player.name == name:
                 return True
@@ -26,7 +36,7 @@ class Login(Action):
 
     def process(self, client: Client, _command: str, args: List[str]):
         if client.is_logged_in:
-            self._send.private(
+            self.send.private(
                 client,
                 "You login to Facebook, to make sure your ex isn't doing better "
                 "than you are.",
@@ -39,7 +49,7 @@ class Login(Action):
         player = Player.get_by_name(player_name)
 
         if not player:
-            self._send.private(
+            self.send.private(
                 client,
                 f"A player by the name [cyan]{player_name}[/] does not exist. "
                 "If you want, you can [green]register[/] a new player with "
@@ -49,12 +59,12 @@ class Login(Action):
 
         # the password the client entered doesn't match the one in the Player record
         if not self._password_hasher.verify(password, player.password):
-            self._send.private(client, "[bright_red]Incorrect password.[/]")
+            self.send.private(client, "[bright_red]Incorrect password.[/]")
             return
 
         # check to see if another client is already logged in with the Player
         if self.is_player_logged_in(player.name):
-            self._send.private(
+            self.send.private(
                 client,
                 f"The player [cyan]{player_name}[/] is already logged in. "
                 "If this player belongs to you and you think it's been stolen, "
@@ -65,7 +75,7 @@ class Login(Action):
         client.log_in(player)
 
         # join the world and look at the room we left off in
-        self._send.private(
+        self.send.private(
             client,
             "You take the [red]red pill[/]. You have a look around, to see how deep "
             "the rabbit hole goes...",
@@ -75,7 +85,7 @@ class Login(Action):
         Look(self._telnet, self._world).process(client, None, [])
 
         # tell everyone we've arrived
-        self._send.local(
+        self.send.local(
             client.player.current_room_id,
             f"[cyan]{client.player.name}[/] falls from heaven. It looks like "
             "it hurt.",

@@ -31,26 +31,26 @@ class Move(Action):
 
     def process(self, client: Client, command: str, _args: List[str]):
         if not client.is_logged_in:
-            self._send.prompt(client)
+            self.send.prompt(client)
             return
 
         current_room = self.rooms.get_by_id(client.player.current_room_id)
         exit_ = self.rooms.get_direction_exit(current_room, command)
 
         if not exit_:
-            self._send.private(client, "You can't go that way.")
+            self.send.private(client, "You can't go that way.")
             return
 
         door = self.doors.get_by_room_ids(current_room.id_, exit_.id_)
 
         if self.doors.is_door_closed(door):
-            self._send.private(client, f"The [magenta]{door.name}[/] is closed.")
+            self.send.private(client, f"The [magenta]{door.name}[/] is closed.")
             return
 
         # update the player's current room to the one they're navigating to
         client.player.current_room_id = exit_.id_
 
-        self._send.private(
+        self.send.private(
             client,
             f"You head {exit_.direction.name.lower()}.",
             prompt=False,
@@ -58,14 +58,14 @@ class Move(Action):
         Look(self._telnet, self._world).process(client, None, [])
 
         # announce player departure to anyone in the previous room
-        self._send.local(
+        self.send.local(
             current_room.id_,
             f"[cyan]{client.player.name}[/] leaves " f"{exit_.direction.name.lower()}.",
             [client],
         )
 
         # announce player arrival to anyone in the current room
-        self._send.local(
+        self.send.local(
             client.player.current_room_id,
             f"[cyan]{client.player.name}[/] arrives.",
             [client],
