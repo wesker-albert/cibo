@@ -14,9 +14,8 @@ from cibo.resources.__resource__ import Resource
 class Doors(Resource):
     """All the Doors that exist in the world."""
 
-    def __init__(self):
-        self._doors_file = "doors.json"
-        self._doors: List[Door] = self._generate_resources(self._doors_file)
+    def __init__(self, doors_file: str):
+        self._doors: List[Door] = self._generate_resources(doors_file)
 
     def _create_resource_from_dict(self, resource: dict) -> Door:
         """Takes an individual Door in raw dict format, and constructs a Door out of it.
@@ -52,3 +51,72 @@ class Doors(Resource):
                 return door
 
         return None
+
+    def is_door_closed(self, door: Door) -> bool:
+        """Check if the Door is closed.
+
+        Args:
+            door (Door): The Door to check.
+
+        Returns:
+            bool: True, if closed.
+        """
+
+        if not door:
+            return False
+
+        return (
+            not door.flags
+            or DoorFlag.CLOSED in door.flags
+            or DoorFlag.LOCKED in door.flags
+        )
+
+    def is_door_open(self, door: Door) -> bool:
+        """Check if the Door is open.
+
+        Args:
+            door (Door): The Door to check.
+
+        Returns:
+            bool: True, if open.
+        """
+
+        if not door:
+            return False
+
+        return DoorFlag.OPEN in door.flags
+
+    def is_door_locked(self, door: Door) -> bool:
+        """Check if the Door is locked.
+
+        Args:
+            door (Door): The Door to check.
+
+        Returns:
+            bool: True, if locked.
+        """
+
+        if not door:
+            return False
+
+        return DoorFlag.LOCKED in door.flags
+
+    def close_door(self, door: Door) -> None:
+        """Close the given Door.
+
+        Args:
+            door (Door): The Door to close.
+        """
+
+        door.flags.remove(DoorFlag.OPEN)
+        door.flags.append(DoorFlag.CLOSED)
+
+    def open_door(self, door: Door) -> None:
+        """Open the given Door.
+
+        Args:
+            door (Door): The Door to open.
+        """
+
+        door.flags.remove(DoorFlag.CLOSED)
+        door.flags.append(DoorFlag.OPEN)

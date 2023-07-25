@@ -12,7 +12,7 @@ class UnrecognizedCommand(Exception):
         """Raised if the client's command is unrecognized.
 
         Args:
-            command (str): The command the client sent
+            command (str): The command the client sent.
         """
 
         self.message = f"Unrecognized command: {command}"
@@ -25,12 +25,13 @@ class CommandMissingArguments(Exception):
         """Raised if the client's command is missing expected arguments.
 
         Args:
-            command (str): The command the client sent
-            required_args (List[str]): Descriptions of the required args for the command
+            command (str): The command the client sent.
+            required_args (List[str]): Descriptions of the required args for the
+                command.
         """
         joined_args = " ".join([str(x) for x in required_args])
 
         self.message = (
-            "Command is missing required arguments. "
-            f"Expected syntax: {command} {joined_args}"
+            "Command is missing required arguments.\n"
+            f"Expected syntax: [green]{command} {joined_args}[/]"
         )

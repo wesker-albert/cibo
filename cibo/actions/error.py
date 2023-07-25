@@ -6,7 +6,7 @@ from cibo.actions.__action__ import Action
 from cibo.client import Client
 
 
-class _Error(Action):
+class Error(Action):
     """Alert the client an error occurred."""
 
     def aliases(self) -> List[str]:
@@ -16,4 +16,4 @@ class _Error(Action):
         return ["message"]
 
     def process(self, client: Client, _command: Optional[str], args: List[str]):
-        self._send.private(client, f"[bright_red]{args[0]}[/]")
+        self.send.private(client, f"[bright_red]{args[0]}[/]")

@@ -32,7 +32,7 @@ class Model(Model_):
         """Validate the model instance's attributes against the provided schema.
 
         Args:
-            schema (Schema): The marshmallow schema to validate against
+            schema (Schema): The marshmallow schema to validate against.
         """
 
         schema().load(self.__data__)

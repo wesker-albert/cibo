@@ -13,9 +13,8 @@ from cibo.resources.__resource__ import Resource
 class Rooms(Resource):
     """All the Rooms that exist in the world."""
 
-    def __init__(self):
-        self._rooms_file = "rooms.json"
-        self._rooms: List[Room] = self._generate_resources(self._rooms_file)
+    def __init__(self, rooms_file: str):
+        self._rooms: List[Room] = self._generate_resources(rooms_file)
 
     def _create_resource_from_dict(self, resource: dict) -> Room:
         """Takes an individual Room in raw dict format, and constructs a Room out of it.
@@ -52,7 +51,7 @@ class Rooms(Resource):
             ],
         )
 
-    def get(self, id_: int) -> Optional[Room]:
+    def get_by_id(self, id_: int) -> Optional[Room]:
         """Get a Room by its ID. Returns None if not found.
 
         Args:
@@ -68,20 +67,54 @@ class Rooms(Resource):
 
         return None
 
-    def get_exits(self, id_: int) -> List[str]:
+    def get_exits(self, room: Room) -> List[str]:
         """Get the text values of the exits for the given Room, in alphabetical order.
-        Returns empty if no room by that ID exists, or if the room has no exits.
+        Returns empty if the room has no exits.
 
         Args:
-            id_ (int): The Room ID you're looking for.
+            room (Room): The Room you're looking for exits in.
 
         Returns:
             List[str]: The Room exits in str format.
         """
 
-        room = self.get(id_)
-
-        if not room:
-            return []
-
         return sorted([exit_.direction.name.lower() for exit_ in room.exits])
+
+    def get_formatted_exits(self, room: Room) -> str:
+        """Formats the exits into a pretty, stylized string.
+
+        Args:
+            room (Room): The Room to look for exits in.
+
+        Returns:
+            str: The formatted exits.
+        """
+
+        exits = self.get_exits(room)
+
+        # plurality is important...
+        if not exits:
+            return "[green]Exits:[/] none"
+
+        if len(exits) == 1:
+            return f"[green]Exit:[/] {exits[0]}"
+
+        joined_exits = ", ".join([str(exit_) for exit_ in exits])
+        return f"[green]Exits:[/] {joined_exits}"
+
+    def get_direction_exit(self, room: Room, direction: str) -> Optional[RoomExit]:
+        """Returns the Room exit in the direction given, if an exit exists that way.
+
+        Args:
+            room (Room): The Room you want to check the exits in.
+            direction (str): The direction to check.
+
+        Returns:
+            Optional[RoomExit]: The exit, if it exists.
+        """
+
+        for exit_ in room.exits:
+            if direction == (exit_.direction.value or exit_.direction.name.lower()):
+                return exit_
+
+        return None

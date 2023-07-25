@@ -4,12 +4,22 @@ the server is started and stopped from the commandline, and not while a loop is
 running.
 """
 
+from os import getenv
 from time import sleep
 
+from dotenv import load_dotenv
+
+from cibo.resources.world import World
 from cibo.server import Server
+from cibo.telnet import TelnetServer
+
+load_dotenv()
 
 if __name__ == "__main__":
-    server = Server()
+    telnet = TelnetServer(port=int(getenv("SERVER_PORT", "51234")))
+    world = World()
+
+    server = Server(telnet, world)
 
     print(
         "Accepted commands:\n\n"

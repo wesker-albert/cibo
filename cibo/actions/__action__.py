@@ -6,6 +6,8 @@ from typing import List
 from cibo.client import Client
 from cibo.output import Output
 from cibo.password import Password
+from cibo.resources.doors import Doors
+from cibo.resources.rooms import Rooms
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
@@ -21,24 +23,43 @@ class Action(ABC):
         self._world = world
 
     @property
-    def world(self) -> World:
-        """You've got the whole World, in your hands.
+    def rooms(self) -> Rooms:
+        """All the Rooms in the World.
 
         Returns:
-            World: The heavy weight of the World.
+            Rooms: The Rooms.
+        """
+        return self._world.rooms
+
+    @property
+    def doors(self) -> Doors:
+        """All the Doors in the World.
+
+        Returns:
+            Doors: The Doors, without Jim Morrison.
         """
 
-        return self._world
+        return self._world.doors
+
+    @property
+    def send(self) -> Output:
+        """Access the Output formatter, to send messages to clients.
+
+        Returns:
+            Output: The Output formatter instance, and its methods.
+        """
+
+        return self._send
 
     def _join_args(self, args: List[str]) -> str:
         """Join the list of args into a singular string, using a space as the
         delimiter.
 
         Args:
-            args (List[str]): The list of args
+            args (List[str]): The list of args.
 
         Returns:
-            str: All the args as one big string
+            str: All the args as one big string.
         """
 
         return " ".join([str(x) for x in args])
@@ -51,11 +72,8 @@ class Action(ABC):
         If the action isn't intended to be directly available as a client Command,
         returns an empty list.
 
-        IMPORTANT: All aliases should be lowercase, to avoid case sensitivity conflicts
-        with entered commands from Clients.
-
         Returns:
-            List[str]: Aliases associated with the Action
+            List[str]: Aliases associated with the Action.
         """
 
         pass
@@ -67,7 +85,7 @@ class Action(ABC):
         If no arguments are necessary for the Action, returns an empty list.
 
         Returns:
-            List[str]: Descriptions for each required argument
+            List[str]: Descriptions for each required argument.
         """
 
         pass
@@ -77,9 +95,9 @@ class Action(ABC):
         """Process the logic for the Action.
 
         Args:
-            client (Client): The client who triggered the Action
-            command (str): The command that the client sent
-            args (List[str]): The args necessary to the Action
+            client (Client): The client who triggered the Action.
+            command (str): The command that the client sent.
+            args (List[str]): The args necessary to the Action.
         """
 
         pass

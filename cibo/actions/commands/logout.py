@@ -4,8 +4,8 @@ from time import sleep
 from typing import List
 
 from cibo.actions.__action__ import Action
-from cibo.actions._connect import _Connect
-from cibo.client import Client, ClientLoginState
+from cibo.actions.connect import Connect
+from cibo.client import Client
 
 
 class Logout(Action):
@@ -18,18 +18,16 @@ class Logout(Action):
         return []
 
     def process(self, client: Client, command: str, args: List[str]):
-        if not client.is_logged_in or not client.player:
-            self._send.prompt(client)
+        if not client.is_logged_in:
+            self.send.prompt(client)
             return
 
         player_name = client.player.name
         player_room = client.player.current_room_id
 
-        client.login_state = ClientLoginState.PRE_LOGIN
-        client.player.save()
-        client.player = None
+        client.log_out()
 
-        self._send.local(
+        self.send.local(
             player_room,
             "A black van pulls up, and 2 large men in labcoats abduct "
             f"[cyan]{player_name}[/]. The van speeds away. You wonder if "
@@ -37,7 +35,7 @@ class Logout(Action):
             [client],
         )
 
-        self._send.private(
+        self.send.private(
             client,
             "You slowly fade away into obscurity, like you always feared you would...",
             prompt=False,
@@ -47,4 +45,4 @@ class Logout(Action):
 
         # process the connection Action, so the client knows they can now register
         # or login again
-        _Connect(self._telnet, self._world).process(client, command, args)
+        Connect(self._telnet, self._world).process(client, command, args)

@@ -31,7 +31,7 @@ about but haven't gotten the professional opportunity to try.
 ## Current state:
 
 ### 2023-07-18
-* New commands available: `open`, `close`
+* New commands available: `up`, `down`, `open`, `close`
 * Introduced interactive doors. If you run into a door you can use `open` or `close`
 followed by the direction the door is in. For example `open w` or `close west`
 * Doors can also be locked. Currently there's no mechanism to unlock them, but that

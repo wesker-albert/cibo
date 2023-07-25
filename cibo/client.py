@@ -36,17 +36,17 @@ class Client:
         """Check if the client is logged in.
 
         Returns:
-            bool: Is the client logged in or not
+            bool: Is the client logged in or not.
         """
 
-        return self.login_state is ClientLoginState.LOGGED_IN
+        return self.login_state is ClientLoginState.LOGGED_IN and self.player
 
     @property
     def prompt(self) -> str:
         """The prompt that appears before the client's terminal input.
 
         Returns:
-            str: The prompt text
+            str: The prompt text.
         """
 
         return "> "
@@ -56,7 +56,7 @@ class Client:
         the client's terminal.
 
         Args:
-            message (str): The body text of the message
+            message (str): The body text of the message.
         """
 
         try:
@@ -71,7 +71,7 @@ class Client:
         """Sends the message text to the client, and apends a prompt at the end.
 
         Args:
-            message (str): The body text of the message
+            message (str): The body text of the message.
         """
 
         self._send_message(message)
@@ -81,3 +81,20 @@ class Client:
 
         self.socket.shutdown(socket_.SHUT_RDWR)
         self.socket.close()
+
+    def log_out(self) -> None:
+        """Log the client out of their current Player session."""
+
+        self.login_state = ClientLoginState.PRE_LOGIN
+        self.player.save()
+        self.player = None
+
+    def log_in(self, player: Player) -> None:
+        """Log the client in as the given Player.
+
+        Args:
+            player (Player): The Player the client will assume.
+        """
+
+        self.player = player
+        self.login_state = ClientLoginState.LOGGED_IN

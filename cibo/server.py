@@ -6,13 +6,12 @@ import os
 from enum import Enum
 from threading import Thread
 from time import sleep
-from typing import Optional
 
 from peewee import SqliteDatabase
 
 from cibo.decorator import load_environment_variables
 from cibo.event import EventProcessor
-from cibo.events.tick import Tick
+from cibo.events.tick import TickEvent
 from cibo.models.player import Player
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
@@ -33,23 +32,23 @@ class Server:
         STOPPED = 4
 
     @load_environment_variables
-    def __init__(self, port: Optional[int] = None) -> None:
+    def __init__(self, telnet: TelnetServer, world: World) -> None:
         """Creates a dormant telnet server. Once instantiated, it can be started and
         stopped.
 
         Args:
-            port (int, optional): The port for telnet to listen on. Defaults to 51234
+            telnet (TelnetServer): The TelnetServer instance to use.
+            world (World): The world, and all its resources.
         """
 
         self._database = SqliteDatabase(os.getenv("DATABASE_PATH", "cibo_database.db"))
 
-        self._port = port or int(os.getenv("SERVER_PORT", "51234"))
-        self._telnet = TelnetServer(port=self._port)
-        self._world = World()
+        self._telnet = telnet
+        self._world = world
 
         self._event_processor = EventProcessor(self._telnet, self._world)
 
-        self._tick = Tick(self._telnet, self._world)
+        self._tick = TickEvent(self._telnet, self._world)
         self._tick_thread = Thread(target=self._start_tick_timers)
 
         self._thread = Thread(target=self._start_server)
@@ -60,7 +59,7 @@ class Server:
         """Check if the server is active and listening.
 
         Returns:
-            bool: Is the server is running or not
+            bool: Is the server is running or not.
         """
 
         return self._status is self.Status.RUNNING

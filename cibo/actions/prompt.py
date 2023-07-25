@@ -1,4 +1,4 @@
-"""Repetative logic that is carried out every minute."""
+"""Send the client only a prompt."""
 
 from typing import List, Optional
 
@@ -6,8 +6,8 @@ from cibo.actions.__action__ import Action
 from cibo.client import Client
 
 
-class _TickMinute(Action):
-    """Repetative logic that is carried out every minute."""
+class Prompt(Action):
+    """Send the client only a prompt."""
 
     def aliases(self) -> List[str]:
         return []
@@ -16,5 +16,4 @@ class _TickMinute(Action):
         return []
 
     def process(self, client: Client, _command: Optional[str], _args: List[str]):
-        if client.is_logged_in and client.player:
-            client.player.save()
+        self.send.prompt(client)

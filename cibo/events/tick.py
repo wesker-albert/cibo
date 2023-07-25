@@ -6,14 +6,14 @@ from threading import Thread
 from schedule import every, run_pending
 
 from cibo.actions.__action__ import Action
-from cibo.actions._tick_minute import _TickMinute
-from cibo.actions._tick_second import _TickSecond
+from cibo.actions.scheduled.every_minute import EveryMinute
+from cibo.actions.scheduled.every_second import EverySecond
 from cibo.events.__event__ import Event
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
 
-class Tick(Event):
+class TickEvent(Event):
     """Tick timers, that execute recurring Actions with varying frequency."""
 
     def __init__(self, telnet: TelnetServer, world: World):
@@ -21,10 +21,10 @@ class Tick(Event):
 
         # schedule each of our tick Actions for processing
         every().second.do(
-            self._process_tick, self._tick_second, self._telnet, self._world
+            self._process_tick, self._every_second, self._telnet, self._world
         )
         every().minute.do(
-            self._process_tick, self._tick_minute, self._telnet, self._world
+            self._process_tick, self._every_minute, self._telnet, self._world
         )
 
     @staticmethod
@@ -42,18 +42,18 @@ class Tick(Event):
         thread.start()
 
     @staticmethod
-    def _tick_second(telnet: TelnetServer, world: World):
+    def _every_second(telnet: TelnetServer, world: World):
         """A tick scheduled for every second."""
 
         for client in telnet.get_connected_clients():
-            _TickSecond(telnet, world).process(client, None, [])
+            EverySecond(telnet, world).process(client, None, [])
 
     @staticmethod
-    def _tick_minute(telnet: TelnetServer, world: World):
+    def _every_minute(telnet: TelnetServer, world: World):
         """A tick scheduled for every minute."""
 
         for client in telnet.get_connected_clients():
-            _TickMinute(telnet, world).process(client, None, [])
+            EveryMinute(telnet, world).process(client, None, [])
 
     def process(
         self,

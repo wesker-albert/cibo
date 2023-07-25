@@ -66,7 +66,7 @@ class TelnetServer:
         and messages.
 
         Args:
-            port (int): Port the server will listen to
+            port (int): Port the server will listen to.
         """
         self._port = port
         self._encoding = "utf-8"
@@ -125,7 +125,7 @@ class TelnetServer:
         since the last call to 'update'.
 
         Returns:
-            List[Client]: All newly connected clients
+            List[Client]: All newly connected clients.
         """
 
         clients = [
@@ -141,7 +141,7 @@ class TelnetServer:
         'update'.
 
         Returns:
-            List[Client]: All currently connected clients
+            List[Client]: All currently connected clients.
         """
 
         return self._clients
@@ -151,7 +151,7 @@ class TelnetServer:
         last call to 'update'.
 
         Returns:
-            List[Client]: Clients who have disconnected
+            List[Client]: Clients who have disconnected.
         """
 
         clients = [
@@ -168,7 +168,7 @@ class TelnetServer:
 
         Returns:
             List[Tuple[Client, Optional[str]]]: The client and the incoming message
-                they sent
+                they sent.
         """
 
         client_messages = [

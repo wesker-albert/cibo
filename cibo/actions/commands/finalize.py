@@ -18,7 +18,7 @@ class Finalize(Action):
 
     def process(self, client: Client, _command: str, _args: List[str]):
         if client.is_logged_in:
-            self._send.private(
+            self.send.private(
                 client,
                 "You finalize your written will, leaving your whole estate "
                 "to your cat.",
@@ -26,7 +26,7 @@ class Finalize(Action):
             return
 
         if not client.registration:
-            self._send.private(
+            self.send.private(
                 client,
                 "You'll need to [green]register[/] before you can "
                 "[green]finalize[/].",
@@ -36,7 +36,7 @@ class Finalize(Action):
         try:
             client.registration.save()
 
-            self._send.private(
+            self.send.private(
                 client,
                 f"[cyan]{client.registration.name}[/] has been created. "
                 "You can now [green]login[/] with this player.",
@@ -44,7 +44,7 @@ class Finalize(Action):
 
         # a Player with the same name already exists
         except IntegrityError:
-            self._send.private(
+            self.send.private(
                 client,
                 "Sorry, turns out the name "
                 f"[cyan]{client.registration.name}[/] is already "

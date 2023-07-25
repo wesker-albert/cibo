@@ -6,7 +6,7 @@ from cibo.actions.__action__ import Action
 from cibo.client import Client
 
 
-class _TickSecond(Action):
+class EverySecond(Action):
     """Repetative logic that is carried out every second."""
 
     def aliases(self) -> List[str]:
