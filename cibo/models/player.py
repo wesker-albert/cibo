@@ -28,7 +28,7 @@ class Player(Model):
             name (str): The Player name to search.
 
         Returns:
-            Optional[Self]: The Player, if one exists with the gien name.
+            Optional[Self]: The Player, if one exists with the given name.
         """
 
         try:

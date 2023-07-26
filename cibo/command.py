@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from typing import List, Optional, Type
 
 from cibo.actions.__action__ import Action
-from cibo.actions.commands import ACTIONS
 from cibo.client import Client
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
 from cibo.resources.world import World
@@ -26,7 +25,9 @@ class CommandProcessor:
     command aliases, and maps them to action methods.
     """
 
-    def __init__(self, telnet: TelnetServer, world: World) -> None:
+    def __init__(
+        self, telnet: TelnetServer, world: World, actions: List[type[Action]]
+    ) -> None:
         """Creates the command processor instance.
 
         Args:
@@ -36,6 +37,7 @@ class CommandProcessor:
 
         self._telnet = telnet
         self._world = world
+        self._actions = actions
 
     @property
     def _commands(self) -> List[Command]:
@@ -47,7 +49,7 @@ class CommandProcessor:
 
         return [
             Command(aliases=action(self._telnet, self._world).aliases(), action=action)
-            for action in ACTIONS
+            for action in self._actions
         ]
 
     def _get_command_action(self, client_command: str) -> Optional[Type[Action]]:

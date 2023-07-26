@@ -35,6 +35,10 @@
 						{
 							"match": "poetry.lock|pyproject.toml",
 							"cmd": "make init_poetry"
+						},
+						{
+							"match": "cibo/.*\\.py",
+							"cmd": "make coverage"
 						}
 					]
 				},
