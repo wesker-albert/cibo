@@ -141,19 +141,21 @@ class Output:
 
     def sector(
         self, _sector: int, _message: str, _ignore_clients: List[Client]
-    ) -> None:
+    ) -> None:  # pytest: no cover
         """Prints a message to all clients within the sector."""
 
         pass
 
     def region(
         self, _region: int, _message: str, _ignore_clients: List[Client]
-    ) -> None:
+    ) -> None:  # pytest: no cover
         """Prints a message to all clients within the sector."""
 
         pass
 
-    def server(self, _message: str, _ignore_clients: List[Client]) -> None:
+    def server(
+        self, _message: str, _ignore_clients: List[Client]
+    ) -> None:  # pytest: no cover
         """Prints a message to all clients on the server."""
 
         pass

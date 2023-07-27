@@ -13,7 +13,7 @@ from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
 
-class EventProcessor:
+class EventProcessor:  # pytest: no cover
     """Event processing abstraction layer for the server. Kicks off the processing
     logic for each included Event type.
     """

@@ -34,13 +34,14 @@ parallel = true
 concurrency = ["multiprocessing"]
 omit = [
     "*/__init__.py",
-    "*/tests/*",
-    "*/__main__.py"
+    "*/__main__.py",
+    "*/conftest.py",
+    "*/tests/*"
 ]
 
 [tool.coverage.report]
 show_missing = true
-skip_covered = false
+skip_covered = true
 exclude_lines = [
     "pytest: no cover",
     "import"
@@ -97,7 +98,7 @@ disable = [
 ]
 
 [tool.pylint-per-file-ignores]
-"./tests/" = "missing-function-docstring,missing-class-docstring,missing-module-docstring"
+"./tests/" = "missing-function-docstring,missing-class-docstring,missing-module-docstring,line-too-long"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

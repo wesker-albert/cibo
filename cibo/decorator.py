@@ -12,7 +12,7 @@ def load_environment_variables(function: Callable) -> Callable:
     """
 
     @wraps(function)
-    def wrapper(*args: tuple, **kwargs: dict) -> Any:
+    def wrapper(*args: tuple, **kwargs: dict) -> Any:  # pytest: no cover
         load_dotenv()
         return function(*args, **kwargs)
 

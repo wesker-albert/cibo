@@ -6,7 +6,6 @@ from passlib.hash import bcrypt
 class Password:
     """Contains methods to hash and verify login passwords."""
 
-    # pylint: disable=line-too-long
     def __init__(self) -> None:
         self._bcrypt: bcrypt = bcrypt.using(rounds=13)
 
