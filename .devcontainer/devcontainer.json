@@ -63,13 +63,16 @@
 					"--profile",
 					"black"
 				],
+				"mypy.targets": [
+					"cibo/"
+				],
 				"python.analysis.autoImportCompletions": true,
 				"python.analysis.fixAll": [
 					"source.convertImportFormat",
 					"source.unusedImports"
 				],
 				"python.analysis.importFormat": "absolute",
-				"python.analysis.typeCheckingMode": "basic",
+				"python.analysis.typeCheckingMode": "off",
 				"python.createEnvironment.contentButton":"hide",
 				"python.defaultInterpreterPath": "/usr/local/py-utils/venvs/poetry/bin/python3.11",
 				"python.formatting.provider": "black",
@@ -82,7 +85,7 @@
 				"python.linting.pylintEnabled": true,
 				"python.linting.pylintPath": "/usr/local/py-utils/venvs/poetry/bin/pylint",
 				"python.testing.pytestArgs": [
-					"cibo"
+					"tests"
 				],
 				"python.testing.pytestEnabled": true,
 				"python.testing.unittestEnabled": false,
@@ -118,6 +121,7 @@
 				"emeraldwalk.RunOnSave",
 				"IronGeek.vscode-env",
 				"magicstack.MagicPython",
+				"matangover.mypy",
 				"ms-python.isort",
 				"ms-python.python",
 				"ms-python.vscode-pylance",

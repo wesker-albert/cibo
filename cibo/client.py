@@ -39,7 +39,7 @@ class Client:
             bool: Is the client logged in or not.
         """
 
-        return self.login_state is ClientLoginState.LOGGED_IN and self.player
+        return self.login_state is ClientLoginState.LOGGED_IN
 
     @property
     def prompt(self) -> str:
@@ -86,7 +86,8 @@ class Client:
         """Log the client out of their current Player session."""
 
         self.login_state = ClientLoginState.PRE_LOGIN
-        self.player.save()
+        if self.player:
+            self.player.save()
         self.player = None
 
     def log_in(self, player: Player) -> None:

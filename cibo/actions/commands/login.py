@@ -29,12 +29,12 @@ class Login(Action):
         """
 
         for client in self._telnet.get_connected_clients():
-            if client.is_logged_in and client.player.name == name:
+            if client.is_logged_in and client.player and client.player.name == name:
                 return True
 
         return False
 
-    def process(self, client: Client, _command: str, args: List[str]):
+    def process(self, client: Client, _command: str, args: List[str]) -> None:
         if client.is_logged_in:
             self.send.private(
                 client,
@@ -74,20 +74,21 @@ class Login(Action):
 
         client.log_in(player)
 
-        # join the world and look at the room we left off in
-        self.send.private(
-            client,
-            "You take the [red]red pill[/]. You have a look around, to see how deep "
-            "the rabbit hole goes...",
-            prompt=False,
-        )
+        if client.player:
+            # join the world and look at the room we left off in
+            self.send.private(
+                client,
+                "You take the [red]red pill[/]. You have a look around, to see how "
+                "deep the rabbit hole goes...",
+                prompt=False,
+            )
 
-        Look(self._telnet, self._world).process(client, None, [])
+            Look(self._telnet, self._world).process(client, None, [])
 
-        # tell everyone we've arrived
-        self.send.local(
-            client.player.current_room_id,
-            f"[cyan]{client.player.name}[/] falls from heaven. It looks like "
-            "it hurt.",
-            [client],
-        )
+            # tell everyone we've arrived
+            self.send.local(
+                client.player.current_room_id,
+                f"[cyan]{client.player.name}[/] falls from heaven. It looks like "
+                "it hurt.",
+                [client],
+            )

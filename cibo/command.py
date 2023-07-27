@@ -90,7 +90,7 @@ class CommandProcessor:
         command = command.lower()
         # partition returns a blank string if no args are found after the command
         # in that case, we want to drop the blank string and just return an empty list
-        args = args.split(" ") if args else []
+        split_args = args.split(" ") if args else []
 
         action = self._get_command_action(command)
 
@@ -100,7 +100,7 @@ class CommandProcessor:
         action_instance = action(self._telnet, self._world)
 
         try:
-            action_instance.process(client, command, args)
+            action_instance.process(client, command, split_args)
 
         # an IndexError means that the client's command was missing an argument index
         # that this specific action requires

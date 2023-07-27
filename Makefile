@@ -36,7 +36,10 @@ python:
 # Quality Control
 
 lint:
-	@poetry run pylint ./cibo
+	@poetry run pylint ./cibo ./tests
+
+type_check:
+	@poetry run mypy
 
 formatting:
 	@poetry run black --diff --check --verbose cibo/

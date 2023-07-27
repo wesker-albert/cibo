@@ -4,6 +4,7 @@ from typing import List
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
+from cibo.exception import ResourceNotFound
 
 
 class Close(Action):
@@ -15,8 +16,8 @@ class Close(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, client: Client, _command: str, args: List[str]):
-        if not client.is_logged_in:
+    def process(self, client: Client, _command: str, args: List[str]) -> None:
+        if not client.is_logged_in or not client.player:
             self.send.prompt(client)
             return
 
@@ -27,33 +28,39 @@ class Close(Action):
             )
             return
 
-        room = self.rooms.get_by_id(client.player.current_room_id)
-        exit_ = self.rooms.get_direction_exit(room, args[0])
+        try:
+            room = self.rooms.get_by_id(client.player.current_room_id)
+            exit_ = self.rooms.get_direction_exit(room, args[0])
 
-        if not exit_:
-            self.send.private(client, "There's nothing to close.")
+            if not exit_:
+                self.send.private(client, "There's nothing to close.")
+                return
+
+            door = self.doors.get_by_room_ids(room.id_, exit_.id_)
+
+            if self.doors.is_door_closed(door):
+                self.send.private(
+                    client,
+                    f"The [magenta]{door.name}[/] is already closed.",
+                )
+                return
+
+            if self.doors.is_door_open(door):
+                self.doors.close_door(door)
+
+                self.send.private(client, f"You close the [magenta]{door.name}[/].")
+                self.send.local(
+                    room.id_,
+                    f"[cyan]{client.player.name}[/] closes a "
+                    f"[magenta]{door.name}[/].",
+                    [client],
+                )
+                self.send.local(
+                    exit_.id_,
+                    f"A [magenta]{door.name}[/] closes.",
+                    [client],
+                )
+
+        except ResourceNotFound:
+            self.send.prompt(client)
             return
-
-        door = self.doors.get_by_room_ids(room.id_, exit_.id_)
-
-        if self.doors.is_door_closed(door):
-            self.send.private(
-                client,
-                f"The [magenta]{door.name}[/] is already closed.",
-            )
-            return
-
-        if self.doors.is_door_open(door):
-            self.doors.close_door(door)
-
-            self.send.private(client, f"You close the [magenta]{door.name}[/].")
-            self.send.local(
-                room.id_,
-                f"[cyan]{client.player.name}[/] closes a " f"[magenta]{door.name}[/].",
-                [client],
-            )
-            self.send.local(
-                exit_.id_,
-                f"A [magenta]{door.name}[/] closes.",
-                [client],
-            )

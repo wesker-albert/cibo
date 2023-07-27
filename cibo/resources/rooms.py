@@ -6,6 +6,7 @@ This is a collection of all the Rooms that exist in the world.
 
 from typing import List, Optional
 
+from cibo.exception import ResourceNotFound
 from cibo.models.room import Direction, Room, RoomDescription, RoomExit
 from cibo.resources.__resource__ import Resource
 
@@ -51,7 +52,7 @@ class Rooms(Resource):
             ],
         )
 
-    def get_by_id(self, id_: int) -> Optional[Room]:
+    def get_by_id(self, id_: int) -> Room:
         """Get a Room by its ID. Returns None if not found.
 
         Args:
@@ -65,7 +66,7 @@ class Rooms(Resource):
             if room.id_ == id_:
                 return room
 
-        return None
+        raise ResourceNotFound
 
     def get_exits(self, room: Room) -> List[str]:
         """Get the text values of the exits for the given Room, in alphabetical order.

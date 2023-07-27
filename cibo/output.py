@@ -132,6 +132,7 @@ class Output:
         for client in self._telnet.get_connected_clients():
             if (
                 client.is_logged_in
+                and client.player
                 and client.player.current_room_id == room_id
                 and client not in ignore_clients
             ):

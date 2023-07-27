@@ -15,8 +15,10 @@ class Exits(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, client: Client, _command: Optional[str], _args: List[str]):
-        if not client.is_logged_in:
+    def process(
+        self, client: Client, _command: Optional[str], _args: List[str]
+    ) -> None:
+        if not client.is_logged_in or not client.player:
             self.send.prompt(client)
             return
 

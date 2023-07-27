@@ -17,7 +17,9 @@ schedule = "1.2.0"
 [tool.poetry.dev-dependencies]
 black = "23.7.0"
 coverage = "7.2.7"
+mypy = "1.4.1"
 pylint = "2.17.4"
+pylint-per-file-ignores = "1.2.1"
 pytest = "7.4.0"
 pytest-cov = "4.1.0"
 pytest-reverse = "1.7.0"
@@ -38,7 +40,7 @@ omit = [
 
 [tool.coverage.report]
 show_missing = true
-skip_covered = true
+skip_covered = false
 exclude_lines = [
     "pytest: no cover",
     "import"
@@ -60,7 +62,17 @@ sections = [
     "LOCALFOLDER"
 ]
 
+[tool.mypy]
+disallow_untyped_defs = true
+files = "$MYPY_CONFIG_FILE_DIR/cibo/"
+ignore_missing_imports = true
+no_implicit_optional = true
+python_version = "3.11"
+warn_return_any = true
+warn_unused_ignores = true
+
 [tool.pylint.master]
+load-plugins = ["pylint_per_file_ignores"]
 ignore = [
     "*/.git/*",
     "*/.serverless/*",
@@ -83,6 +95,9 @@ disable = [
     "unnecessary-pass",
     "unsubscriptable-object"
 ]
+
+[tool.pylint-per-file-ignores]
+"./tests/" = "missing-function-docstring,missing-class-docstring,missing-module-docstring"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

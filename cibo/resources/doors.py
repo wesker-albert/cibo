@@ -5,8 +5,9 @@ be impassible until certain events are triggered.
 This is a collection of all the Doors that exist in the world.
 """
 
-from typing import List, Optional
+from typing import List
 
+from cibo.exception import ResourceNotFound
 from cibo.models.door import Door, DoorFlag
 from cibo.resources.__resource__ import Resource
 
@@ -35,7 +36,7 @@ class Doors(Resource):
             flags=[DoorFlag(flag) for flag in door.get("flags", [])],
         )
 
-    def get_by_room_ids(self, room_id: int, adjoining_room_id: int) -> Optional[Door]:
+    def get_by_room_ids(self, room_id: int, adjoining_room_id: int) -> Door:
         """Get a Door using the two adjoining Room IDs.
 
         Args:
@@ -50,7 +51,7 @@ class Doors(Resource):
             if room_id in door.room_ids and adjoining_room_id in door.room_ids:
                 return door
 
-        return None
+        raise ResourceNotFound
 
     def is_door_closed(self, door: Door) -> bool:
         """Check if the Door is closed.

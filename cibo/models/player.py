@@ -32,7 +32,7 @@ class Player(Model):
         """
 
         try:
-            player = cls.get(cls.name == name)
+            player: Self = cls.get(cls.name == name)
             return player
 
         # a Player doesn't exist with the entered name

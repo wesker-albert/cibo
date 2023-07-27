@@ -38,6 +38,10 @@ jobs:
       run: |
         make lint
 
+    - name: Type check codebase
+      run: |
+        make type_check
+
     - name: Validate formatting
       run: |
         make formatting

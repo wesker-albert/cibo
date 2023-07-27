@@ -15,5 +15,7 @@ class Prompt(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, client: Client, _command: Optional[str], _args: List[str]):
+    def process(
+        self, client: Client, _command: Optional[str], _args: List[str]
+    ) -> None:
         self.send.prompt(client)

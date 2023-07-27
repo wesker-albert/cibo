@@ -1,6 +1,7 @@
 """Data model meta and methods, for inheritance by all data models."""
 
 import os
+from typing import Any
 
 from dotenv import load_dotenv
 from marshmallow import Schema
@@ -26,9 +27,9 @@ class Model(Model_):
             dict: The model in dict format.
         """
 
-        return model_to_dict(self)
+        return dict(model_to_dict(self))
 
-    def validate(self, schema: type[Schema]):
+    def validate(self, schema: type[Schema]) -> Any:
         """Validate the model instance's attributes against the provided schema.
 
         Args:

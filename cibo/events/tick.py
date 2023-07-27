@@ -28,7 +28,7 @@ class TickEvent(Event):
         )
 
     @staticmethod
-    def _process_tick(action: type[Action], telnet: TelnetServer, world: World):
+    def _process_tick(action: type[Action], telnet: TelnetServer, world: World) -> None:
         """This processes our tick schedules in parallel, rather than serially.
         That way our intervals are as accurate as possible.
 
@@ -42,14 +42,14 @@ class TickEvent(Event):
         thread.start()
 
     @staticmethod
-    def _every_second(telnet: TelnetServer, world: World):
+    def _every_second(telnet: TelnetServer, world: World) -> None:
         """A tick scheduled for every second."""
 
         for client in telnet.get_connected_clients():
             EverySecond(telnet, world).process(client, None, [])
 
     @staticmethod
-    def _every_minute(telnet: TelnetServer, world: World):
+    def _every_minute(telnet: TelnetServer, world: World) -> None:
         """A tick scheduled for every minute."""
 
         for client in telnet.get_connected_clients():

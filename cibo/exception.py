@@ -35,3 +35,9 @@ class CommandMissingArguments(Exception):
             "Command is missing required arguments.\n"
             f"Expected syntax: [green]{command} {joined_args}[/]"
         )
+
+
+class ResourceNotFound(Exception):
+    """Raised if a resource can't be found."""
+
+    pass

@@ -38,7 +38,7 @@ class Register(Action):
         except ValidationError:
             return False
 
-    def process(self, client: Client, _command: str, args: List[str]):
+    def process(self, client: Client, _command: str, args: List[str]) -> None:
         if client.is_logged_in:
             self.send.private(
                 client,
