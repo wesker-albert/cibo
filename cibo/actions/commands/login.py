@@ -83,7 +83,7 @@ class Login(Action):
                 prompt=False,
             )
 
-            Look(self._telnet, self._world).process(client, None, [])
+            Look(self._telnet, self._world, self._output).process(client, None, [])
 
             # tell everyone we've arrived
             self.send.local(

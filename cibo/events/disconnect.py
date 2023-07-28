@@ -9,4 +9,6 @@ class DisconnectEvent(Event):
 
     def process(self) -> None:
         for client in self._telnet.get_disconnected_clients():
-            Disconnect(self._telnet, self._world).process(client, None, [])
+            Disconnect(self._telnet, self._world, self._output).process(
+                client, None, []
+            )

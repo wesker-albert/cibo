@@ -15,9 +15,9 @@ from cibo.telnet import TelnetServer
 class Action(ABC):
     """The base interface used by all Action classes."""
 
-    def __init__(self, telnet: TelnetServer, world: World) -> None:
+    def __init__(self, telnet: TelnetServer, world: World, output: Output) -> None:
         self._telnet = telnet
-        self._send = Output(self._telnet)
+        self._output = output
         self._password_hasher = Password()
 
         self._world = world
@@ -49,7 +49,7 @@ class Action(ABC):
             Output: The Output formatter instance, and its methods.
         """
 
-        return self._send
+        return self._output
 
     def _join_args(self, args: List[str]) -> str:
         """Join the list of args into a singular string, using a space as the

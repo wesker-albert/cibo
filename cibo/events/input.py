@@ -21,12 +21,16 @@ class InputEvent(Event):
     def __init__(self, telnet: TelnetServer, world: World) -> None:
         super().__init__(telnet, world)
 
-        self._command_processor = CommandProcessor(self._telnet, self._world, ACTIONS)
+        self._command_processor = CommandProcessor(
+            self._telnet, self._world, self._output, ACTIONS
+        )
 
     def process(self) -> None:
         for client, input_ in self._telnet.get_client_input():
             if not input_:
-                Prompt(self._telnet, self._world).process(client, None, [])
+                Prompt(self._telnet, self._world, self._output).process(
+                    client, None, []
+                )
                 return
 
             try:
@@ -36,4 +40,6 @@ class InputEvent(Event):
                 UnrecognizedCommand,
                 CommandMissingArguments,
             ) as ex:
-                Error(self._telnet, self._world).process(client, None, [ex.message])
+                Error(self._telnet, self._world, self._output).process(
+                    client, None, [ex.message]
+                )

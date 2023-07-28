@@ -34,7 +34,7 @@ def fixture_mock_client() -> Client:
 
 @fixture(name="command_processor")
 def fixture_command_processor() -> CommandProcessor:
-    return CommandProcessor(Mock(), Mock(), [MockAction])
+    return CommandProcessor(Mock(), Mock(), Mock(), [MockAction])
 
 
 @fixture(name="output")
@@ -43,7 +43,7 @@ def fixture_output() -> Output:
 
 
 class MockAction:
-    def __init__(self, _telnet, _world):
+    def __init__(self, _telnet, _world, _output):
         pass
 
     def aliases(self):

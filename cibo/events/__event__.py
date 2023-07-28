@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 
+from cibo.output import Output
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
@@ -12,6 +13,7 @@ class Event(ABC):
     def __init__(self, telnet: TelnetServer, world: World) -> None:
         self._telnet = telnet
         self._world = world
+        self._output = Output(self._telnet)
 
     @abstractmethod
     def process(self) -> None:

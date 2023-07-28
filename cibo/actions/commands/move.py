@@ -57,7 +57,7 @@ class Move(Action):
                 f"You head {exit_.direction.name.lower()}.",
                 prompt=False,
             )
-            Look(self._telnet, self._world).process(client, None, [])
+            Look(self._telnet, self._world, self._output).process(client, None, [])
 
             # announce player departure to anyone in the previous room
             self.send.local(
