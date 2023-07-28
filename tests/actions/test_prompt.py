@@ -1,6 +1,7 @@
 from unittest.mock import Mock
 
 from cibo.actions.prompt import Prompt
+from cibo.client import Client
 
 
 def test_aliases():
@@ -15,10 +16,10 @@ def test_required_args():
     assert not prompt.required_args()
 
 
-def test_process():
+def test_process(client: Client):
     output = Mock()
+    output.prompt = Mock()
     prompt = Prompt(Mock(), Mock(), output)
-    client = Mock()
 
     prompt.process(client, None, [])
 
