@@ -65,7 +65,7 @@ class Action(ABC):
         return " ".join([str(x) for x in args])
 
     @abstractmethod
-    def aliases(self) -> List[str]:
+    def aliases(self) -> List[str]:  # pytest: no cover
         """Command aliases mapped to the Action. Clients can input these text
         commands, to trigger this Action.
 
@@ -79,7 +79,7 @@ class Action(ABC):
         pass
 
     @abstractmethod
-    def required_args(self) -> List[str]:
+    def required_args(self) -> List[str]:  # pytest: no cover
         """Descriptions of the args required for the Action.
 
         If no arguments are necessary for the Action, returns an empty list.
@@ -91,7 +91,9 @@ class Action(ABC):
         pass
 
     @abstractmethod
-    def process(self, client: Client, command: str, args: List[str]) -> None:
+    def process(
+        self, client: Client, command: str, args: List[str]
+    ) -> None:  # pytest: no cover
         """Process the logic for the Action.
 
         Args:

@@ -8,6 +8,7 @@ from cibo.actions.prompt import Prompt
 from cibo.command import CommandProcessor
 from cibo.events.__event__ import Event
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
+from cibo.output import Output
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
@@ -18,8 +19,8 @@ class InputEvent(Event):
     carried out.
     """
 
-    def __init__(self, telnet: TelnetServer, world: World) -> None:
-        super().__init__(telnet, world)
+    def __init__(self, telnet: TelnetServer, world: World, output: Output) -> None:
+        super().__init__(telnet, world, output)
 
         self._command_processor = CommandProcessor(
             self._telnet, self._world, self._output, ACTIONS

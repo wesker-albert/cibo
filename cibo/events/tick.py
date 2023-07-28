@@ -17,8 +17,8 @@ from cibo.telnet import TelnetServer
 class TickEvent(Event):
     """Tick timers, that execute recurring Actions with varying frequency."""
 
-    def __init__(self, telnet: TelnetServer, world: World):
-        super().__init__(telnet, world)
+    def __init__(self, telnet: TelnetServer, world: World, output: Output):
+        super().__init__(telnet, world, output)
 
         # schedule each of our tick Actions for processing
         every().second.do(

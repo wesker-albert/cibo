@@ -42,5 +42,7 @@ class Resource(ABC):
         return next(iter(data.values()))
 
     @abstractmethod
-    def _create_resource_from_dict(self, resource: dict) -> Union[Room, Door]:
+    def _create_resource_from_dict(
+        self, resource: dict
+    ) -> Union[Room, Door]:  # pytest: no cover
         pass
