@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 from marshmallow import Schema
 from peewee import Model as Model_
 from peewee import SqliteDatabase
-from playhouse.shortcuts import model_to_dict
 
 
 class Model(Model_):
@@ -19,15 +18,6 @@ class Model(Model_):
         load_dotenv()
 
         database = SqliteDatabase(os.getenv("DATABASE_PATH", "cibo_database.db"))
-
-    def asdict(self) -> dict:
-        """Converts the peewee model into a dict representation.
-
-        Returns:
-            dict: The model in dict format.
-        """
-
-        return dict(model_to_dict(self))
 
     def validate(self, schema: type[Schema]) -> Any:
         """Validate the model instance's attributes against the provided schema.
