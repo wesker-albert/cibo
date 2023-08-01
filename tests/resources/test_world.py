@@ -1,10 +1,9 @@
-from cibo.resources.world import World
+from tests.conftest import WorldFactory
 
 
-def test_motd():
-    world = World()
-
-    assert (
-        world.motd
-        == "━━━━━━[red]┏┓[/]━━━━━━\n━━━━━━[red]┃┃[/]━━━━━━\n[red]┏━━┓┏┓┃┗━┓┏━━┓\n┃┏━┛┣┫┃┏┓┃┃┏┓┃\n┃┗━┓┃┃┃┗┛┃┃┗┛┃\n┗━━┛┗┛┗━━┛┗━━┛[/]\n━━━━━━━━━━━━━━\n━━━━━━━━━━━━━━"
-    )
+class TestWorld(WorldFactory):
+    def test_motd(self):
+        assert (
+            self.world.motd
+            == "━━━━━━[red]┏┓[/]━━━━━━\n━━━━━━[red]┃┃[/]━━━━━━\n[red]┏━━┓┏┓┃┗━┓┏━━┓\n┃┏━┛┣┫┃┏┓┃┃┏┓┃\n┃┗━┓┃┃┃┗┛┃┃┗┛┃\n┗━━┛┗┛┗━━┛┗━━┛[/]\n━━━━━━━━━━━━━━\n━━━━━━━━━━━━━━"
+        )

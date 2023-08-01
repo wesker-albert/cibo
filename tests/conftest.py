@@ -10,13 +10,14 @@ from cibo.actions.error import Error
 from cibo.actions.prompt import Prompt
 from cibo.client import Client, ClientLoginState
 from cibo.command import CommandProcessor
-from cibo.decorator import load_environment_variables
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
+from cibo.models.room import Room, RoomDescription
 from cibo.output import Output
 from cibo.resources.doors import Doors
 from cibo.resources.rooms import Rooms
+from cibo.resources.world import World
 
 
 class BaseFactory:
@@ -133,13 +134,36 @@ class InputEventFactory(CommandProcessorFactory):
         yield
 
 
-@fixture(name="doors")
-@load_environment_variables
-def fixture_doors() -> Doors:
-    return Doors(getenv("DOORS_PATH", "/cibo/resources/doors.json"))
+class WorldFactory:
+    @fixture(autouse=True)
+    def fixture_world(self) -> World:
+        self.world = World()
+        yield
 
+    @fixture(autouse=True)
+    def fixture_doors(self) -> Doors:
+        self.doors = Doors(getenv("DOORS_PATH", "/cibo/resources/doors.json"))
+        yield
 
-@fixture(name="rooms")
-@load_environment_variables
-def fixture_rooms() -> Rooms:
-    return Rooms(getenv("ROOMS_PATH", "/cibo/resources/rooms.json"))
+    @fixture(autouse=True)
+    def fixture_rooms(self) -> Rooms:
+        self.rooms = Rooms(getenv("ROOMS_PATH", "/cibo/resources/rooms.json"))
+        yield
+
+    @fixture(name="room")
+    def fixture_room(self) -> Room:
+        yield Room(
+            id_=1,
+            name="A Room Marked #1",
+            description=RoomDescription(
+                normal="The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation.",
+                extra=None,
+                night=None,
+                under=None,
+                behind=None,
+                above=None,
+                smell=None,
+                listen=None,
+            ),
+            exits=[],
+        )
