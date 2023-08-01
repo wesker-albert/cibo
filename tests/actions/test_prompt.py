@@ -1,26 +1,14 @@
-from unittest.mock import Mock
-
-from cibo.actions.prompt import Prompt
-from cibo.client import Client
+from tests.conftest import ClientFactory, PromptActionFactory
 
 
-def test_aliases():
-    prompt = Prompt(Mock(), Mock(), Mock())
+class TestPromptAction(ClientFactory, PromptActionFactory):
+    def test_aliases(self):
+        assert not self.prompt.aliases()
 
-    assert not prompt.aliases()
+    def test_required_args(self):
+        assert not self.prompt.required_args()
 
+    def test_process(self):
+        self.prompt.process(self.mock_client, None, [])
 
-def test_required_args():
-    prompt = Prompt(Mock(), Mock(), Mock())
-
-    assert not prompt.required_args()
-
-
-def test_process(client: Client):
-    output = Mock()
-    output.prompt = Mock()
-    prompt = Prompt(Mock(), Mock(), output)
-
-    prompt.process(client, None, [])
-
-    output.prompt.assert_called_once_with(client)
+        self.output.prompt.assert_called_once_with(self.mock_client)

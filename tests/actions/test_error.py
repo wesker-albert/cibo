@@ -1,27 +1,16 @@
-from unittest.mock import Mock
-
-from cibo.actions.error import Error
+from tests.conftest import ClientFactory, ErrorActionFactory
 
 
-def test_aliases():
-    error = Error(Mock(), Mock(), Mock())
+class TestErrorAction(ClientFactory, ErrorActionFactory):
+    def test_aliases(self):
+        assert not self.error.aliases()
 
-    assert not error.aliases()
+    def test_required_args(self):
+        assert self.error.required_args() == ["message"]
 
+    def test_process(self):
+        self.error.process(self.mock_client, None, ["Something unexpected happened!"])
 
-def test_required_args():
-    error = Error(Mock(), Mock(), Mock())
-
-    assert error.required_args() == ["message"]
-
-
-def test_process():
-    output = Mock()
-    error = Error(Mock(), Mock(), output)
-    client = Mock()
-
-    error.process(client, None, ["Something unexpected happened!"])
-
-    output.private.assert_called_once_with(
-        client, "[bright_red]Something unexpected happened![/]"
-    )
+        self.output.private.assert_called_once_with(
+            self.mock_client, "[bright_red]Something unexpected happened![/]"
+        )

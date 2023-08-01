@@ -1,25 +1,18 @@
-from unittest.mock import ANY, Mock
+from unittest.mock import ANY
 
-from cibo.actions.connect import Connect
-
-
-def test_aliases():
-    connect = Connect(Mock(), Mock(), Mock())
-
-    assert not connect.aliases()
+from tests.conftest import ClientFactory, ConnectActionFactory
 
 
-def test_required_args():
-    connect = Connect(Mock(), Mock(), Mock())
+class TestConnectAction(ClientFactory, ConnectActionFactory):
+    def test_aliases(self):
+        assert not self.connect.aliases()
 
-    assert not connect.required_args()
+    def test_required_args(self):
+        assert not self.connect.required_args()
 
+    def test_process(self):
+        self.connect.process(self.mock_client, None, [])
 
-def test_process():
-    output = Mock()
-    connect = Connect(Mock(), Mock(), output)
-    client = Mock()
-
-    connect.process(client, None, [])
-
-    output.private.assert_called_once_with(client, ANY, justify="center")
+        self.output.private.assert_called_once_with(
+            self.mock_client, ANY, justify="center"
+        )

@@ -98,7 +98,7 @@ disable = [
 ]
 
 [tool.pylint-per-file-ignores]
-"./tests/" = "missing-function-docstring,missing-class-docstring,missing-module-docstring,line-too-long"
+"./tests/" = "missing-function-docstring,missing-class-docstring,missing-module-docstring,line-too-long,no-member,attribute-defined-outside-init,logging-too-many-args"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -3,25 +3,24 @@ from unittest.mock import Mock
 
 from pytest import raises
 
-from cibo.command import CommandProcessor
 from cibo.exception import CommandMissingArguments, UnrecognizedCommand
+from tests.conftest import CommandProcessorFactory
 
 
-def test_process(caplog, command_processor: CommandProcessor):
-    with caplog.at_level(logging.INFO):
-        command_processor.process(Mock(), "login john ClevaGuhl!")
+class TestCommandProcessor(CommandProcessorFactory):
+    def test_process(self, caplog):
+        with caplog.at_level(logging.INFO):
+            self.command_processor.process(Mock(), "login john ClevaGuhl!")
 
-        assert caplog.records[0].args == {
-            "args": ["john", "ClevaGuhl!"],
-            "command": "login",
-        }
+            assert caplog.records[0].args == {
+                "args": ["john", "ClevaGuhl!"],
+                "command": "login",
+            }
 
+    def test_process_unrecognized_command(self):
+        with raises(UnrecognizedCommand):
+            self.command_processor.process(Mock(), "say")
 
-def test_process_unrecognized_command(command_processor: CommandProcessor):
-    with raises(UnrecognizedCommand):
-        command_processor.process(Mock(), "say")
-
-
-def test_process_missing_args(command_processor: CommandProcessor):
-    with raises(CommandMissingArguments):
-        command_processor.process(Mock(), "login john")
+    def test_process_missing_args(self):
+        with raises(CommandMissingArguments):
+            self.command_processor.process(Mock(), "login john")
