@@ -1,36 +1,15 @@
 from pytest import raises
 
 from cibo.exception import ResourceNotFound
-from cibo.models.room import Direction, Room, RoomDescription, RoomExit
+from cibo.models.room import Direction, Room, RoomExit
 from tests.conftest import WorldFactory
 
 
 class TestRooms(WorldFactory):
-    def test_get_by_id(self):
-        room = self.rooms.get_by_id(1)
+    def test_get_by_id(self, room: Room):
+        fetched_room = self.rooms.get_by_id(1)
 
-        assert room == Room(
-            id_=1,
-            name="A Room Marked #1",
-            description=RoomDescription(
-                normal="The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation.",
-                extra=None,
-                night=None,
-                under=None,
-                behind=None,
-                above=None,
-                smell=None,
-                listen=None,
-            ),
-            exits=[
-                RoomExit(direction=Direction.NORTH, id_=2, description=None),
-                RoomExit(direction=Direction.EAST, id_=3, description=None),
-                RoomExit(direction=Direction.SOUTH, id_=4, description=None),
-                RoomExit(direction=Direction.WEST, id_=5, description=None),
-                RoomExit(direction=Direction.UP, id_=6, description=None),
-                RoomExit(direction=Direction.DOWN, id_=7, description=None),
-            ],
-        )
+        assert fetched_room == room
 
     def test_get_by_id_not_found(self):
         with raises(ResourceNotFound):
@@ -60,6 +39,8 @@ class TestRooms(WorldFactory):
         assert self.rooms.get_formatted_exits(room) == "[green]Exit:[/] north"
 
     def test_get_formatted_exits_none(self, room: Room):
+        room.exits = []
+
         assert self.rooms.get_formatted_exits(room) == "[green]Exits:[/] none"
 
     def test_get_direction_exit(self, room: Room):

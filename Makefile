@@ -49,7 +49,7 @@ type_check:
 	@poetry run mypy
 
 formatting:
-	@poetry run black --diff --check cibo/
+	@poetry run black --diff --check ./cibo ./tests
 
 test:
 	@poetry run pytest --durations=5

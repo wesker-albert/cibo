@@ -13,7 +13,7 @@ from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
-from cibo.models.room import Room, RoomDescription
+from cibo.models.room import Direction, Room, RoomDescription, RoomExit
 from cibo.output import Output
 from cibo.resources.doors import Doors
 from cibo.resources.rooms import Rooms
@@ -25,6 +25,7 @@ class BaseFactory:
     def fixture_base(self) -> None:
         self.telnet = Mock()
         self.output = Mock()
+        yield
 
 
 class ClientFactory:
@@ -165,5 +166,12 @@ class WorldFactory:
                 smell=None,
                 listen=None,
             ),
-            exits=[],
+            exits=[
+                RoomExit(direction=Direction.NORTH, id_=2, description=None),
+                RoomExit(direction=Direction.EAST, id_=3, description=None),
+                RoomExit(direction=Direction.SOUTH, id_=4, description=None),
+                RoomExit(direction=Direction.WEST, id_=5, description=None),
+                RoomExit(direction=Direction.UP, id_=6, description=None),
+                RoomExit(direction=Direction.DOWN, id_=7, description=None),
+            ],
         )
