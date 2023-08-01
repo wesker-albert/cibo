@@ -2,7 +2,6 @@
 CommandProcessor. If the input contains a valid Command, further logic will be carried
 out."""
 
-from cibo.actions.commands import ACTIONS
 from cibo.actions.error import Error
 from cibo.actions.prompt import Prompt
 from cibo.command import CommandProcessor
@@ -19,12 +18,16 @@ class InputEvent(Event):
     carried out.
     """
 
-    def __init__(self, telnet: TelnetServer, world: World, output: Output) -> None:
+    def __init__(
+        self,
+        telnet: TelnetServer,
+        world: World,
+        output: Output,
+        command_processor: CommandProcessor,
+    ) -> None:
         super().__init__(telnet, world, output)
 
-        self._command_processor = CommandProcessor(
-            self._telnet, self._world, self._output, ACTIONS
-        )
+        self._command_processor = command_processor
 
     def process(self) -> None:
         for client, input_ in self._telnet.get_client_input():

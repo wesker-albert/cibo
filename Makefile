@@ -47,6 +47,9 @@ formatting:
 test:
 	@poetry run pytest --durations=5
 
+test_verbose:
+	@poetry run pytest --durations=5 -vv
+
 coverage:
 	@poetry run pytest --cov-report term --cov-report xml:coverage.xml --cov=cibo
 

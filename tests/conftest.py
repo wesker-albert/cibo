@@ -1,11 +1,15 @@
 import logging
+from os import getenv
 from unittest.mock import Mock
 
 from pytest import fixture
 
 from cibo.client import Client, ClientLoginState
 from cibo.command import CommandProcessor
+from cibo.decorator import load_environment_variables
 from cibo.output import Output
+from cibo.resources.doors import Doors
+from cibo.resources.rooms import Rooms
 
 
 @fixture(name="client")
@@ -40,6 +44,18 @@ def fixture_command_processor() -> CommandProcessor:
 @fixture(name="output")
 def fixture_output() -> Output:
     return Output(Mock())
+
+
+@fixture(name="doors")
+@load_environment_variables
+def fixture_doors() -> Doors:
+    return Doors(getenv("DOORS_PATH", "/cibo/resources/doors.json"))
+
+
+@fixture(name="rooms")
+@load_environment_variables
+def fixture_rooms() -> Rooms:
+    return Rooms(getenv("ROOMS_PATH", "/cibo/resources/rooms.json"))
 
 
 class MockAction:

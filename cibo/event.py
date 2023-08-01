@@ -6,6 +6,8 @@ The EventProcessor allows for the different Event types to be processed as a bat
 in a FIFO order.
 """
 
+from cibo.actions.commands import ACTIONS
+from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
@@ -32,9 +34,15 @@ class EventProcessor:  # pytest: no cover
         self._world = world
         self._output = output
 
+        self._command_processor = CommandProcessor(
+            self._telnet, self._world, self._output, ACTIONS
+        )
+
         self._connect = ConnectEvent(self._telnet, self._world, self._output)
         self._disconnect = DisconnectEvent(self._telnet, self._world, self._output)
-        self._input = InputEvent(self._telnet, self._world, self._output)
+        self._input = InputEvent(
+            self._telnet, self._world, self._output, self._command_processor
+        )
 
     def process(self) -> None:
         """Processes the different Event types."""
