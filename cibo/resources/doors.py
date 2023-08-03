@@ -7,7 +7,7 @@ This is a collection of all the Doors that exist in the world.
 
 from typing import List
 
-from cibo.exception import ResourceNotFound
+from cibo.exception import DoorNotFound
 from cibo.models.door import Door, DoorFlag
 from cibo.resources.__resource__ import Resource
 
@@ -51,7 +51,7 @@ class Doors(Resource):
             if room_id in door.room_ids and adjoining_room_id in door.room_ids:
                 return door
 
-        raise ResourceNotFound
+        raise DoorNotFound
 
     def is_door_closed(self, door: Door) -> bool:
         """Check if the Door is closed.

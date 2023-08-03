@@ -4,6 +4,8 @@ from typing import List
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
+from cibo.exception import MissingArguments, NotLoggedIn
+from cibo.models.announcement import Announcement
 
 
 class Say(Action):
@@ -15,21 +17,41 @@ class Say(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, client: Client, _command: str, args: List[str]) -> None:
-        if not client.is_logged_in or not client.player:
-            self.send.prompt(client)
-            return
+    @property
+    def no_args_msg(self) -> str:
+        """No arguments were provided."""
 
-        if not args:
-            self.send.private(
-                client, "You try to think of something clever to say, but fail."
-            )
-            return
+        return "You try to think of something clever to say, but fail."
 
-        self.send.local(
-            client.player.current_room_id,
-            f'[cyan]{client.player.name}[/] says, "{self._join_args(args)}"',
-            [client],
+    def speaking_msg(self, player_name: str, player_message: str) -> Announcement:
+        """Player is successfully saying something."""
+
+        return Announcement(
+            f'You say, "{player_message}"',
+            f'[cyan]{player_name}[/] says, "{player_message}"',
         )
 
-        self.send.private(client, f'You say, "{self._join_args(args)}"')
+    def process(self, client: Client, _command: str, args: List[str]) -> None:
+        try:
+            if not client.is_logged_in:
+                raise NotLoggedIn
+
+            if not args:
+                raise MissingArguments
+
+        except NotLoggedIn:
+            self.send.prompt(client)
+
+        except MissingArguments:
+            self.send.private(client, self.no_args_msg)
+
+        else:
+            speaking_msg = self.speaking_msg(client.player.name, self._join_args(args))
+
+            self.send.local(
+                client.player.current_room_id,
+                speaking_msg.to_room,
+                [client],
+            )
+
+            self.send.private(client, speaking_msg.to_self)

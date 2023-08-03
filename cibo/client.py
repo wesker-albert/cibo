@@ -29,7 +29,7 @@ class Client:
     last_check: float
     login_state: ClientLoginState
     registration: Optional[Player]
-    player: Optional[Player]
+    player: Player
 
     @property
     def is_logged_in(self) -> bool:
@@ -88,7 +88,7 @@ class Client:
         self.login_state = ClientLoginState.PRE_LOGIN
         if self.player:
             self.player.save()
-        self.player = None
+        self.player = Player()
 
     def log_in(self, player: Player) -> None:
         """Log the client in as the given Player.

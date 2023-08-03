@@ -4,6 +4,7 @@ from unittest.mock import Mock
 
 from pytest import fixture
 
+from cibo.actions.commands.close import Close
 from cibo.actions.connect import Connect
 from cibo.actions.disconnect import Disconnect
 from cibo.actions.error import Error
@@ -13,6 +14,7 @@ from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
+from cibo.models.player import Player
 from cibo.models.room import Direction, Room, RoomDescription, RoomExit
 from cibo.output import Output
 from cibo.resources.doors import Doors
@@ -39,7 +41,7 @@ class ClientFactory:
             last_check=2.5,
             login_state=ClientLoginState.PRE_LOGIN,
             registration=None,
-            player=None,
+            player=Player(),
         )
         yield
 
@@ -47,7 +49,7 @@ class ClientFactory:
     def fixture_mock_client(self) -> Client:
         self.mock_client = Mock()
         self.mock_client.login_state = ClientLoginState.PRE_LOGIN
-        self.mock_client.player = None
+        self.mock_client.player = Player()
         self.mock_client.prompt = "> "
         yield
 
@@ -109,6 +111,13 @@ class PromptActionFactory(BaseFactory):
     @fixture(autouse=True)
     def fixture_prompt(self) -> Prompt:
         self.prompt = Prompt(self.telnet, Mock(), self.output)
+        yield
+
+
+class CloseActionFactory(BaseFactory):
+    @fixture(autouse=True)
+    def fixture_close(self) -> Close:
+        self.close = Close(self.telnet, Mock(), self.output)
         yield
 
 

@@ -37,7 +37,31 @@ class CommandMissingArguments(Exception):
         )
 
 
-class ResourceNotFound(Exception):
-    """Raised if a resource can't be found."""
+class MissingArguments(Exception):
+    """Raised if not arguments were supplied to an Action."""
+
+    pass
+
+
+class RoomNotFound(Exception):
+    """Raised by an Action if the player isn't currently in a room."""
+
+    pass
+
+
+class ExitNotFound(Exception):
+    """Raised by an Action if there's no exit in the direction specified."""
+
+    pass
+
+
+class DoorNotFound(Exception):
+    """Raised by an Action if there's no door in the direction specified."""
+
+    pass
+
+
+class NotLoggedIn(Exception):
+    """Raised by an Action if the Client isn't logged into a Player."""
 
     pass

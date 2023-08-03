@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
+from cibo.exception import NotLoggedIn, RoomNotFound
 
 
 class Exits(Action):
@@ -18,14 +19,14 @@ class Exits(Action):
     def process(
         self, client: Client, _command: Optional[str], _args: List[str]
     ) -> None:
-        if not client.is_logged_in or not client.player:
+        try:
+            if not client.is_logged_in:
+                raise NotLoggedIn
+
+            room = self.rooms.get_by_id(client.player.current_room_id)
+
+        except (NotLoggedIn, RoomNotFound):
             self.send.prompt(client)
-            return
 
-        room = self.rooms.get_by_id(client.player.current_room_id)
-
-        if not room:
-            self.send.prompt(client)
-            return
-
-        self.send.private(client, self.rooms.get_formatted_exits(room))
+        else:
+            self.send.private(client, self.rooms.get_formatted_exits(room))

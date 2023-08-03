@@ -18,11 +18,6 @@ class TestDisconnectAction(ClientFactory, DisconnectActionFactory):
         self.mock_client.player.send.assert_not_called()
         self.output.private.assert_not_called()
 
-    def test_process_no_player(self):
-        self.disconnect.process(self.mock_client, None, [])
-
-        self.output.private.assert_not_called()
-
     def test_process(self):
         self.mock_client.player = Mock()
         self.mock_client.player.name = "John"

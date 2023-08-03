@@ -6,7 +6,7 @@ from rich.panel import Panel
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
-from cibo.exception import ResourceNotFound
+from cibo.exception import NotLoggedIn, RoomNotFound
 
 
 class Look(Action):
@@ -48,14 +48,17 @@ class Look(Action):
         return f"\n\n{joined_occupants}" if len(occupants) > 0 else ""
 
     def process(self, client: Client, _command: Optional[str], args: List[str]) -> None:
-        if not client.is_logged_in or not client.player or args:
-            self.send.prompt(client)
-            return
-
         try:
+            if not client.is_logged_in or args:
+                raise NotLoggedIn
+
             # the player is just looking at the room in general
             room = self.rooms.get_by_id(client.player.current_room_id)
 
+        except (NotLoggedIn, RoomNotFound):
+            self.send.prompt(client)
+
+        else:
             self.send.private(
                 client,
                 Panel(
@@ -68,7 +71,3 @@ class Look(Action):
                     padding=(1, 4),
                 ),
             )
-
-        except ResourceNotFound:
-            self.send.prompt(client)
-            return

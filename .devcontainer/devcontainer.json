@@ -22,10 +22,12 @@
 				"autoDocstring.docstringFormat": "google",
 				"coverage-gutters.coverageBaseDir": "**",
 				"coverage-gutters.coverageFileNames": [
-					"coverage.xml"
+					"../coverage.xml"
 				],
 				"coverage-gutters.coverageReportFileName": "coverage/**/index.html",
 				"coverage-gutters.ignoredPathGlobs": "**/{node_modules}/**",
+				"coverage-gutters.showGutterCoverage": false,
+				"coverage-gutters.showLineCoverage": true,
 				"emeraldwalk.runonsave": {
 					"commands": [
 						{
@@ -95,6 +97,7 @@
 						"path": "/bin/zsh"
 					}
 				},
+				"testing.openTesting": "neverOpen",
 				"workbench.editorAssociations": {
 					"*.db": "sqlite-viewer.option"
 				},

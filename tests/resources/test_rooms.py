@@ -1,6 +1,6 @@
 from pytest import raises
 
-from cibo.exception import ResourceNotFound
+from cibo.exception import ExitNotFound, RoomNotFound
 from cibo.models.room import Direction, Room, RoomExit
 from tests.conftest import WorldFactory
 
@@ -12,7 +12,7 @@ class TestRooms(WorldFactory):
         assert fetched_room == room
 
     def test_get_by_id_not_found(self):
-        with raises(ResourceNotFound):
+        with raises(RoomNotFound):
             _room = self.rooms.get_by_id(7373547567)
 
     def test_get_exits(self, room: Room):
@@ -59,4 +59,5 @@ class TestRooms(WorldFactory):
             RoomExit(direction=Direction.EAST, id_=3, description=None),
         ]
 
-        assert not self.rooms.get_direction_exit(room, "w")
+        with raises(ExitNotFound):
+            self.rooms.get_direction_exit(room, "w")

@@ -14,6 +14,7 @@ from select import select
 from typing import List, Optional, Tuple
 
 from cibo.client import Client, ClientLoginState
+from cibo.models.player import Player
 
 
 class TelnetEventType(int, Enum):
@@ -226,7 +227,7 @@ class TelnetServer:
                 last_check=time.time(),
                 login_state=ClientLoginState.PRE_LOGIN,
                 registration=None,
-                player=None,
+                player=Player(),
             )
 
             self._clients.append(new_client)

@@ -37,7 +37,9 @@ class TickEvent(Event):
         )
 
     @staticmethod
-    def _process_tick(action: type[Action], telnet: TelnetServer, world: World) -> None:
+    def _process_tick(
+        action: type[Action], telnet: TelnetServer, world: World, output: Output
+    ) -> None:
         """This processes our tick schedules in parallel, rather than serially.
         That way our intervals are as accurate as possible.
 
@@ -47,7 +49,7 @@ class TickEvent(Event):
             world (World): The World as we know it.
         """
 
-        thread = Thread(target=action, args=[telnet, world])
+        thread = Thread(target=action, args=[telnet, world, output])
         thread.start()
 
     @staticmethod

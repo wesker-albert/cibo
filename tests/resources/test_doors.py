@@ -1,6 +1,6 @@
 from pytest import raises
 
-from cibo.exception import ResourceNotFound
+from cibo.exception import DoorNotFound
 from cibo.models.door import Door, DoorFlag
 from tests.conftest import WorldFactory
 
@@ -14,7 +14,7 @@ class TestDoors(WorldFactory):
         )
 
     def test_get_by_room_ids_not_found(self):
-        with raises(ResourceNotFound):
+        with raises(DoorNotFound):
             _door = self.doors.get_by_room_ids(10, 14)
 
     def test_is_door_closed(self):

@@ -4,9 +4,9 @@ occupy as well as navigate through.
 This is a collection of all the Rooms that exist in the world.
 """
 
-from typing import List, Optional
+from typing import List
 
-from cibo.exception import ResourceNotFound
+from cibo.exception import ExitNotFound, RoomNotFound
 from cibo.models.room import Direction, Room, RoomDescription, RoomExit
 from cibo.resources.__resource__ import Resource
 
@@ -66,7 +66,7 @@ class Rooms(Resource):
             if room.id_ == id_:
                 return room
 
-        raise ResourceNotFound
+        raise RoomNotFound
 
     def get_exits(self, room: Room) -> List[str]:
         """Get the text values of the exits for the given Room, in alphabetical order.
@@ -103,7 +103,7 @@ class Rooms(Resource):
         joined_exits = ", ".join([str(exit_) for exit_ in exits])
         return f"[green]Exits:[/] {joined_exits}"
 
-    def get_direction_exit(self, room: Room, direction: str) -> Optional[RoomExit]:
+    def get_direction_exit(self, room: Room, direction: str) -> RoomExit:
         """Returns the Room exit in the direction given, if an exit exists that way.
 
         Args:
@@ -115,7 +115,10 @@ class Rooms(Resource):
         """
 
         for exit_ in room.exits:
-            if direction == (exit_.direction.value or exit_.direction.name.lower()):
+            if (
+                direction == exit_.direction.value
+                or direction == exit_.direction.name.lower()
+            ):
                 return exit_
 
-        return None
+        raise ExitNotFound

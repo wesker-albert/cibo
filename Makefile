@@ -41,6 +41,7 @@ test_verbose:
 safety_check:
 	@poetry export --without-hashes --with dev -o requirements.txt && cat requirements.txt \
 		| poetry run safety check --stdin --full-report && poetry check -n
+	@rm requirements.txt
 
 lint:
 	@poetry run pylint ./cibo ./tests
@@ -55,7 +56,8 @@ test:
 	@poetry run pytest --durations=5
 
 coverage:
-	@poetry run pytest --cov-report term --cov-report xml:coverage.xml --cov=cibo
+	@poetry run pytest --cov-report term --cov-report xml:../coverage.xml --cov=cibo
+	@rm .coverage
 
 
 # Server
