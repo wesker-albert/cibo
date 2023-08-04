@@ -1,10 +1,13 @@
 import logging
 
+from pytest import raises
+
+from cibo.exception import InputNotReceived
 from tests.conftest import ClientFactory, InputEventFactory
 
 
 class TestInputEevent(ClientFactory, InputEventFactory):
-    def test_process(self, caplog):
+    def test_event_input_process(self, caplog):
         self.telnet.get_client_input.return_value = [
             (self.mock_client, "login john ClevaGuhl!")
         ]
@@ -17,14 +20,13 @@ class TestInputEevent(ClientFactory, InputEventFactory):
                 "command": "login",
             }
 
-    def test_process_no_input(self):
+    def test_event_input_process_no_input(self):
         self.telnet.get_client_input.return_value = [(self.mock_client, None)]
 
-        self.input.process()
+        with raises(InputNotReceived):
+            self.input.process()
 
-        self.output.prompt.assert_called_once()
-
-    def test_process_exception(self):
+    def test_event_input_process_exception(self):
         self.telnet.get_client_input.return_value = [(self.mock_client, "login john")]
 
         self.input.process()

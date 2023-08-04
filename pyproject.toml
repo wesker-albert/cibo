@@ -87,13 +87,14 @@ ignore = [
 
 [tool.pylint.similarities]
 ignore-imports = true
-min-similarity-lines = 8
+min-similarity-lines = 10
 
 [tool.pylint.format]
 max-line-length = 88
 
 [tool.pylint.messages_control]
 disable = [
+    "broad-exception-caught",
     "fixme",
     "too-few-public-methods",
     "too-many-instance-attributes",
@@ -103,7 +104,6 @@ disable = [
 
 [tool.pylint-per-file-ignores]
 "./tests/" = "missing-function-docstring,missing-class-docstring,missing-module-docstring,line-too-long,no-member,attribute-defined-outside-init,logging-too-many-args"
-"./cibo/actions/" = "too-many-return-statements"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

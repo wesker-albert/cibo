@@ -5,6 +5,8 @@ from typing import List
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
+from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotRegistered
+from cibo.models.player import Player
 
 
 class Finalize(Action):
@@ -17,7 +19,7 @@ class Finalize(Action):
         return []
 
     @property
-    def already_logged_in_msg(self) -> str:
+    def is_logged_in_msg(self) -> str:
         """Player is already logged in."""
 
         return "You finalize your written will, leaving your whole estate to your cat."
@@ -28,7 +30,7 @@ class Finalize(Action):
 
         return "You'll need to [green]register[/] before you can [green]finalize[/]."
 
-    def registered_msg(self, player_name: str) -> str:
+    def successfully_registered_msg(self, player_name: str) -> str:
         """Finalization was successful."""
 
         return (
@@ -36,7 +38,7 @@ class Finalize(Action):
             "with this player."
         )
 
-    def name_not_available_msg(self, player_name: str) -> str:
+    def player_already_exists_msg(self, player_name: str) -> str:
         """Player name is already taken."""
 
         return (
@@ -44,24 +46,47 @@ class Finalize(Action):
             "Please [green]register[/] again with a different name."
         )
 
-    def process(self, client: Client, _command: str, _args: List[str]) -> None:
-        if client.is_logged_in:
-            self.send.private(client, self.already_logged_in_msg)
-            return
+    def save_player_registration(self, client: Client) -> None:
+        """Save the registered Player to the database.
 
-        if not client.registration:
-            self.send.private(client, self.not_registered_msg)
-            return
+        Args:
+            client (Client): The client containing the registration info.
+
+        Raises:
+            PlayerAlreadyExists: A Player with the same name already exists.
+        """
 
         try:
             client.registration.save()
 
-            self.send.private(client, self.registered_msg(client.registration.name))
+        except IntegrityError as ex:
+            raise PlayerAlreadyExists from ex
 
-        # a Player with the same name already exists
-        except IntegrityError:
+    def process(self, client: Client, _command: str, _args: List[str]) -> None:
+        try:
+            if client.is_logged_in:
+                raise ClientIsLoggedIn
+
+            if not client.is_registered:
+                raise PlayerNotRegistered
+
+            self.save_player_registration(client)
+
+        except ClientIsLoggedIn:
+            self.send.private(client, self.is_logged_in_msg)
+
+        except PlayerNotRegistered:
+            self.send.private(client, self.not_registered_msg)
+
+        except PlayerAlreadyExists:
             self.send.private(
-                client, self.name_not_available_msg(client.registration.name)
+                client, self.player_already_exists_msg(client.registration.name)
             )
 
-        client.registration = None
+        else:
+            self.send.private(
+                client, self.successfully_registered_msg(client.registration.name)
+            )
+
+        finally:
+            client.registration = Player()

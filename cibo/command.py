@@ -7,7 +7,7 @@ from typing import List, Optional, Type
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
-from cibo.exception import CommandMissingArguments, UnrecognizedCommand
+from cibo.exception import CommandMissingArguments, CommandUnrecognized
 from cibo.output import Output
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
@@ -88,7 +88,7 @@ class CommandProcessor:
             input_ (str): The client command and args.
 
         Raises:
-            UnrecognizedCommand: The client command is unrecognized.
+            CommandUnrecognized: The client command is unrecognized.
             CommandMissingArguments: The client command is missing required args.
         """
 
@@ -104,7 +104,7 @@ class CommandProcessor:
         action = self._get_command_action(command)
 
         if action is None:
-            raise UnrecognizedCommand(command)
+            raise CommandUnrecognized(command)
 
         action_instance = action(self._telnet, self._world, self._output)
 

@@ -6,7 +6,8 @@ from rich.panel import Panel
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
-from cibo.exception import NotLoggedIn, RoomNotFound
+from cibo.exception import ClientNotLoggedIn, RoomNotFound
+from cibo.models.room import Room
 
 
 class Look(Action):
@@ -17,6 +18,18 @@ class Look(Action):
 
     def required_args(self) -> List[str]:
         return []
+
+    def room_desc_msg(self, room: Room, client: Client) -> Panel:
+        """A stylized description of the room, including its exits and occupants."""
+
+        return Panel(
+            f"  {room.description.normal}" f"{self.get_formatted_occupants(client)}",
+            title=f"[blue]{room.name}[/]",
+            title_align="left",
+            subtitle=self.rooms.get_formatted_exits(room),
+            subtitle_align="right",
+            padding=(1, 4),
+        )
 
     def get_formatted_occupants(self, client: Client) -> str:
         """Formats and lists out all occupants of the Client's current room, sans the
@@ -50,24 +63,13 @@ class Look(Action):
     def process(self, client: Client, _command: Optional[str], args: List[str]) -> None:
         try:
             if not client.is_logged_in or args:
-                raise NotLoggedIn
+                raise ClientNotLoggedIn
 
             # the player is just looking at the room in general
             room = self.rooms.get_by_id(client.player.current_room_id)
 
-        except (NotLoggedIn, RoomNotFound):
+        except (ClientNotLoggedIn, RoomNotFound):
             self.send.prompt(client)
 
         else:
-            self.send.private(
-                client,
-                Panel(
-                    f"  {room.description.normal}"
-                    f"{self.get_formatted_occupants(client)}",
-                    title=f"[blue]{room.name}[/]",
-                    title_align="left",
-                    subtitle=self.rooms.get_formatted_exits(room),
-                    subtitle_align="right",
-                    padding=(1, 4),
-                ),
-            )
+            self.send.private(client, self.room_desc_msg(room, client))

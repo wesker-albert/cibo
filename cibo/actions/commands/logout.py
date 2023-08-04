@@ -6,7 +6,7 @@ from typing import List
 from cibo.actions.__action__ import Action
 from cibo.actions.connect import Connect
 from cibo.client import Client
-from cibo.exception import NotLoggedIn
+from cibo.exception import ClientNotLoggedIn
 from cibo.models.announcement import Announcement
 
 
@@ -32,9 +32,9 @@ class Logout(Action):
     def process(self, client: Client, command: str, args: List[str]) -> None:
         try:
             if not client.is_logged_in:
-                raise NotLoggedIn
+                raise ClientNotLoggedIn
 
-        except NotLoggedIn:
+        except ClientNotLoggedIn:
             self.send.prompt(client)
 
         else:

@@ -5,6 +5,12 @@ from typing import List
 from cibo.actions.__action__ import Action
 from cibo.actions.commands.look import Look
 from cibo.client import Client
+from cibo.exception import (
+    ClientIsLoggedIn,
+    PasswordIncorrect,
+    PlayerNotFound,
+    PlayerSessionActive,
+)
 from cibo.models.announcement import Announcement
 from cibo.models.player import Player
 
@@ -19,7 +25,7 @@ class Login(Action):
         return ["name", "password"]
 
     @property
-    def already_logged_in_msg(self) -> str:
+    def is_logged_in_msg(self) -> str:
         """Player is already logged in."""
 
         return (
@@ -27,7 +33,7 @@ class Login(Action):
             "you are."
         )
 
-    def no_existing_player_msg(self, player_name: str) -> str:
+    def player_not_found_msg(self, player_name: str) -> str:
         """Player doesn't exist."""
 
         return (
@@ -41,7 +47,7 @@ class Login(Action):
 
         return "[bright_red]Incorrect password.[/]"
 
-    def player_in_session_msg(self, player_name: str) -> str:
+    def player_session_active_msg(self, player_name: str) -> str:
         """Another Client is already logged into a session with the Player."""
 
         return (
@@ -59,7 +65,7 @@ class Login(Action):
             f"[cyan]{player_name}[/] falls from heaven. It looks like it hurt.",
         )
 
-    def is_player_logged_in(self, name: str) -> bool:
+    def check_for_player_session(self, name: str) -> None:
         """Checks to see if the Player is already logged into and active session, by
         a different client.
 
@@ -72,45 +78,41 @@ class Login(Action):
 
         for client in self._telnet.get_connected_clients():
             if client.is_logged_in and client.player and client.player.name == name:
-                return True
-
-        return False
+                raise PlayerSessionActive
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
-        if client.is_logged_in:
-            self.send.private(client, self.already_logged_in_msg)
-            return
+        try:
+            if client.is_logged_in:
+                raise ClientIsLoggedIn
 
-        player_name = args[0]
-        password = args[1]
+            player_name = args[0]
+            password = args[1]
 
-        player = Player.get_by_name(player_name)
+            player = Player.get_by_name(player_name)
 
-        if not player:
-            self.send.private(client, self.no_existing_player_msg(player_name))
-            return
+            self._password_hasher.verify(password, player.password)
+            self.check_for_player_session(player.name)
 
-        # the password the client entered doesn't match the one in the Player record
-        if not self._password_hasher.verify(password, player.password):
+        except ClientIsLoggedIn:
+            self.send.private(client, self.is_logged_in_msg)
+
+        except PlayerNotFound:
+            self.send.private(client, self.player_not_found_msg(player_name))
+
+        except PasswordIncorrect:
             self.send.private(client, self.incorrect_password_msg)
-            return
 
-        # check to see if another client is already logged in with the Player
-        if self.is_player_logged_in(player.name):
-            self.send.private(client, self.player_in_session_msg(player_name))
-            return
+        except PlayerSessionActive:
+            self.send.private(client, self.player_session_active_msg(player_name))
 
-        client.log_in(player)
+        else:
+            client.log_in(player)
 
-        if client.player:
             logging_in_msg = self.logging_in_msg(client.player.name)
 
-            # join the world and look at the room we left off in
             self.send.private(client, logging_in_msg.to_self, prompt=False)
-
-            Look(self._telnet, self._world, self._output).process(client, None, [])
-
-            # tell everyone we've arrived
             self.send.local(
                 client.player.current_room_id, logging_in_msg.to_room, [client]
             )
+
+            Look(self._telnet, self._world, self._output).process(client, None, [])

@@ -6,6 +6,7 @@ from marshmallow import ValidationError
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
+from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotFound
 from cibo.models.player import Player, PlayerSchema
 
 
@@ -19,12 +20,12 @@ class Register(Action):
         return ["name", "password"]
 
     @property
-    def already_logged_in_msg(self) -> str:
+    def is_logged_in_msg(self) -> str:
         """Player is already logged in."""
 
         return "You register to vote, even though both candidates aren't that great."
 
-    def name_not_available_msg(self, player_name: str) -> str:
+    def player_already_exists_msg(self, player_name: str) -> str:
         """Player name is already taken."""
 
         return (
@@ -33,7 +34,7 @@ class Register(Action):
         )
 
     @property
-    def invalid_registration_msg(self) -> str:
+    def validation_error_msg(self) -> str:
         """Provided registration info is invalid."""
 
         return (
@@ -44,7 +45,7 @@ class Register(Action):
             "Please [green]register[/] again."
         )
 
-    def ask_to_finalize_msg(self, player_name: str) -> str:
+    def confirm_finalize_msg(self, player_name: str) -> str:
         """Ask the client to finalize the player registration."""
 
         return (
@@ -57,51 +58,58 @@ class Register(Action):
             "existing player."
         )
 
-    def is_registration_valid(self, name: str, password: str) -> bool:
+    def validate_player_info(self, name: str, password: str) -> None:
         """Validates the supplied Player information, to see if it follows the
         requirements established by the schema.
 
         Args:
             name (str): The Player name to validate.
             password (str): The password to validate.
-
-        Returns:
-            bool: True if the validation was successful.
         """
 
-        try:
-            Player(name=name, password=password).validate(PlayerSchema)
+        Player(name=name, password=password).validate(PlayerSchema)
 
-            return True
+    def check_for_existing_player(self, player_name: str) -> None:
+        """Checks to see if a Player already exists witht the provided name.
 
-        except ValidationError:
-            return False
+        Args:
+            player_name (str): The name to check against.
+
+        Raises:
+            PlayerAlreadyExists: A Player with that name exists.
+        """
+
+        _existing_player = Player.get_by_name(player_name)
+
+        raise PlayerAlreadyExists
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
-        if client.is_logged_in:
-            self.send.private(client, self.already_logged_in_msg)
-            return
+        try:
+            if client.is_logged_in:
+                raise ClientIsLoggedIn
 
-        player_name = args[0]
-        password = args[1]
+            player_name = args[0]
+            password = args[1]
 
-        # verify a Player with the same name doesn't already exist
-        existing_player = Player.get_by_name(player_name)
+            self.check_for_existing_player(player_name)
+            self.validate_player_info(player_name, password)
 
-        if existing_player:
-            self.send.private(client, self.name_not_available_msg(player_name))
-            return
+        except ClientIsLoggedIn:
+            self.send.private(client, self.is_logged_in_msg)
 
-        if not self.is_registration_valid(player_name, password):
-            self.send.private(client, self.invalid_registration_msg)
-            return
+        except PlayerAlreadyExists:
+            self.send.private(client, self.player_already_exists_msg(player_name))
 
-        # a temporary Player model is set on the client, to be created in the db if
-        # they call the Finalize action
-        client.registration = Player(
-            name=player_name,
-            password=self._password_hasher.hash_(password),
-            current_room_id=1,
-        )
+        except ValidationError:
+            self.send.private(client, self.validation_error_msg)
 
-        self.send.private(client, self.ask_to_finalize_msg(player_name))
+        except PlayerNotFound:
+            # a temporary Player model is set on the client, to be created in the db if
+            # they call the Finalize action
+            client.registration = Player(
+                name=player_name,
+                password=self._password_hasher.hash_(password),
+                current_room_id=1,
+            )
+
+            self.send.private(client, self.confirm_finalize_msg(player_name))

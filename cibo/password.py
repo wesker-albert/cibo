@@ -2,6 +2,8 @@
 
 from passlib.hash import bcrypt
 
+from cibo.exception import PasswordIncorrect
+
 
 class Password:
     """Contains methods to hash and verify login passwords."""
@@ -21,7 +23,7 @@ class Password:
 
         return str(self._bcrypt.hash(password_plaintext))
 
-    def verify(self, password_plaintext: str, password_hashed: str) -> bool:
+    def verify(self, password_plaintext: str, password_hashed: str) -> None:
         """Verifies the password against a hash.
 
         Args:
@@ -32,4 +34,7 @@ class Password:
             bool: Returns true if password matches the hash.
         """
 
-        return bool(self._bcrypt.verify(password_plaintext, password_hashed))
+        is_valid = bool(self._bcrypt.verify(password_plaintext, password_hashed))
+
+        if not is_valid:
+            raise PasswordIncorrect

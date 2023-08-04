@@ -4,13 +4,13 @@ from tests.conftest import ClientFactory, DisconnectActionFactory
 
 
 class TestDisconnectAction(ClientFactory, DisconnectActionFactory):
-    def test_aliases(self):
+    def test_action_disconnect_aliases(self):
         assert not self.disconnect.aliases()
 
-    def test_required_args(self):
+    def test_action_disconnect_required_args(self):
         assert not self.disconnect.required_args()
 
-    def test_process_not_logged_in(self):
+    def test_action_disconnect_process_not_logged_in(self):
         self.mock_client.player = Mock()
 
         self.disconnect.process(self.mock_client, None, [])
@@ -18,7 +18,7 @@ class TestDisconnectAction(ClientFactory, DisconnectActionFactory):
         self.mock_client.player.send.assert_not_called()
         self.output.private.assert_not_called()
 
-    def test_process(self):
+    def test_action_disconnect_process(self):
         self.mock_client.player = Mock()
         self.mock_client.player.name = "John"
         self.mock_client.player.current_room_id = 1

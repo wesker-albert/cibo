@@ -226,7 +226,7 @@ class TelnetServer:
                 buffer="",
                 last_check=time.time(),
                 login_state=ClientLoginState.PRE_LOGIN,
-                registration=None,
+                registration=Player(),
                 player=Player(),
             )
 

@@ -2,13 +2,13 @@ from tests.conftest import ClientFactory, ErrorActionFactory
 
 
 class TestErrorAction(ClientFactory, ErrorActionFactory):
-    def test_aliases(self):
+    def test_action_error_aliases(self):
         assert not self.error.aliases()
 
-    def test_required_args(self):
+    def test_action_error_required_args(self):
         assert self.error.required_args() == ["message"]
 
-    def test_process(self):
+    def test_action_error_process(self):
         self.error.process(self.mock_client, None, ["Something unexpected happened!"])
 
         self.output.private.assert_called_once_with(

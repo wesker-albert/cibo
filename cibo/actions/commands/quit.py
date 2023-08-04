@@ -5,6 +5,7 @@ from typing import List
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
+from cibo.exception import ClientIsLoggedIn
 from cibo.models.announcement import Announcement
 
 
@@ -29,7 +30,11 @@ class Quit(Action):
         )
 
     def process(self, client: Client, _command: str, _args: List[str]) -> None:
-        if client.is_logged_in:
+        try:
+            if client.is_logged_in:
+                raise ClientIsLoggedIn
+
+        except ClientIsLoggedIn:
             player_name = client.player.name
             player_room = client.player.current_room_id
 
@@ -39,8 +44,10 @@ class Quit(Action):
                 player_room, self.quitting_msg(player_name).to_room, [client]
             )
 
-        self.send.private(client, self.quitting_msg(player_name).to_self, prompt=False)
+        finally:
+            self.send.private(
+                client, self.quitting_msg(player_name).to_self, prompt=False
+            )
 
-        sleep(1)
-
-        client.disconnect()
+            sleep(1)
+            client.disconnect()

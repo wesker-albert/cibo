@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
-from cibo.exception import NotLoggedIn, RoomNotFound
+from cibo.exception import ClientNotLoggedIn, RoomNotFound
 
 
 class Exits(Action):
@@ -21,11 +21,11 @@ class Exits(Action):
     ) -> None:
         try:
             if not client.is_logged_in:
-                raise NotLoggedIn
+                raise ClientNotLoggedIn
 
             room = self.rooms.get_by_id(client.player.current_room_id)
 
-        except (NotLoggedIn, RoomNotFound):
+        except (ClientNotLoggedIn, RoomNotFound):
             self.send.prompt(client)
 
         else:

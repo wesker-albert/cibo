@@ -4,7 +4,7 @@ from tests.conftest import ClientFactory, DisconnectEventFactory
 
 
 class TestDisconnectEvent(ClientFactory, DisconnectEventFactory):
-    def test_process(self):
+    def test_event_disconnect_process(self):
         self.telnet.get_disconnected_clients.return_value = [self.mock_client]
 
         self.mock_client.player = Mock()

@@ -7,7 +7,7 @@ This is a collection of all the Doors that exist in the world.
 
 from typing import List
 
-from cibo.exception import DoorNotFound
+from cibo.exception import DoorIsClosed, DoorIsLocked, DoorIsOpen, DoorNotFound
 from cibo.models.door import Door, DoorFlag
 from cibo.resources.__resource__ import Resource
 
@@ -66,11 +66,7 @@ class Doors(Resource):
         if not door:
             return False
 
-        return (
-            not door.flags
-            or DoorFlag.CLOSED in door.flags
-            or DoorFlag.LOCKED in door.flags
-        )
+        return not door.flags or DoorFlag.CLOSED in door.flags
 
     def is_door_open(self, door: Door) -> bool:
         """Check if the Door is open.
@@ -101,6 +97,27 @@ class Doors(Resource):
             return False
 
         return DoorFlag.LOCKED in door.flags
+
+    def raise_door_status(self, door: Door) -> None:
+        """Raises the current status of the door as an Exception.
+
+        Args:
+            door (Door): The door you want to check.
+
+        Raises:
+            DoorIsClosed: Given door is closed.
+            DoorIsOpen: Given door is open.
+            DoorIsLocked: Given door is locked.
+        """
+
+        if self.is_door_closed(door):
+            raise DoorIsClosed
+
+        if self.is_door_open(door):
+            raise DoorIsOpen
+
+        if self.is_door_locked(door):
+            raise DoorIsLocked
 
     def close_door(self, door: Door) -> None:
         """Close the given Door.
