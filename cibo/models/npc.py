@@ -7,8 +7,8 @@ from typing import List
 from uuid import UUID
 
 
-@dataclass
-class Npc:
+@dataclass  # pytest: no cover
+class Npc:  # pytest: no cover
     """Represents a non-player character."""
 
     uuid: UUID

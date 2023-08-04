@@ -38,6 +38,10 @@ jobs:
       run: |
         make lint
 
+    - name: Type check codebase
+      run: |
+        make type_check
+
     - name: Validate formatting
       run: |
         make formatting
@@ -47,11 +51,13 @@ jobs:
         make test
 
     - name: Generate coverage report
+      if: success() || failure()
       run: |
-        make coverage
+        make coverage_ci
 
     - name: Format coverage report
       uses: irongut/CodeCoverageSummary@v1.3.0
+      if: success() || failure()
       with:
         filename: coverage.xml
         badge: false

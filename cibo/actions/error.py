@@ -15,5 +15,5 @@ class Error(Action):
     def required_args(self) -> List[str]:
         return ["message"]
 
-    def process(self, client: Client, _command: Optional[str], args: List[str]):
+    def process(self, client: Client, _command: Optional[str], args: List[str]) -> None:
         self.send.private(client, f"[bright_red]{args[0]}[/]")

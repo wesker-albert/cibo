@@ -17,13 +17,18 @@ schedule = "1.2.0"
 [tool.poetry.dev-dependencies]
 black = "23.7.0"
 coverage = "7.2.7"
+mypy = "1.4.1"
 pylint = "2.17.4"
+pylint-per-file-ignores = "1.2.1"
 pytest = "7.4.0"
 pytest-cov = "4.1.0"
 pytest-reverse = "1.7.0"
 pytest-xdist = "3.3.1"
 python-dotenv = "1.0.0"
 safety = "2.3.4"
+
+[tool.pytest.ini_options]
+cache_dir = "../.pytest_cache"
 
 [tool.coverage.run]
 source = ["."]
@@ -32,8 +37,9 @@ parallel = true
 concurrency = ["multiprocessing"]
 omit = [
     "*/__init__.py",
-    "*/tests/*",
-    "*/__main__.py"
+    "*/__main__.py",
+    "*/conftest.py",
+    "*/tests/*"
 ]
 
 [tool.coverage.report]
@@ -60,7 +66,18 @@ sections = [
     "LOCALFOLDER"
 ]
 
+[tool.mypy]
+cache_dir = "../.mypy_cache"
+disallow_untyped_defs = true
+files = "$MYPY_CONFIG_FILE_DIR/cibo/"
+ignore_missing_imports = true
+no_implicit_optional = true
+python_version = "3.11"
+warn_return_any = true
+warn_unused_ignores = true
+
 [tool.pylint.master]
+load-plugins = ["pylint_per_file_ignores"]
 ignore = [
     "*/.git/*",
     "*/.serverless/*",
@@ -70,19 +87,23 @@ ignore = [
 
 [tool.pylint.similarities]
 ignore-imports = true
-min-similarity-lines = 8
+min-similarity-lines = 10
 
 [tool.pylint.format]
 max-line-length = 88
 
 [tool.pylint.messages_control]
 disable = [
+    "broad-exception-caught",
     "fixme",
     "too-few-public-methods",
     "too-many-instance-attributes",
     "unnecessary-pass",
     "unsubscriptable-object"
 ]
+
+[tool.pylint-per-file-ignores]
+"./tests/" = "missing-function-docstring,missing-class-docstring,missing-module-docstring,line-too-long,no-member,attribute-defined-outside-init,logging-too-many-args"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

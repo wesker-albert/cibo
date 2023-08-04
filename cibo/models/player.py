@@ -4,11 +4,12 @@ to resume their adventure where they left off.
 """
 
 
-from typing import Optional, Self
+from typing import Self
 
 from marshmallow import Schema, fields, validate
 from peewee import AutoField, CharField, DoesNotExist, IntegerField, TextField
 
+from cibo.exception import PlayerNotFound
 from cibo.models.__model__ import Model
 
 
@@ -21,25 +22,23 @@ class Player(Model):
     current_room_id = IntegerField()
 
     @classmethod
-    def get_by_name(cls, name: str) -> Optional[Self]:
+    def get_by_name(cls, name: str) -> Self:
         """Find a Player by name, if they already exist.
 
         Args:
             name (str): The Player name to search.
 
         Returns:
-            Optional[Self]: The Player, if one exists with the gien name.
+            Self: The Player, if one exists with the given name.
         """
 
         try:
-            player = cls.get(cls.name == name)
+            player: Self = cls.get(cls.name == name)
             return player
 
         # a Player doesn't exist with the entered name
-        except DoesNotExist:
-            pass
-
-        return None
+        except DoesNotExist as ex:
+            raise PlayerNotFound from ex
 
 
 class PlayerSchema(Schema):

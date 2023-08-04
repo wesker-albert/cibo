@@ -16,7 +16,7 @@ class World:
     """
 
     @load_environment_variables
-    def __init__(self):
+    def __init__(self) -> None:
         self.rooms = Rooms(getenv("ROOMS_PATH", "/cibo/resources/rooms.json"))
         self.doors = Doors(getenv("DOORS_PATH", "/cibo/resources/doors.json"))
 

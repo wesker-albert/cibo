@@ -7,8 +7,8 @@ git clone https://github.com/jirutka/zsh-shift-select.git ${ZSH_CUSTOM:-~/.oh-my
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 sed -i "s/plugins=(git)/plugins=(git zsh-autosuggestions zsh-shift-select zsh-syntax-highlighting)/g" ~/.zshrc
 
-# disable the creation of __pycache__ dirs
-echo -e "export PYTHONDONTWRITEBYTECODE=1" >> ~/.zshrc
+# redirect the creation of __pycache__ dirs to tmp
+echo -e "export PYTHONPYCACHEPREFIX=/tmp" >> ~/.zshrc
 
 # install node dependencies
 npm install

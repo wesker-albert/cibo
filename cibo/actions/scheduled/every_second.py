@@ -15,5 +15,7 @@ class EverySecond(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def process(self, _client: Client, _command: Optional[str], _args: List[str]):
+    def process(
+        self, _client: Client, _command: Optional[str], _args: List[str]
+    ) -> None:
         pass

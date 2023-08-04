@@ -132,6 +132,7 @@ class Output:
         for client in self._telnet.get_connected_clients():
             if (
                 client.is_logged_in
+                and client.player
                 and client.player.current_room_id == room_id
                 and client not in ignore_clients
             ):
@@ -140,19 +141,21 @@ class Output:
 
     def sector(
         self, _sector: int, _message: str, _ignore_clients: List[Client]
-    ) -> None:
+    ) -> None:  # pytest: no cover
         """Prints a message to all clients within the sector."""
 
         pass
 
     def region(
         self, _region: int, _message: str, _ignore_clients: List[Client]
-    ) -> None:
+    ) -> None:  # pytest: no cover
         """Prints a message to all clients within the sector."""
 
         pass
 
-    def server(self, _message: str, _ignore_clients: List[Client]) -> None:
+    def server(
+        self, _message: str, _ignore_clients: List[Client]
+    ) -> None:  # pytest: no cover
         """Prints a message to all clients on the server."""
 
         pass

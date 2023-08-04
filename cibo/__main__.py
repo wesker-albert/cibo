@@ -9,6 +9,7 @@ from time import sleep
 
 from dotenv import load_dotenv
 
+from cibo.output import Output
 from cibo.resources.world import World
 from cibo.server import Server
 from cibo.telnet import TelnetServer
@@ -18,8 +19,9 @@ load_dotenv()
 if __name__ == "__main__":
     telnet = TelnetServer(port=int(getenv("SERVER_PORT", "51234")))
     world = World()
+    output = Output(telnet)
 
-    server = Server(telnet, world)
+    server = Server(telnet, world, output)
 
     print(
         "Accepted commands:\n\n"

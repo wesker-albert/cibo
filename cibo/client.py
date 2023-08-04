@@ -6,7 +6,6 @@ out interactions between the user and the server.
 import socket as socket_
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
 
 from cibo.models.player import Player
 
@@ -28,8 +27,8 @@ class Client:
     buffer: str
     last_check: float
     login_state: ClientLoginState
-    registration: Optional[Player]
-    player: Optional[Player]
+    registration: Player
+    player: Player
 
     @property
     def is_logged_in(self) -> bool:
@@ -39,7 +38,17 @@ class Client:
             bool: Is the client logged in or not.
         """
 
-        return self.login_state is ClientLoginState.LOGGED_IN and self.player
+        return self.login_state is ClientLoginState.LOGGED_IN
+
+    @property
+    def is_registered(self) -> bool:
+        """Check if the client has registration information.
+
+        Returns:
+            bool: Does the client have player regisration info.
+        """
+
+        return bool(self.registration.is_dirty())
 
     @property
     def prompt(self) -> str:
@@ -86,8 +95,9 @@ class Client:
         """Log the client out of their current Player session."""
 
         self.login_state = ClientLoginState.PRE_LOGIN
-        self.player.save()
-        self.player = None
+        if self.player:
+            self.player.save()
+        self.player = Player()
 
     def log_in(self, player: Player) -> None:
         """Log the client in as the given Player.

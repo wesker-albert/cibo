@@ -16,7 +16,7 @@ from cibo.models.room import Room
 class Resource(ABC):
     """An object that exists in the World."""
 
-    def _generate_resources(self, filename: str) -> Union[List[Room], List[Door]]:
+    def _generate_resources(self, filename: str) -> list:
         """Generate all the resources, from the local JSON file that houses them,
 
         Returns:
@@ -42,5 +42,7 @@ class Resource(ABC):
         return next(iter(data.values()))
 
     @abstractmethod
-    def _create_resource_from_dict(self, resource: dict) -> Union[Room, Door]:
+    def _create_resource_from_dict(
+        self, resource: dict
+    ) -> Union[Room, Door]:  # pytest: no cover
         pass

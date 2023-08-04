@@ -13,6 +13,7 @@ from cibo.decorator import load_environment_variables
 from cibo.event import EventProcessor
 from cibo.events.tick import TickEvent
 from cibo.models.player import Player
+from cibo.output import Output
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
@@ -32,7 +33,7 @@ class Server:
         STOPPED = 4
 
     @load_environment_variables
-    def __init__(self, telnet: TelnetServer, world: World) -> None:
+    def __init__(self, telnet: TelnetServer, world: World, output: Output) -> None:
         """Creates a dormant telnet server. Once instantiated, it can be started and
         stopped.
 
@@ -45,10 +46,11 @@ class Server:
 
         self._telnet = telnet
         self._world = world
+        self._output = output
 
-        self._event_processor = EventProcessor(self._telnet, self._world)
+        self._event_processor = EventProcessor(self._telnet, self._world, self._output)
 
-        self._tick = TickEvent(self._telnet, self._world)
+        self._tick = TickEvent(self._telnet, self._world, self._output)
         self._tick_thread = Thread(target=self._start_tick_timers)
 
         self._thread = Thread(target=self._start_server)

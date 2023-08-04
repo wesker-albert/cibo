@@ -6,19 +6,22 @@ The EventProcessor allows for the different Event types to be processed as a bat
 in a FIFO order.
 """
 
+from cibo.actions.commands import ACTIONS
+from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
+from cibo.output import Output
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
 
-class EventProcessor:
+class EventProcessor:  # pytest: no cover
     """Event processing abstraction layer for the server. Kicks off the processing
     logic for each included Event type.
     """
 
-    def __init__(self, telnet: TelnetServer, world: World) -> None:
+    def __init__(self, telnet: TelnetServer, world: World, output: Output) -> None:
         """Creates the Event processor instance.
 
         Args:
@@ -29,10 +32,17 @@ class EventProcessor:
 
         self._telnet = telnet
         self._world = world
+        self._output = output
 
-        self._connect = ConnectEvent(self._telnet, self._world)
-        self._disconnect = DisconnectEvent(self._telnet, self._world)
-        self._input = InputEvent(self._telnet, self._world)
+        self._command_processor = CommandProcessor(
+            self._telnet, self._world, self._output, ACTIONS
+        )
+
+        self._connect = ConnectEvent(self._telnet, self._world, self._output)
+        self._disconnect = DisconnectEvent(self._telnet, self._world, self._output)
+        self._input = InputEvent(
+            self._telnet, self._world, self._output, self._command_processor
+        )
 
     def process(self) -> None:
         """Processes the different Event types."""

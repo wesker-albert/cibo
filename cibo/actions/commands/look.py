@@ -6,6 +6,8 @@ from rich.panel import Panel
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
+from cibo.exception import ClientNotLoggedIn, RoomNotFound
+from cibo.models.room import Room
 
 
 class Look(Action):
@@ -16,6 +18,18 @@ class Look(Action):
 
     def required_args(self) -> List[str]:
         return []
+
+    def room_desc_msg(self, room: Room, client: Client) -> Panel:
+        """A stylized description of the room, including its exits and occupants."""
+
+        return Panel(
+            f"  {room.description.normal}" f"{self.get_formatted_occupants(client)}",
+            title=f"[blue]{room.name}[/]",
+            title_align="left",
+            subtitle=self.rooms.get_formatted_exits(room),
+            subtitle_align="right",
+            padding=(1, 4),
+        )
 
     def get_formatted_occupants(self, client: Client) -> str:
         """Formats and lists out all occupants of the Client's current room, sans the
@@ -33,7 +47,10 @@ class Look(Action):
             f"[cyan]{occupant_client.player.name} is standing here.[/]"
             for occupant_client in self._telnet.get_connected_clients()
             if (
-                occupant_client.player.current_room_id == client.player.current_room_id
+                occupant_client.player
+                and client.player
+                and occupant_client.player.current_room_id
+                == client.player.current_room_id
                 and occupant_client is not client
             )
         ]
@@ -43,27 +60,16 @@ class Look(Action):
         # only include leading new lines if there are actual occupants
         return f"\n\n{joined_occupants}" if len(occupants) > 0 else ""
 
-    def process(self, client: Client, _command: Optional[str], args: List[str]):
-        if not client.is_logged_in or args:
+    def process(self, client: Client, _command: Optional[str], args: List[str]) -> None:
+        try:
+            if not client.is_logged_in or args:
+                raise ClientNotLoggedIn
+
+            # the player is just looking at the room in general
+            room = self.rooms.get_by_id(client.player.current_room_id)
+
+        except (ClientNotLoggedIn, RoomNotFound):
             self.send.prompt(client)
-            return
 
-        # the player is just looking at the room in general
-        room = self.rooms.get_by_id(client.player.current_room_id)
-
-        if not room:
-            self.send.prompt(client)
-            return
-
-        self.send.private(
-            client,
-            Panel(
-                f"  {room.description.normal}"
-                f"{self.get_formatted_occupants(client)}",
-                title=f"[blue]{room.name}[/]",
-                title_align="left",
-                subtitle=self.rooms.get_formatted_exits(room),
-                subtitle_align="right",
-                padding=(1, 4),
-            ),
-        )
+        else:
+            self.send.private(client, self.room_desc_msg(room, client))
