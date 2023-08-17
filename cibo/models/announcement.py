@@ -1,5 +1,5 @@
 """Announcements allow us to more easily denote differently formatted messages, that
-should then be sent to different recipients depending on thing like proximity to
+should then be sent to different recipients depending on things like proximity to
 the client that triggered the Action.
 """
 

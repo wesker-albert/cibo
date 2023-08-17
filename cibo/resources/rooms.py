@@ -50,6 +50,7 @@ class Rooms(Resource):
                 )
                 for exit_ in room["exits"]
             ],
+            spawned_items=room.get("spawned_items", []),
         )
 
     def get_by_id(self, id_: int) -> Room:

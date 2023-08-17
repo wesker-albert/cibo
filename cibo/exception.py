@@ -91,6 +91,12 @@ class InputNotReceived(Exception):
     pass
 
 
+class ItemNotFound(Exception):
+    """Raised if no Item is found with the given ID."""
+
+    pass
+
+
 class PasswordIncorrect(Exception):
     """Raised if a given Player password doesn't match the stored hash."""
 

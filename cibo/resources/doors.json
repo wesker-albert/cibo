@@ -1,7 +1,7 @@
 {
     "doors": [
         {
-            "name": "small trapdoor",
+            "name": "a small trapdoor",
             "room_ids": [
                 1,
                 7
@@ -11,7 +11,7 @@
             ]
         },
         {
-            "name": "rooftop escape passage",
+            "name": "a rooftop escape passage",
             "room_ids": [
                 6,
                 8

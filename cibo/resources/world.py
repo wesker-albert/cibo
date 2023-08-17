@@ -7,6 +7,7 @@ from pathlib import Path
 
 from cibo.decorator import load_environment_variables
 from cibo.resources.doors import Doors
+from cibo.resources.items import Items
 from cibo.resources.rooms import Rooms
 
 
@@ -19,6 +20,7 @@ class World:
     def __init__(self) -> None:
         self.rooms = Rooms(getenv("ROOMS_PATH", "/cibo/resources/rooms.json"))
         self.doors = Doors(getenv("DOORS_PATH", "/cibo/resources/doors.json"))
+        self.items = Items(getenv("ITEMS_PATH", "/cibo/resources/items.json"))
 
     @property
     def motd(self) -> str:

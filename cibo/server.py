@@ -12,6 +12,7 @@ from peewee import SqliteDatabase
 from cibo.decorator import load_environment_variables
 from cibo.event import EventProcessor
 from cibo.events.tick import TickEvent
+from cibo.models.item import PlayerItem
 from cibo.models.player import Player
 from cibo.output import Output
 from cibo.resources.world import World
@@ -95,7 +96,7 @@ class Server:
         """Create the sqlite DB and necessary tables."""
 
         self._database.connect()
-        self._database.create_tables([Player])
+        self._database.create_tables([Player, PlayerItem])
 
     def start(self) -> None:
         """Create a thread and start the server."""

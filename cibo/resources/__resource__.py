@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import List, Union
 
 from cibo.models.door import Door
+from cibo.models.item import Item
 from cibo.models.room import Room
 
 
@@ -44,5 +45,5 @@ class Resource(ABC):
     @abstractmethod
     def _create_resource_from_dict(
         self, resource: dict
-    ) -> Union[Room, Door]:  # pytest: no cover
+    ) -> Union[Item, Room, Door]:  # pytest: no cover
         pass
