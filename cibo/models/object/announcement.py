@@ -5,6 +5,10 @@ the client that triggered the Action.
 
 from dataclasses import dataclass
 
+# TODO: This shouldn't be a standalone model. It should belong to the Output class,
+# likely as a method that appropriately outputs (sends) the given strings without
+# further responsibility of the Action calling it.
+
 
 @dataclass
 class Announcement:

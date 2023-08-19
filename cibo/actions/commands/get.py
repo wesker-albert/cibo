@@ -9,6 +9,7 @@ from cibo.client import Client
 from cibo.exception import (
     ActionMissingArguments,
     ClientNotLoggedIn,
+    ItemIsStationary,
     ItemNotFound,
     RoomItemNotFound,
 )
@@ -36,6 +37,12 @@ class Get(Action):
         """The given item name isn't in the room."""
 
         return "You look around, but don't see that."
+
+    @property
+    def room_item_is_stationary_msg(self) -> str:
+        """The specified item can't be picked up."""
+
+        return "You try, but you can't take that."
 
     def gotten_item_msg(self, player_name: str, item_name: str) -> Announcement:
         """Player has just picked up an item."""
@@ -79,6 +86,9 @@ class Get(Action):
             item = self.find_item_in_room(client, self._join_args(args))
             item_meta = self.items.get_by_id(item.item_id)
 
+            if item_meta.is_stationary:
+                raise ItemIsStationary
+
             item.room_id = None
             item.player_id = client.player
             item.save()
@@ -98,3 +108,6 @@ class Get(Action):
 
         except RoomItemNotFound:
             self.send.private(client, self.room_item_not_found_msg)
+
+        except ItemIsStationary:
+            self.send.private(client, self.room_item_is_stationary_msg)

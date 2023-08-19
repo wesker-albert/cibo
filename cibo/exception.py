@@ -97,6 +97,12 @@ class ItemNotFound(Exception):
     pass
 
 
+class ItemIsStationary(Exception):
+    """Raised if the specified item is a stationary."""
+
+    pass
+
+
 class InventoryItemNotFound(Exception):
     """Raised if no Item with the given name is found in the Player inventory."""
 
