@@ -1,1 +1,1 @@
-"""Data models and schemas that are used to represent and validate a database object."""
+"""Data and object models, that together represent tangible world items and entities."""
