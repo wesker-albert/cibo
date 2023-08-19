@@ -47,7 +47,7 @@ class Look(Action):
         """
 
         occupants = [
-            f"[cyan]{occupant_client.player.name} is standing here.[/]"
+            f"[cyan]{occupant_client.player.name}[/] is standing here."
             for occupant_client in self._telnet.get_connected_clients()
             if (
                 occupant_client.player
