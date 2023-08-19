@@ -135,6 +135,12 @@ class PlayerSessionActive(Exception):
     pass
 
 
+class RoomItemNotFound(Exception):
+    """Raised if no Item with the given name is found in the current room."""
+
+    pass
+
+
 class RoomNotFound(Exception):
     """Raised by an Action if the player isn't currently in a room."""
 

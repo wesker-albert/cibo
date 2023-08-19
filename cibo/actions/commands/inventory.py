@@ -1,3 +1,5 @@
+"""Display the itemized contents of the Player inventory."""
+
 from typing import List
 
 from cibo.actions.__action__ import Action
@@ -16,9 +18,20 @@ class Inventory(Action):
 
     @property
     def empty_inventory_msg(self) -> str:
+        """The Player inventory is empty."""
+
         return "You aren't carrying anything..."
 
     def get_formatted_inventory(self, client: Client) -> str:
+        """The contents of the Player inventory.
+
+        Args:
+            client (Client): The client whose inventory will be checked.
+
+        Returns:
+            str: The items in the Player inventory.
+        """
+
         inventory_items = [
             self.items.get_by_id(item.item_id).name for item in client.player.inventory
         ]

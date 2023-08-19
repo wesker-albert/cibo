@@ -44,6 +44,12 @@ class Action(ABC):
 
     @property
     def items(self) -> Items:
+        """All the Items in the World.
+
+        Returns:
+            Items: The Items.
+        """
+
         return self._world.items
 
     @property

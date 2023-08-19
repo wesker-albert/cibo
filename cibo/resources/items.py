@@ -1,3 +1,9 @@
+"""An item is an in-game piece of inventory, that can be picked up, carried, and
+often used by a player.
+
+This is a collection of all the Items that exist in the world.
+"""
+
 from typing import List
 
 from cibo.exception import ItemNotFound
@@ -24,6 +30,18 @@ class Items(Resource):
         )
 
     def get_by_id(self, id_: int) -> Item:
+        """Get an Item by it's ID.
+
+        Args:
+            id_ (int): The Item ID you're looking for.
+
+        Raises:
+            ItemNotFound: The item does not exist in the World.
+
+        Returns:
+            Item: The matched Item.
+        """
+
         for item in self._items:
             if item.id_ == id_:
                 return item

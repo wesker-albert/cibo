@@ -1,3 +1,5 @@
+"""Drops an item from the Player's inventory, onto the ground of the current room."""
+
 from typing import List
 
 from cibo.actions.__action__ import Action
@@ -29,7 +31,9 @@ class Drop(Action):
 
     @property
     def inventory_item_not_found_msg(self) -> str:
-        return "You scour your inventory, but can't find it."
+        """The given item name isn't in the Player inventory."""
+
+        return "You scour your inventory, but can't find that."
 
     def dropped_item_msg(self, player_name: str, item_name: str) -> Announcement:
         """Player has just dropped an item."""
@@ -40,6 +44,19 @@ class Drop(Action):
         )
 
     def find_item_in_inventory(self, client: Client, item_name: str) -> Item:
+        """Locate the item in the inventory, if it exists there.
+
+        Args:
+            client (Client): The client whose inventory should be checked.
+            item_name (str): The item name, full or partial.
+
+        Raises:
+            InventoryItemNotFound: The given item name wasn't found in Player inventory.
+
+        Returns:
+            Item: The Item entry from the database.
+        """
+
         inventory: List[Item] = client.player.inventory
 
         for inventory_item in inventory:

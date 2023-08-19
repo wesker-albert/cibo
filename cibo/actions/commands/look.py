@@ -64,15 +64,30 @@ class Look(Action):
         return f"\n\n{joined_occupants}" if len(occupants) > 0 else ""
 
     def get_formatted_items(self, client: Client) -> str:
+        """Formats and lists all the Items that are in the current room, and
+        potentially interactable.
+
+        Args:
+            client (Client): The client whose current room you want to list the items
+                from.
+
+        Returns:
+            str: The individual items the room contains.
+        """
+
         room_items = Item.get_by_room_id(client.player.current_room_id)
 
         inventory_items = [
             self.items.get_by_id(item.item_id).name for item in room_items
         ]
 
-        inventory = "\n".join([str(item) for item in inventory_items])
+        inventory = "\n  ".join([str(item) for item in inventory_items])
 
-        return f"\n\n{inventory}" if len(inventory_items) > 0 else ""
+        return (
+            f"\n\n[yellow]You notice:[/]\n  {inventory}"
+            if len(inventory_items) > 0
+            else ""
+        )
 
     def process(self, client: Client, _command: Optional[str], args: List[str]) -> None:
         try:
