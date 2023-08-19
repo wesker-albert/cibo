@@ -85,7 +85,7 @@ class Drop(Action):
 
             self.send.private(client, dropped_item_msg.to_self)
             self.send.local(
-                client.player.current_room_id, dropped_item_msg.to_self, [client]
+                client.player.current_room_id, dropped_item_msg.to_room, [client]
             )
 
         except (ClientNotLoggedIn, ItemNotFound):

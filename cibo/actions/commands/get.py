@@ -97,7 +97,7 @@ class Get(Action):
 
             self.send.private(client, gotten_item_msg.to_self)
             self.send.local(
-                client.player.current_room_id, gotten_item_msg.to_self, [client]
+                client.player.current_room_id, gotten_item_msg.to_room, [client]
             )
 
         except (ClientNotLoggedIn, ItemNotFound):
