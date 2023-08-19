@@ -35,7 +35,6 @@ about but haven't gotten the professional opportunity to try.
 * New players are given a fork, to test the new commands.
 * Dropped items persist in the world until picked up again. They can be seen in a room
 during movement, or using the `look` command.
-* Some restructuring of the `cibo.models` directory structure.
 
 ### 2023-07-18
 * New commands available: `up`, `down`, `open`, `close`
