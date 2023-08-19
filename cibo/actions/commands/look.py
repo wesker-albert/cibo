@@ -81,10 +81,10 @@ class Look(Action):
             self.items.get_by_id(item.item_id).name for item in room_items
         ]
 
-        inventory = "\n  ".join([str(item) for item in inventory_items])
+        inventory = "\n  ".join([str(item).capitalize() for item in inventory_items])
 
         return (
-            f"\n\n[yellow]You notice:[/]\n  {inventory}"
+            f"\n\n[bright_blue]On the ground you see:[/]\n  {inventory}"
             if len(inventory_items) > 0
             else ""
         )

@@ -48,7 +48,7 @@ class Move(Action):
     def door_is_closed_msg(self, door_name: str) -> str:
         """There's a closed door in the way."""
 
-        return f"[magenta]{door_name.capitalize()}[/] is closed."
+        return f"{door_name.capitalize()} is closed."
 
     def moving_msg(self, player_name: str, direction: str) -> Announcement:
         """Successfully moving in the direction given."""

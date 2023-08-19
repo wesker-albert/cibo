@@ -44,21 +44,21 @@ class Open(Action):
     def door_is_locked_msg(self, door_name: str) -> str:
         """The door is locked."""
 
-        return f"[magenta]{door_name.capitalize()}[/] is locked."
+        return f"{door_name.capitalize()} is locked."
 
     def opening_door_msg(self, player_name: str, door_name: str) -> Announcement:
         """Successfully opening the door."""
 
         return Announcement(
-            f"You open [magenta]{door_name}[/].",
-            f"[cyan]{player_name}[/] opens [magenta]{door_name}[/].",
-            f"[magenta]{door_name.capitalize()}[/] opens.",
+            f"You open {door_name}.",
+            f"[cyan]{player_name}[/] opens {door_name}.",
+            f"{door_name.capitalize()} opens.",
         )
 
     def door_is_open(self, door_name: str) -> str:
         """The door is already open."""
 
-        return f"[magenta]{door_name.capitalize()}[/] is already open."
+        return f"{door_name.capitalize()} is already open."
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
         try:

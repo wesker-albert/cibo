@@ -41,15 +41,15 @@ class Close(Action):
     def door_is_closed_msg(self, door_name: str) -> str:
         """The door is already closed."""
 
-        return f"[magenta]{door_name.capitalize()}[/] is already closed."
+        return f"{door_name.capitalize()} is already closed."
 
     def door_closes_msg(self, door_name: str, player_name: str) -> Announcement:
         """The door is closed by the Player."""
 
         return Announcement(
-            f"You close [magenta]{door_name}[/].",
-            f"[cyan]{player_name}[/] closes [magenta]{door_name}[/].",
-            f"[magenta]{door_name.capitalize()}[/] closes.",
+            f"You close {door_name}.",
+            f"[cyan]{player_name}[/] closes {door_name}.",
+            f"{door_name.capitalize()} closes.",
         )
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:

@@ -36,7 +36,7 @@ class Inventory(Action):
             self.items.get_by_id(item.item_id).name for item in client.player.inventory
         ]
 
-        inventory = "\n".join([str(item) for item in inventory_items])
+        inventory = "\n".join([str(item).capitalize() for item in inventory_items])
 
         return inventory if len(inventory_items) > 0 else self.empty_inventory_msg
 
