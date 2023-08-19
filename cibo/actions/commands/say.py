@@ -5,7 +5,7 @@ from typing import List
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ActionMissingArguments, ClientNotLoggedIn
-from cibo.models.announcement import Announcement
+from cibo.models.object.announcement import Announcement
 
 
 class Say(Action):

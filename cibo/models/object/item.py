@@ -4,11 +4,6 @@ often used by a player.
 
 from dataclasses import dataclass
 
-from peewee import AutoField, ForeignKeyField, IntegerField
-
-from cibo.models.__model__ import Model
-from cibo.models.player import Player
-
 
 @dataclass
 class Item:
@@ -20,10 +15,3 @@ class Item:
     is_stationary: bool
     carry_limit: int
     weight: int
-
-
-class PlayerItem(Model):
-    id_ = AutoField()
-    item_id = IntegerField()
-    room_id = IntegerField()
-    player = ForeignKeyField(Player, backref="inventory")

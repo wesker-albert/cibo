@@ -7,7 +7,8 @@ from rich.panel import Panel
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientNotLoggedIn, RoomNotFound
-from cibo.models.room import Room
+from cibo.models.data.item import Item
+from cibo.models.object.room import Room
 
 
 class Look(Action):
@@ -23,7 +24,9 @@ class Look(Action):
         """A stylized description of the room, including its exits and occupants."""
 
         return Panel(
-            f"  {room.description.normal}" f"{self.get_formatted_occupants(client)}",
+            f"  {room.description.normal}"
+            f"{self.get_formatted_occupants(client)}"
+            f"{self.get_formatted_items(client)}",
             title=f"[blue]{room.name}[/]",
             title_align="left",
             subtitle=self.rooms.get_formatted_exits(room),
@@ -59,6 +62,17 @@ class Look(Action):
 
         # only include leading new lines if there are actual occupants
         return f"\n\n{joined_occupants}" if len(occupants) > 0 else ""
+
+    def get_formatted_items(self, client: Client) -> str:
+        room_items = Item.get_by_room_id(client.player.current_room_id)
+
+        inventory_items = [
+            self.items.get_by_id(item.item_id).name for item in room_items
+        ]
+
+        inventory = "\n".join([str(item) for item in inventory_items])
+
+        return f"\n\n{inventory}" if len(inventory_items) > 0 else ""
 
     def process(self, client: Client, _command: Optional[str], args: List[str]) -> None:
         try:

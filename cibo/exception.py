@@ -97,6 +97,12 @@ class ItemNotFound(Exception):
     pass
 
 
+class InventoryItemNotFound(Exception):
+    """Raised if no Item with the given name is found in the Player inventory."""
+
+    pass
+
+
 class PasswordIncorrect(Exception):
     """Raised if a given Player password doesn't match the stored hash."""
 

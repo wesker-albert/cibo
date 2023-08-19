@@ -14,8 +14,8 @@ from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
-from cibo.models.player import Player
-from cibo.models.room import Direction, Room, RoomDescription, RoomExit
+from cibo.models.data.player import Player
+from cibo.models.object.room import Direction, Room, RoomDescription, RoomExit
 from cibo.output import Output
 from cibo.resources.doors import Doors
 from cibo.resources.rooms import Rooms
@@ -183,4 +183,5 @@ class WorldFactory:
                 RoomExit(direction=Direction.UP, id_=6, description=None),
                 RoomExit(direction=Direction.DOWN, id_=7, description=None),
             ],
+            spawned_items=[2],
         )

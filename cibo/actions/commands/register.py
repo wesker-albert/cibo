@@ -7,7 +7,7 @@ from marshmallow import ValidationError
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotFound
-from cibo.models.player import Player, PlayerSchema
+from cibo.models.data.player import Player, PlayerSchema
 
 
 class Register(Action):

@@ -6,7 +6,7 @@ from typing import List
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotRegistered
-from cibo.models.player import Player
+from cibo.models.data.player import Player
 
 
 class Finalize(Action):

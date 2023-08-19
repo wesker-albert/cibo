@@ -1,5 +1,3 @@
-"""Say something to the current room."""
-
 from typing import List
 
 from cibo.actions.__action__ import Action

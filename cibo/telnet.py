@@ -14,7 +14,7 @@ from select import select
 from typing import List, Optional, Tuple
 
 from cibo.client import Client, ClientLoginState
-from cibo.models.player import Player
+from cibo.models.data.player import Player
 
 
 class TelnetEventType(int, Enum):

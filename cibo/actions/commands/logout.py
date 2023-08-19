@@ -7,7 +7,7 @@ from cibo.actions.__action__ import Action
 from cibo.actions.connect import Connect
 from cibo.client import Client
 from cibo.exception import ClientNotLoggedIn
-from cibo.models.announcement import Announcement
+from cibo.models.object.announcement import Announcement
 
 
 class Logout(Action):

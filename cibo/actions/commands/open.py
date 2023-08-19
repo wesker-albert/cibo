@@ -14,7 +14,7 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.models.announcement import Announcement
+from cibo.models.object.announcement import Announcement
 
 
 class Open(Action):

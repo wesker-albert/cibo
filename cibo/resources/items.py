@@ -1,7 +1,7 @@
 from typing import List
 
 from cibo.exception import ItemNotFound
-from cibo.models.item import Item
+from cibo.models.object.item import Item
 from cibo.resources.__resource__ import Resource
 
 
