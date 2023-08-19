@@ -31,9 +31,6 @@
                     "direction": "d",
                     "id": 7
                 }
-            ],
-            "spawned_items": [
-                2
             ]
         },
         {
@@ -73,10 +70,6 @@
                     "direction": "n",
                     "id": 1
                 }
-            ],
-            "spawned_items": [
-                1,
-                2
             ]
         },
         {

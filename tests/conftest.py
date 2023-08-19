@@ -183,5 +183,4 @@ class WorldFactory:
                 RoomExit(direction=Direction.UP, id_=6, description=None),
                 RoomExit(direction=Direction.DOWN, id_=7, description=None),
             ],
-            spawned_items=[2],
         )

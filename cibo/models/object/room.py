@@ -67,7 +67,6 @@ class Room:
     name: str
     description: RoomDescription
     exits: List[RoomExit]
-    spawned_items: List[int]
     # sector: Sector
     # regions: List[Region]
     # flags: List[Flags]
