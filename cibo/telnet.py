@@ -3,7 +3,7 @@
 Based on a generalization made by Oliver L. Sanz from Mark Frimston's mud-py server.
 https://github.com/OliverLSanz/python-telnetserver/blob/master/telnetserver
 
-Further modified as needed, to accomodate the cibo project.
+Further modified as needed, to accommodate the cibo project.
 """
 
 import socket
