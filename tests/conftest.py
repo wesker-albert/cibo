@@ -18,6 +18,7 @@ from cibo.models.data.player import Player
 from cibo.models.object.room import Direction, Room, RoomDescription, RoomExit
 from cibo.output import Output
 from cibo.resources.doors import Doors
+from cibo.resources.items import Items
 from cibo.resources.rooms import Rooms
 from cibo.resources.world import World
 
@@ -158,6 +159,11 @@ class WorldFactory:
     @fixture(autouse=True)
     def fixture_rooms(self) -> Rooms:
         self.rooms = Rooms(getenv("ROOMS_PATH", "/cibo/resources/rooms.json"))
+        yield
+
+    @fixture(autouse=True)
+    def fixture_itemss(self) -> Items:
+        self.items = Items(getenv("ITEMS_PATH", "/cibo/resources/items.json"))
         yield
 
     @fixture(name="room")
