@@ -1,9 +1,8 @@
 """Data model meta and methods, for inheritance by all data models."""
 
-import os
+from os import getenv
 from typing import Any
 
-from dotenv import load_dotenv
 from marshmallow import Schema
 from peewee import Model as Model_
 from peewee import SqliteDatabase
@@ -15,9 +14,7 @@ class Model(Model_):
     class Meta:
         """Meta class that specifies the database."""
 
-        load_dotenv()
-
-        database = SqliteDatabase(os.getenv("DATABASE_PATH", "cibo_database.db"))
+        database = SqliteDatabase(getenv("DATABASE_PATH"))
 
     def validate(self, schema: type[Schema]) -> Any:
         """Validate the model instance's attributes against the provided schema.

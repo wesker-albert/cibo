@@ -5,7 +5,6 @@ Rooms, Items, Npcs.
 from os import getenv
 from pathlib import Path
 
-from cibo.decorator import load_environment_variables
 from cibo.resources.doors import Doors
 from cibo.resources.items import Items
 from cibo.resources.rooms import Rooms
@@ -16,7 +15,6 @@ class World:
     Rooms, Items, Npcs, etc.
     """
 
-    @load_environment_variables
     def __init__(self) -> None:
         self.rooms = Rooms(getenv("ROOMS_PATH", "/cibo/resources/rooms.json"))
         self.doors = Doors(getenv("DOORS_PATH", "/cibo/resources/doors.json"))

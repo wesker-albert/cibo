@@ -1,7 +1,8 @@
 import logging
-from os import getenv
+from os import getenv, remove
 from unittest.mock import Mock
 
+from peewee import SqliteDatabase
 from pytest import fixture
 
 from cibo.actions.commands.close import Close
@@ -14,9 +15,11 @@ from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
+from cibo.models.data.item import Item
 from cibo.models.data.player import Player
 from cibo.models.object.room import Direction, Room, RoomDescription, RoomExit
 from cibo.output import Output
+from cibo.password import Password
 from cibo.resources.doors import Doors
 from cibo.resources.items import Items
 from cibo.resources.rooms import Rooms
@@ -190,3 +193,30 @@ class WorldFactory:
                 RoomExit(direction=Direction.DOWN, id_=7, description=None),
             ],
         )
+
+
+class PasswordFactory:
+    @fixture(autouse=True)
+    def fixture_password(self):
+        self.password = Password()
+        self.hashed_password = self.password.hash_("abc123")
+        yield
+
+
+class DatabaseFactory(PasswordFactory):
+    @fixture(autouse=True)
+    def fixture_database(self):
+        # we have to remove the db before populating it again, if it exists
+        try:
+            remove(getenv("DATABASE_PATH"))
+
+        except FileNotFoundError:
+            pass
+
+        database = SqliteDatabase(getenv("DATABASE_PATH"))
+        database.connect()
+        database.create_tables([Player, Item])
+
+        Item(item_id=1, room_id=1).save()
+
+        yield
