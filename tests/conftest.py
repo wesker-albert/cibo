@@ -203,27 +203,25 @@ class PasswordFactory:
         yield
 
 
-class DatabaseFactory(PasswordFactory):
-    def cleanup(self):
-        # we have to remove the db before populating it again, if it exists
-        try:
-            remove(getenv("DATABASE_PATH"))
+@fixture(scope="session", autouse=True)
+def fixture_database():
+    # we have to remove the db before populating it again, if it exists
+    try:
+        remove(getenv("DATABASE_PATH"))
 
-        except FileNotFoundError:
-            pass
+    except FileNotFoundError:
+        pass
 
-    @fixture(scope="session", autouse=True)
-    def fixture_database(self):
-        self.cleanup()
+    database = SqliteDatabase(getenv("DATABASE_PATH"))
+    database.connect()
+    database.create_tables([Player, Item])
 
-        database = SqliteDatabase(getenv("DATABASE_PATH"))
-        database.connect()
-        database.create_tables([Player, Item])
+    player = Player(
+        name="frank", password=Password().hash_("abc123"), current_room_id=1
+    )
+    player.save()
 
-        player = Player(name="frank", password=self.hashed_password, current_room_id=1)
-        player.save()
+    Item(item_id=1, room_id=1).save()
+    Item(item_id=1, player=player).save()
 
-        Item(item_id=1, room_id=1).save()
-        Item(item_id=1, player=player).save()
-
-        yield
+    yield
