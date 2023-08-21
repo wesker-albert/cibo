@@ -6,7 +6,8 @@ from typing import List
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotRegistered
-from cibo.models.player import Player
+from cibo.models.data.item import Item
+from cibo.models.data.player import Player
 
 
 class Finalize(Action):
@@ -62,6 +63,17 @@ class Finalize(Action):
         except IntegrityError as ex:
             raise PlayerAlreadyExists from ex
 
+    def create_player_starting_inventory(self, client: Client) -> None:
+        """Give the newly created player any starting items they may need.
+
+        Args:
+            client (Client): The client whose new Player needs swag.
+        """
+
+        # give the player a fork, for now
+        item = Item(item_id=1, player_id=client.registration)
+        item.save()
+
     def process(self, client: Client, _command: str, _args: List[str]) -> None:
         try:
             if client.is_logged_in:
@@ -71,6 +83,7 @@ class Finalize(Action):
                 raise PlayerNotRegistered
 
             self.save_player_registration(client)
+            self.create_player_starting_inventory(client)
 
         except ClientIsLoggedIn:
             self.send.private(client, self.is_logged_in_msg)

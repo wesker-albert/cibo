@@ -1,12 +1,12 @@
 """Quits the game and disconnects the client."""
 
 from time import sleep
-from typing import List
+from typing import List, Optional
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientIsLoggedIn
-from cibo.models.announcement import Announcement
+from cibo.models.object.announcement import Announcement
 
 
 class Quit(Action):
@@ -18,7 +18,7 @@ class Quit(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def quitting_msg(self, player_name: str) -> Announcement:
+    def quitting_msg(self, player_name: Optional[str]) -> Announcement:
         """Successfully quitting the game."""
 
         return Announcement(
@@ -45,9 +45,7 @@ class Quit(Action):
             )
 
         finally:
-            self.send.private(
-                client, self.quitting_msg(player_name).to_self, prompt=False
-            )
+            self.send.private(client, self.quitting_msg(None).to_self, prompt=False)
 
             sleep(1)
             client.disconnect()

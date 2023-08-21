@@ -5,6 +5,13 @@ often used by a player.
 from dataclasses import dataclass
 
 
-@dataclass  # pytest: no cover
-class Item:  # pytest: no cover
+@dataclass
+class Item:
     """Represents an interactive item."""
+
+    id_: int
+    name: str
+    description: str
+    is_stationary: bool
+    carry_limit: int
+    weight: int

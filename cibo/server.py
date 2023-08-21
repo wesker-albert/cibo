@@ -2,17 +2,17 @@
 well as methods to control the server state.
 """
 
-import os
 from enum import Enum
+from os import getenv
 from threading import Thread
 from time import sleep
 
 from peewee import SqliteDatabase
 
-from cibo.decorator import load_environment_variables
 from cibo.event import EventProcessor
 from cibo.events.tick import TickEvent
-from cibo.models.player import Player
+from cibo.models.data.item import Item
+from cibo.models.data.player import Player
 from cibo.output import Output
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
@@ -32,7 +32,6 @@ class Server:
         SHUTTING_DOWN = 3
         STOPPED = 4
 
-    @load_environment_variables
     def __init__(self, telnet: TelnetServer, world: World, output: Output) -> None:
         """Creates a dormant telnet server. Once instantiated, it can be started and
         stopped.
@@ -42,7 +41,7 @@ class Server:
             world (World): The world, and all its resources.
         """
 
-        self._database = SqliteDatabase(os.getenv("DATABASE_PATH", "cibo_database.db"))
+        self._database = SqliteDatabase(getenv("DATABASE_PATH", "cibo_database.db"))
 
         self._telnet = telnet
         self._world = world
@@ -95,7 +94,7 @@ class Server:
         """Create the sqlite DB and necessary tables."""
 
         self._database.connect()
-        self._database.create_tables([Player])
+        self._database.create_tables([Player, Item])
 
     def start(self) -> None:
         """Create a thread and start the server."""

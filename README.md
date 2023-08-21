@@ -30,6 +30,12 @@ about but haven't gotten the professional opportunity to try.
 
 ## Current state:
 
+### 2023-08-19
+* New commands available: `inventory`, `drop`, `get`
+* New players are given a fork, to test the new commands.
+* Dropped items persist in the world until picked up again. They can be seen in a room
+during movement, or using the `look` command.
+
 ### 2023-07-18
 * New commands available: `up`, `down`, `open`, `close`
 * Introduced interactive doors. If you run into a door you can use `open` or `close`

@@ -1,0 +1,16 @@
+{
+    "items": [
+        {
+            "id": 1,
+            "name": "a metal fork",
+            "description": "A pronged, metal eating utensil.",
+            "is_stationary": false
+        },
+        {
+            "id": 2,
+            "name": "an electrical outlet",
+            "description": "The outlet lightly hums. It is likely carrying a strong current.",
+            "is_stationary": true
+        }
+    ]
+}

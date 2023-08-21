@@ -11,8 +11,8 @@ from cibo.exception import (
     PlayerNotFound,
     PlayerSessionActive,
 )
-from cibo.models.announcement import Announcement
-from cibo.models.player import Player
+from cibo.models.data.player import Player
+from cibo.models.object.announcement import Announcement
 
 
 class Login(Action):

@@ -24,7 +24,6 @@ pytest = "7.4.0"
 pytest-cov = "4.1.0"
 pytest-reverse = "1.7.0"
 pytest-xdist = "3.3.1"
-python-dotenv = "1.0.0"
 safety = "2.3.4"
 
 [tool.pytest.ini_options]

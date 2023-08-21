@@ -1,7 +1,8 @@
 import logging
-from os import getenv
+from os import getenv, remove
 from unittest.mock import Mock
 
+from peewee import SqliteDatabase
 from pytest import fixture
 
 from cibo.actions.commands.close import Close
@@ -14,10 +15,13 @@ from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
-from cibo.models.player import Player
-from cibo.models.room import Direction, Room, RoomDescription, RoomExit
+from cibo.models.data.item import Item
+from cibo.models.data.player import Player
+from cibo.models.object.room import Direction, Room, RoomDescription, RoomExit
 from cibo.output import Output
+from cibo.password import Password
 from cibo.resources.doors import Doors
+from cibo.resources.items import Items
 from cibo.resources.rooms import Rooms
 from cibo.resources.world import World
 
@@ -160,6 +164,11 @@ class WorldFactory:
         self.rooms = Rooms(getenv("ROOMS_PATH", "/cibo/resources/rooms.json"))
         yield
 
+    @fixture(autouse=True)
+    def fixture_itemss(self) -> Items:
+        self.items = Items(getenv("ITEMS_PATH", "/cibo/resources/items.json"))
+        yield
+
     @fixture(name="room")
     def fixture_room(self) -> Room:
         yield Room(
@@ -184,3 +193,35 @@ class WorldFactory:
                 RoomExit(direction=Direction.DOWN, id_=7, description=None),
             ],
         )
+
+
+class PasswordFactory:
+    @fixture(autouse=True)
+    def fixture_password(self):
+        self.password = Password()
+        self.hashed_password = self.password.hash_("abc123")
+        yield
+
+
+@fixture(scope="session", autouse=True)
+def fixture_database():
+    # we have to remove the db before populating it again, if it exists
+    try:
+        remove(getenv("DATABASE_PATH"))
+
+    except FileNotFoundError:
+        pass
+
+    database = SqliteDatabase(getenv("DATABASE_PATH"))
+    database.connect()
+    database.create_tables([Player, Item])
+
+    player = Player(
+        name="frank", password=Password().hash_("abc123"), current_room_id=1
+    )
+    player.save()
+
+    Item(item_id=1, room_id=1).save()
+    Item(item_id=1, player=player).save()
+
+    yield

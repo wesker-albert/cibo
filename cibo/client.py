@@ -7,7 +7,7 @@ import socket as socket_
 from dataclasses import dataclass
 from enum import Enum
 
-from cibo.models.player import Player
+from cibo.models.data.player import Player
 
 
 class ClientLoginState(int, Enum):

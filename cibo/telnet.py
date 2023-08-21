@@ -3,7 +3,7 @@
 Based on a generalization made by Oliver L. Sanz from Mark Frimston's mud-py server.
 https://github.com/OliverLSanz/python-telnetserver/blob/master/telnetserver
 
-Further modified as needed, to accomodate the cibo project.
+Further modified as needed, to accommodate the cibo project.
 """
 
 import socket
@@ -14,7 +14,7 @@ from select import select
 from typing import List, Optional, Tuple
 
 from cibo.client import Client, ClientLoginState
-from cibo.models.player import Player
+from cibo.models.data.player import Player
 
 
 class TelnetEventType(int, Enum):

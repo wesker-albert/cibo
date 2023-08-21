@@ -10,7 +10,7 @@ from marshmallow import Schema, fields, validate
 from peewee import AutoField, CharField, DoesNotExist, IntegerField, TextField
 
 from cibo.exception import PlayerNotFound
-from cibo.models.__model__ import Model
+from cibo.models.data.__model__ import Model
 
 
 class Player(Model):

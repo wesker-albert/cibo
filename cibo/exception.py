@@ -91,6 +91,24 @@ class InputNotReceived(Exception):
     pass
 
 
+class ItemNotFound(Exception):
+    """Raised if no Item is found with the given ID."""
+
+    pass
+
+
+class ItemIsStationary(Exception):
+    """Raised if the specified item is a stationary."""
+
+    pass
+
+
+class InventoryItemNotFound(Exception):
+    """Raised if no Item with the given name is found in the Player inventory."""
+
+    pass
+
+
 class PasswordIncorrect(Exception):
     """Raised if a given Player password doesn't match the stored hash."""
 
@@ -119,6 +137,12 @@ class PlayerSessionActive(Exception):
     """Raised by an Action if a client is already logged into a session with the
     Player.
     """
+
+    pass
+
+
+class RoomItemNotFound(Exception):
+    """Raised if no Item with the given name is found in the current room."""
 
     pass
 

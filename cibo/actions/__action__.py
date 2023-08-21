@@ -7,6 +7,7 @@ from cibo.client import Client
 from cibo.output import Output
 from cibo.password import Password
 from cibo.resources.doors import Doors
+from cibo.resources.items import Items
 from cibo.resources.rooms import Rooms
 from cibo.resources.world import World
 from cibo.telnet import TelnetServer
@@ -40,6 +41,16 @@ class Action(ABC):
         """
 
         return self._world.doors
+
+    @property
+    def items(self) -> Items:
+        """All the Items in the World.
+
+        Returns:
+            Items: The Items.
+        """
+
+        return self._world.items
 
     @property
     def send(self) -> Output:
