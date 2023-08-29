@@ -13,6 +13,6 @@ class TestConnectAction(ClientFactory, ConnectActionFactory):
     def test_action_connect_process(self):
         self.connect.process(self.mock_client, None, [])
 
-        self.output.private.assert_called_once_with(
+        self.output.send_private_message.assert_called_once_with(
             self.mock_client, ANY, justify="center"
         )

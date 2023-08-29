@@ -15,4 +15,4 @@ class TestDisconnectEvent(ClientFactory, DisconnectEventFactory):
         self.disconnect.process()
 
         self.mock_client.player.save.assert_called_once()
-        self.output.local.assert_called_once()
+        self.output.send_local_message.assert_called_once()

@@ -16,7 +16,7 @@ class TestDisconnectAction(ClientFactory, DisconnectActionFactory):
         self.disconnect.process(self.mock_client, None, [])
 
         self.mock_client.player.send.assert_not_called()
-        self.output.private.assert_not_called()
+        self.output.send_private_message.assert_not_called()
 
     def test_action_disconnect_process(self):
         self.mock_client.player = Mock()
@@ -27,7 +27,7 @@ class TestDisconnectAction(ClientFactory, DisconnectActionFactory):
         self.disconnect.process(self.mock_client, None, [])
 
         self.mock_client.player.save.assert_called_once()
-        self.output.local.assert_called_once_with(
+        self.output.send_local_message.assert_called_once_with(
             1,
             "You watch in horror as [cyan]John[/] proceeds to slowly eat their own head. They eventually disappear into nothingness.",
             [self.mock_client],

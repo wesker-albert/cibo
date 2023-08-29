@@ -11,4 +11,4 @@ class TestPromptAction(ClientFactory, PromptActionFactory):
     def test_action_prompt_process(self):
         self.prompt.process(self.mock_client, None, [])
 
-        self.output.prompt.assert_called_once_with(self.mock_client)
+        self.output.send_prompt.assert_called_once_with(self.mock_client)
