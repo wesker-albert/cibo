@@ -164,7 +164,13 @@ class Output:
         and optionally any players in an adjacent room.
 
         Args:
-            announcement (LocalAnnouncement): All the announcment info and messages.
+            announcement (Announcement): The differing messages that will be sent.
+            client (Client): The client who is the source of the announcement.
+            room_id (int): The originating room of the announcement
+            adjoining_room_id (Optional[int], optional): An adjoining room to send a
+                message to. Defaults to None.
+            prompt (bool, optional): Whether to follow the private client message with
+                a prompt. Defaults to True.
         """
 
         self.send_private_message(client, announcement.self_message, prompt=prompt)

@@ -1,6 +1,7 @@
 from unittest.mock import Mock, call
 
 from cibo.client import ClientLoginState
+from cibo.output import Announcement
 from tests.conftest import ClientFactory, OutputFactory
 
 
@@ -74,3 +75,64 @@ class TestOutput(ClientFactory, OutputFactory):
         self.output.send_local_message(1, "John leaves.", [self.mock_client])
 
         self.mock_client.send_message.assert_not_called()
+
+    def test_output_local_announcement(self):
+        announcement = Announcement("You died.", "John died.")
+
+        self.mock_client.login_state = ClientLoginState.LOGGED_IN
+        self.mock_client.player = Mock(current_room_id=1)
+
+        self.telnet.get_connected_clients.return_value = [
+            self.mock_client,
+            self.mock_client_additional,
+        ]
+
+        self.output.send_local_announcement(announcement, self.mock_client, 1)
+
+        client_calls = [
+            call(
+                "\n  You died.                                                                 \n"
+            ),
+            call("\r\n> "),
+        ]
+
+        self.mock_client.send_message.assert_has_calls(client_calls)
+
+        additional_client_calls = [
+            call(
+                "\r  John died.                                                                \n"
+            ),
+            call("\r\n> "),
+        ]
+
+        self.mock_client_additional.send_message.assert_has_calls(
+            additional_client_calls
+        )
+
+    def test_output_local_announcement_adjoining_room(self):
+        announcement = Announcement(
+            "You died.", "John died.", "Your hear a horrifying scream."
+        )
+
+        self.mock_client.login_state = ClientLoginState.LOGGED_IN
+        self.mock_client.player = Mock(current_room_id=1)
+
+        self.mock_client_additional.player = Mock(current_room_id=2)
+
+        self.telnet.get_connected_clients.return_value = [
+            self.mock_client,
+            self.mock_client_additional,
+        ]
+
+        self.output.send_local_announcement(announcement, self.mock_client, 1, 2)
+
+        additional_client_calls = [
+            call(
+                "\r  Your hear a horrifying scream.                                            \n"
+            ),
+            call("\r\n> "),
+        ]
+
+        self.mock_client_additional.send_message.assert_has_calls(
+            additional_client_calls
+        )

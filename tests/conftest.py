@@ -1,8 +1,7 @@
 import logging
-from os import getenv, remove
+from os import getenv
 from unittest.mock import Mock
 
-from peewee import SqliteDatabase
 from pytest import fixture
 
 from cibo.actions.commands.close import Close
@@ -15,7 +14,6 @@ from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
-from cibo.models.data.item import Item
 from cibo.models.data.player import Player
 from cibo.models.object.room import Direction, Room, RoomDescription, RoomExit
 from cibo.output import Output
@@ -55,6 +53,14 @@ class ClientFactory:
         self.mock_client.login_state = ClientLoginState.PRE_LOGIN
         self.mock_client.player = Player()
         self.mock_client.prompt = "> "
+        yield
+
+    @fixture(autouse=True)
+    def fixture_mock_client_additional(self) -> Client:
+        self.mock_client_additional = Mock()
+        self.mock_client_additional.login_state = ClientLoginState.LOGGED_IN
+        self.mock_client_additional.player = Mock(current_room_id=1)
+        self.mock_client_additional.prompt = "> "
         yield
 
 
@@ -201,27 +207,3 @@ class PasswordFactory:
         self.password = Password()
         self.hashed_password = self.password.hash_("abc123")
         yield
-
-
-@fixture(scope="session", autouse=True)
-def fixture_database():
-    # we have to remove the db before populating it again, if it exists
-    try:
-        remove(getenv("DATABASE_PATH"))
-
-    except FileNotFoundError:
-        pass
-
-    database = SqliteDatabase(getenv("DATABASE_PATH"))
-    database.connect()
-    database.create_tables([Player, Item])
-
-    player = Player(
-        name="frank", password=Password().hash_("abc123"), current_room_id=1
-    )
-    player.save()
-
-    Item(item_id=1, room_id=1).save()
-    Item(item_id=1, player=player).save()
-
-    yield
