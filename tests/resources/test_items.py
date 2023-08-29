@@ -1,7 +1,7 @@
 from pytest import raises
 
 from cibo.exception import ItemNotFound
-from cibo.models.object.item import Item
+from cibo.models.item import Item
 from tests.conftest import WorldFactory
 
 

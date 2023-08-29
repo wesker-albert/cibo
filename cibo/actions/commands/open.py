@@ -69,10 +69,10 @@ class Open(Action):
                 raise ActionMissingArguments
 
             room = self.rooms.get_by_id(client.player.current_room_id)
-            exit_ = self.rooms.get_direction_exit(room, args[0])
+            exit_ = room.get_direction_exit(args[0])
             door = self.doors.get_by_room_ids(room.id_, exit_.id_)
 
-            self.doors.raise_door_status(door)
+            door.raise_status()
 
         except ActionMissingArguments:
             self.output.send_local_announcement(
@@ -96,7 +96,7 @@ class Open(Action):
             self.output.send_private_message(client, self.door_is_open(door.name))
 
         except DoorIsClosed:
-            self.doors.open_door(door)
+            door.open_()
 
             self.output.send_local_announcement(
                 self.opening_door_message(client.player.name, door.name),
