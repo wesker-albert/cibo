@@ -5,7 +5,7 @@ from typing import List
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ActionMissingArguments, ClientNotLoggedIn
-from cibo.models.object.announcement import Announcement
+from cibo.output import Announcement
 
 
 class Say(Action):
@@ -18,12 +18,12 @@ class Say(Action):
         return []
 
     @property
-    def missing_args_msg(self) -> str:
+    def missing_args_message(self) -> str:
         """No arguments were provided."""
 
         return "You try to think of something clever to say, but fail."
 
-    def speech_msg(self, player_name: str, player_message: str) -> Announcement:
+    def speech_message(self, player_name: str, player_message: str) -> Announcement:
         """Player is successfully saying something."""
 
         return Announcement(
@@ -40,18 +40,14 @@ class Say(Action):
                 raise ActionMissingArguments
 
         except ClientNotLoggedIn:
-            self.send.prompt(client)
+            self.output.send_prompt(client)
 
         except ActionMissingArguments:
-            self.send.private(client, self.missing_args_msg)
+            self.output.send_private_message(client, self.missing_args_message)
 
         else:
-            speech_msg = self.speech_msg(client.player.name, self._join_args(args))
-
-            self.send.local(
+            self.output.send_local_announcement(
+                self.speech_message(client.player.name, self._join_args(args)),
+                client,
                 client.player.current_room_id,
-                speech_msg.to_room,
-                [client],
             )
-
-            self.send.private(client, speech_msg.to_self)

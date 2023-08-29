@@ -20,7 +20,7 @@ class Look(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def room_desc_msg(self, room: Room, client: Client) -> Panel:
+    def room_desc_message(self, room: Room, client: Client) -> Panel:
         """A stylized description of the room, including its exits and occupants."""
 
         return Panel(
@@ -98,7 +98,9 @@ class Look(Action):
             room = self.rooms.get_by_id(client.player.current_room_id)
 
         except (ClientNotLoggedIn, RoomNotFound):
-            self.send.prompt(client)
+            self.output.send_prompt(client)
 
         else:
-            self.send.private(client, self.room_desc_msg(room, client))
+            self.output.send_private_message(
+                client, self.room_desc_message(room, client)
+            )

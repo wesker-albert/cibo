@@ -26,7 +26,9 @@ class Exits(Action):
             room = self.rooms.get_by_id(client.player.current_room_id)
 
         except (ClientNotLoggedIn, RoomNotFound):
-            self.send.prompt(client)
+            self.output.send_prompt(client)
 
         else:
-            self.send.private(client, self.rooms.get_formatted_exits(room))
+            self.output.send_private_message(
+                client, self.rooms.get_formatted_exits(room)
+            )

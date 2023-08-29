@@ -2,6 +2,7 @@
 that messages have a uniform style and reach only the clients they are intended to.
 """
 
+from dataclasses import dataclass
 from typing import List, Literal, Optional, Union
 
 from rich.columns import Columns
@@ -15,6 +16,15 @@ from rich.tree import Tree
 
 from cibo.client import Client
 from cibo.telnet import TelnetServer
+
+
+@dataclass
+class Announcement:
+    """The information necessary to make a localized announcement."""
+
+    self_message: str
+    room_message: str
+    adjoining_room_message: Optional[str] = None
 
 
 class Output:
@@ -83,7 +93,7 @@ class Output:
 
         return capture.get()
 
-    def prompt(self, client: Client) -> None:
+    def send_prompt(self, client: Client) -> None:
         """Prints a formatted prompt to the client.
 
         Args:
@@ -93,7 +103,7 @@ class Output:
         formatted_prompt = self._format_prompt(client.prompt)
         client.send_message(f"\r\n{formatted_prompt}")
 
-    def private(
+    def send_private_message(
         self,
         client: Client,
         message: Union[str, Columns, Markdown, Panel, Syntax, Table, Tree],
@@ -116,9 +126,11 @@ class Output:
         client.send_message(f"\n{formatted_message}")
 
         if prompt:
-            self.prompt(client)
+            self.send_prompt(client)
 
-    def local(self, room_id: int, message: str, ignore_clients: List[Client]) -> None:
+    def send_local_message(
+        self, room_id: int, message: str, ignore_clients: List[Client]
+    ) -> None:
         """Prints a message to all clients whose plater are within the room.
 
         Args:
@@ -137,23 +149,55 @@ class Output:
                 and client not in ignore_clients
             ):
                 client.send_message(f"\r{formatted_message}")
-                self.prompt(client)
+                self.send_prompt(client)
 
-    def sector(
+    # pylint: disable=too-many-arguments
+    def send_local_announcement(
+        self,
+        announcement: Announcement,
+        client: Client,
+        room_id: int,
+        adjoining_room_id: Optional[int] = None,
+        prompt: bool = True,
+    ) -> None:
+        """Make a localized announcement to the player, other players in the same room,
+        and optionally any players in an adjacent room.
+
+        Args:
+            announcement (Announcement): The differing messages that will be sent.
+            client (Client): The client who is the source of the announcement.
+            room_id (int): The originating room of the announcement
+            adjoining_room_id (Optional[int], optional): An adjoining room to send a
+                message to. Defaults to None.
+            prompt (bool, optional): Whether to follow the private client message with
+                a prompt. Defaults to True.
+        """
+
+        self.send_private_message(client, announcement.self_message, prompt=prompt)
+        self.send_local_message(room_id, announcement.room_message, [client])
+
+        if adjoining_room_id and announcement.adjoining_room_message:
+            self.send_local_message(
+                adjoining_room_id,
+                announcement.adjoining_room_message,
+                [client],
+            )
+
+    def send_sector_announcement(
         self, _sector: int, _message: str, _ignore_clients: List[Client]
     ) -> None:  # pytest: no cover
         """Prints a message to all clients within the sector."""
 
         pass
 
-    def region(
+    def self_region_announcement(
         self, _region: int, _message: str, _ignore_clients: List[Client]
     ) -> None:  # pytest: no cover
         """Prints a message to all clients within the sector."""
 
         pass
 
-    def server(
+    def send_server_announcement(
         self, _message: str, _ignore_clients: List[Client]
     ) -> None:  # pytest: no cover
         """Prints a message to all clients on the server."""

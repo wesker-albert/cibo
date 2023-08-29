@@ -11,7 +11,7 @@ from cibo.exception import (
     ItemNotFound,
 )
 from cibo.models.data.item import Item
-from cibo.models.object.announcement import Announcement
+from cibo.output import Announcement
 
 
 class Drop(Action):
@@ -24,18 +24,18 @@ class Drop(Action):
         return []
 
     @property
-    def missing_args_msg(self) -> str:
+    def missing_args_message(self) -> str:
         """No arguments were provided."""
 
         return "Drop what? Your pants? No way!"
 
     @property
-    def inventory_item_not_found_msg(self) -> str:
+    def inventory_item_not_found_message(self) -> str:
         """The given item name isn't in the Player inventory."""
 
         return "You scour your inventory, but can't find that."
 
-    def dropped_item_msg(self, player_name: str, item_name: str) -> Announcement:
+    def dropped_item_message(self, player_name: str, item_name: str) -> Announcement:
         """Player has just dropped an item."""
 
         return Announcement(
@@ -81,18 +81,19 @@ class Drop(Action):
             item.player_id = None
             item.save()
 
-            dropped_item_msg = self.dropped_item_msg(client.player.name, item_meta.name)
-
-            self.send.private(client, dropped_item_msg.to_self)
-            self.send.local(
-                client.player.current_room_id, dropped_item_msg.to_room, [client]
+            self.output.send_local_announcement(
+                self.dropped_item_message(client.player.name, item_meta.name),
+                client,
+                client.player.current_room_id,
             )
 
         except (ClientNotLoggedIn, ItemNotFound):
-            self.send.prompt(client)
+            self.output.send_prompt(client)
 
         except ActionMissingArguments:
-            self.send.private(client, self.missing_args_msg)
+            self.output.send_private_message(client, self.missing_args_message)
 
         except InventoryItemNotFound:
-            self.send.private(client, self.inventory_item_not_found_msg)
+            self.output.send_private_message(
+                client, self.inventory_item_not_found_message
+            )

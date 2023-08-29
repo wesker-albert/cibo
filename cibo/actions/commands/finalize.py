@@ -20,18 +20,18 @@ class Finalize(Action):
         return []
 
     @property
-    def is_logged_in_msg(self) -> str:
+    def is_logged_in_message(self) -> str:
         """Player is already logged in."""
 
         return "You finalize your written will, leaving your whole estate to your cat."
 
     @property
-    def not_registered_msg(self) -> str:
+    def not_registered_message(self) -> str:
         """Didn't register first."""
 
         return "You'll need to [green]register[/] before you can [green]finalize[/]."
 
-    def successfully_registered_msg(self, player_name: str) -> str:
+    def successfully_registered_message(self, player_name: str) -> str:
         """Finalization was successful."""
 
         return (
@@ -39,7 +39,7 @@ class Finalize(Action):
             "with this player."
         )
 
-    def player_already_exists_msg(self, player_name: str) -> str:
+    def player_already_exists_message(self, player_name: str) -> str:
         """Player name is already taken."""
 
         return (
@@ -86,19 +86,19 @@ class Finalize(Action):
             self.create_player_starting_inventory(client)
 
         except ClientIsLoggedIn:
-            self.send.private(client, self.is_logged_in_msg)
+            self.output.send_private_message(client, self.is_logged_in_message)
 
         except PlayerNotRegistered:
-            self.send.private(client, self.not_registered_msg)
+            self.output.send_private_message(client, self.not_registered_message)
 
         except PlayerAlreadyExists:
-            self.send.private(
-                client, self.player_already_exists_msg(client.registration.name)
+            self.output.send_private_message(
+                client, self.player_already_exists_message(client.registration.name)
             )
 
         else:
-            self.send.private(
-                client, self.successfully_registered_msg(client.registration.name)
+            self.output.send_private_message(
+                client, self.successfully_registered_message(client.registration.name)
             )
 
         finally:

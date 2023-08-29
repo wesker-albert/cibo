@@ -12,7 +12,7 @@ from cibo.exception import (
     PlayerSessionActive,
 )
 from cibo.models.data.player import Player
-from cibo.models.object.announcement import Announcement
+from cibo.output import Announcement
 
 
 class Login(Action):
@@ -25,7 +25,7 @@ class Login(Action):
         return ["name", "password"]
 
     @property
-    def is_logged_in_msg(self) -> str:
+    def is_logged_in_message(self) -> str:
         """Player is already logged in."""
 
         return (
@@ -33,7 +33,7 @@ class Login(Action):
             "you are."
         )
 
-    def player_not_found_msg(self, player_name: str) -> str:
+    def player_not_found_message(self, player_name: str) -> str:
         """Player doesn't exist."""
 
         return (
@@ -42,12 +42,12 @@ class Login(Action):
         )
 
     @property
-    def incorrect_password_msg(self) -> str:
+    def incorrect_password_message(self) -> str:
         """Incorrect password entered."""
 
         return "[bright_red]Incorrect password.[/]"
 
-    def player_session_active_msg(self, player_name: str) -> str:
+    def player_session_active_message(self, player_name: str) -> str:
         """Another Client is already logged into a session with the Player."""
 
         return (
@@ -56,7 +56,7 @@ class Login(Action):
             "contact the admin."
         )
 
-    def logging_in_msg(self, player_name: str) -> Announcement:
+    def logging_in_message(self, player_name: str) -> Announcement:
         """Successfully loggin in."""
 
         return Announcement(
@@ -94,25 +94,28 @@ class Login(Action):
             self.check_for_player_session(player.name)
 
         except ClientIsLoggedIn:
-            self.send.private(client, self.is_logged_in_msg)
+            self.output.send_private_message(client, self.is_logged_in_message)
 
         except PlayerNotFound:
-            self.send.private(client, self.player_not_found_msg(player_name))
+            self.output.send_private_message(
+                client, self.player_not_found_message(player_name)
+            )
 
         except PasswordIncorrect:
-            self.send.private(client, self.incorrect_password_msg)
+            self.output.send_private_message(client, self.incorrect_password_message)
 
         except PlayerSessionActive:
-            self.send.private(client, self.player_session_active_msg(player_name))
+            self.output.send_private_message(
+                client, self.player_session_active_message(player_name)
+            )
 
         else:
             client.log_in(player)
 
-            logging_in_msg = self.logging_in_msg(client.player.name)
-
-            self.send.private(client, logging_in_msg.to_self, prompt=False)
-            self.send.local(
-                client.player.current_room_id, logging_in_msg.to_room, [client]
+            self.output.send_local_announcement(
+                self.logging_in_message(client.player.name),
+                client,
+                client.player.current_room_id,
             )
 
             Look(self._telnet, self._world, self._output).process(client, None, [])

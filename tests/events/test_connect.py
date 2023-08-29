@@ -7,4 +7,4 @@ class TestConnectEvent(ClientFactory, ConnectEventFactory):
 
         self.connect.process()
 
-        self.output.private.assert_called_once()
+        self.output.send_private_message.assert_called_once()

@@ -14,7 +14,7 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.models.object.announcement import Announcement
+from cibo.output import Announcement
 
 
 class Move(Action):
@@ -40,23 +40,23 @@ class Move(Action):
         return []
 
     @property
-    def exit_not_found_msg(self) -> str:
+    def exit_not_found_message(self) -> str:
         """No exit in the given direction."""
 
         return "You can't go that way."
 
-    def door_is_closed_msg(self, door_name: str) -> str:
+    def door_is_closed_message(self, door_name: str) -> str:
         """There's a closed door in the way."""
 
         return f"{door_name.capitalize()} is closed."
 
-    def moving_msg(self, player_name: str, direction: str) -> Announcement:
+    def moving_message(self, player_name: str, direction: str) -> Announcement:
         """Successfully moving in the direction given."""
 
         return Announcement(
             f"You head {direction}.",
-            f"[cyan]{player_name}[/] leaves {direction}.",
             f"[cyan]{player_name}[/] arrives.",
+            f"[cyan]{player_name}[/] leaves {direction}.",
         )
 
     def process(self, client: Client, command: str, _args: List[str]) -> None:
@@ -71,31 +71,27 @@ class Move(Action):
             self.doors.raise_door_status(door)
 
         except (ClientNotLoggedIn, RoomNotFound):
-            self.send.prompt(client)
+            self.output.send_prompt(client)
 
         except ExitNotFound:
-            self.send.private(client, self.exit_not_found_msg)
+            self.output.send_private_message(client, self.exit_not_found_message)
 
         except (DoorIsClosed, DoorIsLocked):
             if door:
-                self.send.private(client, self.door_is_closed_msg(door.name))
+                self.output.send_private_message(
+                    client, self.door_is_closed_message(door.name)
+                )
 
         except (DoorNotFound, DoorIsOpen):
             # update the player's current room to the one they're navigating to
             client.player.current_room_id = exit_.id_
 
-            moving_msg = self.moving_msg(
-                client.player.name, exit_.direction.name.lower()
-            )
-
-            self.send.private(client, moving_msg.to_self, prompt=False)
-
-            # announce player departure to anyone in the previous room
-            self.send.local(current_room.id_, moving_msg.to_room, [client])
-
-            # announce player arrival to anyone in the new room
-            self.send.local(
-                client.player.current_room_id, moving_msg.to_adjoining_room, [client]
+            self.output.send_local_announcement(
+                self.moving_message(client.player.name, exit_.direction.name.lower()),
+                client,
+                client.player.current_room_id,
+                current_room.id_,
+                prompt=False,
             )
 
             Look(self._telnet, self._world, self._output).process(client, None, [])
