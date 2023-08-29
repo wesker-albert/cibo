@@ -7,7 +7,7 @@ This is a collection of all the Rooms that exist in the world.
 from typing import List
 
 from cibo.exception import ExitNotFound, RoomNotFound
-from cibo.models.object.room import Direction, Room, RoomDescription, RoomExit
+from cibo.models.room import Direction, Room, RoomDescription, RoomExit
 from cibo.resources.__resource__ import Resource
 
 

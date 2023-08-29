@@ -15,7 +15,7 @@ from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
 from cibo.models.data.player import Player
-from cibo.models.object.room import Direction, Room, RoomDescription, RoomExit
+from cibo.models.room import Direction, Room, RoomDescription, RoomExit
 from cibo.output import Output
 from cibo.password import Password
 from cibo.resources.doors import Doors
