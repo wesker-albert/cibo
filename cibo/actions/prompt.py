@@ -18,4 +18,4 @@ class Prompt(Action):
     def process(
         self, client: Client, _command: Optional[str], _args: List[str]
     ) -> None:
-        self.send.prompt(client)
+        self.output.send_prompt(client)

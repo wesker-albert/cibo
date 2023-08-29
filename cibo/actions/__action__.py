@@ -53,7 +53,7 @@ class Action(ABC):
         return self._world.items
 
     @property
-    def send(self) -> Output:
+    def output(self) -> Output:
         """Access the Output formatter, to send messages to clients.
 
         Returns:

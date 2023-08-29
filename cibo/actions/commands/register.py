@@ -20,12 +20,12 @@ class Register(Action):
         return ["name", "password"]
 
     @property
-    def is_logged_in_msg(self) -> str:
+    def is_logged_in_message(self) -> str:
         """Player is already logged in."""
 
         return "You register to vote, even though both candidates aren't that great."
 
-    def player_already_exists_msg(self, player_name: str) -> str:
+    def player_already_exists_message(self, player_name: str) -> str:
         """Player name is already taken."""
 
         return (
@@ -34,7 +34,7 @@ class Register(Action):
         )
 
     @property
-    def validation_error_msg(self) -> str:
+    def validation_error_message(self) -> str:
         """Provided registration info is invalid."""
 
         return (
@@ -45,7 +45,7 @@ class Register(Action):
             "Please [green]register[/] again."
         )
 
-    def confirm_finalize_msg(self, player_name: str) -> str:
+    def confirm_finalize_message(self, player_name: str) -> str:
         """Ask the client to finalize the player registration."""
 
         return (
@@ -95,13 +95,15 @@ class Register(Action):
             self.validate_player_info(player_name, password)
 
         except ClientIsLoggedIn:
-            self.send.private(client, self.is_logged_in_msg)
+            self.output.send_private_message(client, self.is_logged_in_message)
 
         except PlayerAlreadyExists:
-            self.send.private(client, self.player_already_exists_msg(player_name))
+            self.output.send_private_message(
+                client, self.player_already_exists_message(player_name)
+            )
 
         except ValidationError:
-            self.send.private(client, self.validation_error_msg)
+            self.output.send_private_message(client, self.validation_error_message)
 
         except PlayerNotFound:
             # a temporary Player model is set on the client, to be created in the db if
@@ -112,4 +114,6 @@ class Register(Action):
                 current_room_id=1,
             )
 
-            self.send.private(client, self.confirm_finalize_msg(player_name))
+            self.output.send_private_message(
+                client, self.confirm_finalize_message(player_name)
+            )

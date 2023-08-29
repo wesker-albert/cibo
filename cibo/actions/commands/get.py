@@ -14,7 +14,7 @@ from cibo.exception import (
     RoomItemNotFound,
 )
 from cibo.models.data.item import Item
-from cibo.models.object.announcement import Announcement
+from cibo.output import Announcement
 
 
 class Get(Action):
@@ -27,24 +27,24 @@ class Get(Action):
         return []
 
     @property
-    def missing_args_msg(self) -> str:
+    def missing_args_message(self) -> str:
         """No arguments were provided."""
 
         return "You don't get it, and you probably never will."
 
     @property
-    def room_item_not_found_msg(self) -> str:
+    def room_item_not_found_message(self) -> str:
         """The given item name isn't in the room."""
 
         return "You look around, but don't see that."
 
     @property
-    def room_item_is_stationary_msg(self) -> str:
+    def room_item_is_stationary_message(self) -> str:
         """The specified item can't be picked up."""
 
         return "You try, but you can't take that."
 
-    def gotten_item_msg(self, player_name: str, item_name: str) -> Announcement:
+    def gotten_item_message(self, player_name: str, item_name: str) -> Announcement:
         """Player has just picked up an item."""
 
         return Announcement(
@@ -93,21 +93,22 @@ class Get(Action):
             item.player_id = client.player
             item.save()
 
-            gotten_item_msg = self.gotten_item_msg(client.player.name, item_meta.name)
-
-            self.send.private(client, gotten_item_msg.to_self)
-            self.send.local(
-                client.player.current_room_id, gotten_item_msg.to_room, [client]
+            self.output.send_local_announcement(
+                self.gotten_item_message(client.player.name, item_meta.name),
+                client,
+                client.player.current_room_id,
             )
 
         except (ClientNotLoggedIn, ItemNotFound):
-            self.send.prompt(client)
+            self.output.send_prompt(client)
 
         except ActionMissingArguments:
-            self.send.private(client, self.missing_args_msg)
+            self.output.send_private_message(client, self.missing_args_message)
 
         except RoomItemNotFound:
-            self.send.private(client, self.room_item_not_found_msg)
+            self.output.send_private_message(client, self.room_item_not_found_message)
 
         except ItemIsStationary:
-            self.send.private(client, self.room_item_is_stationary_msg)
+            self.output.send_private_message(
+                client, self.room_item_is_stationary_message
+            )

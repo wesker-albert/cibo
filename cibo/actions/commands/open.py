@@ -14,7 +14,7 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.models.object.announcement import Announcement
+from cibo.output import Announcement
 
 
 class Open(Action):
@@ -26,7 +26,7 @@ class Open(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def missing_args_msg(self, player_name: str) -> Announcement:
+    def missing_args_message(self, player_name: str) -> Announcement:
         """No arguments were provided."""
 
         return Announcement(
@@ -36,17 +36,17 @@ class Open(Action):
         )
 
     @property
-    def exit_not_found_msg(self) -> str:
+    def exit_not_found_message(self) -> str:
         """No exit in the given direction."""
 
         return "There's nothing to open."
 
-    def door_is_locked_msg(self, door_name: str) -> str:
+    def door_is_locked_message(self, door_name: str) -> str:
         """The door is locked."""
 
         return f"{door_name.capitalize()} is locked."
 
-    def opening_door_msg(self, player_name: str, door_name: str) -> Announcement:
+    def opening_door_message(self, player_name: str, door_name: str) -> Announcement:
         """Successfully opening the door."""
 
         return Announcement(
@@ -75,30 +75,32 @@ class Open(Action):
             self.doors.raise_door_status(door)
 
         except ActionMissingArguments:
-            missing_args_msg = self.missing_args_msg(client.player.name)
-
-            self.send.private(client, missing_args_msg.to_self)
-            self.send.local(
-                client.player.current_room_id, missing_args_msg.to_room, [client]
+            self.output.send_local_announcement(
+                self.missing_args_message(client.player.name),
+                client,
+                client.player.current_room_id,
             )
 
         except (ClientNotLoggedIn, RoomNotFound):
-            self.send.prompt(client)
+            self.output.send_prompt(client)
 
         except (ExitNotFound, DoorNotFound):
-            self.send.private(client, self.exit_not_found_msg)
+            self.output.send_private_message(client, self.exit_not_found_message)
 
         except DoorIsLocked:
-            self.send.private(client, self.door_is_locked_msg(door.name))
+            self.output.send_private_message(
+                client, self.door_is_locked_message(door.name)
+            )
 
         except DoorIsOpen:
-            self.send.private(client, self.door_is_open(door.name))
+            self.output.send_private_message(client, self.door_is_open(door.name))
 
         except DoorIsClosed:
             self.doors.open_door(door)
 
-            opening_door_msg = self.opening_door_msg(client.player.name, door.name)
-
-            self.send.private(client, opening_door_msg.to_self)
-            self.send.local(room.id_, opening_door_msg.to_room, [client])
-            self.send.local(exit_.id_, opening_door_msg.to_adjoining_room, [client])
+            self.output.send_local_announcement(
+                self.opening_door_message(client.player.name, door.name),
+                client,
+                room.id_,
+                exit_.id_,
+            )

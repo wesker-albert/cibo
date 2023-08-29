@@ -17,7 +17,7 @@ class Inventory(Action):
         return []
 
     @property
-    def empty_inventory_msg(self) -> str:
+    def empty_inventory_message(self) -> str:
         """The Player inventory is empty."""
 
         return "You aren't carrying anything..."
@@ -38,7 +38,7 @@ class Inventory(Action):
 
         inventory = "\n".join([str(item).capitalize() for item in inventory_items])
 
-        return inventory if len(inventory_items) > 0 else self.empty_inventory_msg
+        return inventory if len(inventory_items) > 0 else self.empty_inventory_message
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
         try:
@@ -46,7 +46,9 @@ class Inventory(Action):
                 raise ClientNotLoggedIn
 
         except ClientNotLoggedIn:
-            self.send.prompt(client)
+            self.output.send_prompt(client)
 
         else:
-            self.send.private(client, self.get_formatted_inventory(client))
+            self.output.send_private_message(
+                client, self.get_formatted_inventory(client)
+            )

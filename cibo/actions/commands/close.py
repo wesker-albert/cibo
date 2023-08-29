@@ -14,7 +14,7 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.models.object.announcement import Announcement
+from cibo.output import Announcement
 
 
 class Close(Action):
@@ -27,23 +27,23 @@ class Close(Action):
         return []
 
     @property
-    def missing_args_msg(self) -> str:
+    def missing_args_message(self) -> str:
         """No arguments were provided."""
 
         return "You close your eyes and daydream about money and success."
 
     @property
-    def exit_not_found_msg(self) -> str:
+    def exit_not_found_message(self) -> str:
         """No exit in the given direction."""
 
         return "There's nothing to close."
 
-    def door_is_closed_msg(self, door_name: str) -> str:
+    def door_is_closed_message(self, door_name: str) -> str:
         """The door is already closed."""
 
         return f"{door_name.capitalize()} is already closed."
 
-    def door_closes_msg(self, door_name: str, player_name: str) -> Announcement:
+    def door_closes_message(self, door_name: str, player_name: str) -> Announcement:
         """The door is closed by the Player."""
 
         return Announcement(
@@ -67,22 +67,25 @@ class Close(Action):
             self.doors.raise_door_status(door)
 
         except ActionMissingArguments:
-            self.send.private(client, self.missing_args_msg)
+            self.output.send_private_message(client, self.missing_args_message)
 
         except (ClientNotLoggedIn, RoomNotFound):
-            self.send.prompt(client)
+            self.output.send_prompt(client)
 
         except (ExitNotFound, DoorNotFound):
-            self.send.private(client, self.exit_not_found_msg)
+            self.output.send_private_message(client, self.exit_not_found_message)
 
         except (DoorIsClosed, DoorIsLocked):
-            self.send.private(client, self.door_is_closed_msg(door.name))
+            self.output.send_private_message(
+                client, self.door_is_closed_message(door.name)
+            )
 
         except DoorIsOpen:
             self.doors.close_door(door)
 
-            door_closes_msg = self.door_closes_msg(door.name, client.player.name)
-
-            self.send.private(client, door_closes_msg.to_self)
-            self.send.local(room.id_, door_closes_msg.to_room, [client])
-            self.send.local(exit_.id_, door_closes_msg.to_adjoining_room, [client])
+            self.output.send_local_announcement(
+                self.door_closes_message(door.name, client.player.name),
+                client,
+                room.id_,
+                exit_.id_,
+            )

@@ -6,7 +6,7 @@ from typing import List, Optional
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientIsLoggedIn
-from cibo.models.object.announcement import Announcement
+from cibo.output import Announcement
 
 
 class Quit(Action):
@@ -18,7 +18,7 @@ class Quit(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def quitting_msg(self, player_name: Optional[str]) -> Announcement:
+    def quitting_message(self, player_name: Optional[str]) -> Announcement:
         """Successfully quitting the game."""
 
         return Announcement(
@@ -40,12 +40,14 @@ class Quit(Action):
 
             client.log_out()
 
-            self.send.local(
-                player_room, self.quitting_msg(player_name).to_room, [client]
+            self.output.send_local_message(
+                player_room, self.quitting_message(player_name).room_message, [client]
             )
 
         finally:
-            self.send.private(client, self.quitting_msg(None).to_self, prompt=False)
+            self.output.send_private_message(
+                client, self.quitting_message(None).self_message, prompt=False
+            )
 
             sleep(1)
             client.disconnect()

@@ -20,7 +20,7 @@ class Connect(Action):
     def process(
         self, client: Client, _command: Optional[str], _args: List[str]
     ) -> None:
-        self.send.private(
+        self.output.send_private_message(
             client,
             Panel(
                 f"{self._world.motd}\n\n"

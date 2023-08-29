@@ -7,7 +7,7 @@ from cibo.actions.__action__ import Action
 from cibo.actions.connect import Connect
 from cibo.client import Client
 from cibo.exception import ClientNotLoggedIn
-from cibo.models.object.announcement import Announcement
+from cibo.output import Announcement
 
 
 class Logout(Action):
@@ -19,7 +19,7 @@ class Logout(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def logging_out_msg(self, player_name: str) -> Announcement:
+    def logging_out_message(self, player_name: str) -> Announcement:
         """Successfully logging the Player out."""
 
         return Announcement(
@@ -35,7 +35,7 @@ class Logout(Action):
                 raise ClientNotLoggedIn
 
         except ClientNotLoggedIn:
-            self.send.prompt(client)
+            self.output.send_prompt(client)
 
         else:
             player_name = client.player.name
@@ -43,10 +43,9 @@ class Logout(Action):
 
             client.log_out()
 
-            logging_out_msg = self.logging_out_msg(player_name)
-
-            self.send.local(player_room, logging_out_msg.to_room, [client])
-            self.send.private(client, logging_out_msg.to_self, prompt=False)
+            self.output.send_local_announcement(
+                self.logging_out_message(player_name), client, player_room, prompt=False
+            )
 
             sleep(1)
 
