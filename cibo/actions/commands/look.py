@@ -29,7 +29,7 @@ class Look(Action):
             f"{self.get_formatted_items(client)}",
             title=f"[blue]{room.name}[/]",
             title_align="left",
-            subtitle=self.rooms.get_formatted_exits(room),
+            subtitle=room.get_formatted_exits(),
             subtitle_align="right",
             padding=(1, 4),
         )

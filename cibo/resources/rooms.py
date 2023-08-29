@@ -6,7 +6,7 @@ This is a collection of all the Rooms that exist in the world.
 
 from typing import List
 
-from cibo.exception import ExitNotFound, RoomNotFound
+from cibo.exception import RoomNotFound
 from cibo.models.room import Direction, Room, RoomDescription, RoomExit
 from cibo.resources.__resource__ import Resource
 
@@ -58,6 +58,9 @@ class Rooms(Resource):
         Args:
             id_ (int): The Room ID you're looking for.
 
+        Raises:
+            RoomNotFound: No room found for the given ID.
+
         Returns:
             Optional[Room]: The matching Room.
         """
@@ -67,58 +70,3 @@ class Rooms(Resource):
                 return room
 
         raise RoomNotFound
-
-    def get_exits(self, room: Room) -> List[str]:
-        """Get the text values of the exits for the given Room, in alphabetical order.
-        Returns empty if the room has no exits.
-
-        Args:
-            room (Room): The Room you're looking for exits in.
-
-        Returns:
-            List[str]: The Room exits in str format.
-        """
-
-        return sorted([exit_.direction.name.lower() for exit_ in room.exits])
-
-    def get_formatted_exits(self, room: Room) -> str:
-        """Formats the exits into a pretty, stylized string.
-
-        Args:
-            room (Room): The Room to look for exits in.
-
-        Returns:
-            str: The formatted exits.
-        """
-
-        exits = self.get_exits(room)
-
-        # plurality is important...
-        if not exits:
-            return "[green]Exits:[/] none"
-
-        if len(exits) == 1:
-            return f"[green]Exit:[/] {exits[0]}"
-
-        joined_exits = ", ".join([str(exit_) for exit_ in exits])
-        return f"[green]Exits:[/] {joined_exits}"
-
-    def get_direction_exit(self, room: Room, direction: str) -> RoomExit:
-        """Returns the Room exit in the direction given, if an exit exists that way.
-
-        Args:
-            room (Room): The Room you want to check the exits in.
-            direction (str): The direction to check.
-
-        Returns:
-            Optional[RoomExit]: The exit, if it exists.
-        """
-
-        for exit_ in room.exits:
-            if (
-                direction == exit_.direction.value
-                or direction == exit_.direction.name.lower()
-            ):
-                return exit_
-
-        raise ExitNotFound

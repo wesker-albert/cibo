@@ -15,6 +15,7 @@ from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
 from cibo.models.data.player import Player
+from cibo.models.door import Door, DoorFlag
 from cibo.models.room import Direction, Room, RoomDescription, RoomExit
 from cibo.output import Output
 from cibo.password import Password
@@ -26,7 +27,7 @@ from cibo.resources.world import World
 
 class BaseFactory:
     @fixture(autouse=True)
-    def fixture_base(self) -> None:
+    def fixture_base(self):
         self.telnet = Mock()
         self.output = Mock()
         yield
@@ -34,7 +35,7 @@ class BaseFactory:
 
 class ClientFactory:
     @fixture(autouse=True)
-    def fixture_client(self) -> Client:
+    def fixture_client(self):
         self.client = Client(
             socket=Mock(),
             address="127.0.0.1",
@@ -48,7 +49,7 @@ class ClientFactory:
         yield
 
     @fixture(autouse=True)
-    def fixture_mock_client(self) -> Client:
+    def fixture_mock_client(self):
         self.mock_client = Mock()
         self.mock_client.login_state = ClientLoginState.PRE_LOGIN
         self.mock_client.player = Player()
@@ -56,7 +57,7 @@ class ClientFactory:
         yield
 
     @fixture(autouse=True)
-    def fixture_mock_client_additional(self) -> Client:
+    def fixture_mock_client_additional(self):
         self.mock_client_additional = Mock()
         self.mock_client_additional.login_state = ClientLoginState.LOGGED_IN
         self.mock_client_additional.player = Mock(current_room_id=1)
@@ -82,7 +83,7 @@ class CommandProcessorFactory(BaseFactory):
             logging.info("Action processed", {"command": command, "args": args})
 
     @fixture(autouse=True)
-    def fixture_command_processor(self) -> CommandProcessor:
+    def fixture_command_processor(self):
         self.command_processor = CommandProcessor(
             self.telnet, Mock(), self.output, [self.MockAction]
         )
@@ -91,63 +92,63 @@ class CommandProcessorFactory(BaseFactory):
 
 class OutputFactory(BaseFactory):
     @fixture(autouse=True)
-    def fixture_output(self) -> Output:
+    def fixture_output(self):
         self.output = Output(self.telnet)
         yield
 
 
 class ConnectActionFactory(BaseFactory):
     @fixture(autouse=True)
-    def fixture_connect(self) -> Connect:
+    def fixture_connect(self):
         self.connect = Connect(self.telnet, Mock(), self.output)
         yield
 
 
 class DisconnectActionFactory(BaseFactory):
     @fixture(autouse=True)
-    def fixture_disconnect(self) -> Disconnect:
+    def fixture_disconnect(self):
         self.disconnect = Disconnect(self.telnet, Mock(), self.output)
         yield
 
 
 class ErrorActionFactory(BaseFactory):
     @fixture(autouse=True)
-    def fixture_error(self) -> Error:
+    def fixture_error(self):
         self.error = Error(self.telnet, Mock(), self.output)
         yield
 
 
 class PromptActionFactory(BaseFactory):
     @fixture(autouse=True)
-    def fixture_prompt(self) -> Prompt:
+    def fixture_prompt(self):
         self.prompt = Prompt(self.telnet, Mock(), self.output)
         yield
 
 
 class CloseActionFactory(BaseFactory):
     @fixture(autouse=True)
-    def fixture_close(self) -> Close:
+    def fixture_close(self):
         self.close = Close(self.telnet, Mock(), self.output)
         yield
 
 
 class ConnectEventFactory(BaseFactory):
     @fixture(autouse=True)
-    def fixture_connect_event(self) -> ConnectEvent:
+    def fixture_connect_event(self):
         self.connect = ConnectEvent(self.telnet, Mock(), self.output)
         yield
 
 
 class DisconnectEventFactory(BaseFactory):
     @fixture(autouse=True)
-    def fixture_disconnect_event(self) -> DisconnectEvent:
+    def fixture_disconnect_event(self):
         self.disconnect = DisconnectEvent(self.telnet, Mock(), self.output)
         yield
 
 
 class InputEventFactory(CommandProcessorFactory):
     @fixture(autouse=True)
-    def fixture_input_event(self) -> InputEvent:
+    def fixture_input_event(self):
         self.input = InputEvent(
             self.telnet, Mock(), self.output, self.command_processor
         )
@@ -156,28 +157,35 @@ class InputEventFactory(CommandProcessorFactory):
 
 class WorldFactory:
     @fixture(autouse=True)
-    def fixture_world(self) -> World:
+    def fixture_world(self):
         self.world = World()
-        yield
-
-    @fixture(autouse=True)
-    def fixture_doors(self) -> Doors:
         self.doors = Doors(getenv("DOORS_PATH", "/cibo/resources/doors.json"))
-        yield
-
-    @fixture(autouse=True)
-    def fixture_rooms(self) -> Rooms:
         self.rooms = Rooms(getenv("ROOMS_PATH", "/cibo/resources/rooms.json"))
-        yield
-
-    @fixture(autouse=True)
-    def fixture_itemss(self) -> Items:
         self.items = Items(getenv("ITEMS_PATH", "/cibo/resources/items.json"))
         yield
 
-    @fixture(name="room")
-    def fixture_room(self) -> Room:
-        yield Room(
+
+class DoorFactory:
+    @fixture(autouse=True)
+    def fixture_door(self):
+        self.door_closed = Door(
+            name="small trapdoor", room_ids=[1, 7], flags=[DoorFlag.CLOSED]
+        )
+        self.door_open = Door(
+            name="small trapdoor", room_ids=[1, 7], flags=[DoorFlag.OPEN]
+        )
+        self.door_locked = Door(
+            name="small trapdoor",
+            room_ids=[1, 7],
+            flags=[DoorFlag.LOCKED],
+        )
+        yield
+
+
+class RoomFactory:
+    @fixture(autouse=True)
+    def fixture_room(self):
+        self.room = Room(
             id_=1,
             name="A Room Marked #1",
             description=RoomDescription(
@@ -199,6 +207,7 @@ class WorldFactory:
                 RoomExit(direction=Direction.DOWN, id_=7, description=None),
             ],
         )
+        yield
 
 
 class PasswordFactory:
