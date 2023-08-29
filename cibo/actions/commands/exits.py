@@ -29,6 +29,4 @@ class Exits(Action):
             self.output.send_prompt(client)
 
         else:
-            self.output.send_private_message(
-                client, self.rooms.get_formatted_exits(room)
-            )
+            self.output.send_private_message(client, room.get_formatted_exits())

@@ -64,11 +64,11 @@ class Move(Action):
             if not client.is_logged_in:
                 raise ClientNotLoggedIn
 
-            current_room = self.rooms.get_by_id(client.player.current_room_id)
-            exit_ = self.rooms.get_direction_exit(current_room, command)
-            door = self.doors.get_by_room_ids(current_room.id_, exit_.id_)
+            room = self.rooms.get_by_id(client.player.current_room_id)
+            exit_ = room.get_direction_exit(command)
+            door = self.doors.get_by_room_ids(room.id_, exit_.id_)
 
-            self.doors.raise_door_status(door)
+            door.raise_status()
 
         except (ClientNotLoggedIn, RoomNotFound):
             self.output.send_prompt(client)
@@ -90,7 +90,7 @@ class Move(Action):
                 self.moving_message(client.player.name, exit_.direction.name.lower()),
                 client,
                 client.player.current_room_id,
-                current_room.id_,
+                room.id_,
                 prompt=False,
             )
 
