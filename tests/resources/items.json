@@ -1,0 +1,10 @@
+{
+    "items": [
+        {
+            "id": 1,
+            "name": "a metal fork",
+            "description": "A pronged, metal eating utensil.",
+            "is_stationary": false
+        }
+    ]
+}

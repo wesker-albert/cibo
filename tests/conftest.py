@@ -1,5 +1,4 @@
 import logging
-from os import getenv
 from unittest.mock import Mock
 
 from pytest import fixture
@@ -19,9 +18,6 @@ from cibo.models.door import Door, DoorFlag
 from cibo.models.room import Direction, Room, RoomDescription, RoomExit
 from cibo.output import Output
 from cibo.password import Password
-from cibo.resources.doors import Doors
-from cibo.resources.items import Items
-from cibo.resources.rooms import Rooms
 from cibo.resources.world import World
 
 
@@ -152,9 +148,6 @@ class WorldFactory:
     @fixture(autouse=True)
     def fixture_world(self):
         self.world = World()
-        self.doors = Doors(getenv("DOORS_PATH", "/cibo/resources/doors.json"))
-        self.rooms = Rooms(getenv("ROOMS_PATH", "/cibo/resources/rooms.json"))
-        self.items = Items(getenv("ITEMS_PATH", "/cibo/resources/items.json"))
         yield
 
 
@@ -162,14 +155,14 @@ class DoorFactory:
     @fixture(autouse=True)
     def fixture_door(self):
         self.door_closed = Door(
-            name="small trapdoor", room_ids=[1, 7], flags=[DoorFlag.CLOSED]
+            name="a wooden door", room_ids=[1, 2], flags=[DoorFlag.CLOSED]
         )
         self.door_open = Door(
-            name="small trapdoor", room_ids=[1, 7], flags=[DoorFlag.OPEN]
+            name="a wooden door", room_ids=[1, 2], flags=[DoorFlag.OPEN]
         )
         self.door_locked = Door(
-            name="small trapdoor",
-            room_ids=[1, 7],
+            name="a steel security door",
+            room_ids=[1, 4],
             flags=[DoorFlag.LOCKED],
         )
         yield
@@ -196,8 +189,6 @@ class RoomFactory:
                 RoomExit(direction=Direction.EAST, id_=3, description=None),
                 RoomExit(direction=Direction.SOUTH, id_=4, description=None),
                 RoomExit(direction=Direction.WEST, id_=5, description=None),
-                RoomExit(direction=Direction.UP, id_=6, description=None),
-                RoomExit(direction=Direction.DOWN, id_=7, description=None),
             ],
         )
         yield

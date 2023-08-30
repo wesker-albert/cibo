@@ -1,0 +1,24 @@
+{
+    "doors": [
+        {
+            "name": "a wooden door",
+            "room_ids": [
+                1,
+                2
+            ],
+            "flags": [
+                "closed"
+            ]
+        },
+        {
+            "name": "a steel security door",
+            "room_ids": [
+                1,
+                4
+            ],
+            "flags": [
+                "locked"
+            ]
+        }
+    ]
+}
