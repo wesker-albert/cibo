@@ -202,9 +202,15 @@ class PasswordFactory:
         yield
 
 
-class CloseActionFactory(BaseFactory, WorldFactory):
+class CloseActionFactory(BaseFactory, ClientFactory, WorldFactory):
     @fixture(autouse=True)
     def fixture_close(self) -> Close:
         self.world = World()
         self.close = Close(self.telnet, self.world, self.output)
+
+        self.client.login_state = ClientLoginState.LOGGED_IN
+        self.client.player = Mock()
+        self.client.player.current_room_id = 1
+        self.client.player.name = "frank"
+
         yield
