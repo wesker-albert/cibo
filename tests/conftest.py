@@ -125,13 +125,6 @@ class PromptActionFactory(BaseFactory):
         yield
 
 
-class CloseActionFactory(BaseFactory):
-    @fixture(autouse=True)
-    def fixture_close(self):
-        self.close = Close(self.telnet, Mock(), self.output)
-        yield
-
-
 class ConnectEventFactory(BaseFactory):
     @fixture(autouse=True)
     def fixture_connect_event(self):
@@ -215,4 +208,12 @@ class PasswordFactory:
     def fixture_password(self):
         self.password = Password()
         self.hashed_password = self.password.hash_("abc123")
+        yield
+
+
+class CloseActionFactory(BaseFactory, WorldFactory):
+    @fixture(autouse=True)
+    def fixture_close(self) -> Close:
+        self.world = World()
+        self.close = Close(self.telnet, self.world, self.output)
         yield
