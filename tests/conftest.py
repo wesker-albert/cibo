@@ -4,6 +4,7 @@ from unittest.mock import Mock
 from pytest import fixture
 
 from cibo.actions.commands.close import Close
+from cibo.actions.commands.exits import Exits
 from cibo.actions.connect import Connect
 from cibo.actions.disconnect import Disconnect
 from cibo.actions.error import Error
@@ -207,6 +208,20 @@ class CloseActionFactory(BaseFactory, ClientFactory, WorldFactory):
     def fixture_close(self) -> Close:
         self.world = World()
         self.close = Close(self.telnet, self.world, self.output)
+
+        self.client.login_state = ClientLoginState.LOGGED_IN
+        self.client.player = Mock()
+        self.client.player.current_room_id = 1
+        self.client.player.name = "frank"
+
+        yield
+
+
+class ExitsActionFactory(BaseFactory, ClientFactory, WorldFactory):
+    @fixture(autouse=True)
+    def fixture_exits(self) -> Close:
+        self.world = World()
+        self.exits = Exits(self.telnet, self.world, self.output)
 
         self.client.login_state = ClientLoginState.LOGGED_IN
         self.client.player = Mock()
