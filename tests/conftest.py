@@ -5,6 +5,7 @@ from pytest import fixture
 
 from cibo.actions.commands.close import Close
 from cibo.actions.commands.exits import Exits
+from cibo.actions.commands.open import Open
 from cibo.actions.commands.say import Say
 from cibo.actions.connect import Connect
 from cibo.actions.disconnect import Disconnect
@@ -221,6 +222,13 @@ class CloseActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_close(self, _fixture_action):
         self.close = Close(self.telnet, self.world, self.output)
+        yield
+
+
+class OpenActionFactory(BaseFactory, ActionFactory):
+    @fixture(autouse=True)
+    def fixture_open(self, _fixture_action):
+        self.open = Open(self.telnet, self.world, self.output)
         yield
 
 
