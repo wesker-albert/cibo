@@ -49,15 +49,16 @@ class DatabaseFactory:
         with database.bind_ctx(tables):
             database.create_tables(tables)
 
+            hashed_password = Password().hash_("abcd1234")
             players = [
                 {
                     "name": "frank",
-                    "password": Password().hash_("abcd1234"),
+                    "password": hashed_password,
                     "current_room_id": 1,
                 },
                 {
                     "name": "john",
-                    "password": Password().hash_("abcd1234"),
+                    "password": hashed_password,
                     "current_room_id": 1,
                 },
             ]
