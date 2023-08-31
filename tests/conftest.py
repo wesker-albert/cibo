@@ -8,6 +8,7 @@ from pytest import fixture
 from cibo.actions.commands.close import Close
 from cibo.actions.commands.drop import Drop
 from cibo.actions.commands.exits import Exits
+from cibo.actions.commands.get import Get
 from cibo.actions.commands.inventory import Inventory
 from cibo.actions.commands.login import Login
 from cibo.actions.commands.logout import Logout
@@ -72,6 +73,7 @@ class DatabaseFactory:
             items = [
                 {"item_id": 1, "room_id": 1},
                 {"item_id": 1},
+                {"item_id": 2, "room_id": 1},
             ]
 
             # pylint: disable=no-value-for-parameter
@@ -334,4 +336,11 @@ class DropActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_drop(self, _fixture_action):
         self.drop = Drop(self.telnet, self.world, self.output)
+        yield
+
+
+class GetActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
+    @fixture(autouse=True)
+    def fixture_get(self, _fixture_action):
+        self.get = Get(self.telnet, self.world, self.output)
         yield
