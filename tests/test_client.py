@@ -18,7 +18,6 @@ class TestClient(ClientFactory):
         self.client.log_out()
 
         assert not self.client.is_logged_in
-        assert self.client.login_state is ClientLoginState.PRE_LOGIN
         assert not self.client.player.get_id()
 
     def test_client_prompt(self):

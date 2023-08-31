@@ -34,7 +34,7 @@ class Door:
             bool: True, if closed.
         """
 
-        return not self.flags or DoorFlag.CLOSED in self.flags
+        return DoorFlag.CLOSED in self.flags
 
     @property
     def is_open(self) -> bool:
