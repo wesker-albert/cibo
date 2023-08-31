@@ -10,7 +10,7 @@ class TestQuitAction(QuitActionFactory):
         assert not self.quit.required_args()
 
     def test_action_quit_process_logged_in(self):
-        self.quit.process(self.client, "quit", [])
+        self.quit.process(self.client, "quit", [], 0)
 
         assert self.client.login_state is ClientLoginState.PRE_LOGIN
 
@@ -30,7 +30,7 @@ class TestQuitAction(QuitActionFactory):
     def test_action_quit_process_not_logged_in(self):
         self.client.login_state = ClientLoginState.PRE_LOGIN
 
-        self.quit.process(self.client, "quit", [])
+        self.quit.process(self.client, "quit", [], 0)
 
         self.output.send_private_message.assert_called_once_with(
             self.client,

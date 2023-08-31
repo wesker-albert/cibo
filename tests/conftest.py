@@ -41,7 +41,7 @@ class BaseFactory:
 
 
 class DatabaseFactory:
-    @fixture
+    @fixture(scope="module")
     def _fixture_database(self):
         database = SqliteDatabase(getenv("DATABASE_PATH"))
         tables = (Player, Item)
@@ -50,25 +50,27 @@ class DatabaseFactory:
             database.create_tables(tables)
 
             players = [
-                Player(
-                    name="frank",
-                    password=Password().hash_("abcd1234"),
-                    current_room_id=1,
-                ),
-                Player(
-                    name="john",
-                    password=Password().hash_("abcd1234"),
-                    current_room_id=1,
-                ),
+                {
+                    "name": "frank",
+                    "password": Password().hash_("abcd1234"),
+                    "current_room_id": 1,
+                },
+                {
+                    "name": "john",
+                    "password": Password().hash_("abcd1234"),
+                    "current_room_id": 1,
+                },
             ]
 
-            for player in players:
-                player.save()
+            items = [
+                {"item_id": 1, "room_id": 1},
+                {"item_id": 1},
+            ]
 
-            items = [Item(item_id=1, room_id=1), Item(item_id=1, player=players[0])]
-
-            for item in items:
-                item.save()
+            # pylint: disable=no-value-for-parameter
+            with database.atomic():
+                Player.insert_many(players).execute()
+                Item.insert_many(items).execute()
 
             yield
 

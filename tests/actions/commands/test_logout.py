@@ -20,7 +20,7 @@ class TestLogoutAction(LogoutActionFactory):
         self.output.send_prompt.assert_called_once_with(self.client)
 
     def test_action_logout_process(self):
-        self.logout.process(self.client, "logout", [])
+        self.logout.process(self.client, "logout", [], 0)
 
         assert self.client.login_state is ClientLoginState.PRE_LOGIN
 
