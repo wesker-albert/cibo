@@ -91,8 +91,8 @@ class Register(Action):
             player_name = args[0]
             password = args[1]
 
-            self.check_for_existing_player(player_name)
             self.validate_player_info(player_name, password)
+            self.check_for_existing_player(player_name)
 
         except ClientIsLoggedIn:
             self.output.send_private_message(client, self.is_logged_in_message)

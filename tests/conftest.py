@@ -1,6 +1,8 @@
 import logging
+from os import getenv
 from unittest.mock import Mock
 
+from peewee import SqliteDatabase
 from pytest import fixture
 
 from cibo.actions.commands.close import Close
@@ -8,6 +10,7 @@ from cibo.actions.commands.exits import Exits
 from cibo.actions.commands.logout import Logout
 from cibo.actions.commands.open import Open
 from cibo.actions.commands.quit import Quit
+from cibo.actions.commands.register import Register
 from cibo.actions.commands.say import Say
 from cibo.actions.connect import Connect
 from cibo.actions.disconnect import Disconnect
@@ -18,6 +21,8 @@ from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
+from cibo.models.data.item import Item
+from cibo.models.data.player import Player
 from cibo.models.door import Door, DoorFlag
 from cibo.models.room import Direction, Room, RoomDescription, RoomExit
 from cibo.output import Output
@@ -31,6 +36,29 @@ class BaseFactory:
         self.telnet = Mock()
         self.output = Mock()
         yield
+
+
+class DatabaseFactory:
+    @fixture
+    def _fixture_database(self):
+        database = SqliteDatabase(getenv("DATABASE_PATH"))
+        tables = (Player, Item)
+
+        with database.bind_ctx(tables):
+            database.create_tables(tables)
+
+            player = Player(
+                name="frank", password=Password().hash_("abc123"), current_room_id=1
+            )
+            player.save()
+
+            Item(item_id=1, room_id=1).save()
+            Item(item_id=1, player=player).save()
+
+            yield
+
+            database.drop_tables(tables)
+            database.close()
 
 
 class ClientFactory:
@@ -252,4 +280,12 @@ class LogoutActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_logout(self, _fixture_action):
         self.logout = Logout(self.telnet, self.world, self.output)
+        yield
+
+
+class RegisterActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
+    @fixture(autouse=True)
+    def fixture_register(self, _fixture_action):
+        self.client.login_state = ClientLoginState.PRE_LOGIN
+        self.register = Register(self.telnet, self.world, self.output)
         yield

@@ -1,8 +1,9 @@
 from cibo.models.data.item import Item
+from tests.conftest import DatabaseFactory
 
 
-class TestDataItem:
-    def test_data_item_get_by_room_id(self):
+class TestDataItem(DatabaseFactory):
+    def test_data_item_get_by_room_id(self, _fixture_database):
         items = Item.get_by_room_id(1)
 
         assert len(items) == 1
