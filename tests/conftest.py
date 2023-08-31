@@ -7,6 +7,7 @@ from pytest import fixture
 
 from cibo.actions.commands.close import Close
 from cibo.actions.commands.exits import Exits
+from cibo.actions.commands.inventory import Inventory
 from cibo.actions.commands.login import Login
 from cibo.actions.commands.logout import Logout
 from cibo.actions.commands.open import Open
@@ -48,13 +49,26 @@ class DatabaseFactory:
         with database.bind_ctx(tables):
             database.create_tables(tables)
 
-            player = Player(
-                name="frank", password=Password().hash_("abcd1234"), current_room_id=1
-            )
-            player.save()
+            players = [
+                Player(
+                    name="frank",
+                    password=Password().hash_("abcd1234"),
+                    current_room_id=1,
+                ),
+                Player(
+                    name="john",
+                    password=Password().hash_("abcd1234"),
+                    current_room_id=1,
+                ),
+            ]
 
-            Item(item_id=1, room_id=1).save()
-            Item(item_id=1, player=player).save()
+            for player in players:
+                player.save()
+
+            items = [Item(item_id=1, room_id=1), Item(item_id=1, player=players[0])]
+
+            for item in items:
+                item.save()
 
             yield
 
@@ -297,4 +311,11 @@ class LoginActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     def fixture_login(self, _fixture_action):
         self.client.login_state = ClientLoginState.PRE_LOGIN
         self.login = Login(self.telnet, self.world, self.output)
+        yield
+
+
+class InventoryActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
+    @fixture(autouse=True)
+    def fixture_inventory(self, _fixture_action):
+        self.inventory = Inventory(self.telnet, self.world, self.output)
         yield
