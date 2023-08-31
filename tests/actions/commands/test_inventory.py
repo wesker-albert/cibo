@@ -1,5 +1,4 @@
 from cibo.client import ClientLoginState
-from cibo.models.data.item import Item
 from cibo.models.data.player import Player
 from tests.conftest import InventoryActionFactory
 
@@ -29,10 +28,7 @@ class TestInventoryAction(InventoryActionFactory):
 
     def test_action_inventory_process(self, _fixture_database):
         self.client.player = Player.get_by_name("frank")
-
-        item = Item.get_by_id(2)
-        item.player = self.client.player
-        item.save()
+        self.give_item_to_player(2, self.client.player)
 
         self.inventory.process(self.client, "inv", [])
 

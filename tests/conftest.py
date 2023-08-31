@@ -6,6 +6,7 @@ from peewee import SqliteDatabase
 from pytest import fixture
 
 from cibo.actions.commands.close import Close
+from cibo.actions.commands.drop import Drop
 from cibo.actions.commands.exits import Exits
 from cibo.actions.commands.inventory import Inventory
 from cibo.actions.commands.login import Login
@@ -41,6 +42,11 @@ class BaseFactory:
 
 
 class DatabaseFactory:
+    def give_item_to_player(self, item_id: int, player: Player) -> None:
+        item = Item.get_by_id(item_id)
+        item.player = player
+        item.save()
+
     @fixture(scope="module")
     def _fixture_database(self):
         database = SqliteDatabase(getenv("DATABASE_PATH"))
@@ -321,4 +327,11 @@ class InventoryActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_inventory(self, _fixture_action):
         self.inventory = Inventory(self.telnet, self.world, self.output)
+        yield
+
+
+class DropActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
+    @fixture(autouse=True)
+    def fixture_drop(self, _fixture_action):
+        self.drop = Drop(self.telnet, self.world, self.output)
         yield
