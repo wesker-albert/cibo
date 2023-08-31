@@ -5,6 +5,7 @@ from pytest import fixture
 
 from cibo.actions.commands.close import Close
 from cibo.actions.commands.exits import Exits
+from cibo.actions.commands.logout import Logout
 from cibo.actions.commands.open import Open
 from cibo.actions.commands.quit import Quit
 from cibo.actions.commands.say import Say
@@ -17,7 +18,6 @@ from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
-from cibo.models.data.player import Player
 from cibo.models.door import Door, DoorFlag
 from cibo.models.room import Direction, Room, RoomDescription, RoomExit
 from cibo.output import Output
@@ -44,24 +44,21 @@ class ClientFactory:
             last_check=2.5,
             login_state=ClientLoginState.PRE_LOGIN,
             registration=None,
-            player=Player(),
+            player=Mock(current_room_id=1),
         )
+        self.client.player.name = "frank"
         yield
 
     @fixture(autouse=True)
-    def fixture_mock_client(self):
-        self.mock_client = Mock()
-        self.mock_client.login_state = ClientLoginState.PRE_LOGIN
-        self.mock_client.player = Player()
-        self.mock_client.prompt = "> "
-        yield
-
-    @fixture(autouse=True)
-    def fixture_mock_client_additional(self):
-        self.mock_client_additional = Mock()
-        self.mock_client_additional.login_state = ClientLoginState.LOGGED_IN
-        self.mock_client_additional.player = Mock(current_room_id=1)
-        self.mock_client_additional.prompt = "> "
+    def fixture_mock_clients(self):
+        self.mock_clients = [
+            Mock(login_state=ClientLoginState.PRE_LOGIN, player=Mock(), prompt="> "),
+            Mock(
+                login_state=ClientLoginState.LOGGED_IN,
+                player=Mock(current_room_id=1),
+                prompt="> ",
+            ),
+        ]
         yield
 
 
@@ -90,61 +87,18 @@ class CommandProcessorFactory(BaseFactory):
         yield
 
 
-class OutputFactory(BaseFactory):
+class OutputFactory(BaseFactory, ClientFactory):
     @fixture(autouse=True)
     def fixture_output(self):
         self.output = Output(self.telnet)
         yield
 
 
-class ConnectActionFactory(BaseFactory):
+class PasswordFactory:
     @fixture(autouse=True)
-    def fixture_connect(self):
-        self.connect = Connect(self.telnet, Mock(), self.output)
-        yield
-
-
-class DisconnectActionFactory(BaseFactory):
-    @fixture(autouse=True)
-    def fixture_disconnect(self):
-        self.disconnect = Disconnect(self.telnet, Mock(), self.output)
-        yield
-
-
-class ErrorActionFactory(BaseFactory):
-    @fixture(autouse=True)
-    def fixture_error(self):
-        self.error = Error(self.telnet, Mock(), self.output)
-        yield
-
-
-class PromptActionFactory(BaseFactory):
-    @fixture(autouse=True)
-    def fixture_prompt(self):
-        self.prompt = Prompt(self.telnet, Mock(), self.output)
-        yield
-
-
-class ConnectEventFactory(BaseFactory):
-    @fixture(autouse=True)
-    def fixture_connect_event(self):
-        self.connect = ConnectEvent(self.telnet, Mock(), self.output)
-        yield
-
-
-class DisconnectEventFactory(BaseFactory):
-    @fixture(autouse=True)
-    def fixture_disconnect_event(self):
-        self.disconnect = DisconnectEvent(self.telnet, Mock(), self.output)
-        yield
-
-
-class InputEventFactory(CommandProcessorFactory):
-    @fixture(autouse=True)
-    def fixture_input_event(self):
-        self.input = InputEvent(
-            self.telnet, Mock(), self.output, self.command_processor
-        )
+    def fixture_password(self):
+        self.password = Password()
+        self.hashed_password = self.password.hash_("abc123")
         yield
 
 
@@ -198,24 +152,63 @@ class RoomFactory:
         yield
 
 
-class PasswordFactory:
+class ConnectEventFactory(BaseFactory):
     @fixture(autouse=True)
-    def fixture_password(self):
-        self.password = Password()
-        self.hashed_password = self.password.hash_("abc123")
+    def fixture_connect_event(self):
+        self.connect = ConnectEvent(self.telnet, Mock(), self.output)
+        yield
+
+
+class DisconnectEventFactory(BaseFactory, ClientFactory):
+    @fixture(autouse=True)
+    def fixture_disconnect_event(self):
+        self.client.login_state = ClientLoginState.LOGGED_IN
+        self.disconnect = DisconnectEvent(self.telnet, Mock(), self.output)
+        yield
+
+
+class InputEventFactory(CommandProcessorFactory, ClientFactory):
+    @fixture(autouse=True)
+    def fixture_input_event(self):
+        self.input = InputEvent(
+            self.telnet, Mock(), self.output, self.command_processor
+        )
         yield
 
 
 class ActionFactory(ClientFactory, WorldFactory):
     @fixture
     def _fixture_action(self):
-        self.world = World()
-
         self.client.login_state = ClientLoginState.LOGGED_IN
-        self.client.player = Mock()
-        self.client.player.current_room_id = 1
-        self.client.player.name = "frank"
+        self.world = World()
+        yield
 
+
+class ConnectActionFactory(BaseFactory, ActionFactory):
+    @fixture(autouse=True)
+    def fixture_connect(self, _fixture_action):
+        self.connect = Connect(self.telnet, Mock(), self.output)
+        yield
+
+
+class DisconnectActionFactory(BaseFactory, ActionFactory):
+    @fixture(autouse=True)
+    def fixture_disconnect(self, _fixture_action):
+        self.disconnect = Disconnect(self.telnet, Mock(), self.output)
+        yield
+
+
+class ErrorActionFactory(BaseFactory, ActionFactory):
+    @fixture(autouse=True)
+    def fixture_error(self, _fixture_action):
+        self.error = Error(self.telnet, Mock(), self.output)
+        yield
+
+
+class PromptActionFactory(BaseFactory, ActionFactory):
+    @fixture(autouse=True)
+    def fixture_prompt(self, _fixture_action):
+        self.prompt = Prompt(self.telnet, Mock(), self.output)
         yield
 
 
@@ -251,4 +244,11 @@ class QuitActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_quit(self, _fixture_action):
         self.quit = Quit(self.telnet, self.world, self.output)
+        yield
+
+
+class LogoutActionFactory(BaseFactory, ActionFactory):
+    @fixture(autouse=True)
+    def fixture_logout(self, _fixture_action):
+        self.logout = Logout(self.telnet, self.world, self.output)
         yield

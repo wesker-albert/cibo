@@ -1,9 +1,9 @@
 from unittest.mock import ANY
 
-from tests.conftest import ClientFactory, ConnectActionFactory
+from tests.conftest import ConnectActionFactory
 
 
-class TestConnectAction(ClientFactory, ConnectActionFactory):
+class TestConnectAction(ConnectActionFactory):
     def test_action_connect_aliases(self):
         assert not self.connect.aliases()
 
@@ -11,8 +11,8 @@ class TestConnectAction(ClientFactory, ConnectActionFactory):
         assert not self.connect.required_args()
 
     def test_action_connect_process(self):
-        self.connect.process(self.mock_client, None, [])
+        self.connect.process(self.client, None, [])
 
         self.output.send_private_message.assert_called_once_with(
-            self.mock_client, ANY, justify="center"
+            self.client, ANY, justify="center"
         )

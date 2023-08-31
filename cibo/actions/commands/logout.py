@@ -26,7 +26,7 @@ class Logout(Action):
             "You slowly fade away into obscurity, like you always feared you would...",
             "A black van pulls up, and 2 large men in labcoats abduct "
             f"[cyan]{player_name}[/]. The van speeds away. You wonder if "
-            "you'll ever see your them again...",
+            "you'll ever see them again...",
         )
 
     def process(self, client: Client, command: str, args: List[str]) -> None:

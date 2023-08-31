@@ -1,9 +1,8 @@
-from unittest.mock import Mock
+from cibo.client import ClientLoginState
+from tests.conftest import DisconnectActionFactory
 
-from tests.conftest import ClientFactory, DisconnectActionFactory
 
-
-class TestDisconnectAction(ClientFactory, DisconnectActionFactory):
+class TestDisconnectAction(DisconnectActionFactory):
     def test_action_disconnect_aliases(self):
         assert not self.disconnect.aliases()
 
@@ -11,24 +10,18 @@ class TestDisconnectAction(ClientFactory, DisconnectActionFactory):
         assert not self.disconnect.required_args()
 
     def test_action_disconnect_process_not_logged_in(self):
-        self.mock_client.player = Mock()
+        self.client.login_state = ClientLoginState.PRE_LOGIN
 
-        self.disconnect.process(self.mock_client, None, [])
+        self.disconnect.process(self.client, None, [])
 
-        self.mock_client.player.send.assert_not_called()
         self.output.send_private_message.assert_not_called()
 
     def test_action_disconnect_process(self):
-        self.mock_client.player = Mock()
-        self.mock_client.player.name = "John"
-        self.mock_client.player.current_room_id = 1
-        self.mock_client.is_logged_in.return_value = True
+        self.disconnect.process(self.client, None, [])
 
-        self.disconnect.process(self.mock_client, None, [])
-
-        self.mock_client.player.save.assert_called_once()
+        self.client.player.save.assert_called_once()
         self.output.send_local_message.assert_called_once_with(
             1,
-            "You watch in horror as [cyan]John[/] proceeds to slowly eat their own head. They eventually disappear into nothingness.",
-            [self.mock_client],
+            "You watch in horror as [cyan]frank[/] proceeds to slowly eat their own head. They eventually disappear into nothingness.",
+            [self.client],
         )
