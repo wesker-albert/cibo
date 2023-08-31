@@ -10,10 +10,10 @@ from tests.conftest import CommandProcessorFactory
 class TestCommandProcessor(CommandProcessorFactory):
     def test_command_process(self, caplog):
         with caplog.at_level(logging.INFO):
-            self.command_processor.process(Mock(), "login john ClevaGuhl!")
+            self.command_processor.process(Mock(), "login frank ClevaGuhl!")
 
             assert caplog.records[0].args == {
-                "args": ["john", "ClevaGuhl!"],
+                "args": ["frank", "ClevaGuhl!"],
                 "command": "login",
             }
 
@@ -23,4 +23,4 @@ class TestCommandProcessor(CommandProcessorFactory):
 
     def test_command_process_missing_args(self):
         with raises(CommandMissingArguments):
-            self.command_processor.process(Mock(), "login john")
+            self.command_processor.process(Mock(), "login frank")

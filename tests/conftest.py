@@ -51,13 +51,14 @@ class ClientFactory:
 
     @fixture(autouse=True)
     def fixture_mock_clients(self):
+        default_client_params = {
+            "login_state": ClientLoginState.LOGGED_IN,
+            "player": Mock(current_room_id=1),
+            "prompt": "> ",
+        }
         self.mock_clients = [
-            Mock(login_state=ClientLoginState.PRE_LOGIN, player=Mock(), prompt="> "),
-            Mock(
-                login_state=ClientLoginState.LOGGED_IN,
-                player=Mock(current_room_id=1),
-                prompt="> ",
-            ),
+            Mock(**default_client_params),
+            Mock(**default_client_params),
         ]
         yield
 

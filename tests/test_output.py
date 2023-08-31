@@ -6,12 +6,12 @@ from tests.conftest import OutputFactory
 
 
 class TestOutput(OutputFactory):
-    def test_output_prompt(self):
+    def test_output_send_prompt(self):
         self.output.send_prompt(self.mock_clients[0])
 
         self.mock_clients[0].send_message.assert_called_once_with("\r\n> ")
 
-    def test_output_private(self):
+    def test_output_send_private_mesage(self):
         self.output.send_private_message(self.mock_clients[0], "You are tired.")
 
         calls = [
@@ -23,7 +23,7 @@ class TestOutput(OutputFactory):
 
         self.mock_clients[0].send_message.assert_has_calls(calls)
 
-    def test_output_private_no_prompt(self):
+    def test_output_send_private_message_no_prompt(self):
         self.output.send_private_message(
             self.mock_clients[0], "You are tired.", prompt=False
         )
@@ -32,55 +32,48 @@ class TestOutput(OutputFactory):
             "\n  You are tired.                                                            \n"
         )
 
-    def test_output_local(self):
-        self.mock_clients[0].login_state = ClientLoginState.LOGGED_IN
-        self.mock_clients[0].player = Mock(current_room_id=1)
-
+    def test_output_send_local_message(self):
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
-        self.output.send_local_message(1, "John leaves.", [])
+        self.output.send_local_message(1, "frank leaves.", [])
 
         calls = [
             call(
-                "\r  John leaves.                                                              \n"
+                "\r  frank leaves.                                                             \n"
             ),
             call("\r\n> "),
         ]
 
         self.mock_clients[0].send_message.assert_has_calls(calls)
 
-    def test_output_local_no_logged_in_clients(self):
+    def test_output_send_local_message_no_logged_in_clients(self):
+        self.mock_clients[0].login_state = ClientLoginState.PRE_LOGIN
+        self.mock_clients[0].player = Mock()
+
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
-        self.output.send_local_message(1, "John leaves.", [])
+        self.output.send_local_message(1, "frank leaves.", [])
 
         self.mock_clients[0].send_message.assert_not_called()
 
-    def test_output_local_no_client_in_room(self):
-        self.mock_clients[0].login_state = ClientLoginState.LOGGED_IN
+    def test_output_send_local_message_no_client_in_room(self):
         self.mock_clients[0].player = Mock(current_room_id=2)
 
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
-        self.output.send_local_message(1, "John leaves.", [])
+        self.output.send_local_message(1, "frank leaves.", [])
 
         self.mock_clients[0].send_message.assert_not_called()
 
-    def test_output_local_client_ignored(self):
-        self.mock_clients[0].login_state = ClientLoginState.LOGGED_IN
-        self.mock_clients[0].player = Mock(current_room_id=1)
-
+    def test_output_send_local_message_client_ignored(self):
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
-        self.output.send_local_message(1, "John leaves.", [self.mock_clients[0]])
+        self.output.send_local_message(1, "frank leaves.", [self.mock_clients[0]])
 
         self.mock_clients[0].send_message.assert_not_called()
 
-    def test_output_local_announcement(self):
-        announcement = Announcement("You died.", "John died.")
-
-        self.mock_clients[0].login_state = ClientLoginState.LOGGED_IN
-        self.mock_clients[0].player = Mock(current_room_id=1)
+    def test_output_send_local_announcement(self):
+        announcement = Announcement("You died.", "frank died.")
 
         self.telnet.get_connected_clients.return_value = [
             self.mock_clients[0],
@@ -100,20 +93,17 @@ class TestOutput(OutputFactory):
 
         additional_client_calls = [
             call(
-                "\r  John died.                                                                \n"
+                "\r  frank died.                                                               \n"
             ),
             call("\r\n> "),
         ]
 
         self.mock_clients[1].send_message.assert_has_calls(additional_client_calls)
 
-    def test_output_local_announcement_adjoining_room(self):
+    def test_output_send_local_announcement_adjoining_room(self):
         announcement = Announcement(
-            "You died.", "John died.", "Your hear a horrifying scream."
+            "You died.", "frank died.", "Your hear a horrifying scream."
         )
-
-        self.mock_clients[0].login_state = ClientLoginState.LOGGED_IN
-        self.mock_clients[0].player = Mock(current_room_id=1)
 
         self.mock_clients[1].player = Mock(current_room_id=2)
 
