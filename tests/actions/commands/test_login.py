@@ -69,3 +69,7 @@ class TestLoginAction(LoginActionFactory):
             self.client,
             1,
         )
+
+        panel = self.get_private_message_panel()
+
+        assert panel.title == "[blue]A Room Marked #1[/]"

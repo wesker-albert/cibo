@@ -4,6 +4,7 @@ from tests.conftest import MoveActionFactory
 
 
 class TestMoveAction(MoveActionFactory):
+    # pylint: disable=duplicate-code
     def test_action_move_aliases(self):
         assert self.move.aliases() == [
             "d",
@@ -67,3 +68,7 @@ class TestMoveAction(MoveActionFactory):
             1,
             prompt=False,
         )
+
+        panel = self.get_private_message_panel()
+
+        assert panel.title == "[blue]A Room Marked #5[/]"

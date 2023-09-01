@@ -13,6 +13,7 @@ from cibo.actions.commands.get import Get
 from cibo.actions.commands.inventory import Inventory
 from cibo.actions.commands.login import Login
 from cibo.actions.commands.logout import Logout
+from cibo.actions.commands.look import Look
 from cibo.actions.commands.move import Move
 from cibo.actions.commands.open import Open
 from cibo.actions.commands.quit import Quit
@@ -234,6 +235,9 @@ class InputEventFactory(CommandProcessorFactory, ClientFactory):
 
 
 class ActionFactory(ClientFactory, WorldFactory):
+    def get_private_message_panel(self):
+        return self.output.send_private_message.call_args.args[1]
+
     @fixture
     def _fixture_action(self):
         self.client.login_state = ClientLoginState.LOGGED_IN
@@ -288,6 +292,13 @@ class MoveActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     def fixture_move(self, _fixture_action):
         self.telnet.get_connected_clients.return_value = []
         self.move = Move(self.telnet, self.world, self.output)
+        yield
+
+
+class LookActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
+    @fixture(autouse=True)
+    def fixture_look(self, _fixture_action):
+        self.look = Look(self.telnet, self.world, self.output)
         yield
 
 
