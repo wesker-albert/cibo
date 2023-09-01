@@ -13,6 +13,7 @@ from cibo.actions.commands.get import Get
 from cibo.actions.commands.inventory import Inventory
 from cibo.actions.commands.login import Login
 from cibo.actions.commands.logout import Logout
+from cibo.actions.commands.move import Move
 from cibo.actions.commands.open import Open
 from cibo.actions.commands.quit import Quit
 from cibo.actions.commands.register import Register
@@ -279,6 +280,14 @@ class OpenActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_open(self, _fixture_action):
         self.open = Open(self.telnet, self.world, self.output)
+        yield
+
+
+class MoveActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
+    @fixture(autouse=True)
+    def fixture_move(self, _fixture_action):
+        self.telnet.get_connected_clients.return_value = []
+        self.move = Move(self.telnet, self.world, self.output)
         yield
 
 

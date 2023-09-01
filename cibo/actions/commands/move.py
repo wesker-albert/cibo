@@ -77,10 +77,9 @@ class Move(Action):
             self.output.send_private_message(client, self.exit_not_found_message)
 
         except (DoorIsClosed, DoorIsLocked):
-            if door:
-                self.output.send_private_message(
-                    client, self.door_is_closed_message(door.name)
-                )
+            self.output.send_private_message(
+                client, self.door_is_closed_message(door.name)
+            )
 
         except (DoorNotFound, DoorIsOpen):
             # update the player's current room to the one they're navigating to
