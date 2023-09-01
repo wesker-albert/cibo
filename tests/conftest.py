@@ -8,6 +8,7 @@ from pytest import fixture
 from cibo.actions.commands.close import Close
 from cibo.actions.commands.drop import Drop
 from cibo.actions.commands.exits import Exits
+from cibo.actions.commands.finalize import Finalize
 from cibo.actions.commands.get import Get
 from cibo.actions.commands.inventory import Inventory
 from cibo.actions.commands.login import Login
@@ -314,6 +315,15 @@ class RegisterActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     def fixture_register(self, _fixture_action):
         self.client.login_state = ClientLoginState.PRE_LOGIN
         self.register = Register(self.telnet, self.world, self.output)
+        yield
+
+
+class FinalizeActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
+    @fixture(autouse=True)
+    def fixture_finalize(self, _fixture_action):
+        self.client.login_state = ClientLoginState.PRE_LOGIN
+        self.client.registration = Player()
+        self.finalize = Finalize(self.telnet, self.world, self.output)
         yield
 
 
