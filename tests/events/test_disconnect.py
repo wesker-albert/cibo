@@ -1,18 +1,15 @@
-from unittest.mock import Mock
-
-from tests.conftest import ClientFactory, DisconnectEventFactory
+from tests.conftest import DisconnectEventFactory
 
 
-class TestDisconnectEvent(ClientFactory, DisconnectEventFactory):
+class TestDisconnectEvent(DisconnectEventFactory):
     def test_event_disconnect_process(self):
-        self.telnet.get_disconnected_clients.return_value = [self.mock_client]
-
-        self.mock_client.player = Mock()
-        self.mock_client.player.name = "John"
-        self.mock_client.player.current_room_id = 1
-        self.mock_client.is_logged_in.return_value = True
+        self.telnet.get_disconnected_clients.return_value = [self.client]
 
         self.disconnect.process()
 
-        self.mock_client.player.save.assert_called_once()
-        self.output.send_local_message.assert_called_once()
+        self.client.player.save.assert_called_once()
+        self.output.send_local_message.assert_called_once_with(
+            1,
+            "You watch in horror as [cyan]frank[/] proceeds to slowly eat their own head. They eventually disappear into nothingness.",
+            [self.client],
+        )

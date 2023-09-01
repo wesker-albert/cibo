@@ -1,18 +1,15 @@
 from pytest import raises
 
 from cibo.exception import DoorNotFound
-from cibo.models.door import Door, DoorFlag
-from tests.conftest import WorldFactory
+from tests.conftest import DoorFactory, WorldFactory
 
 
-class TestDoors(WorldFactory):
+class TestDoors(WorldFactory, DoorFactory):
     def test_doors_get_by_room_ids(self):
-        door = self.doors.get_by_room_ids(1, 7)
+        door = self.world.doors.get_by_room_ids(1, 2)
 
-        assert door == Door(
-            name="a small trapdoor", room_ids=[1, 7], flags=[DoorFlag.CLOSED]
-        )
+        assert door == self.door_closed
 
     def test_doors_get_by_room_ids_not_found(self):
         with raises(DoorNotFound):
-            _door = self.doors.get_by_room_ids(10, 14)
+            _door = self.world.doors.get_by_room_ids(10, 14)

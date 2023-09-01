@@ -18,5 +18,5 @@ class EveryMinute(Action):
     def process(
         self, client: Client, _command: Optional[str], _args: List[str]
     ) -> None:
-        if client.is_logged_in and client.player:
+        if client.is_logged_in:
             client.player.save()

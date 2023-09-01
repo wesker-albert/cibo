@@ -95,8 +95,9 @@ class Client:
         """Log the client out of their current Player session."""
 
         self.login_state = ClientLoginState.PRE_LOGIN
-        if self.player:
-            self.player.save()
+
+        self.player.save()
+
         self.player = Player()
 
     def log_in(self, player: Player) -> None:

@@ -1,7 +1,8 @@
 """Finalizes the creation of a new player."""
 
-from sqlite3 import IntegrityError
 from typing import List
+
+from peewee import IntegrityError
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
@@ -31,20 +32,20 @@ class Finalize(Action):
 
         return "You'll need to [green]register[/] before you can [green]finalize[/]."
 
-    def successfully_registered_message(self, player_name: str) -> str:
-        """Finalization was successful."""
-
-        return (
-            f"[cyan]{player_name}[/] has been created. You can now [green]login[/] "
-            "with this player."
-        )
-
     def player_already_exists_message(self, player_name: str) -> str:
         """Player name is already taken."""
 
         return (
             f"Sorry, turns out the name [cyan]{player_name}[/] is already taken. "
             "Please [green]register[/] again with a different name."
+        )
+
+    def successfully_registered_message(self, player_name: str) -> str:
+        """Finalization was successful."""
+
+        return (
+            f"[cyan]{player_name}[/] has been created. You can now [green]login[/] "
+            "with this player."
         )
 
     def save_player_registration(self, client: Client) -> None:

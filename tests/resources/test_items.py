@@ -7,7 +7,7 @@ from tests.conftest import WorldFactory
 
 class TestItems(WorldFactory):
     def test_items_get_by_id(self):
-        item = self.items.get_by_id(1)
+        item = self.world.items.get_by_id(1)
 
         assert item == Item(
             id_=1,
@@ -20,4 +20,4 @@ class TestItems(WorldFactory):
 
     def test_items_get_by_id_not_found(self):
         with raises(ItemNotFound):
-            _item = self.items.get_by_id(939883539365)
+            _item = self.world.items.get_by_id(939883539365)

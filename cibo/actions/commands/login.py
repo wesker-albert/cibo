@@ -66,7 +66,7 @@ class Login(Action):
         )
 
     def check_for_player_session(self, name: str) -> None:
-        """Checks to see if the Player is already logged into and active session, by
+        """Checks to see if the Player is already logged into an active session, by
         a different client.
 
         Args:
@@ -77,7 +77,7 @@ class Login(Action):
         """
 
         for client in self._telnet.get_connected_clients():
-            if client.is_logged_in and client.player and client.player.name == name:
+            if client.is_logged_in and client.player.name == name:
                 raise PlayerSessionActive
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:

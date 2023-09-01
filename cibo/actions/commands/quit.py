@@ -29,7 +29,9 @@ class Quit(Action):
             "then proceed to drop their microphone, and walk off the stage.",
         )
 
-    def process(self, client: Client, _command: str, _args: List[str]) -> None:
+    def process(
+        self, client: Client, _command: str, _args: List[str], sleep_time: int = 1
+    ) -> None:
         try:
             if client.is_logged_in:
                 raise ClientIsLoggedIn
@@ -49,5 +51,5 @@ class Quit(Action):
                 client, self.quitting_message(None).self_message, prompt=False
             )
 
-            sleep(1)
+            sleep(sleep_time)
             client.disconnect()

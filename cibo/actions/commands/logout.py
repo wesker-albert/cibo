@@ -26,10 +26,12 @@ class Logout(Action):
             "You slowly fade away into obscurity, like you always feared you would...",
             "A black van pulls up, and 2 large men in labcoats abduct "
             f"[cyan]{player_name}[/]. The van speeds away. You wonder if "
-            "you'll ever see your them again...",
+            "you'll ever see them again...",
         )
 
-    def process(self, client: Client, command: str, args: List[str]) -> None:
+    def process(
+        self, client: Client, command: str, args: List[str], sleep_time: int = 1
+    ) -> None:
         try:
             if not client.is_logged_in:
                 raise ClientNotLoggedIn
@@ -47,7 +49,7 @@ class Logout(Action):
                 self.logging_out_message(player_name), client, player_room, prompt=False
             )
 
-            sleep(1)
+            sleep(sleep_time)
 
             # process the connection Action, so the client knows they can now register
             # or login again

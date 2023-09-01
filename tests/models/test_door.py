@@ -1,7 +1,7 @@
 from pytest import raises
 
 from cibo.exception import DoorIsClosed, DoorIsLocked, DoorIsOpen
-from cibo.models.door import DoorFlag
+from cibo.models.door import Door, DoorFlag
 from tests.conftest import DoorFactory
 
 
@@ -38,3 +38,6 @@ class TestDoor(DoorFactory):
 
         with raises(DoorIsLocked):
             self.door_locked.raise_status()
+
+        door = Door(name="a door missing flags", room_ids=[1, 2], flags=[])
+        door.raise_status()
