@@ -1,5 +1,3 @@
-from unittest.mock import ANY
-
 from tests.conftest import ConnectActionFactory
 
 
@@ -13,6 +11,9 @@ class TestConnectAction(ConnectActionFactory):
     def test_action_connect_process(self):
         self.connect.process(self.client, None, [])
 
-        self.output.send_private_message.assert_called_once_with(
-            self.client, ANY, justify="center"
+        panel = self.get_private_message_panel()
+
+        assert (
+            panel.renderable
+            == "Welcome to the server!\n\nEnter [green]register name password[/] to create a new player.\nEnter [green]login name password[/] to log in to an existing player."
         )

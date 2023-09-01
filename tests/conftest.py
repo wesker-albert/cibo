@@ -23,6 +23,8 @@ from cibo.actions.connect import Connect
 from cibo.actions.disconnect import Disconnect
 from cibo.actions.error import Error
 from cibo.actions.prompt import Prompt
+from cibo.actions.scheduled.every_minute import EveryMinute
+from cibo.actions.scheduled.every_second import EverySecond
 from cibo.client import Client, ClientLoginState
 from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
@@ -248,7 +250,7 @@ class ActionFactory(ClientFactory, WorldFactory):
 class ConnectActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_connect(self, _fixture_action):
-        self.connect = Connect(self.telnet, Mock(), self.output)
+        self.connect = Connect(self.telnet, self.world, self.output)
         yield
 
 
@@ -373,4 +375,18 @@ class GetActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_get(self, _fixture_action):
         self.get = Get(self.telnet, self.world, self.output)
+        yield
+
+
+class EveryMinuteActionFactory(BaseFactory, ActionFactory):
+    @fixture(autouse=True)
+    def fixture_every_minute(self, _fixture_action):
+        self.every_minute = EveryMinute(self.telnet, Mock(), self.output)
+        yield
+
+
+class EverySecondActionFactory(BaseFactory, ActionFactory):
+    @fixture(autouse=True)
+    def fixture_every_second(self, _fixture_action):
+        self.every_second = EverySecond(self.telnet, Mock(), self.output)
         yield
