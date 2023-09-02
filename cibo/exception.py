@@ -141,6 +141,12 @@ class PlayerSessionActive(Exception):
     pass
 
 
+class RegionNotFound(Exception):
+    """Raised by an Action if the given Region ID doesn't exist."""
+
+    pass
+
+
 class RoomItemNotFound(Exception):
     """Raised if no Item with the given name is found in the current room."""
 
@@ -149,5 +155,11 @@ class RoomItemNotFound(Exception):
 
 class RoomNotFound(Exception):
     """Raised by an Action if the player isn't currently in a room."""
+
+    pass
+
+
+class SectorNotFound(Exception):
+    """Raised by an Action if the given Sector ID doesn't exist."""
 
     pass

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import List
 
 from cibo.models.flag import RoomFlag
+from cibo.models.region import Region
 
 
 @dataclass
@@ -13,5 +14,5 @@ class Sector:
     id_: int
     name: str
     description: str
-    room_ids: List[int]
+    region: Region
     flags: List[RoomFlag]

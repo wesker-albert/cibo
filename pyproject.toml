@@ -79,8 +79,6 @@ warn_unused_ignores = true
 load-plugins = ["pylint_per_file_ignores"]
 ignore = [
     "*/.git/*",
-    "*/.serverless/*",
-    "*/node_modules/*",
     "pyproject.toml"
 ]
 

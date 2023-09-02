@@ -34,7 +34,10 @@ from cibo.models.data.item import Item
 from cibo.models.data.player import Player
 from cibo.models.direction import Direction
 from cibo.models.door import Door, DoorFlag
+from cibo.models.flag import RoomFlag
+from cibo.models.region import Region
 from cibo.models.room import Room, RoomDescription, RoomExit
+from cibo.models.sector import Sector
 from cibo.output import Output
 from cibo.password import Password
 from cibo.resources.world import World
@@ -190,6 +193,20 @@ class DoorFactory:
 class RoomFactory:
     @fixture(autouse=True)
     def fixture_room(self):
+        region = Region(
+            id_=1,
+            name="The Simulation",
+            description="It's powered by people, but not in a good way.",
+            flags=[],
+        )
+        sector = Sector(
+            id_=1,
+            name="The Backrooms",
+            description="A handful of rooms that make you feel uneasy.",
+            region=region,
+            flags=[RoomFlag.INSIDE],
+        )
+
         self.room = Room(
             id_=1,
             name="A Room Marked #1",
@@ -206,6 +223,7 @@ class RoomFactory:
                 RoomExit(direction=Direction.SOUTH, id_=4, description=None),
                 RoomExit(direction=Direction.WEST, id_=5, description=None),
             ],
+            sector=sector,
             flags=[],
         )
         yield

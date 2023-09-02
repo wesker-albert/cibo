@@ -8,6 +8,7 @@ from typing import List, Optional
 from cibo.exception import ExitNotFound
 from cibo.models.direction import Direction
 from cibo.models.flag import RoomFlag
+from cibo.models.sector import Sector
 
 
 @dataclass
@@ -38,6 +39,7 @@ class Room:
     name: str
     description: RoomDescription
     exits: List[RoomExit]
+    sector: Sector
     flags: List[RoomFlag]
 
     def get_exits(self) -> List[str]:

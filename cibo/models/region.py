@@ -13,5 +13,4 @@ class Region:
     id_: int
     name: str
     description: str
-    sector_ids: List[int]
     flags: List[RoomFlag]
