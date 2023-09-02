@@ -10,13 +10,6 @@ sed -i "s/plugins=(git)/plugins=(git zsh-autosuggestions zsh-shift-select zsh-sy
 # redirect the creation of __pycache__ dirs to tmp
 echo -e "export PYTHONPYCACHEPREFIX=/tmp" >> ~/.zshrc
 
-# install node dependencies
-npm install
-# move the node_modules dir up one level
-mv /home/vscode/cibo/node_modules /home/vscode/
-# add modules to PATH
-echo -e "export PATH=/home/vscode/node_modules/.bin:$PATH" >> ~/.zshrc
-
 # disable poetry venv creation
 poetry config virtualenvs.create false
 # install python dependencies
