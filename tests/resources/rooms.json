@@ -23,7 +23,8 @@
                     "direction": "w",
                     "id": 5
                 }
-            ]
+            ],
+            "flags": []
         },
         {
             "id": 2,
@@ -36,7 +37,8 @@
                     "direction": "s",
                     "id": 1
                 }
-            ]
+            ],
+            "flags": []
         },
         {
             "id": 3,
@@ -49,7 +51,8 @@
                     "direction": "w",
                     "id": 1
                 }
-            ]
+            ],
+            "flags": []
         },
         {
             "id": 4,
@@ -62,7 +65,8 @@
                     "direction": "n",
                     "id": 1
                 }
-            ]
+            ],
+            "flags": []
         },
         {
             "id": 5,
@@ -75,7 +79,8 @@
                     "direction": "e",
                     "id": 1
                 }
-            ]
+            ],
+            "flags": []
         }
     ]
 }

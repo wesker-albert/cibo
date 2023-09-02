@@ -17,9 +17,6 @@ class RoomDescription:
     normal: str
     extra: Optional[str]
     night: Optional[str]
-    under: Optional[str]
-    behind: Optional[str]
-    above: Optional[str]
     smell: Optional[str]
     listen: Optional[str]
 
