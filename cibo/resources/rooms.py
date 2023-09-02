@@ -7,7 +7,9 @@ This is a collection of all the Rooms that exist in the world.
 from typing import List
 
 from cibo.exception import RoomNotFound
-from cibo.models.room import Direction, Room, RoomDescription, RoomExit
+from cibo.models.direction import Direction
+from cibo.models.flag import RoomFlag
+from cibo.models.room import Room, RoomDescription, RoomExit
 from cibo.resources.__resource__ import Resource
 
 
@@ -50,6 +52,7 @@ class Rooms(Resource):
                 )
                 for exit_ in room["exits"]
             ],
+            flags=[RoomFlag(flag) for flag in room["flags"]],
         )
 
     def get_by_id(self, id_: int) -> Room:

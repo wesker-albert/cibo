@@ -32,8 +32,9 @@ from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
 from cibo.models.data.item import Item
 from cibo.models.data.player import Player
+from cibo.models.direction import Direction
 from cibo.models.door import Door, DoorFlag
-from cibo.models.room import Direction, Room, RoomDescription, RoomExit
+from cibo.models.room import Room, RoomDescription, RoomExit
 from cibo.output import Output
 from cibo.password import Password
 from cibo.resources.world import World
@@ -208,6 +209,7 @@ class RoomFactory:
                 RoomExit(direction=Direction.SOUTH, id_=4, description=None),
                 RoomExit(direction=Direction.WEST, id_=5, description=None),
             ],
+            flags=[],
         )
         yield
 
