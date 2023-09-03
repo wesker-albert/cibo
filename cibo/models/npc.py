@@ -3,21 +3,20 @@ the world. Some Npcs can be interacted with, in varying ways.
 """
 
 from dataclasses import dataclass
-from typing import List
-from uuid import UUID
 
 
-@dataclass  # pytest: no cover
-class Npc:  # pytest: no cover
+@dataclass
+class NpcDescription:
+    """Descriptions of the Npc depending on context."""
+
+    room: str
+    look: str
+
+
+@dataclass
+class Npc:
     """Represents a non-player character."""
 
-    uuid: UUID
+    id_: int
     name: str
-    prefix: str
-    description: str
-    look: str
-    allowed_rooms: List[int]
-    start_room: int
-    wander_freq: int
-    phrases: List[str]
-    speech_freq: int
+    description: NpcDescription
