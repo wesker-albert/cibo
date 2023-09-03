@@ -1,4 +1,4 @@
-"""Flags are used to ascribe various qualities or behaviors to rooms, intems, and
+"""Flags are used to ascribe various qualities or behaviors to rooms, items, and
 entities in the World.
 """
 

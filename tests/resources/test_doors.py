@@ -1,10 +1,10 @@
 from pytest import raises
 
 from cibo.exception import DoorNotFound
-from tests.conftest import DoorFactory, WorldFactory
+from tests.conftest import DoorFactory
 
 
-class TestDoors(WorldFactory, DoorFactory):
+class TestDoors(DoorFactory):
     def test_doors_get_by_room_ids(self):
         door = self.world.doors.get_by_room_ids(1, 2)
 

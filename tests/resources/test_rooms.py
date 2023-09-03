@@ -1,10 +1,10 @@
 from pytest import raises
 
 from cibo.exception import RoomNotFound
-from tests.conftest import RoomFactory, WorldFactory
+from tests.conftest import RoomFactory
 
 
-class TestRooms(WorldFactory, RoomFactory):
+class TestRooms(RoomFactory):
     def test_rooms_get_by_id(self):
         fetched_room = self.world.rooms.get_by_id(1)
 
