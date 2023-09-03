@@ -12,4 +12,4 @@ class TestRegions(RegionFactory):
 
     def test_regions_get_by_id_not_found(self):
         with raises(RegionNotFound):
-            _room = self.world.regions.get_by_id(4721)
+            _region = self.world.regions.get_by_id(4721)

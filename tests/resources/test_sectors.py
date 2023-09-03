@@ -12,4 +12,4 @@ class TestSectors(SectorFactory):
 
     def test_sectors_get_by_id_not_found(self):
         with raises(SectorNotFound):
-            _room = self.world.sectors.get_by_id(98736)
+            _sector = self.world.sectors.get_by_id(98736)
