@@ -11,6 +11,7 @@ from typing import List, Union
 
 from cibo.models.door import Door
 from cibo.models.item import Item
+from cibo.models.npc import Npc
 from cibo.models.region import Region
 from cibo.models.room import Room
 from cibo.models.sector import Sector
@@ -47,5 +48,5 @@ class Resource(ABC):
     @abstractmethod
     def _create_resource_from_dict(
         self, resource: dict
-    ) -> Union[Item, Room, Door, Sector, Region]:  # pytest: no cover
+    ) -> Union[Item, Room, Door, Sector, Region, Npc]:  # pytest: no cover
         pass
