@@ -3,39 +3,12 @@ occupy as well as navigate through.
 """
 
 from dataclasses import dataclass
-from enum import Enum
 from typing import List, Optional
 
 from cibo.exception import ExitNotFound
-
-
-class Direction(str, Enum):
-    """Available directions of travel between Rooms."""
-
-    NORTH = "n"
-    SOUTH = "s"
-    EAST = "e"
-    WEST = "w"
-    UP = "u"
-    DOWN = "d"
-
-
-@dataclass
-class Sector:
-    """A subset of Rooms with certain shared behaviors."""
-
-    id_: int
-    name: str
-    # flags: List[Flags]
-
-
-@dataclass
-class Region:
-    """A large group of Rooms."""
-
-    id_: int
-    name: str
-    # flags: List[Flags]
+from cibo.models.direction import Direction
+from cibo.models.flag import RoomFlag
+from cibo.models.sector import Sector
 
 
 @dataclass
@@ -45,9 +18,6 @@ class RoomDescription:
     normal: str
     extra: Optional[str]
     night: Optional[str]
-    under: Optional[str]
-    behind: Optional[str]
-    above: Optional[str]
     smell: Optional[str]
     listen: Optional[str]
 
@@ -69,9 +39,8 @@ class Room:
     name: str
     description: RoomDescription
     exits: List[RoomExit]
-    # sector: Sector
-    # regions: List[Region]
-    # flags: List[Flags]
+    sector: Sector
+    flags: List[RoomFlag]
 
     def get_exits(self) -> List[str]:
         """Get the text values of the exits for the given Room, in alphabetical order.

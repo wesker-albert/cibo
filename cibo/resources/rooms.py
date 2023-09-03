@@ -7,14 +7,18 @@ This is a collection of all the Rooms that exist in the world.
 from typing import List
 
 from cibo.exception import RoomNotFound
-from cibo.models.room import Direction, Room, RoomDescription, RoomExit
+from cibo.models.direction import Direction
+from cibo.models.flag import RoomFlag
+from cibo.models.room import Room, RoomDescription, RoomExit
 from cibo.resources.__resource__ import Resource
+from cibo.resources.sectors import Sectors
 
 
 class Rooms(Resource):
     """All the Rooms that exist in the world."""
 
-    def __init__(self, rooms_file: str):
+    def __init__(self, rooms_file: str, sectors: Sectors):
+        self._sectors = sectors
         self._rooms: List[Room] = self._generate_resources(rooms_file)
 
     def _create_resource_from_dict(self, resource: dict) -> Room:
@@ -36,9 +40,6 @@ class Rooms(Resource):
                 normal=room["description"]["normal"],
                 extra=room["description"].get("extra", None),
                 night=room["description"].get("night", None),
-                under=room["description"].get("under", None),
-                behind=room["description"].get("behind", None),
-                above=room["description"].get("above", None),
                 smell=room["description"].get("smell", None),
                 listen=room["description"].get("listen", None),
             ),
@@ -50,10 +51,12 @@ class Rooms(Resource):
                 )
                 for exit_ in room["exits"]
             ],
+            sector=self._sectors.get_by_id(room["sector_id"]),
+            flags=[RoomFlag(flag) for flag in room["flags"]],
         )
 
     def get_by_id(self, id_: int) -> Room:
-        """Get a Room by its ID. Returns None if not found.
+        """Get a Room by its ID.
 
         Args:
             id_ (int): The Room ID you're looking for.
@@ -62,7 +65,7 @@ class Rooms(Resource):
             RoomNotFound: No room found for the given ID.
 
         Returns:
-            Optional[Room]: The matching Room.
+            Room: The matching Room.
         """
 
         for room in self._rooms:

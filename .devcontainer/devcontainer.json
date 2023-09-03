@@ -52,6 +52,10 @@
 				"files.associations": {
 					".env*": "env"
 				},
+				"git.branchProtection": [
+					"master"
+				],
+				"git.branchProtectionPrompt": "alwaysCommitToNewBranch",
 				"gitlens.currentLine.enabled": false,
 				"isort.args": [
 					"--settings-path",

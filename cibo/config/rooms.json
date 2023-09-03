@@ -31,7 +31,9 @@
                     "direction": "d",
                     "id": 7
                 }
-            ]
+            ],
+            "sector_id": 1,
+            "flags": []
         },
         {
             "id": 2,
@@ -44,20 +46,24 @@
                     "direction": "s",
                     "id": 1
                 }
-            ]
+            ],
+            "sector_id": 1,
+            "flags": []
         },
         {
             "id": 3,
-            "name": "A Room Marked #3",
+            "name": "A Bright Courtyard",
             "description": {
-                "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
+                "normal": "The small courtyard is surrounded by very tall, featureless, concrete walls. The sun is an unnatural color and seems to emit a low, buzzing hum."
             },
             "exits": [
                 {
                     "direction": "w",
                     "id": 1
                 }
-            ]
+            ],
+            "sector_id": 2,
+            "flags": []
         },
         {
             "id": 4,
@@ -70,7 +76,9 @@
                     "direction": "n",
                     "id": 1
                 }
-            ]
+            ],
+            "sector_id": 1,
+            "flags": []
         },
         {
             "id": 5,
@@ -83,7 +91,9 @@
                     "direction": "e",
                     "id": 1
                 }
-            ]
+            ],
+            "sector_id": 1,
+            "flags": []
         },
         {
             "id": 6,
@@ -100,7 +110,9 @@
                     "direction": "u",
                     "id": 8
                 }
-            ]
+            ],
+            "sector_id": 1,
+            "flags": []
         },
         {
             "id": 7,
@@ -113,7 +125,9 @@
                     "direction": "u",
                     "id": 1
                 }
-            ]
+            ],
+            "sector_id": 1,
+            "flags": []
         },
         {
             "id": 8,
@@ -126,7 +140,9 @@
                     "direction": "d",
                     "id": 6
                 }
-            ]
+            ],
+            "sector_id": 1,
+            "flags": []
         }
     ]
 }

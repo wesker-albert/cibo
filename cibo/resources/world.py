@@ -7,7 +7,9 @@ from pathlib import Path
 
 from cibo.resources.doors import Doors
 from cibo.resources.items import Items
+from cibo.resources.regions import Regions
 from cibo.resources.rooms import Rooms
+from cibo.resources.sectors import Sectors
 
 
 class World:
@@ -16,9 +18,15 @@ class World:
     """
 
     def __init__(self) -> None:
-        self.rooms = Rooms(getenv("ROOMS_PATH", "/cibo/resources/rooms.json"))
-        self.doors = Doors(getenv("DOORS_PATH", "/cibo/resources/doors.json"))
-        self.items = Items(getenv("ITEMS_PATH", "/cibo/resources/items.json"))
+        self.regions = Regions(getenv("REGIONS_PATH", "/cibo/config/regions.json"))
+        self.sectors = Sectors(
+            getenv("SECTORS_PATH", "/cibo/config/sectors.json"), self.regions
+        )
+        self.rooms = Rooms(
+            getenv("ROOMS_PATH", "/cibo/config/rooms.json"), self.sectors
+        )
+        self.doors = Doors(getenv("DOORS_PATH", "/cibo/config/doors.json"))
+        self.items = Items(getenv("ITEMS_PATH", "/cibo/config/items.json"))
 
     @property
     def motd(self) -> str:
@@ -29,7 +37,7 @@ class World:
             str: The MOTD text.
         """
 
-        motd_path = getenv("MOTD_PATH", "/cibo/resources/motd.txt")
+        motd_path = getenv("MOTD_PATH", "/cibo/config/motd.txt")
 
         with open(f"{Path.cwd()}{motd_path}", encoding="utf-8") as file:
             motd = file.read()

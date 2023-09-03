@@ -1,7 +1,8 @@
 from pytest import raises
 
 from cibo.exception import ExitNotFound
-from cibo.models.room import Direction, RoomExit
+from cibo.models.direction import Direction
+from cibo.models.room import RoomExit
 from tests.conftest import RoomFactory
 
 

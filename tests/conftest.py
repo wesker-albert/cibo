@@ -30,10 +30,15 @@ from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
-from cibo.models.data.item import Item
+from cibo.models.data.item import Item as DataItem
 from cibo.models.data.player import Player
+from cibo.models.direction import Direction
 from cibo.models.door import Door, DoorFlag
-from cibo.models.room import Direction, Room, RoomDescription, RoomExit
+from cibo.models.flag import RoomFlag
+from cibo.models.item import Item
+from cibo.models.region import Region
+from cibo.models.room import Room, RoomDescription, RoomExit
+from cibo.models.sector import Sector
 from cibo.output import Output
 from cibo.password import Password
 from cibo.resources.world import World
@@ -49,14 +54,14 @@ class BaseFactory:
 
 class DatabaseFactory:
     def give_item_to_player(self, item_id: int, player: Player) -> None:
-        item = Item.get_by_id(item_id)
+        item = DataItem.get_by_id(item_id)
         item.player = player
         item.save()
 
     @fixture(scope="module")
     def _fixture_database(self):
         database = SqliteDatabase(getenv("DATABASE_PATH"))
-        tables = (Player, Item)
+        tables = (Player, DataItem)
 
         with database.bind_ctx(tables):
             database.create_tables(tables)
@@ -84,7 +89,7 @@ class DatabaseFactory:
             # pylint: disable=no-value-for-parameter
             with database.atomic():
                 Player.insert_many(players).execute()
-                Item.insert_many(items).execute()
+                DataItem.insert_many(items).execute()
 
             yield
 
@@ -164,12 +169,62 @@ class PasswordFactory:
 
 class WorldFactory:
     @fixture(autouse=True)
-    def fixture_world(self):
+    def _fixture_world(self):
         self.world = World()
         yield
 
 
-class DoorFactory:
+class RegionFactory(WorldFactory):
+    @fixture(autouse=True)
+    def _fixture_region(self):
+        self.region = Region(
+            id_=1,
+            name="The Simulation",
+            description="It's powered by people, but not in a good way.",
+            flags=[],
+        )
+        yield
+
+
+class SectorFactory(RegionFactory):
+    @fixture(autouse=True)
+    def _fixture_sector(self, _fixture_region):
+        self.sector = Sector(
+            id_=1,
+            name="The Backrooms",
+            description="A handful of rooms that make you feel uneasy.",
+            region=self.region,
+            flags=[RoomFlag.INSIDE],
+        )
+        yield
+
+
+class RoomFactory(SectorFactory):
+    @fixture(autouse=True)
+    def fixture_room(self, _fixture_sector):
+        self.room = Room(
+            id_=1,
+            name="A Room Marked #1",
+            description=RoomDescription(
+                normal="The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation.",
+                extra=None,
+                night=None,
+                smell=None,
+                listen=None,
+            ),
+            exits=[
+                RoomExit(direction=Direction.NORTH, id_=2, description=None),
+                RoomExit(direction=Direction.EAST, id_=3, description=None),
+                RoomExit(direction=Direction.SOUTH, id_=4, description=None),
+                RoomExit(direction=Direction.WEST, id_=5, description=None),
+            ],
+            sector=self.sector,
+            flags=[],
+        )
+        yield
+
+
+class DoorFactory(WorldFactory):
     @fixture(autouse=True)
     def fixture_door(self):
         self.door_closed = Door(
@@ -186,28 +241,16 @@ class DoorFactory:
         yield
 
 
-class RoomFactory:
+class ItemFactory(WorldFactory):
     @fixture(autouse=True)
-    def fixture_room(self):
-        self.room = Room(
+    def fixture_item(self):
+        self.item = Item(
             id_=1,
-            name="A Room Marked #1",
-            description=RoomDescription(
-                normal="The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation.",
-                extra=None,
-                night=None,
-                under=None,
-                behind=None,
-                above=None,
-                smell=None,
-                listen=None,
-            ),
-            exits=[
-                RoomExit(direction=Direction.NORTH, id_=2, description=None),
-                RoomExit(direction=Direction.EAST, id_=3, description=None),
-                RoomExit(direction=Direction.SOUTH, id_=4, description=None),
-                RoomExit(direction=Direction.WEST, id_=5, description=None),
-            ],
+            name="a metal fork",
+            description="A pronged, metal eating utensil.",
+            is_stationary=False,
+            carry_limit=0,
+            weight=0,
         )
         yield
 
@@ -241,9 +284,8 @@ class ActionFactory(ClientFactory, WorldFactory):
         return self.output.send_private_message.call_args.args[1]
 
     @fixture
-    def _fixture_action(self):
+    def _fixture_action(self, _fixture_world):
         self.client.login_state = ClientLoginState.LOGGED_IN
-        self.world = World()
         yield
 
 
