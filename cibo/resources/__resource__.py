@@ -15,6 +15,7 @@ from cibo.models.npc import Npc
 from cibo.models.region import Region
 from cibo.models.room import Room
 from cibo.models.sector import Sector
+from cibo.models.spawn import Spawn
 
 
 class Resource(ABC):
@@ -48,5 +49,5 @@ class Resource(ABC):
     @abstractmethod
     def _create_resource_from_dict(
         self, resource: dict
-    ) -> Union[Item, Room, Door, Sector, Region, Npc]:  # pytest: no cover
+    ) -> Union[Item, Room, Door, Sector, Region, Npc, Spawn]:  # pytest: no cover
         pass

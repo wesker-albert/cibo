@@ -169,3 +169,15 @@ class SectorNotFound(Exception):
     """Raised by if the given Sector ID doesn't exist."""
 
     pass
+
+
+class SpawnNotFound(Exception):
+    """Raised if a Spawn can't be found for the given parameters."""
+
+    pass
+
+
+class SpawnTypeUnknown(Exception):
+    """Raised if an unknown type of entity is given for a Spawn."""
+
+    pass
