@@ -21,19 +21,19 @@ class Spawns(Resource):
 
         return Spawn(
             type_=type_,
-            entity=self._get_entity_by_id(type_, spawn["entity_id"]),
+            entity_id=spawn["entity_id"],
             room_id=spawn["room_id"],
             amount=spawn["amount"],
         )
 
     def _get_entity_by_id(self, type_: SpawnType, id_: int) -> Union[Item, Npc]:
-        match type_:
-            case SpawnType.ITEM:
-                return self._items.get_by_id(id_)
-            case SpawnType.NPC:
-                return self._npcs.get_by_id(id_)
-            case _:
-                raise SpawnTypeUnknown
+        if type_ is SpawnType.ITEM:
+            return self._items.get_by_id(id_)
+
+        if type_ is SpawnType.NPC:
+            return self._npcs.get_by_id(id_)
+
+        raise SpawnTypeUnknown
 
     def get_by_room_id(self, id_: int) -> Spawn:
         for spawn in self._spawns:
@@ -41,3 +41,6 @@ class Spawns(Resource):
                 return spawn
 
         raise SpawnNotFound
+
+    def get_all(self) -> List[Spawn]:
+        return self._spawns

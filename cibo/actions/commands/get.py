@@ -89,7 +89,7 @@ class Get(Action):
             if item_meta.is_stationary:
                 raise ItemIsStationary
 
-            item.room_id = None
+            item.current_room_id = None
             item.player_id = client.player
             item.save()
 

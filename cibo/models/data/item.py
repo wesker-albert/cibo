@@ -18,7 +18,8 @@ class Item(Model):
 
     id_ = AutoField()
     item_id = IntegerField()
-    room_id = IntegerField(null=True)
+    spawn_room_id = IntegerField(null=True)
+    current_room_id = IntegerField(null=True)
     player = ForeignKeyField(Player, backref="inventory", null=True)
 
     @classmethod
@@ -32,4 +33,4 @@ class Item(Model):
             List[Self]: The Item(s) that are currently in the room specified, if any.
         """
 
-        return [item for item in cls.select() if item.room_id == room_id]
+        return [item for item in cls.select() if item.current_room_id == room_id]
