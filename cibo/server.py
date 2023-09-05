@@ -10,6 +10,7 @@ from time import sleep
 from peewee import SqliteDatabase
 
 from cibo.event import EventProcessor
+from cibo.events.spawn import SpawnEvent
 from cibo.events.tick import TickEvent
 from cibo.models.data.item import Item
 from cibo.models.data.npc import Npc
@@ -53,6 +54,8 @@ class Server:
         self._tick = TickEvent(self._telnet, self._world, self._output)
         self._tick_thread = Thread(target=self._start_tick_timers)
 
+        self._spawn = SpawnEvent(self._telnet, self._world, self._output)
+
         self._thread = Thread(target=self._start_server)
         self._status = self.Status.STOPPED
 
@@ -84,6 +87,8 @@ class Server:
         self._status = self.Status.RUNNING
 
         self._tick_thread.start()
+
+        self._spawn.process()
 
         while self.is_running:
             self._telnet.update()
