@@ -8,7 +8,7 @@ from cibo.models.spawn import Spawn, SpawnType
 
 class SpawnEvent(Event):
     def _generate_item_model_list(self, spawn: Spawn) -> List[Item]:
-        existing_items = Item.get_by_room_id(spawn.room_id)
+        existing_items = Item.get_by_current_room_id(spawn.room_id)
 
         return [
             Item(
@@ -16,7 +16,7 @@ class SpawnEvent(Event):
                 spawn_room_id=spawn.room_id,
                 current_room_id=spawn.room_id,
             )
-            for _i in range(spawn.amount - len(existing_items))
+            for _item in range(spawn.amount - len(existing_items))
         ]
 
     def _generate_npc_model_list(self, spawn: Spawn) -> List[Npc]:
@@ -28,7 +28,7 @@ class SpawnEvent(Event):
                 spawn_room_id=spawn.room_id,
                 current_room_id=spawn.room_id,
             )
-            for _i in range(spawn.amount - len(existing_npcs))
+            for _npc in range(spawn.amount - len(existing_npcs))
         ]
 
     def process(self) -> None:

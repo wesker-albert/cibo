@@ -23,7 +23,7 @@ class Item(Model):
     player = ForeignKeyField(Player, backref="inventory", null=True)
 
     @classmethod
-    def get_by_room_id(cls, room_id: int) -> List[Self]:
+    def get_by_current_room_id(cls, room_id: int) -> List[Self]:
         """Get any Items that currently persist in the Room with the given ID.
 
         Args:

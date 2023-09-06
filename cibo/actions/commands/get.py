@@ -66,7 +66,7 @@ class Get(Action):
             Item: The Item entry from the database.
         """
 
-        room_items = Item.get_by_room_id(client.player.current_room_id)
+        room_items = Item.get_by_current_room_id(client.player.current_room_id)
 
         for item in room_items:
             item_meta = self.items.get_by_id(item.item_id)

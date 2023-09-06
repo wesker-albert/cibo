@@ -4,13 +4,7 @@ the world. Some Npcs can be interacted with, in varying ways.
 
 from dataclasses import dataclass
 
-
-@dataclass
-class NpcDescription:
-    """Descriptions of the Npc depending on context."""
-
-    room: str
-    look: str
+from cibo.models.description import EntityDescription
 
 
 @dataclass
@@ -19,4 +13,8 @@ class Npc:
 
     id_: int
     name: str
-    description: NpcDescription
+    description: EntityDescription
+
+    @property
+    def room_description(self) -> str:
+        return f"{self.name} {self.description.room}".capitalize()

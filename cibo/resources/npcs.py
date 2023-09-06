@@ -7,7 +7,8 @@ This is a collection of all the Npcs that exist in the world.
 from typing import List
 
 from cibo.exception import NpcNotFound
-from cibo.models.npc import Npc, NpcDescription
+from cibo.models.description import EntityDescription
+from cibo.models.npc import Npc
 from cibo.resources.__resource__ import Resource
 
 
@@ -23,8 +24,9 @@ class Npcs(Resource):
         return Npc(
             id_=npc["id"],
             name=npc["name"],
-            description=NpcDescription(
-                room=npc["description"]["room"], look=npc["description"]["look"]
+            description=EntityDescription(
+                room=npc["description"]["room"],
+                look=npc["description"]["look"],
             ),
         )
 

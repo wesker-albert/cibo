@@ -14,3 +14,7 @@ class Npc(Model):
     @classmethod
     def get_by_spawn_room_id(cls, room_id: int) -> List[Self]:
         return [npc for npc in cls.select() if npc.spawn_room_id == room_id]
+
+    @classmethod
+    def get_by_current_room_id(cls, room_id: int) -> List[Self]:
+        return [npc for npc in cls.select() if npc.current_room_id == room_id]

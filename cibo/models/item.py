@@ -4,6 +4,8 @@ often used by a player.
 
 from dataclasses import dataclass
 
+from cibo.models.description import EntityDescription
+
 
 @dataclass
 class Item:
@@ -11,7 +13,11 @@ class Item:
 
     id_: int
     name: str
-    description: str
+    description: EntityDescription
     is_stationary: bool
     carry_limit: int
     weight: int
+
+    @property
+    def room_description(self) -> str:
+        return f"{self.name} {self.description.room}".capitalize()
