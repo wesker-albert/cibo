@@ -32,5 +32,5 @@ class TestLookAction(LookActionFactory):
         assert panel.subtitle == "[green]Exits:[/] east, north, south, west"
         assert (
             panel.renderable
-            == "  The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation.\n\n[cyan]jennifer[/] is standing here.\n\n[bright_blue]On the ground you see:[/]\n  A metal fork\n  A large jukebox"
+            == "  The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation.\n\nLooking around you see:\n• [bright_blue]A metal fork glistens in the dirt.\n• A large jukebox is plugged into the wall.[/]\n• [bright_green][cyan]jennifer[/] is standing here.[/]"
         )

@@ -1,8 +1,5 @@
 import logging
 
-from pytest import raises
-
-from cibo.exception import InputNotReceived
 from tests.conftest import InputEventFactory
 
 
@@ -23,8 +20,9 @@ class TestInputEevent(InputEventFactory):
     def test_event_input_process_no_input(self):
         self.telnet.get_client_input.return_value = [(self.client, None)]
 
-        with raises(InputNotReceived):
-            self.input.process()
+        self.input.process()
+
+        self.output.send_prompt.assert_called_once_with(self.client)
 
     def test_event_input_process_missing_args(self):
         self.telnet.get_client_input.return_value = [(self.client, "login frank")]

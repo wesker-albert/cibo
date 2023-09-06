@@ -30,8 +30,10 @@ from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
-from cibo.models.data.item import Item as DataItem
+from cibo.models.data.item import Item as ItemData
+from cibo.models.data.npc import Npc
 from cibo.models.data.player import Player
+from cibo.models.description import EntityDescription
 from cibo.models.direction import Direction
 from cibo.models.door import Door, DoorFlag
 from cibo.models.flag import RoomFlag
@@ -54,14 +56,14 @@ class BaseFactory:
 
 class DatabaseFactory:
     def give_item_to_player(self, item_id: int, player: Player) -> None:
-        item = DataItem.get_by_id(item_id)
+        item = ItemData.get_by_id(item_id)
         item.player = player
         item.save()
 
     @fixture(scope="module")
     def _fixture_database(self):
         database = SqliteDatabase(getenv("DATABASE_PATH"))
-        tables = (Player, DataItem)
+        tables = (Player, ItemData, Npc)
 
         with database.bind_ctx(tables):
             database.create_tables(tables)
@@ -81,15 +83,15 @@ class DatabaseFactory:
             ]
 
             items = [
-                {"item_id": 1, "room_id": 1},
+                {"item_id": 1, "current_room_id": 1},
                 {"item_id": 1},
-                {"item_id": 2, "room_id": 1},
+                {"item_id": 2, "current_room_id": 1},
             ]
 
             # pylint: disable=no-value-for-parameter
             with database.atomic():
                 Player.insert_many(players).execute()
-                DataItem.insert_many(items).execute()
+                ItemData.insert_many(items).execute()
 
             yield
 
@@ -247,7 +249,10 @@ class ItemFactory(WorldFactory):
         self.item = Item(
             id_=1,
             name="a metal fork",
-            description="A pronged, metal eating utensil.",
+            description=EntityDescription(
+                room="glistens in the dirt.",
+                look="A pronged, metal eating utensil.",
+            ),
             is_stationary=False,
             carry_limit=0,
             weight=0,
