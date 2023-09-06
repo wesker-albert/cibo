@@ -30,17 +30,20 @@ from cibo.command import CommandProcessor
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
+from cibo.events.spawn import SpawnEvent
 from cibo.models.data.item import Item as ItemData
-from cibo.models.data.npc import Npc
+from cibo.models.data.npc import Npc as NpcData
 from cibo.models.data.player import Player
 from cibo.models.description import EntityDescription
 from cibo.models.direction import Direction
 from cibo.models.door import Door, DoorFlag
 from cibo.models.flag import RoomFlag
 from cibo.models.item import Item
+from cibo.models.npc import Npc
 from cibo.models.region import Region
 from cibo.models.room import Room, RoomDescription, RoomExit
 from cibo.models.sector import Sector
+from cibo.models.spawn import Spawn, SpawnType
 from cibo.output import Output
 from cibo.password import Password
 from cibo.resources.world import World
@@ -63,7 +66,7 @@ class DatabaseFactory:
     @fixture(scope="module")
     def _fixture_database(self):
         database = SqliteDatabase(getenv("DATABASE_PATH"))
-        tables = (Player, ItemData, Npc)
+        tables = (Player, ItemData, NpcData)
 
         with database.bind_ctx(tables):
             database.create_tables(tables)
@@ -88,10 +91,13 @@ class DatabaseFactory:
                 {"item_id": 2, "current_room_id": 1},
             ]
 
+            npcs = [{"npc_id": 1, "spawn_room_id": 1, "current_room_id": 1}]
+
             # pylint: disable=no-value-for-parameter
             with database.atomic():
                 Player.insert_many(players).execute()
                 ItemData.insert_many(items).execute()
+                NpcData.insert_many(npcs).execute()
 
             yield
 
@@ -260,6 +266,31 @@ class ItemFactory(WorldFactory):
         yield
 
 
+class SpawnFactory(WorldFactory):
+    @fixture(autouse=True)
+    def _fixture_spawn(self):
+        self.spawns = [
+            Spawn(type_=SpawnType.ITEM, entity_id=1, room_id=2, amount=1),
+            Spawn(type_=SpawnType.ITEM, entity_id=2, room_id=1, amount=1),
+            Spawn(type_=SpawnType.NPC, entity_id=1, room_id=1, amount=1),
+        ]
+        yield
+
+
+class NpcFactory(WorldFactory):
+    @fixture(autouse=True)
+    def fixture_npc(self):
+        self.npc = Npc(
+            id_=1,
+            name="a faceless businessman",
+            description=EntityDescription(
+                room="sits at his desk.",
+                look="His face is smooth and amorphis, like putty. He is wearing a suit, tie, and carrying a briefcase. Though he has no eyes, he seems to be aware of your presence.",
+            ),
+        )
+        yield
+
+
 class ConnectEventFactory(BaseFactory):
     @fixture(autouse=True)
     def fixture_connect_event(self):
@@ -272,6 +303,13 @@ class DisconnectEventFactory(BaseFactory, ClientFactory):
     def fixture_disconnect_event(self):
         self.client.login_state = ClientLoginState.LOGGED_IN
         self.disconnect = DisconnectEvent(self.telnet, Mock(), self.output)
+        yield
+
+
+class SpawnEventFactory(BaseFactory, WorldFactory, DatabaseFactory):
+    @fixture(autouse=True)
+    def fixture_spawn_event(self):
+        self.spawn = SpawnEvent(self.telnet, self.world, self.output)
         yield
 
 
