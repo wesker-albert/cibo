@@ -34,14 +34,14 @@ from cibo.events.spawn import SpawnEvent
 from cibo.models.data.item import Item as ItemData
 from cibo.models.data.npc import Npc as NpcData
 from cibo.models.data.player import Player
-from cibo.models.description import EntityDescription
+from cibo.models.description import EntityDescription, RoomDescription
 from cibo.models.direction import Direction
 from cibo.models.door import Door, DoorFlag
 from cibo.models.flag import RoomFlag
 from cibo.models.item import Item
 from cibo.models.npc import Npc
 from cibo.models.region import Region
-from cibo.models.room import Room, RoomDescription, RoomExit
+from cibo.models.room import Room, RoomExit
 from cibo.models.sector import Sector
 from cibo.models.spawn import Spawn, SpawnType
 from cibo.output import Output

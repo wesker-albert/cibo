@@ -6,20 +6,10 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 from cibo.exception import ExitNotFound
+from cibo.models.description import RoomDescription
 from cibo.models.direction import Direction
 from cibo.models.flag import RoomFlag
 from cibo.models.sector import Sector
-
-
-@dataclass
-class RoomDescription:
-    """Descriptions of the Room from different perspectives."""
-
-    normal: str
-    extra: Optional[str]
-    night: Optional[str]
-    smell: Optional[str]
-    listen: Optional[str]
 
 
 @dataclass

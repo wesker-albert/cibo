@@ -1,3 +1,8 @@
+"""A Spawn is a rule that is used to manifest Items or NPCS into a room, of specific
+amounts.
+
+This is a collection of all the spawn rules in the world.
+"""
 from typing import List
 
 from cibo.models.spawn import Spawn, SpawnType
@@ -7,6 +12,8 @@ from cibo.resources.npcs import Npcs
 
 
 class Spawns(Resource):
+    """All the Spawn rules that exist."""
+
     def __init__(self, spawns_file: str, items: Items, npcs: Npcs):
         self._items = items
         self._npcs = npcs
@@ -24,4 +31,10 @@ class Spawns(Resource):
         )
 
     def get_all(self) -> List[Spawn]:
+        """Get all the Spawn rules.
+
+        Returns:
+            List[Spawn]: All existing Spawn rules.
+        """
+
         return self._spawns

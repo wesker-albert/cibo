@@ -17,4 +17,11 @@ class Npc:
 
     @property
     def room_description(self) -> str:
+        """The NPC name and room description together, capitalized and in a friendly
+        format.
+
+        Returns:
+            str: The combined room description.
+        """
+
         return f"{self.name} {self.description.room}".capitalize()
