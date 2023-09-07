@@ -77,7 +77,7 @@ class Drop(Action):
             item = self.find_item_in_inventory(client, self._join_args(args))
             item_meta = self.items.get_by_id(item.item_id)
 
-            item.room_id = client.player.current_room_id
+            item.current_room_id = client.player.current_room_id
             item.player_id = None
             item.save()
 

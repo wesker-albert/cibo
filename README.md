@@ -30,6 +30,12 @@ about but haven't gotten the professional opportunity to try.
 
 ## Current state:
 
+### 2023-09-06
+* Added basic, stationary NPCs. They can't be interacted with yet, but soon enough.
+* Added the ability to create item and NPC spawning rules, to populate specific rooms
+with either entity type. Currently spawning only happens upon server startup.
+* Improved room descriptions for items and NPCs.
+
 ### 2023-08-19
 * New commands available: `inventory`, `drop`, `get`
 * New players are given a fork, to test the new commands.

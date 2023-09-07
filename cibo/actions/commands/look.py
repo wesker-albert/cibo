@@ -8,6 +8,7 @@ from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientNotLoggedIn, RoomNotFound
 from cibo.models.data.item import Item
+from cibo.models.data.npc import Npc
 from cibo.models.room import Room
 
 
@@ -23,16 +24,47 @@ class Look(Action):
     def room_desc_message(self, room: Room, client: Client) -> Panel:
         """A stylized description of the room, including its exits and occupants."""
 
+        items = self.get_formatted_items(client)
+        occupants = self.get_formatted_occupants(client)
+
+        if items or occupants:
+            formatted_room_contents = f"\n\nLooking around you see:{items}{occupants}"
+        else:
+            formatted_room_contents = ""
+
         return Panel(
-            f"  {room.description.normal}"
-            f"{self.get_formatted_occupants(client)}"
-            f"{self.get_formatted_items(client)}",
+            f"  {room.description.normal}{formatted_room_contents}",
             title=f"[blue]{room.name}[/]",
             title_align="left",
             subtitle=room.get_formatted_exits(),
             subtitle_align="right",
             padding=(1, 4),
         )
+
+    def _get_player_occupants(self, client: Client) -> List[str]:
+        return [
+            f"[cyan]{occupant_client.player.name}[/] is standing here."
+            for occupant_client in self._telnet.get_connected_clients()
+            if (
+                occupant_client.player
+                and client.player
+                and occupant_client.player.current_room_id
+                == client.player.current_room_id
+                and occupant_client is not client
+            )
+        ]
+
+    def _get_npc_occupants(self, client: Client) -> List[str]:
+        return [
+            self._world.npcs.get_by_id(npc.npc_id).room_description
+            for npc in Npc.get_by_current_room_id(client.player.current_room_id)
+        ]
+
+    def _get_room_items(self, client: Client) -> List[str]:
+        return [
+            self.items.get_by_id(item.item_id).room_description
+            for item in Item.get_by_current_room_id(client.player.current_room_id)
+        ]
 
     def get_formatted_occupants(self, client: Client) -> str:
         """Formats and lists out all occupants of the Client's current room, sans the
@@ -46,22 +78,20 @@ class Look(Action):
             str: The occupants for the room.
         """
 
-        occupants = [
-            f"[cyan]{occupant_client.player.name}[/] is standing here."
-            for occupant_client in self._telnet.get_connected_clients()
-            if (
-                occupant_client.player
-                and client.player
-                and occupant_client.player.current_room_id
-                == client.player.current_room_id
-                and occupant_client is not client
-            )
-        ]
+        player_occupants = self._get_player_occupants(client)
+        npc_occupants = self._get_npc_occupants(client)
+        combined_occupants = player_occupants + npc_occupants
 
-        joined_occupants = "\n".join([str(occupant) for occupant in occupants])
+        joined_occupants = "\n• ".join(
+            [str(occupant) for occupant in combined_occupants]
+        )
 
         # only include leading new lines if there are actual occupants
-        return f"\n\n{joined_occupants}" if len(occupants) > 0 else ""
+        return (
+            f"\n• [bright_green]{joined_occupants}[/]"
+            if len(combined_occupants) > 0
+            else ""
+        )
 
     def get_formatted_items(self, client: Client) -> str:
         """Formats and lists all the Items that are in the current room, and
@@ -75,19 +105,11 @@ class Look(Action):
             str: The individual items the room contains.
         """
 
-        room_items = Item.get_by_room_id(client.player.current_room_id)
+        room_items = self._get_room_items(client)
 
-        inventory_items = [
-            self.items.get_by_id(item.item_id).name for item in room_items
-        ]
+        joined_items = "\n• ".join([str(item) for item in room_items])
 
-        inventory = "\n  ".join([str(item).capitalize() for item in inventory_items])
-
-        return (
-            f"\n\n[bright_blue]On the ground you see:[/]\n  {inventory}"
-            if len(inventory_items) > 0
-            else ""
-        )
+        return f"\n• [bright_blue]{joined_items}[/]" if len(room_items) > 0 else ""
 
     def process(self, client: Client, _command: Optional[str], args: List[str]) -> None:
         try:

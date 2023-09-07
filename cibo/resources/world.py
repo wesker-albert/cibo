@@ -7,9 +7,11 @@ from pathlib import Path
 
 from cibo.resources.doors import Doors
 from cibo.resources.items import Items
+from cibo.resources.npcs import Npcs
 from cibo.resources.regions import Regions
 from cibo.resources.rooms import Rooms
 from cibo.resources.sectors import Sectors
+from cibo.resources.spawns import Spawns
 
 
 class World:
@@ -27,6 +29,10 @@ class World:
         )
         self.doors = Doors(getenv("DOORS_PATH", "/cibo/config/doors.json"))
         self.items = Items(getenv("ITEMS_PATH", "/cibo/config/items.json"))
+        self.npcs = Npcs(getenv("NPCS_PATH", "/cibo/config/npcs.json"))
+        self.spawns = Spawns(
+            getenv("SPAWNS_PATH", "/cibo/config/spawns.json"), self.items, self.npcs
+        )
 
     @property
     def motd(self) -> str:

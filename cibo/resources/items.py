@@ -7,6 +7,7 @@ This is a collection of all the Items that exist in the world.
 from typing import List
 
 from cibo.exception import ItemNotFound
+from cibo.models.description import EntityDescription
 from cibo.models.item import Item
 from cibo.resources.__resource__ import Resource
 
@@ -23,7 +24,10 @@ class Items(Resource):
         return Item(
             id_=item["id"],
             name=item["name"],
-            description=item["description"],
+            description=EntityDescription(
+                room=item["description"]["room"],
+                look=item["description"]["look"],
+            ),
             is_stationary=item["is_stationary"],
             carry_limit=item.get("carry_limit", 0),
             weight=item.get("weight", 0),

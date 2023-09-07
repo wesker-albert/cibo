@@ -51,5 +51,5 @@ class InputEvent(Event):
                     client, None, []
                 )
 
-                if isinstance(ex, Exception):  # pytest: no cover
+                if not isinstance(ex, InputNotReceived):  # pytest: no cover
                     raise ex

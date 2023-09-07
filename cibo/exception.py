@@ -12,13 +12,13 @@ class ActionMissingArguments(Exception):
 
 
 class ClientNotLoggedIn(Exception):
-    """Raised by an Action if the Client isn't logged into a Player."""
+    """Raised if the Client isn't logged into a Player."""
 
     pass
 
 
 class ClientIsLoggedIn(Exception):
-    """Raised by an Action if the Client is already logged into a Player."""
+    """Raised if the Client is already logged into a Player."""
 
     pass
 
@@ -56,31 +56,31 @@ class CommandMissingArguments(Exception):
 
 
 class DoorNotFound(Exception):
-    """Raised by an Action if there's no door in the direction specified."""
+    """Raised if there's no door in the direction specified."""
 
     pass
 
 
 class DoorIsClosed(Exception):
-    """Raised by an Action if the door specified is closed."""
+    """Raised if the door specified is closed."""
 
     pass
 
 
 class DoorIsOpen(Exception):
-    """Raised by an Action if if the door specified is open."""
+    """Raised if if the door specified is open."""
 
     pass
 
 
 class DoorIsLocked(Exception):
-    """Raised by an Action if the door specified is locked."""
+    """Raised if the door specified is locked."""
 
     pass
 
 
 class ExitNotFound(Exception):
-    """Raised by an Action if there's no exit in the direction specified."""
+    """Raised if there's no exit in the direction specified."""
 
     pass
 
@@ -109,6 +109,12 @@ class InventoryItemNotFound(Exception):
     pass
 
 
+class NpcNotFound(Exception):
+    """Raised if no Npc is found with the given ID."""
+
+    pass
+
+
 class PasswordIncorrect(Exception):
     """Raised if a given Player password doesn't match the stored hash."""
 
@@ -116,25 +122,25 @@ class PasswordIncorrect(Exception):
 
 
 class PlayerNotRegistered(Exception):
-    """Raised by an Action if no Player is yet registered by the client."""
+    """Raised if no Player is yet registered by the client."""
 
     pass
 
 
 class PlayerAlreadyExists(Exception):
-    """Raised by an Action if no a Player already exists with the name given."""
+    """Raised if no a Player already exists with the name given."""
 
     pass
 
 
 class PlayerNotFound(Exception):
-    """Raised by an Action if no Player with the given name is found to exist."""
+    """Raised if no Player with the given name is found to exist."""
 
     pass
 
 
 class PlayerSessionActive(Exception):
-    """Raised by an Action if a client is already logged into a session with the
+    """Raised if a client is already logged into a session with the
     Player.
     """
 
@@ -142,7 +148,7 @@ class PlayerSessionActive(Exception):
 
 
 class RegionNotFound(Exception):
-    """Raised by an Action if the given Region ID doesn't exist."""
+    """Raised if the given Region ID doesn't exist."""
 
     pass
 
@@ -154,12 +160,24 @@ class RoomItemNotFound(Exception):
 
 
 class RoomNotFound(Exception):
-    """Raised by an Action if the player isn't currently in a room."""
+    """Raised if the player isn't currently in a room."""
 
     pass
 
 
 class SectorNotFound(Exception):
-    """Raised by an Action if the given Sector ID doesn't exist."""
+    """Raised by if the given Sector ID doesn't exist."""
+
+    pass
+
+
+class SpawnNotFound(Exception):
+    """Raised if a Spawn can't be found for the given parameters."""
+
+    pass
+
+
+class SpawnTypeUnknown(Exception):
+    """Raised if an unknown type of entity is given for a Spawn."""
 
     pass

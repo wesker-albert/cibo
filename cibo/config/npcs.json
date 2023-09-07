@@ -1,0 +1,12 @@
+{
+    "npcs": [
+        {
+            "id": 1,
+            "name": "a faceless businessman",
+            "description": {
+                "room": "sits at his desk.",
+                "look": "His face is smooth and amorphis, like putty. He is wearing a suit, tie, and carrying a briefcase. Though he has no eyes, he seems to be aware of your presence."
+            }
+        }
+    ]
+}

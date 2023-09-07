@@ -52,7 +52,7 @@ class TestGetAction(GetActionFactory):
         item = Item.get_by_id(1)
 
         assert item.player == self.client.player
-        assert not item.room_id
+        assert not item.current_room_id
 
         self.output.send_local_announcement.assert_called_once_with(
             Announcement(

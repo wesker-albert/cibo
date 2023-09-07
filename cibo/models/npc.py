@@ -3,21 +3,25 @@ the world. Some Npcs can be interacted with, in varying ways.
 """
 
 from dataclasses import dataclass
-from typing import List
-from uuid import UUID
+
+from cibo.models.description import EntityDescription
 
 
-@dataclass  # pytest: no cover
-class Npc:  # pytest: no cover
+@dataclass
+class Npc:
     """Represents a non-player character."""
 
-    uuid: UUID
+    id_: int
     name: str
-    prefix: str
-    description: str
-    look: str
-    allowed_rooms: List[int]
-    start_room: int
-    wander_freq: int
-    phrases: List[str]
-    speech_freq: int
+    description: EntityDescription
+
+    @property
+    def room_description(self) -> str:
+        """The NPC name and room description together, capitalized and in a friendly
+        format.
+
+        Returns:
+            str: The combined room description.
+        """
+
+        return f"{self.name} {self.description.room}".capitalize()

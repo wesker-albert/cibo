@@ -45,7 +45,7 @@ class TestDropAction(DropActionFactory):
         item = Item.get_by_id(2)
 
         assert not item.player
-        assert item.room_id == 1
+        assert item.current_room_id == 1
 
         self.output.send_local_announcement.assert_called_once_with(
             Announcement(
