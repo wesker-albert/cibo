@@ -9,15 +9,13 @@ from time import sleep
 
 from peewee import SqliteDatabase
 
+from cibo.config import ServerConfig
 from cibo.event import EventProcessor
 from cibo.events.spawn import SpawnEvent
 from cibo.events.tick import TickEvent
 from cibo.models.data.item import Item
 from cibo.models.data.npc import Npc
 from cibo.models.data.player import Player
-from cibo.output import Output
-from cibo.resources.world import World
-from cibo.telnet import TelnetServer
 
 
 class Server:
@@ -34,7 +32,7 @@ class Server:
         SHUTTING_DOWN = 3
         STOPPED = 4
 
-    def __init__(self, telnet: TelnetServer, world: World, output: Output) -> None:
+    def __init__(self, server_config: ServerConfig) -> None:
         """Creates a dormant telnet server. Once instantiated, it can be started and
         stopped.
 
@@ -45,16 +43,16 @@ class Server:
 
         self._database = SqliteDatabase(getenv("DATABASE_PATH", "cibo_database.db"))
 
-        self._telnet = telnet
-        self._world = world
-        self._output = output
+        self._telnet = server_config.telnet
+        self._world = server_config.world
+        self._output = server_config.output
 
-        self._event_processor = EventProcessor(self._telnet, self._world, self._output)
+        self._event_processor = EventProcessor(server_config)
 
-        self._tick = TickEvent(self._telnet, self._world, self._output)
+        self._tick = TickEvent(server_config)
         self._tick_thread = Thread(target=self._start_tick_timers)
 
-        self._spawn = SpawnEvent(self._telnet, self._world, self._output)
+        self._spawn = SpawnEvent(server_config)
 
         self._thread = Thread(target=self._start_server)
         self._status = self.Status.STOPPED

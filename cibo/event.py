@@ -8,12 +8,10 @@ in a FIFO order.
 
 from cibo.actions.commands import ACTIONS
 from cibo.command import CommandProcessor
+from cibo.config import ServerConfig
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
-from cibo.output import Output
-from cibo.resources.world import World
-from cibo.telnet import TelnetServer
 
 
 class EventProcessor:  # pytest: no cover
@@ -21,7 +19,7 @@ class EventProcessor:  # pytest: no cover
     logic for each included Event type.
     """
 
-    def __init__(self, telnet: TelnetServer, world: World, output: Output) -> None:
+    def __init__(self, server_config: ServerConfig) -> None:
         """Creates the Event processor instance.
 
         Args:
@@ -30,19 +28,15 @@ class EventProcessor:  # pytest: no cover
             world (World): The world, and all its resources.
         """
 
-        self._telnet = telnet
-        self._world = world
-        self._output = output
+        self._telnet = server_config.telnet
+        self._world = server_config.world
+        self._output = server_config.output
 
-        self._command_processor = CommandProcessor(
-            self._telnet, self._world, self._output, ACTIONS
-        )
+        self._command_processor = CommandProcessor(server_config, ACTIONS)
 
-        self._connect = ConnectEvent(self._telnet, self._world, self._output)
-        self._disconnect = DisconnectEvent(self._telnet, self._world, self._output)
-        self._input = InputEvent(
-            self._telnet, self._world, self._output, self._command_processor
-        )
+        self._connect = ConnectEvent(server_config)
+        self._disconnect = DisconnectEvent(server_config)
+        self._input = InputEvent(server_config, self._command_processor)
 
     def process(self) -> None:
         """Processes the different Event types."""

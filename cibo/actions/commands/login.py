@@ -118,4 +118,4 @@ class Login(Action):
                 client.player.current_room_id,
             )
 
-            Look(self._telnet, self._world, self._output).process(client, None, [])
+            Look(self._server_config).process(client, None, [])
