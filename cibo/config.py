@@ -1,3 +1,7 @@
+""" Used to consolodate the various objects necessary, to launch and orchestrate
+the server, it's events, etc.
+"""
+
 from dataclasses import dataclass
 
 from cibo.output import Output
