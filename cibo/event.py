@@ -28,10 +28,6 @@ class EventProcessor:  # pytest: no cover
             world (World): The world, and all its resources.
         """
 
-        self._telnet = server_config.telnet
-        self._world = server_config.world
-        self._output = server_config.output
-
         self._command_processor = CommandProcessor(server_config, ACTIONS)
 
         self._connect = ConnectEvent(server_config)

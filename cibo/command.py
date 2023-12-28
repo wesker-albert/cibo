@@ -37,10 +37,6 @@ class CommandProcessor:
         """
 
         self._server_config = server_config
-
-        self._telnet = self._server_config.telnet
-        self._world = self._server_config.world
-        self._output = self._server_config.output
         self._actions = actions
 
     @property
