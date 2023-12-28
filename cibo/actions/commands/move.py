@@ -93,4 +93,4 @@ class Move(Action):
                 prompt=False,
             )
 
-            Look(self._telnet, self._world, self._output).process(client, None, [])
+            Look(self._server_config).process(client, None, [])

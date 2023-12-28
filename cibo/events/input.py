@@ -5,15 +5,13 @@ out."""
 from cibo.actions.error import Error
 from cibo.actions.prompt import Prompt
 from cibo.command import CommandProcessor
+from cibo.config import ServerConfig
 from cibo.events.__event__ import Event
 from cibo.exception import (
     CommandMissingArguments,
     CommandUnrecognized,
     InputNotReceived,
 )
-from cibo.output import Output
-from cibo.resources.world import World
-from cibo.telnet import TelnetServer
 
 
 class InputEvent(Event):
@@ -24,12 +22,10 @@ class InputEvent(Event):
 
     def __init__(
         self,
-        telnet: TelnetServer,
-        world: World,
-        output: Output,
+        server_config: ServerConfig,
         command_processor: CommandProcessor,
     ) -> None:
-        super().__init__(telnet, world, output)
+        super().__init__(server_config)
 
         self._command_processor = command_processor
 
@@ -42,14 +38,10 @@ class InputEvent(Event):
                 self._command_processor.process(client, input_)
 
             except (CommandUnrecognized, CommandMissingArguments) as ex:
-                Error(self._telnet, self._world, self._output).process(
-                    client, None, [ex.message]
-                )
+                Error(self._server_config).process(client, None, [ex.message])
 
             except (InputNotReceived, Exception) as ex:
-                Prompt(self._telnet, self._world, self._output).process(
-                    client, None, []
-                )
+                Prompt(self._server_config).process(client, None, [])
 
                 if not isinstance(ex, InputNotReceived):  # pytest: no cover
                     raise ex

@@ -7,10 +7,8 @@ from typing import List, Optional, Type
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
+from cibo.config import ServerConfig
 from cibo.exception import CommandMissingArguments, CommandUnrecognized
-from cibo.output import Output
-from cibo.resources.world import World
-from cibo.telnet import TelnetServer
 
 
 @dataclass
@@ -28,9 +26,7 @@ class CommandProcessor:
 
     def __init__(
         self,
-        telnet: TelnetServer,
-        world: World,
-        output: Output,
+        server_config: ServerConfig,
         actions: List[type[Action]],
     ) -> None:
         """Creates the command processor instance.
@@ -40,9 +36,7 @@ class CommandProcessor:
             world (World): The world, and all its resources.
         """
 
-        self._telnet = telnet
-        self._world = world
-        self._output = output
+        self._server_config = server_config
         self._actions = actions
 
     @property
@@ -55,7 +49,7 @@ class CommandProcessor:
 
         return [
             Command(
-                aliases=action(self._telnet, self._world, self._output).aliases(),
+                aliases=action(self._server_config).aliases(),
                 action=action,
             )
             for action in self._actions
@@ -106,7 +100,7 @@ class CommandProcessor:
         if action is None:
             raise CommandUnrecognized(command)
 
-        action_instance = action(self._telnet, self._world, self._output)
+        action_instance = action(self._server_config)
 
         try:
             action_instance.process(client, command, split_args)

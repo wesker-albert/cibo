@@ -27,6 +27,7 @@ from cibo.actions.scheduled.every_minute import EveryMinute
 from cibo.actions.scheduled.every_second import EverySecond
 from cibo.client import Client, ClientLoginState
 from cibo.command import CommandProcessor
+from cibo.config import ServerConfig
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
@@ -54,6 +55,7 @@ class BaseFactory:
     def fixture_base(self):
         self.telnet = Mock()
         self.output = Mock()
+        self.server_config = ServerConfig(self.telnet, Mock(), self.output)
         yield
 
 
@@ -137,7 +139,7 @@ class ClientFactory:
 
 class CommandProcessorFactory(BaseFactory):
     class MockAction:
-        def __init__(self, _telnet, _world, _output):
+        def __init__(self, _server_config):
             pass
 
         def aliases(self):
@@ -154,9 +156,7 @@ class CommandProcessorFactory(BaseFactory):
 
     @fixture(autouse=True)
     def fixture_command_processor(self):
-        self.command_processor = CommandProcessor(
-            self.telnet, Mock(), self.output, [self.MockAction]
-        )
+        self.command_processor = CommandProcessor(self.server_config, [self.MockAction])
         yield
 
 
@@ -294,7 +294,7 @@ class NpcFactory(WorldFactory):
 class ConnectEventFactory(BaseFactory):
     @fixture(autouse=True)
     def fixture_connect_event(self):
-        self.connect = ConnectEvent(self.telnet, Mock(), self.output)
+        self.connect = ConnectEvent(self.server_config)
         yield
 
 
@@ -302,23 +302,22 @@ class DisconnectEventFactory(BaseFactory, ClientFactory):
     @fixture(autouse=True)
     def fixture_disconnect_event(self):
         self.client.login_state = ClientLoginState.LOGGED_IN
-        self.disconnect = DisconnectEvent(self.telnet, Mock(), self.output)
+        self.disconnect = DisconnectEvent(self.server_config)
         yield
 
 
 class SpawnEventFactory(BaseFactory, WorldFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_spawn_event(self):
-        self.spawn = SpawnEvent(self.telnet, self.world, self.output)
+        self.server_config = ServerConfig(self.telnet, self.world, self.output)
+        self.spawn = SpawnEvent(self.server_config)
         yield
 
 
 class InputEventFactory(CommandProcessorFactory, ClientFactory):
     @fixture(autouse=True)
     def fixture_input_event(self):
-        self.input = InputEvent(
-            self.telnet, Mock(), self.output, self.command_processor
-        )
+        self.input = InputEvent(self.server_config, self.command_processor)
         yield
 
 
@@ -328,6 +327,7 @@ class ActionFactory(ClientFactory, WorldFactory):
 
     @fixture
     def _fixture_action(self, _fixture_world):
+        self.server_config = ServerConfig(self.telnet, self.world, self.output)
         self.client.login_state = ClientLoginState.LOGGED_IN
         yield
 
@@ -335,42 +335,42 @@ class ActionFactory(ClientFactory, WorldFactory):
 class ConnectActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_connect(self, _fixture_action):
-        self.connect = Connect(self.telnet, self.world, self.output)
+        self.connect = Connect(self.server_config)
         yield
 
 
 class DisconnectActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_disconnect(self, _fixture_action):
-        self.disconnect = Disconnect(self.telnet, Mock(), self.output)
+        self.disconnect = Disconnect(self.server_config)
         yield
 
 
 class ErrorActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_error(self, _fixture_action):
-        self.error = Error(self.telnet, Mock(), self.output)
+        self.error = Error(self.server_config)
         yield
 
 
 class PromptActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_prompt(self, _fixture_action):
-        self.prompt = Prompt(self.telnet, Mock(), self.output)
+        self.prompt = Prompt(self.server_config)
         yield
 
 
 class CloseActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_close(self, _fixture_action):
-        self.close = Close(self.telnet, self.world, self.output)
+        self.close = Close(self.server_config)
         yield
 
 
 class OpenActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_open(self, _fixture_action):
-        self.open = Open(self.telnet, self.world, self.output)
+        self.open = Open(self.server_config)
         yield
 
 
@@ -378,42 +378,42 @@ class MoveActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_move(self, _fixture_action):
         self.telnet.get_connected_clients.return_value = []
-        self.move = Move(self.telnet, self.world, self.output)
+        self.move = Move(self.server_config)
         yield
 
 
 class LookActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_look(self, _fixture_action):
-        self.look = Look(self.telnet, self.world, self.output)
+        self.look = Look(self.server_config)
         yield
 
 
 class ExitsActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_exits(self, _fixture_action):
-        self.exits = Exits(self.telnet, self.world, self.output)
+        self.exits = Exits(self.server_config)
         yield
 
 
 class SayActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_say(self, _fixture_action):
-        self.say = Say(self.telnet, self.world, self.output)
+        self.say = Say(self.server_config)
         yield
 
 
 class QuitActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_quit(self, _fixture_action):
-        self.quit = Quit(self.telnet, self.world, self.output)
+        self.quit = Quit(self.server_config)
         yield
 
 
 class LogoutActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_logout(self, _fixture_action):
-        self.logout = Logout(self.telnet, self.world, self.output)
+        self.logout = Logout(self.server_config)
         yield
 
 
@@ -421,7 +421,7 @@ class RegisterActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_register(self, _fixture_action):
         self.client.login_state = ClientLoginState.PRE_LOGIN
-        self.register = Register(self.telnet, self.world, self.output)
+        self.register = Register(self.server_config)
         yield
 
 
@@ -430,7 +430,7 @@ class FinalizeActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     def fixture_finalize(self, _fixture_action):
         self.client.login_state = ClientLoginState.PRE_LOGIN
         self.client.registration = Player()
-        self.finalize = Finalize(self.telnet, self.world, self.output)
+        self.finalize = Finalize(self.server_config)
         yield
 
 
@@ -438,40 +438,40 @@ class LoginActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_login(self, _fixture_action):
         self.client.login_state = ClientLoginState.PRE_LOGIN
-        self.login = Login(self.telnet, self.world, self.output)
+        self.login = Login(self.server_config)
         yield
 
 
 class InventoryActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_inventory(self, _fixture_action):
-        self.inventory = Inventory(self.telnet, self.world, self.output)
+        self.inventory = Inventory(self.server_config)
         yield
 
 
 class DropActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_drop(self, _fixture_action):
-        self.drop = Drop(self.telnet, self.world, self.output)
+        self.drop = Drop(self.server_config)
         yield
 
 
 class GetActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_get(self, _fixture_action):
-        self.get = Get(self.telnet, self.world, self.output)
+        self.get = Get(self.server_config)
         yield
 
 
 class EveryMinuteActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_every_minute(self, _fixture_action):
-        self.every_minute = EveryMinute(self.telnet, Mock(), self.output)
+        self.every_minute = EveryMinute(self.server_config)
         yield
 
 
 class EverySecondActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_every_second(self, _fixture_action):
-        self.every_second = EverySecond(self.telnet, Mock(), self.output)
+        self.every_second = EverySecond(self.server_config)
         yield

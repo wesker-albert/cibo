@@ -4,24 +4,25 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from cibo.client import Client
+from cibo.config import ServerConfig
 from cibo.output import Output
 from cibo.password import Password
 from cibo.resources.doors import Doors
 from cibo.resources.items import Items
 from cibo.resources.rooms import Rooms
-from cibo.resources.world import World
-from cibo.telnet import TelnetServer
 
 
 class Action(ABC):
     """The base interface used by all Action classes."""
 
-    def __init__(self, telnet: TelnetServer, world: World, output: Output) -> None:
-        self._telnet = telnet
-        self._output = output
-        self._password_hasher = Password()
+    def __init__(self, server_config: ServerConfig) -> None:
+        self._server_config = server_config
 
-        self._world = world
+        self._telnet = self._server_config.telnet
+        self._world = self._server_config.world
+        self._output = self._server_config.output
+
+        self._password_hasher = Password()
 
     @property
     def rooms(self) -> Rooms:

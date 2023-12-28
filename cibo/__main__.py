@@ -7,6 +7,7 @@ running.
 from os import getenv
 from time import sleep
 
+from cibo.config import ServerConfig
 from cibo.output import Output
 from cibo.resources.world import World
 from cibo.server import Server
@@ -17,7 +18,9 @@ if __name__ == "__main__":
     world = World()
     output = Output(telnet)
 
-    server = Server(telnet, world, output)
+    server_config = ServerConfig(telnet, world, output)
+
+    server = Server(server_config)
 
     print(
         "Accepted commands:\n\n"

@@ -2,18 +2,18 @@
 
 from abc import ABC, abstractmethod
 
-from cibo.output import Output
-from cibo.resources.world import World
-from cibo.telnet import TelnetServer
+from cibo.config import ServerConfig
 
 
 class Event(ABC):
     """The base interface used by other Event classes."""
 
-    def __init__(self, telnet: TelnetServer, world: World, output: Output) -> None:
-        self._telnet = telnet
-        self._world = world
-        self._output = output
+    def __init__(self, server_config: ServerConfig) -> None:
+        self._server_config = server_config
+
+        self._telnet = self._server_config.telnet
+        self._world = self._server_config.world
+        self._output = self._server_config.output
 
     @abstractmethod
     def process(self) -> None:  # pytest: no cover

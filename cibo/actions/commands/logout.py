@@ -53,6 +53,4 @@ class Logout(Action):
 
             # process the connection Action, so the client knows they can now register
             # or login again
-            Connect(self._telnet, self._world, self._output).process(
-                client, command, args
-            )
+            Connect(self._server_config).process(client, command, args)
