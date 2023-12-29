@@ -13,7 +13,11 @@ from cibo.events.__event__ import Event
 
 
 class TickEvent(Event):
-    """Tick timers, that execute recurring Actions with varying frequency."""
+    """Tick timers, that execute recurring Actions with varying frequency.
+
+    Args:
+        server_config (ServerConfig): The server configuration object.
+    """
 
     def __init__(self, server_config: ServerConfig):
         super().__init__(server_config)
@@ -37,8 +41,7 @@ class TickEvent(Event):
 
         Args:
             action (type[Action]): The tick Action to process.
-            telnet (TelnetServer): The Telnet server to use when executing the Action.
-            world (World): The World as we know it.
+            server_config (ServerConfig): The server configuration object.
         """
 
         thread = Thread(target=action, args=[server_config])

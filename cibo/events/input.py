@@ -18,6 +18,11 @@ class InputEvent(Event):
     """Input sent from clients since the last poll, that needs to be processed by the
     CommandProcessor. If the input contains a valid Command, further logic will be
     carried out.
+
+    Args:
+        server_config (ServerConfig): The server configuration object.
+        command_processor (CommandProcessor): The processor to use when evaluating the
+            given input.
     """
 
     def __init__(

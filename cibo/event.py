@@ -17,17 +17,12 @@ from cibo.events.input import InputEvent
 class EventProcessor:  # pytest: no cover
     """Event processing abstraction layer for the server. Kicks off the processing
     logic for each included Event type.
+
+    Args:
+        server_config (ServerConfig): The server configuration object.
     """
 
     def __init__(self, server_config: ServerConfig) -> None:
-        """Creates the Event processor instance.
-
-        Args:
-            telnet (TelnetServer): The Telnet server to use for event query and
-                processing.
-            world (World): The world, and all its resources.
-        """
-
         self._command_processor = CommandProcessor(server_config, ACTIONS)
 
         self._connect = ConnectEvent(server_config)

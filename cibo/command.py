@@ -22,6 +22,10 @@ class Command:
 class CommandProcessor:
     """Command processing abstraction layer. Establishes the allowed client commands and
     command aliases, and maps them to action methods.
+
+    Args:
+        server_config (ServerConfig): The server configuration object.
+        actions (List[type[Action]]): The Action classes available to the processor.
     """
 
     def __init__(
@@ -29,13 +33,6 @@ class CommandProcessor:
         server_config: ServerConfig,
         actions: List[type[Action]],
     ) -> None:
-        """Creates the command processor instance.
-
-        Args:
-            telnet (TelnetServer):  The Telnet server to use when executing the action.
-            world (World): The world, and all its resources.
-        """
-
         self._server_config = server_config
         self._actions = actions
 

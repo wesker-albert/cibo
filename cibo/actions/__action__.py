@@ -13,7 +13,11 @@ from cibo.resources.rooms import Rooms
 
 
 class Action(ABC):
-    """The base interface used by all Action classes."""
+    """The base interface used by all Action classes.
+
+    Args:
+        server_config (ServerConfig): The server configuration object.
+    """
 
     def __init__(self, server_config: ServerConfig) -> None:
         self._server_config = server_config

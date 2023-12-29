@@ -28,7 +28,11 @@ class Announcement:
 
 
 class Output:
-    """Responsible for constructing messages that are sent to clients."""
+    """Responsible for constructing messages that are sent to clients.
+
+    Args:
+        telnet (TelnetServer): The Telnet server to use when outputting messages.
+    """
 
     def __init__(self, telnet: TelnetServer) -> None:
         self._telnet = telnet

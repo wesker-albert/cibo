@@ -6,7 +6,11 @@ from cibo.config import ServerConfig
 
 
 class Event(ABC):
-    """The base interface used by other Event classes."""
+    """The base interface used by other Event classes.
+
+    Args:
+        server_config (ServerConfig): The server configuration object.
+    """
 
     def __init__(self, server_config: ServerConfig) -> None:
         self._server_config = server_config
