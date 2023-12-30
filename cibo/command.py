@@ -1,5 +1,5 @@
 """Commands are specific strings of input a client can send to the server, that
-will in turn trigger the Action mapped to that Command.
+will in turn trigger the action mapped to that command.
 """
 
 from dataclasses import dataclass
@@ -53,14 +53,14 @@ class CommandProcessor:
         ]
 
     def _get_command_action(self, client_command: str) -> Optional[Type[Action]]:
-        """Returns the Action for the command identified in the client input, if the
+        """Returns the action for the command identified in the client input, if the
         command alias exists.
 
         Args:
             client_command (str): The command the client sent.
 
         Returns:
-            Optional[Type[Action]]: The action class, if the command is valid.
+            Optional[Type[Action]]: The Action class, if the command is valid.
         """
 
         for mapped_command in self._commands:
@@ -71,7 +71,7 @@ class CommandProcessor:
         return None
 
     def process(self, client: Client, input_: str) -> None:
-        """Instantiates the Action that is mapped to the command that the client sent
+        """Instantiates the action that is mapped to the command that the client sent
         and then processes the associated logic.
 
         Args:

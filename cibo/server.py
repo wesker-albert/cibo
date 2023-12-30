@@ -63,7 +63,7 @@ class Server:
         return self._status is self.Status.RUNNING
 
     def _start_tick_timers(self) -> None:
-        """Start the tick timers, that carry out schedules Actions."""
+        """Start the tick timers, that carry out scheduled actions."""
 
         while self.is_running:
             self._tick.process()

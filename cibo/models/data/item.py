@@ -12,8 +12,8 @@ from cibo.models.data.player import Player
 
 
 class Item(Model):
-    """Represents a persisted World Item, that could belong to a Player, located in
-    a Room, etc.
+    """Represents a persisted world item, that could belong to a player, located in
+    a room, etc.
     """
 
     id_ = AutoField()
@@ -24,13 +24,13 @@ class Item(Model):
 
     @classmethod
     def get_by_current_room_id(cls, room_id: int) -> List[Self]:
-        """Get any Items that currently persist in the Room with the given ID.
+        """Get any items that currently persist in the room with the given ID.
 
         Args:
-            room_id (int): The ID of the Room you want to check.
+            room_id (int): The ID of the room you want to check.
 
         Returns:
-            List[Self]: The Item(s) that are currently in the room specified, if any.
+            List[Self]: The item(s) that are currently in the room specified, if any.
         """
 
         return [item for item in cls.select() if item.current_room_id == room_id]

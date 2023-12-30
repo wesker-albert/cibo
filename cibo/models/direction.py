@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class Direction(str, Enum):
-    """Available directions of travel between Rooms."""
+    """Available directions of travel between rooms."""
 
     NORTH = "n"
     SOUTH = "s"

@@ -20,7 +20,7 @@ class Logout(Action):
         return []
 
     def logging_out_message(self, player_name: str) -> Announcement:
-        """Successfully logging the Player out."""
+        """Successfully logging the player out."""
 
         return Announcement(
             "You slowly fade away into obscurity, like you always feared you would...",
@@ -51,6 +51,6 @@ class Logout(Action):
 
             sleep(sleep_time)
 
-            # process the connection Action, so the client knows they can now register
+            # process the connection action, so the client knows they can now register
             # or login again
             Connect(self._server_config).process(client, command, args)

@@ -1,3 +1,3 @@
-"""Actions that are scheduled by the Tick event, to be processed at varying
+"""Actions that are scheduled by the tick event, to be processed at varying
 frequency.
 """

@@ -54,7 +54,7 @@ class TelnetServer:
         SUBNEG = 3
 
     class CommandCode(int, Enum):
-        """Command codes used by Telnet protocol."""
+        """Command codes used by telnet protocol."""
 
         INTERPRET_AS_MESSAGE = 255
         ARE_YOU_THERE = 246

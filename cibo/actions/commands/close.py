@@ -44,7 +44,7 @@ class Close(Action):
         return f"{door_name.capitalize()} is already closed."
 
     def door_closes_message(self, door_name: str, player_name: str) -> Announcement:
-        """The door is closed by the Player."""
+        """The door is closed by the player."""
 
         return Announcement(
             f"You close {door_name}.",

@@ -1,4 +1,4 @@
-"""Drops an item from the Player's inventory, onto the ground of the current room."""
+"""Drops an item from the player's inventory, onto the ground of the current room."""
 
 from typing import List
 
@@ -31,7 +31,7 @@ class Drop(Action):
 
     @property
     def inventory_item_not_found_message(self) -> str:
-        """The given item name isn't in the Player inventory."""
+        """The given item name isn't in the player inventory."""
 
         return "You scour your inventory, but can't find that."
 
@@ -51,10 +51,10 @@ class Drop(Action):
             item_name (str): The item name, full or partial.
 
         Raises:
-            InventoryItemNotFound: The given item name wasn't found in Player inventory.
+            InventoryItemNotFound: The given item name wasn't found in player inventory.
 
         Returns:
-            Item: The Item entry from the database.
+            Item: The item entry from the database.
         """
 
         inventory: List[Item] = client.player.inventory

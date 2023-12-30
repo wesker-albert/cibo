@@ -1,4 +1,4 @@
-"""Abstraction to be used as a base class for every Event."""
+"""Abstraction to be used as a base class for every event."""
 
 from abc import ABC, abstractmethod
 
@@ -21,6 +21,6 @@ class Event(ABC):
 
     @abstractmethod
     def process(self) -> None:  # pytest: no cover
-        """Processes the logic for the specific Event type."""
+        """Processes the logic for the specific event type."""
 
         pass

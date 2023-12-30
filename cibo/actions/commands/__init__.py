@@ -1,4 +1,4 @@
-"""Actions that are called by Commands that are made by the client."""
+"""Actions that are called by commands that are made by the client."""
 
 
 from cibo.actions.commands.close import Close

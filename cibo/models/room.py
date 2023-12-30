@@ -1,4 +1,4 @@
-"""A Room is a space that exists within the world, and which Players and Npcs can
+"""A Room is a space that exists within the world, and which players and NPCs can
 occupy as well as navigate through.
 """
 
@@ -23,7 +23,7 @@ class RoomExit:
 
 @dataclass
 class Room:
-    """Represents a single Room within the world."""
+    """Represents a single room within the world."""
 
     id_: int
     name: str
@@ -33,11 +33,11 @@ class Room:
     flags: List[RoomFlag]
 
     def get_exits(self) -> List[str]:
-        """Get the text values of the exits for the given Room, in alphabetical order.
+        """Get the text values of the exits for the given room, in alphabetical order.
         Returns empty if the room has no exits.
 
         Returns:
-            List[str]: The Room exits in str format.
+            List[str]: The room exits in human-readable format.
         """
 
         return sorted([exit_.direction.name.lower() for exit_ in self.exits])
@@ -62,7 +62,7 @@ class Room:
         return f"[green]Exits:[/] {joined_exits}"
 
     def get_direction_exit(self, direction: str) -> RoomExit:
-        """Returns the Room exit in the direction given, if an exit exists that way.
+        """Returns the room exit in the direction given, if an exit exists that way.
 
         Args:
             direction (str): The direction to check.

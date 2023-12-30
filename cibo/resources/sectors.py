@@ -1,6 +1,6 @@
 """A Sector is a subset of rooms with, certain shared behaviors.
 
-This is a collection of all the Sectors that exist in the World.
+This is a collection of all the sectors that exist in the world.
 """
 
 from typing import List
@@ -13,7 +13,7 @@ from cibo.resources.regions import Regions
 
 
 class Sectors(Resource):
-    """All the Sectors that exist in the World."""
+    """All the sectors that exist in the world."""
 
     def __init__(self, sectors_file: str, regions: Regions):
         self._regions = regions
@@ -31,16 +31,16 @@ class Sectors(Resource):
         )
 
     def get_by_id(self, id_: int) -> Sector:
-        """Get a Sector by its ID.
+        """Get a sector by its ID.
 
         Args:
-            id_ (int): The Sector ID you're looking for.
+            id_ (int): The sector ID you're looking for.
 
         Raises:
-            SectorNotFound: No Sector found for the given ID.
+            SectorNotFound: No sector found for the given ID.
 
         Returns:
-            Sector: The matching Sector.
+            Sector: The matching sector.
         """
 
         for sector in self._sectors:

@@ -59,24 +59,24 @@ class Register(Action):
         )
 
     def validate_player_info(self, name: str, password: str) -> None:
-        """Validates the supplied Player information, to see if it follows the
+        """Validates the supplied player information, to see if it follows the
         requirements established by the schema.
 
         Args:
-            name (str): The Player name to validate.
+            name (str): The player name to validate.
             password (str): The password to validate.
         """
 
         Player(name=name, password=password).validate(PlayerSchema)
 
     def check_for_existing_player(self, player_name: str) -> None:
-        """Checks to see if a Player already exists witht the provided name.
+        """Checks to see if a player already exists witht the provided name.
 
         Args:
             player_name (str): The name to check against.
 
         Raises:
-            PlayerAlreadyExists: A Player with that name exists.
+            PlayerAlreadyExists: A player with that name exists.
         """
 
         _existing_player = Player.get_by_name(player_name)

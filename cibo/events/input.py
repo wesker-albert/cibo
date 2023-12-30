@@ -1,5 +1,5 @@
-"""Input send from clients since the last poll, that needs to be processed by the
-CommandProcessor. If the input contains a valid Command, further logic will be carried
+"""Input sent from clients since the last poll, that needs to be processed by the
+CommandProcessor. If the input contains a valid command, further logic will be carried
 out."""
 
 from cibo.actions.error import Error
@@ -16,7 +16,7 @@ from cibo.exception import (
 
 class InputEvent(Event):
     """Input sent from clients since the last poll, that needs to be processed by the
-    CommandProcessor. If the input contains a valid Command, further logic will be
+    CommandProcessor. If the input contains a valid command, further logic will be
     carried out.
 
     Args:

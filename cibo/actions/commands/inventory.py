@@ -1,4 +1,4 @@
-"""Display the itemized contents of the Player inventory."""
+"""Display the itemized contents of the player inventory."""
 
 from typing import List
 
@@ -18,18 +18,18 @@ class Inventory(Action):
 
     @property
     def empty_inventory_message(self) -> str:
-        """The Player inventory is empty."""
+        """The player inventory is empty."""
 
         return "You aren't carrying anything..."
 
     def get_formatted_inventory(self, client: Client) -> str:
-        """The contents of the Player inventory.
+        """The contents of the player inventory.
 
         Args:
             client (Client): The client whose inventory will be checked.
 
         Returns:
-            str: The items in the Player inventory.
+            str: The items in the player inventory.
         """
 
         inventory_items = [

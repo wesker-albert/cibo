@@ -1,4 +1,4 @@
-"""A Region is a group of multiple Sectors."""
+"""A Region is a group of multiple sectors."""
 
 from dataclasses import dataclass
 from typing import List

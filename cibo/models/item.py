@@ -20,7 +20,7 @@ class Item:
 
     @property
     def room_description(self) -> str:
-        """The Item name and room description together, capitalized and in a friendly
+        """The item name and room description together, capitalized and in a friendly
         format.
 
         Returns:

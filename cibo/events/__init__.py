@@ -2,6 +2,6 @@
 client interactions with the server, or (in future) can be scheduled based upon a
 tick timer or cron.
 
-Some Events call Actions directly. Others, like user input, will be ran through the
-CommandProcessor to determine which Action should be called.
+Some events call actions directly. Others, like user input, will be ran through the
+CommandProcessor to determine which action should be called.
 """

@@ -1,4 +1,4 @@
-"""A Spawn is a rule that is used to manifest Items or NPCS into a room, of specific
+"""A Spawn is a rule that is used to manifest items or NPCS into a room, of specific
 amounts.
 """
 
@@ -7,7 +7,7 @@ from enum import Enum
 
 
 class SpawnType(str, Enum):
-    """The type of Spawn to create."""
+    """The type of spawn to create."""
 
     ITEM = "item"
     NPC = "npc"
@@ -15,7 +15,7 @@ class SpawnType(str, Enum):
 
 @dataclass
 class Spawn:
-    """Represents an Item or NPC spawning rule."""
+    """Represents an item or NPC spawning rule."""
 
     type_: SpawnType
     entity_id: int

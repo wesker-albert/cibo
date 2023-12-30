@@ -92,7 +92,7 @@ class Client:
         self.socket.close()
 
     def log_out(self) -> None:
-        """Log the client out of their current Player session."""
+        """Log the client out of their current player session."""
 
         self.login_state = ClientLoginState.PRE_LOGIN
 
@@ -101,10 +101,10 @@ class Client:
         self.player = Player()
 
     def log_in(self, player: Player) -> None:
-        """Log the client in as the given Player.
+        """Log the client in as the given player.
 
         Args:
-            player (Player): The Player the client will assume.
+            player (Player): The player the client will assume.
         """
 
         self.player = player

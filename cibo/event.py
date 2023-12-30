@@ -2,7 +2,7 @@
 client interactions with the server, or (in future) can be scheduled based upon a
 tick timer or cron.
 
-The EventProcessor allows for the different Event types to be processed as a batch,
+The EventProcessor allows for the different event types to be processed as a batch,
 in a FIFO order.
 """
 
@@ -16,7 +16,7 @@ from cibo.events.input import InputEvent
 
 class EventProcessor:  # pytest: no cover
     """Event processing abstraction layer for the server. Kicks off the processing
-    logic for each included Event type.
+    logic for each included event type.
 
     Args:
         server_config (ServerConfig): The server configuration object.
@@ -30,7 +30,7 @@ class EventProcessor:  # pytest: no cover
         self._input = InputEvent(server_config, self._command_processor)
 
     def process(self) -> None:
-        """Processes the different Event types."""
+        """Processes the different event types."""
 
         self._connect.process()
         self._disconnect.process()

@@ -48,7 +48,7 @@ class Login(Action):
         return "[bright_red]Incorrect password.[/]"
 
     def player_session_active_message(self, player_name: str) -> str:
-        """Another Client is already logged into a session with the Player."""
+        """Another client is already logged into a session with the player."""
 
         return (
             f"The player [cyan]{player_name}[/] is already logged in. "
@@ -66,11 +66,11 @@ class Login(Action):
         )
 
     def check_for_player_session(self, name: str) -> None:
-        """Checks to see if the Player is already logged into an active session, by
+        """Checks to see if the player is already logged into an active session, by
         a different client.
 
         Args:
-            name (str): The Player name to check.
+            name (str): The player name to check.
 
         Returns:
             bool: True if the player is already logged in.
