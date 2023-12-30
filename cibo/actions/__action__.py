@@ -1,4 +1,4 @@
-"""Abstraction to be used as a base class for every Action."""
+"""Abstraction to be used as a base class for every action."""
 
 from abc import ABC, abstractmethod
 from typing import List
@@ -13,7 +13,11 @@ from cibo.resources.rooms import Rooms
 
 
 class Action(ABC):
-    """The base interface used by all Action classes."""
+    """The base interface used by all Action classes.
+
+    Args:
+        server_config (ServerConfig): The server configuration object.
+    """
 
     def __init__(self, server_config: ServerConfig) -> None:
         self._server_config = server_config
@@ -26,39 +30,39 @@ class Action(ABC):
 
     @property
     def rooms(self) -> Rooms:
-        """All the Rooms in the World.
+        """All the rooms in the world.
 
         Returns:
-            Rooms: The Rooms.
+            Rooms: The rooms.
         """
         return self._world.rooms
 
     @property
     def doors(self) -> Doors:
-        """All the Doors in the World.
+        """All the doors in the world.
 
         Returns:
-            Doors: The Doors, without Jim Morrison.
+            Doors: The doors, without Jim Morrison.
         """
 
         return self._world.doors
 
     @property
     def items(self) -> Items:
-        """All the Items in the World.
+        """All the items in the world.
 
         Returns:
-            Items: The Items.
+            Items: The items.
         """
 
         return self._world.items
 
     @property
     def output(self) -> Output:
-        """Access the Output formatter, to send messages to clients.
+        """Access the output formatter, to send messages to clients.
 
         Returns:
-            Output: The Output formatter instance, and its methods.
+            Output: The output formatter instance, and its methods.
         """
 
         return self._output
@@ -78,23 +82,23 @@ class Action(ABC):
 
     @abstractmethod
     def aliases(self) -> List[str]:  # pytest: no cover
-        """Command aliases mapped to the Action. Clients can input these text
-        commands, to trigger this Action.
+        """Command aliases mapped to the action. Clients can input these text
+        commands, to trigger this action.
 
-        If the action isn't intended to be directly available as a client Command,
+        If the action isn't intended to be directly available as a client command,
         returns an empty list.
 
         Returns:
-            List[str]: Aliases associated with the Action.
+            List[str]: Aliases associated with the action.
         """
 
         pass
 
     @abstractmethod
     def required_args(self) -> List[str]:  # pytest: no cover
-        """Descriptions of the args required for the Action.
+        """Descriptions of the args required for the action.
 
-        If no arguments are necessary for the Action, returns an empty list.
+        If no arguments are necessary for the action, returns an empty list.
 
         Returns:
             List[str]: Descriptions for each required argument.
@@ -106,12 +110,12 @@ class Action(ABC):
     def process(
         self, client: Client, command: str, args: List[str]
     ) -> None:  # pytest: no cover
-        """Process the logic for the Action.
+        """Process the logic for the action.
 
         Args:
-            client (Client): The client who triggered the Action.
+            client (Client): The client who triggered the action.
             command (str): The command that the client sent.
-            args (List[str]): The args necessary to the Action.
+            args (List[str]): The args necessary to the action.
         """
 
         pass

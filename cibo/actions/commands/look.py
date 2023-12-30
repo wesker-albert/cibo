@@ -67,8 +67,8 @@ class Look(Action):
         ]
 
     def get_formatted_occupants(self, client: Client) -> str:
-        """Formats and lists out all occupants of the Client's current room, sans the
-        the Client themselves.
+        """Formats and lists out all occupants of the client's current room, excluding
+        the client themself.
 
         Args:
             Client (Client): The client whose current room you want to get the
@@ -94,7 +94,7 @@ class Look(Action):
         )
 
     def get_formatted_items(self, client: Client) -> str:
-        """Formats and lists all the Items that are in the current room, and
+        """Formats and lists all the items that are in the current room, and
         potentially interactable.
 
         Args:

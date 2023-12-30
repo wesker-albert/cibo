@@ -1,7 +1,7 @@
-"""A Resource is some kind of tangible object that exists in the World, often
+"""A Resource is some kind of tangible object that exists in the world, often
 interactable.
 
-Some examples of a Resource would be: a Room, Door, Item, or Npc.
+Some examples of a resource would be: a room, door, item, or NPC.
 """
 
 import json
@@ -19,7 +19,7 @@ from cibo.models.spawn import Spawn
 
 
 class Resource(ABC):
-    """An object that exists in the World."""
+    """An object that exists in the world."""
 
     def _generate_resources(self, filename: str) -> list:
         """Generate all the resources, from the local JSON file that houses them,

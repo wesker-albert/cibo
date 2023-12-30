@@ -1,6 +1,6 @@
-"""A Region is a group of multiple Sectors.
+"""A Region is a group of multiple sectors.
 
-This is a collection of all the Regions that exist in the World.
+This is a collection of all the regions that exist in the world.
 """
 
 from typing import List
@@ -12,7 +12,7 @@ from cibo.resources.__resource__ import Resource
 
 
 class Regions(Resource):
-    """All the Regions that exist in the World."""
+    """All the regions that exist in the world."""
 
     def __init__(self, regions_file: str):
         self._regions: List[Region] = self._generate_resources(regions_file)
@@ -28,16 +28,16 @@ class Regions(Resource):
         )
 
     def get_by_id(self, id_: int) -> Region:
-        """Get a Region by its ID.
+        """Get a region by its ID.
 
         Args:
-            id_ (int): The ID of the Region you're looking for.
+            id_ (int): The ID of the region you're looking for.
 
         Raises:
-            RegionNotFound: No Region found for the given ID.
+            RegionNotFound: No region found for the given ID.
 
         Returns:
-            Region: The matching Region.
+            Region: The matching region.
         """
 
         for region in self._regions:

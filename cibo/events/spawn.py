@@ -1,4 +1,4 @@
-"""A Spawner that iterates over all the existiting Spawn rules, translates them, then
+"""A spawner that iterates over all the existiting spawn rules, translates them, then
 spawns the appropriate entity and amount into the world.
 """
 
@@ -11,20 +11,20 @@ from cibo.models.spawn import Spawn, SpawnType
 
 
 class SpawnEvent(Event):
-    """A Spawner that iterates over all the existiting Spawn rules, translates them,
+    """A spawner that iterates over all the existiting spawn rules, translates them,
     then spawns the specified amount of the appropriate entity into the world.
     """
 
     def _generate_item_model_list(self, spawn: Spawn) -> List[Item]:
-        """Queries the Items of the given Spawn model, that already exist in the
+        """Queries the items of the given spawn model, that already exist in the
         specified room. If there are less than the amount specified by the rule,
         it creates as many are missing.
 
         Args:
-            spawn (Spawn): The Item Spawn rule.
+            spawn (Spawn): The item spawn rule.
 
         Returns:
-            List[Item]: The missing Items, as data model instances.
+            List[Item]: The missing items, as data model instances.
         """
 
         existing_items = Item.get_by_current_room_id(spawn.room_id)
@@ -39,12 +39,12 @@ class SpawnEvent(Event):
         ]
 
     def _generate_npc_model_list(self, spawn: Spawn) -> List[Npc]:
-        """Queries the NPCs of the given Spawn model, that already exist with the
+        """Queries the NPCs of the given spawn model, that already exist with the
         specified spawn room. If there are less than the amount specified by the rule,
         it creates as many are missing.
 
         Args:
-            spawn (Spawn): The NPC Spawn rule.
+            spawn (Spawn): The NPC spawn rule.
 
         Returns:
             List[Npc]: The missing NPCs, as data model instances.

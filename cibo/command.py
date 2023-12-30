@@ -1,5 +1,5 @@
 """Commands are specific strings of input a client can send to the server, that
-will in turn trigger the Action mapped to that Command.
+will in turn trigger the action mapped to that command.
 """
 
 from dataclasses import dataclass
@@ -22,6 +22,10 @@ class Command:
 class CommandProcessor:
     """Command processing abstraction layer. Establishes the allowed client commands and
     command aliases, and maps them to action methods.
+
+    Args:
+        server_config (ServerConfig): The server configuration object.
+        actions (List[type[Action]]): The Action classes available to the processor.
     """
 
     def __init__(
@@ -29,13 +33,6 @@ class CommandProcessor:
         server_config: ServerConfig,
         actions: List[type[Action]],
     ) -> None:
-        """Creates the command processor instance.
-
-        Args:
-            telnet (TelnetServer):  The Telnet server to use when executing the action.
-            world (World): The world, and all its resources.
-        """
-
         self._server_config = server_config
         self._actions = actions
 
@@ -56,14 +53,14 @@ class CommandProcessor:
         ]
 
     def _get_command_action(self, client_command: str) -> Optional[Type[Action]]:
-        """Returns the Action for the command identified in the client input, if the
+        """Returns the action for the command identified in the client input, if the
         command alias exists.
 
         Args:
             client_command (str): The command the client sent.
 
         Returns:
-            Optional[Type[Action]]: The action class, if the command is valid.
+            Optional[Type[Action]]: The Action class, if the command is valid.
         """
 
         for mapped_command in self._commands:
@@ -74,7 +71,7 @@ class CommandProcessor:
         return None
 
     def process(self, client: Client, input_: str) -> None:
-        """Instantiates the Action that is mapped to the command that the client sent
+        """Instantiates the action that is mapped to the command that the client sent
         and then processes the associated logic.
 
         Args:

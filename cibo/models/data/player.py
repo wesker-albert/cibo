@@ -23,13 +23,13 @@ class Player(Model):
 
     @classmethod
     def get_by_name(cls, name: str) -> Self:
-        """Find a Player by name, if they already exist.
+        """Find a player by name, if they already exist.
 
         Args:
-            name (str): The Player name to search.
+            name (str): The player name to search.
 
         Returns:
-            Self: The Player, if one exists with the given name.
+            Self: The player, if one exists with the given name.
         """
 
         try:
@@ -42,7 +42,7 @@ class Player(Model):
 
 
 class PlayerSchema(Schema):
-    """Schema for the Player model."""
+    """Schema for the player model."""
 
     id_ = fields.Int()
     name = fields.Str(

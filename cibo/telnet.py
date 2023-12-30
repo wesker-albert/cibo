@@ -41,6 +41,9 @@ class TelnetServer:
     can then be sent to and from multiple connected clients.
 
     The 'update' method should be called in a loop to keep the server running.
+
+    Args:
+        port (int): Port the server will listen to.
     """
 
     class ReadState(int, Enum):
@@ -51,7 +54,7 @@ class TelnetServer:
         SUBNEG = 3
 
     class CommandCode(int, Enum):
-        """Command codes used by Telnet protocol."""
+        """Command codes used by telnet protocol."""
 
         INTERPRET_AS_MESSAGE = 255
         ARE_YOU_THERE = 246
@@ -63,12 +66,6 @@ class TelnetServer:
         SUBNEGOTIATION_END = 240
 
     def __init__(self, port: int) -> None:
-        """Constructs the TelnetServer object and starts listening for new clients
-        and messages.
-
-        Args:
-            port (int): Port the server will listen to.
-        """
         self._port = port
         self._encoding = "utf-8"
         self._error_policy = "replace"

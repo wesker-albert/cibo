@@ -28,7 +28,11 @@ class Announcement:
 
 
 class Output:
-    """Responsible for constructing messages that are sent to clients."""
+    """Responsible for constructing messages that are sent to clients.
+
+    Args:
+        telnet (TelnetServer): The telnet server to use when outputting messages.
+    """
 
     def __init__(self, telnet: TelnetServer) -> None:
         self._telnet = telnet
@@ -77,7 +81,7 @@ class Output:
         return capture.get()
 
     def _format_prompt(self, prompt: str) -> str:
-        """_summary_
+        """Applies formatting to the prompt text.
 
         Args:
             prompt (str): The prompt text.
@@ -131,7 +135,7 @@ class Output:
     def send_local_message(
         self, room_id: int, message: str, ignore_clients: List[Client]
     ) -> None:
-        """Prints a message to all clients whose plater are within the room.
+        """Prints a message to all clients whose player are within the room.
 
         Args:
             room_id (int): The room to send the message to.

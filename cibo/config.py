@@ -1,5 +1,5 @@
-""" Used to consolodate the various objects necessary, to launch and orchestrate
-the server, it's events, etc.
+"""The configuration object which supplies all the necessary objects that the
+server needs to function, and to process actions and events.
 """
 
 from dataclasses import dataclass
@@ -11,7 +11,9 @@ from cibo.telnet import TelnetServer
 
 @dataclass
 class ServerConfig:
-    """The configuration object for our server."""
+    """The configuration object which supplies all the necessary objects that the
+    server needs to function, and to process actions and events.
+    """
 
     telnet: TelnetServer
     world: World

@@ -49,13 +49,13 @@ class Finalize(Action):
         )
 
     def save_player_registration(self, client: Client) -> None:
-        """Save the registered Player to the database.
+        """Save the registered player to the database.
 
         Args:
             client (Client): The client containing the registration info.
 
         Raises:
-            PlayerAlreadyExists: A Player with the same name already exists.
+            PlayerAlreadyExists: A player with the same name already exists.
         """
 
         try:
@@ -68,7 +68,7 @@ class Finalize(Action):
         """Give the newly created player any starting items they may need.
 
         Args:
-            client (Client): The client whose new Player needs swag.
+            client (Client): The client whose new player needs swag.
         """
 
         # give the player a fork, for now

@@ -8,7 +8,7 @@ from typing import Optional
 
 @dataclass
 class EntityDescription:
-    """Descriptions of an Npc or Item, depending on context."""
+    """Descriptions of an NPC or item, depending on context."""
 
     room: str
     look: str
@@ -16,7 +16,7 @@ class EntityDescription:
 
 @dataclass
 class RoomDescription:
-    """Descriptions of the Room from different perspectives."""
+    """Descriptions of the room from different perspectives."""
 
     normal: str
     extra: Optional[str]

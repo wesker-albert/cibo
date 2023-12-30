@@ -22,6 +22,9 @@ class Server:
     """A telnet server that once started, listens for incoming client events and input.
     When a new event is received upon update, it calls upon the event processor to
     determine event type and then carry out the event logic.
+
+    Args:
+        server_config (ServerConfig): The server configuration object.
     """
 
     class Status(int, Enum):
@@ -33,14 +36,6 @@ class Server:
         STOPPED = 4
 
     def __init__(self, server_config: ServerConfig) -> None:
-        """Creates a dormant telnet server. Once instantiated, it can be started and
-        stopped.
-
-        Args:
-            telnet (TelnetServer): The TelnetServer instance to use.
-            world (World): The world, and all its resources.
-        """
-
         self._database = SqliteDatabase(getenv("DATABASE_PATH", "cibo_database.db"))
 
         self._telnet = server_config.telnet
@@ -68,7 +63,7 @@ class Server:
         return self._status is self.Status.RUNNING
 
     def _start_tick_timers(self) -> None:
-        """Start the tick timers, that carry out schedules Actions."""
+        """Start the tick timers, that carry out scheduled actions."""
 
         while self.is_running:
             self._tick.process()

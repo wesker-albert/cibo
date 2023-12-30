@@ -1,4 +1,4 @@
-"""A door is an interactive object that separates two adjoining rooms. They can
+"""A Door is an interactive object that separates two adjoining rooms. They can
 commonly be opened and closed. Though some may be locked and need a key, or otherwise
 be impassible until certain events are triggered.
 """
@@ -28,7 +28,7 @@ class Door:
 
     @property
     def is_closed(self) -> bool:
-        """Check if the Door is closed.
+        """Check if the door is closed.
 
         Returns:
             bool: True, if closed.
@@ -38,7 +38,7 @@ class Door:
 
     @property
     def is_open(self) -> bool:
-        """Check if the Door is open.
+        """Check if the door is open.
 
         Returns:
             bool: True, if open.
@@ -48,7 +48,7 @@ class Door:
 
     @property
     def is_locked(self) -> bool:
-        """Check if the Door is locked.
+        """Check if the door is locked.
 
         Returns:
             bool: True, if locked.
@@ -75,13 +75,13 @@ class Door:
             raise DoorIsLocked
 
     def close(self) -> None:
-        """Close the given Door."""
+        """Close the given door."""
 
         self.flags.remove(DoorFlag.OPEN)
         self.flags.append(DoorFlag.CLOSED)
 
     def open_(self) -> None:
-        """Open the given Door."""
+        """Open the given door."""
 
         self.flags.remove(DoorFlag.CLOSED)
         self.flags.append(DoorFlag.OPEN)

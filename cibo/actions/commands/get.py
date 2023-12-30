@@ -1,4 +1,4 @@
-"""Picks up an item from the Player's current room, and adds it to the Player
+"""Picks up an item from the player's current room, and adds it to the player
 inventory.
 """
 
@@ -63,7 +63,7 @@ class Get(Action):
             RoomItemNotFound: The given item name wasn't found in the current room.
 
         Returns:
-            Item: The Item entry from the database.
+            Item: The item entry from the database.
         """
 
         room_items = Item.get_by_current_room_id(client.player.current_room_id)

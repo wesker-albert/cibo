@@ -1,7 +1,7 @@
-"""An Npc is a non-player character, that a player might encounter while exploring
-the world. Some Npcs can be interacted with, in varying ways.
+"""An NPC is a non-player character, that a player might encounter while exploring
+the world. Some NPCs can be interacted with, in varying ways.
 
-This is a collection of all the Npcs that exist in the world.
+This is a collection of all the NPCs that exist in the world.
 """
 
 from typing import List
@@ -13,7 +13,7 @@ from cibo.resources.__resource__ import Resource
 
 
 class Npcs(Resource):
-    """All the Npcs that exist in the world."""
+    """All the NPCs that exist in the world."""
 
     def __init__(self, npcs_file: str):
         self._npcs: List[Npc] = self._generate_resources(npcs_file)
@@ -31,16 +31,16 @@ class Npcs(Resource):
         )
 
     def get_by_id(self, id_: int) -> Npc:
-        """Get an Npc by it's ID.
+        """Get an NPC by it's ID.
 
         Args:
-            id_ (int): The Npc ID you're looking for.
+            id_ (int): The NPC ID you're looking for.
 
         Raises:
-            NpcNotFound: The Npc does not exist in the World.
+            NpcNotFound: The NPC does not exist in the world.
 
         Returns:
-            Npc: The matched Npc.
+            Npc: The matched NPC.
         """
 
         for npc in self._npcs:

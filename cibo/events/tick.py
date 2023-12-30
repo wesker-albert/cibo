@@ -1,4 +1,4 @@
-"""Tick timers, that execute recurring Actions with varying frequency."""
+"""Tick timers, that execute recurring actions with varying frequency."""
 
 
 from threading import Thread
@@ -13,12 +13,16 @@ from cibo.events.__event__ import Event
 
 
 class TickEvent(Event):
-    """Tick timers, that execute recurring Actions with varying frequency."""
+    """Tick timers, that execute recurring actions with varying frequency.
+
+    Args:
+        server_config (ServerConfig): The server configuration object.
+    """
 
     def __init__(self, server_config: ServerConfig):
         super().__init__(server_config)
 
-        # schedule each of our tick Actions for processing
+        # schedule each of our tick actions for processing
         every().second.do(
             self._process_tick,
             self._every_second,
@@ -36,9 +40,8 @@ class TickEvent(Event):
         That way our intervals are as accurate as possible.
 
         Args:
-            action (type[Action]): The tick Action to process.
-            telnet (TelnetServer): The Telnet server to use when executing the Action.
-            world (World): The World as we know it.
+            action (type[Action]): The tick action to process.
+            server_config (ServerConfig): The server configuration object.
         """
 
         thread = Thread(target=action, args=[server_config])
