@@ -117,6 +117,9 @@ class Look(Action):
 
         if name_segments[0].isdigit():
             try:
+                # we expect the initial index to be 1 (not zero) because it's
+                # more intuitive from a user perspective, so we have to decrease it
+                # here by 1 to be accurate against our list
                 return results[(int(name_segments[0]) - 1)]
 
             except IndexError:
