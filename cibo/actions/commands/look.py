@@ -48,7 +48,7 @@ class Look(Action):
         inventory, or an NPC in the room. In that order.
         """
 
-        resource = self._get_resource_by_name(
+        resource = self.get_resource_by_name(
             (
                 self._get_room_items(client)
                 + self._get_player_items(client)
@@ -96,9 +96,25 @@ class Look(Action):
     def _get_player_items(self, client: Client) -> List[Item]:
         return [self.items.get_by_id(item.item_id) for item in client.player.inventory]
 
-    def _get_resource_by_name(
+    # TODO: this method will be useful for many other actions in the future, at which
+    # point it should be moved someplace more common
+    def get_resource_by_name(
         self, resources: List[Union[Item, Npc]], name: str
     ) -> Optional[Union[Item, Npc]]:
+        """Finds a resource in a list of resources, with a name that matches or
+        contains the provided string. If the string starts with a number followed
+        by a period, that number is used as an index assuming there are multiple
+        matches.
+
+
+        Args:
+            resources (List[Union[Item, Npc]]): The resources to search against.
+            name (str): What to search for in the resource name.
+
+        Returns:
+            Optional[Union[Item, Npc]]: The matching resource, if one is found.
+        """
+
         search_name = name
         name_segments = name.split(".")
 
