@@ -105,6 +105,7 @@ class Look(Action):
         # after splitting on periods in the name, if the first character is a number,
         # we want to be able to target that specific index in the resources list
         if name_segments[0].isdigit():
+            # a specified index of 0 (zero) returns none -- see the next comment below
             if len(name_segments) > 1 and int(name_segments[0]) > 0:
                 search_name = name_segments[1]
             else:
