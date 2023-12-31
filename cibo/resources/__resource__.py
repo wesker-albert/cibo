@@ -22,7 +22,7 @@ class Resource(ABC):
     """An object that exists in the world."""
 
     def _generate_resources(self, filename: str) -> list:
-        """Generate all the resources, from the local JSON file that houses them,
+        """Generate all the resources, from the local JSON file that houses them.
 
         Returns:
             List[Room]: All the resources.

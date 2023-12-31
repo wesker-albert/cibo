@@ -9,6 +9,7 @@ from cibo.output import Output
 from cibo.password import Password
 from cibo.resources.doors import Doors
 from cibo.resources.items import Items
+from cibo.resources.npcs import Npcs
 from cibo.resources.rooms import Rooms
 
 
@@ -56,6 +57,16 @@ class Action(ABC):
         """
 
         return self._world.items
+
+    @property
+    def npcs(self) -> Npcs:
+        """All the NPCs in the world.
+
+        Returns:
+            Npcs: The NPCs.
+        """
+
+        return self._world.npcs
 
     @property
     def output(self) -> Output:
