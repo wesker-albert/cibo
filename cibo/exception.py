@@ -147,12 +147,6 @@ class RegionNotFound(Exception):
     pass
 
 
-class ResourceNotFound(Exception):
-    """Raised if no general matching resource is found."""
-
-    pass
-
-
 class RoomItemNotFound(Exception):
     """Raised if no item with the given name is found in the current room."""
 

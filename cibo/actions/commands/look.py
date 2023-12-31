@@ -6,7 +6,7 @@ from rich.panel import Panel
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
-from cibo.exception import ActionMissingArguments, ClientNotLoggedIn, ResourceNotFound
+from cibo.exception import ActionMissingArguments, ClientNotLoggedIn
 from cibo.models.data.item import Item as ItemData
 from cibo.models.data.npc import Npc as NpcData
 from cibo.models.item import Item
@@ -23,7 +23,7 @@ class Look(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def room_desc_message(self, room: Room, client: Client) -> Panel:
+    def room_desc_message(self, client: Client, room: Room) -> Panel:
         """A stylized description of the room, including its exits and occupants."""
 
         items = self.get_formatted_items(client)
@@ -42,6 +42,25 @@ class Look(Action):
             subtitle_align="right",
             padding=(1, 4),
         )
+
+    def resource_desc_message(self, client: Client, args: List[str]) -> str:
+        """A stylized description of an item in the room, an item in the player's
+        inventory, or an NPC in the room. In that order.
+        """
+
+        resource = self._get_resource_by_name(
+            (
+                self._get_room_items(client)
+                + self._get_player_items(client)
+                + self._get_npc_occupants(client)
+            ),
+            args[0],
+        )
+
+        if resource:
+            return f"You look at {resource.name}:\n\n  {resource.description.look}"
+
+        return "You don't see that..."
 
     def _get_player_occupants_descriptions(self, client: Client) -> List[str]:
         return [
@@ -74,27 +93,31 @@ class Look(Action):
     def _get_room_items_descriptions(self, client: Client) -> List[str]:
         return [item.room_description for item in self._get_room_items(client)]
 
-    def _get_resource_look_description_by_name(
-        self, resources: Union[List[Item], List[Npc]], name: str
-    ) -> Optional[str]:
+    def _get_player_items(self, client: Client) -> List[Item]:
+        return [self.items.get_by_id(item.item_id) for item in client.player.inventory]
+
+    def _get_resource_by_name(
+        self, resources: List[Union[Item, Npc]], name: str
+    ) -> Optional[Union[Item, Npc]]:
         search_name = name
         name_segments = name.split(".")
 
+        # after splitting on periods in the name, if the first character is a number,
+        # we want to be able to target that specific index in the resources list
         if name_segments[0].isdigit():
-            search_name = name_segments[1]
+            if len(name_segments) > 1 and int(name_segments[0]) > 0:
+                search_name = name_segments[1]
+            else:
+                return None
 
-        results = [
-            resource.description.look
-            for resource in resources
-            if search_name in resource.name
-        ]
+        results = [resource for resource in resources if search_name in resource.name]
 
         if not results:
             return None
 
         if name_segments[0].isdigit():
             try:
-                return results[int(name_segments[0])]
+                return results[(int(name_segments[0]) - 1)]
 
             except IndexError:
                 return None
@@ -154,30 +177,17 @@ class Look(Action):
             if not args:
                 raise ActionMissingArguments
 
-            room_item = self._get_resource_look_description_by_name(
-                self._get_room_items(client), args[0]
+            self.output.send_private_message(
+                client, self.resource_desc_message(client, args)
             )
-            npc_occupant = self._get_resource_look_description_by_name(
-                self._get_npc_occupants(client), args[0]
-            )
-
-            if room_item:
-                self.output.send_private_message(client, room_item)
-            elif npc_occupant:
-                self.output.send_private_message(client, npc_occupant)
-            else:
-                raise ResourceNotFound
 
         except ClientNotLoggedIn:
             self.output.send_prompt(client)
-
-        except ResourceNotFound:
-            self.output.send_private_message(client, "You don't see that.")
 
         except ActionMissingArguments:
             # the player is just looking at the room in general
             room = self.rooms.get_by_id(client.player.current_room_id)
 
             self.output.send_private_message(
-                client, self.room_desc_message(room, client)
+                client, self.room_desc_message(client, room)
             )
