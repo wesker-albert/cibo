@@ -55,7 +55,7 @@ class Open(Action):
             f"{door_name.capitalize()} opens.",
         )
 
-    def door_is_open(self, door_name: str) -> str:
+    def door_is_open_message(self, door_name: str) -> str:
         """The door is already open."""
 
         return f"{door_name.capitalize()} is already open."
@@ -93,7 +93,9 @@ class Open(Action):
             )
 
         except DoorIsOpen:
-            self.output.send_private_message(client, self.door_is_open(door.name))
+            self.output.send_private_message(
+                client, self.door_is_open_message(door.name)
+            )
 
         except DoorIsClosed:
             door.open_()

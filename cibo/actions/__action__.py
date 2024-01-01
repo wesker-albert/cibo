@@ -9,6 +9,8 @@ from cibo.output import Output
 from cibo.password import Password
 from cibo.resources.doors import Doors
 from cibo.resources.items import Items
+from cibo.resources.npcs import Npcs
+from cibo.resources.resources import Resources
 from cibo.resources.rooms import Rooms
 
 
@@ -27,6 +29,17 @@ class Action(ABC):
         self._output = self._server_config.output
 
         self._password_hasher = Password()
+
+    @property
+    def resources(self) -> Resources:
+        """Resource helper methods that aren't necesarily associated with just one
+        resource type.
+
+        Returns:
+            Resources: The helper methods.
+        """
+
+        return self._world.resources
 
     @property
     def rooms(self) -> Rooms:
@@ -56,6 +69,16 @@ class Action(ABC):
         """
 
         return self._world.items
+
+    @property
+    def npcs(self) -> Npcs:
+        """All the NPCs in the world.
+
+        Returns:
+            Npcs: The NPCs.
+        """
+
+        return self._world.npcs
 
     @property
     def output(self) -> Output:

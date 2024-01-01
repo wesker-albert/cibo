@@ -30,6 +30,11 @@ about but haven't gotten the professional opportunity to try.
 
 ## Current state:
 
+### 2024-01-01
+* Happy new year!
+* Added the ability to `look <target>` at items in the current room, player inventory,
+or NPCs in the current room, to see their descriptions.
+
 ### 2023-09-06
 * Added basic, stationary NPCs. They can't be interacted with yet, but soon enough.
 * Added the ability to create item and NPC spawning rules, to populate specific rooms
