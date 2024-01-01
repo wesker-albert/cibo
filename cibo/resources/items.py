@@ -7,9 +7,10 @@ This is a collection of all the items that exist in the world.
 from typing import List
 
 from cibo.exception import ItemNotFound
+from cibo.models.data.item import Item as ItemData
 from cibo.models.description import EntityDescription
 from cibo.models.item import Item
-from cibo.resources.__resource__ import Resource
+from cibo.resources.__resource__ import Composite, Resource
 
 
 class Items(Resource):
@@ -17,6 +18,7 @@ class Items(Resource):
 
     def __init__(self, items_file: str):
         self._items: List[Item] = self._generate_resources(items_file)
+        self.get_by_name = Composite().get_by_name
 
     def _create_resource_from_dict(self, resource: dict) -> Item:
         item = resource
@@ -51,3 +53,16 @@ class Items(Resource):
                 return item
 
         raise ItemNotFound
+
+    def get_from_dataset(self, items_dataset: List[ItemData]) -> List[Item]:
+        """Compiles a list of items, using the IDS from a set of corresponding
+        item data models.
+
+        Args:
+            items_dataset (List[ItemData]): The set of item data models.
+
+        Returns:
+            List[Item]: The compiled list of items.
+        """
+
+        return [self.get_by_id(item.item_id) for item in items_dataset]

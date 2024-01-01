@@ -1,6 +1,6 @@
 """Returns information about the room or object targeted."""
 
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from rich.panel import Panel
 
@@ -48,7 +48,7 @@ class Look(Action):
         inventory, or an NPC in the room. In that order.
         """
 
-        resource = self.get_resource_by_name(
+        resource = self.items.get_by_name(
             (
                 self._get_room_items(client)
                 + self._get_player_items(client)
@@ -62,9 +62,9 @@ class Look(Action):
 
         return "You don't see that..."
 
-    def _get_player_occupants_descriptions(self, client: Client) -> List[str]:
+    def _get_player_occupants(self, client: Client) -> List[Client]:
         return [
-            f"[cyan]{occupant_client.player.name}[/] is standing here."
+            occupant_client
             for occupant_client in self._telnet.get_connected_clients()
             if (
                 occupant_client.player
@@ -76,73 +76,17 @@ class Look(Action):
         ]
 
     def _get_npc_occupants(self, client: Client) -> List[Npc]:
-        return [
-            self._world.npcs.get_by_id(npc.npc_id)
-            for npc in NpcData.get_by_current_room_id(client.player.current_room_id)
-        ]
-
-    def _get_npc_occupants_descriptions(self, client: Client) -> List[str]:
-        return [npc.room_description for npc in self._get_npc_occupants(client)]
+        return self.npcs.get_from_dataset(
+            NpcData.get_by_current_room_id(client.player.current_room_id)
+        )
 
     def _get_room_items(self, client: Client) -> List[Item]:
-        return [
-            self.items.get_by_id(item.item_id)
-            for item in ItemData.get_by_current_room_id(client.player.current_room_id)
-        ]
-
-    def _get_room_items_descriptions(self, client: Client) -> List[str]:
-        return [item.room_description for item in self._get_room_items(client)]
+        return self.items.get_from_dataset(
+            ItemData.get_by_current_room_id(client.player.current_room_id)
+        )
 
     def _get_player_items(self, client: Client) -> List[Item]:
-        return [self.items.get_by_id(item.item_id) for item in client.player.inventory]
-
-    # TODO: this method will be useful for many other actions in the future, at which
-    # point it should be moved someplace more common
-    def get_resource_by_name(
-        self, resources: List[Union[Item, Npc]], name: str
-    ) -> Optional[Union[Item, Npc]]:
-        """Finds a resource in a list of resources, with a name that matches or
-        contains the provided string. If the string starts with a number followed
-        by a period, that number is used as an index assuming there are multiple
-        matches.
-
-
-        Args:
-            resources (List[Union[Item, Npc]]): The resources to search against.
-            name (str): What to search for in the resource name.
-
-        Returns:
-            Optional[Union[Item, Npc]]: The matching resource, if one is found.
-        """
-
-        search_name = name
-        name_segments = name.split(".")
-
-        # after splitting on periods in the name, if the first character is a number,
-        # we want to be able to target that specific index in the resources list
-        if name_segments[0].isdigit():
-            # a specified index of 0 (zero) returns none -- see the next comment below
-            if len(name_segments) > 1 and int(name_segments[0]) > 0:
-                search_name = name_segments[1]
-            else:
-                return None
-
-        results = [resource for resource in resources if search_name in resource.name]
-
-        if not results:
-            return None
-
-        if name_segments[0].isdigit():
-            try:
-                # we expect the initial index to be 1 (not zero) because it's
-                # more intuitive from a user perspective, so we have to decrease it
-                # here by 1 to be accurate against our list
-                return results[(int(name_segments[0]) - 1)]
-
-            except IndexError:
-                return None
-
-        return results[0]
+        return self.items.get_from_dataset(client.player.inventory)
 
     def get_formatted_occupants(self, client: Client) -> str:
         """Formats and lists out all occupants of the client's current room, excluding
@@ -156,8 +100,13 @@ class Look(Action):
             str: The occupants for the room.
         """
 
-        player_occupants = self._get_player_occupants_descriptions(client)
-        npc_occupants = self._get_npc_occupants_descriptions(client)
+        player_occupants = [
+            f"[cyan]{occupant_client.player.name}[/] is standing here."
+            for occupant_client in self._get_player_occupants(client)
+        ]
+        npc_occupants = [
+            npc.room_description for npc in self._get_npc_occupants(client)
+        ]
         combined_occupants = player_occupants + npc_occupants
 
         joined_occupants = "\n• ".join(
@@ -183,7 +132,7 @@ class Look(Action):
             str: The individual items the room contains.
         """
 
-        room_items = self._get_room_items_descriptions(client)
+        room_items = [item.room_description for item in self._get_room_items(client)]
 
         joined_items = "\n• ".join([str(item) for item in room_items])
 
