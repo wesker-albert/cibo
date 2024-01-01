@@ -48,7 +48,7 @@ class Look(Action):
         inventory, or an NPC in the room. In that order.
         """
 
-        resource = self.items.get_by_name(
+        resource = self.resources.get_by_name(
             (
                 self._get_room_items(client)
                 + self._get_player_items(client)
