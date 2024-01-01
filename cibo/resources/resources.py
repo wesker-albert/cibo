@@ -17,14 +17,14 @@ class Resources:
         self, resources: List[Union[Item, Npc]], sub: str
     ) -> Optional[Union[Item, Npc]]:
         """Finds a resource in a list of resources, with a name that matches or
-        contains the provided string. If the string starts with a number followed
-        by a period, that number is used as an index assuming there are multiple
-        matches.
+        contains the provided substring. If the substring starts with a number
+        followed by a period, that number is used as an index assuming there are
+        multiple matches.
 
 
         Args:
             resources (List[Union[Item, Npc]]): The resources to search against.
-            name (str): What to search for in the resource name.
+            sub (str): What to search for in the resource name.
 
         Returns:
             Optional[Union[Item, Npc]]: The matching resource, if one is found.
