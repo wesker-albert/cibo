@@ -51,7 +51,7 @@ class Npcs(Resource):
         raise NpcNotFound
 
     def get_from_dataset(self, npcs_dataset: List[NpcData]) -> List[Npc]:
-        """Compiles a list of NPCs, using the IDS from a set of corresponding
+        """Compiles a list of NPCs, using the IDs from a set of corresponding
         NPC data models.
 
         Args:

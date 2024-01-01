@@ -54,7 +54,7 @@ class Items(Resource):
         raise ItemNotFound
 
     def get_from_dataset(self, items_dataset: List[ItemData]) -> List[Item]:
-        """Compiles a list of items, using the IDS from a set of corresponding
+        """Compiles a list of items, using the IDs from a set of corresponding
         item data models.
 
         Args:
