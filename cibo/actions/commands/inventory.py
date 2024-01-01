@@ -32,9 +32,7 @@ class Inventory(Action):
             str: The items in the player inventory.
         """
 
-        inventory_items = [
-            self.items.get_by_id(item.item_id).name for item in client.player.inventory
-        ]
+        inventory_items = self.items.get_from_dataset(client.player.inventory)
 
         inventory = "\n".join([str(item).capitalize() for item in inventory_items])
 
