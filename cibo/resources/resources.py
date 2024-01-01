@@ -14,7 +14,7 @@ class Resources:
     """
 
     def get_by_name(
-        self, resources: List[Union[Item, Npc]], name: str
+        self, resources: List[Union[Item, Npc]], sub: str
     ) -> Optional[Union[Item, Npc]]:
         """Finds a resource in a list of resources, with a name that matches or
         contains the provided string. If the string starts with a number followed
@@ -30,29 +30,30 @@ class Resources:
             Optional[Union[Item, Npc]]: The matching resource, if one is found.
         """
 
-        search_name = name
-        name_segments = name.split(".")
+        _sub = sub
+        sub_segments = sub.split(".")
 
-        # after splitting on periods in the name, if the first character is a number,
-        # we want to be able to target that specific index in the resources list
-        if name_segments[0].isdigit():
-            # a specified index of 0 (zero) returns none -- see the next comment below
-            if len(name_segments) > 1 and int(name_segments[0]) > 0:
-                search_name = name_segments[1]
+        # after splitting on periods in the substring, if the first character is a
+        # number, we want to be able to target that specific index in the resources
+        # list
+        if sub_segments[0].isdigit():
+            # a specified index of 0 (zero) returns None -- see the next comment below
+            if len(sub_segments) > 1 and int(sub_segments[0]) > 0:
+                _sub = sub_segments[1]
             else:
                 return None
 
-        results = [resource for resource in resources if search_name in resource.name]
+        results = [resource for resource in resources if _sub in resource.name]
 
         if not results:
             return None
 
-        if name_segments[0].isdigit():
+        if sub_segments[0].isdigit():
             try:
                 # we expect the initial index to be 1 (not zero) because it's
                 # more intuitive from a user perspective, so we have to decrease it
                 # here by 1 to be accurate against our list
-                return results[(int(name_segments[0]) - 1)]
+                return results[(int(sub_segments[0]) - 1)]
 
             except IndexError:
                 return None
