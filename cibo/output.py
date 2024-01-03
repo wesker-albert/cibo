@@ -97,6 +97,19 @@ class Output:
 
         return capture.get()
 
+    def prompt(self, message: str) -> str:
+        return f"\r\n{self._format_prompt(message)}"
+
+    def private(
+        self,
+        message: Union[str, Columns, Markdown, Panel, Syntax, Table, Tree],
+        justify: Optional[Literal["left", "center", "right"]] = None,
+    ) -> str:
+        return f"\n{self._format_message(message, justify=justify)}"
+
+    def local(self, message: str) -> str:
+        return f"\r{self._format_message(message)}"
+
     def send_prompt(self, client: Client) -> None:
         """Prints a formatted prompt to the client.
 
@@ -104,8 +117,7 @@ class Output:
             client (Client): The client to send the prompt to.
         """
 
-        formatted_prompt = self._format_prompt(client.prompt)
-        client.send_message([f"\r\n{formatted_prompt}"])
+        client.send_message([self.prompt(client.prompt)])
 
     def send_private_message(
         self,
@@ -126,11 +138,12 @@ class Output:
                 the message. Defaults to True.
         """
 
-        formatted_message = self._format_message(message, justify=justify)
-        client.send_message([f"\n{formatted_message}"])
+        messages = [self.private(message, justify=justify)]
 
         if prompt:
-            self.send_prompt(client)
+            messages.append(self.prompt(client.prompt))
+
+        client.send_message(messages)
 
     def send_local_message(
         self, room_id: int, message: str, ignore_clients: List[Client]
@@ -143,8 +156,6 @@ class Output:
             ignore_clients (List[Client]): Clients that should not receive the message.
         """
 
-        formatted_message = self._format_message(message)
-
         for client in self._telnet.get_connected_clients():
             if (
                 client.is_logged_in
@@ -152,8 +163,7 @@ class Output:
                 and client.player.current_room_id == room_id
                 and client not in ignore_clients
             ):
-                client.send_message([f"\r{formatted_message}"])
-                self.send_prompt(client)
+                client.send_message([self.local(message), self.prompt(client.prompt)])
 
     # pylint: disable=too-many-arguments
     def send_local_announcement(
