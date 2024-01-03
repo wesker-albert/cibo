@@ -105,7 +105,7 @@ class Output:
         """
 
         formatted_prompt = self._format_prompt(client.prompt)
-        client.send_message(f"\r\n{formatted_prompt}")
+        client.send_message([f"\r\n{formatted_prompt}"])
 
     def send_private_message(
         self,
@@ -127,7 +127,7 @@ class Output:
         """
 
         formatted_message = self._format_message(message, justify=justify)
-        client.send_message(f"\n{formatted_message}")
+        client.send_message([f"\n{formatted_message}"])
 
         if prompt:
             self.send_prompt(client)
@@ -152,7 +152,7 @@ class Output:
                 and client.player.current_room_id == room_id
                 and client not in ignore_clients
             ):
-                client.send_message(f"\r{formatted_message}")
+                client.send_message([f"\r{formatted_message}"])
                 self.send_prompt(client)
 
     # pylint: disable=too-many-arguments

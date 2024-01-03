@@ -6,6 +6,7 @@ out interactions between the user and the server.
 import socket as socket_
 from dataclasses import dataclass
 from enum import Enum
+from typing import List
 
 from cibo.models.data.player import Player
 
@@ -76,14 +77,15 @@ class Client:
         except socket_.error:
             return
 
-    def send_message(self, message: str) -> None:
-        """Sends the message text to the client, and apends a prompt at the end.
+    def send_message(self, messages: List[str]) -> None:
+        """Sends a message, or multiple messages, to the client.
 
         Args:
-            message (str): The body text of the message.
+            messages (List[str]): The message(s) to send.
         """
 
-        self._send_message(message)
+        for message in messages:
+            self._send_message(message)
 
     def disconnect(self) -> None:
         """Disconnect the client from the server."""
