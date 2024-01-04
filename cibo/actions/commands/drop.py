@@ -11,7 +11,7 @@ from cibo.exception import (
     ItemNotFound,
 )
 from cibo.models.data.item import Item
-from cibo.output import Announcement
+from cibo.output import Announcement, Message
 
 
 class Drop(Action):
@@ -24,16 +24,16 @@ class Drop(Action):
         return []
 
     @property
-    def missing_args_message(self) -> str:
+    def missing_args_message(self) -> Message:
         """No arguments were provided."""
 
-        return "Drop what? Your pants? No way!"
+        return Message("Drop what? Your pants? No way!")
 
     @property
-    def inventory_item_not_found_message(self) -> str:
+    def inventory_item_not_found_message(self) -> Message:
         """The given item name isn't in the player inventory."""
 
-        return "You scour your inventory, but can't find that."
+        return Message("You scour your inventory, but can't find that.")
 
     def dropped_item_message(self, player_name: str, item_name: str) -> Announcement:
         """Player has just dropped an item."""

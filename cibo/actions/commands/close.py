@@ -14,7 +14,7 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.output import Announcement
+from cibo.output import Announcement, Message
 
 
 class Close(Action):
@@ -27,21 +27,21 @@ class Close(Action):
         return []
 
     @property
-    def missing_args_message(self) -> str:
+    def missing_args_message(self) -> Message:
         """No arguments were provided."""
 
-        return "You close your eyes and daydream about money and success."
+        return Message("You close your eyes and daydream about money and success.")
 
     @property
-    def exit_not_found_message(self) -> str:
+    def exit_not_found_message(self) -> Message:
         """No exit in the given direction."""
 
-        return "There's nothing to close."
+        return Message("There's nothing to close.")
 
-    def door_is_closed_message(self, door_name: str) -> str:
+    def door_is_closed_message(self, door_name: str) -> Message:
         """The door is already closed."""
 
-        return f"{door_name.capitalize()} is already closed."
+        return Message(f"{door_name.capitalize()} is already closed.")
 
     def door_closes_message(self, door_name: str, player_name: str) -> Announcement:
         """The door is closed by the player."""

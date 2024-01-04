@@ -5,7 +5,7 @@ from typing import List
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ActionMissingArguments, ClientNotLoggedIn
-from cibo.output import Announcement
+from cibo.output import Announcement, Message
 
 
 class Say(Action):
@@ -18,10 +18,10 @@ class Say(Action):
         return []
 
     @property
-    def missing_args_message(self) -> str:
+    def missing_args_message(self) -> Message:
         """No arguments were provided."""
 
-        return "You try to think of something clever to say, but fail."
+        return Message("You try to think of something clever to say, but fail.")
 
     def speech_message(self, player_name: str, player_message: str) -> Announcement:
         """Player is successfully saying something."""

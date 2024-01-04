@@ -5,6 +5,7 @@ from typing import List, Optional
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientNotLoggedIn, RoomNotFound
+from cibo.output import Message
 
 
 class Exits(Action):
@@ -29,4 +30,6 @@ class Exits(Action):
             self.output.send_prompt(client)
 
         else:
-            self.output.send_private_message(client, room.get_formatted_exits())
+            self.output.send_private_message(
+                client, Message(room.get_formatted_exits())
+            )

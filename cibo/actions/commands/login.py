@@ -12,7 +12,7 @@ from cibo.exception import (
     PlayerSessionActive,
 )
 from cibo.models.data.player import Player
-from cibo.output import Announcement
+from cibo.output import Announcement, Message
 
 
 class Login(Action):
@@ -25,32 +25,32 @@ class Login(Action):
         return ["name", "password"]
 
     @property
-    def is_logged_in_message(self) -> str:
+    def is_logged_in_message(self) -> Message:
         """Player is already logged in."""
 
-        return (
+        return Message(
             "You login to Facebook, to make sure your ex isn't doing better than "
             "you are."
         )
 
-    def player_not_found_message(self, player_name: str) -> str:
+    def player_not_found_message(self, player_name: str) -> Message:
         """Player doesn't exist."""
 
-        return (
+        return Message(
             f"A player by the name [cyan]{player_name}[/] does not exist. "
             "If you want, you can [green]register[/] a new player with that name."
         )
 
     @property
-    def incorrect_password_message(self) -> str:
+    def incorrect_password_message(self) -> Message:
         """Incorrect password entered."""
 
-        return "[bright_red]Incorrect password.[/]"
+        return Message("[bright_red]Incorrect password.[/]")
 
-    def player_session_active_message(self, player_name: str) -> str:
+    def player_session_active_message(self, player_name: str) -> Message:
         """Another client is already logged into a session with the player."""
 
-        return (
+        return Message(
             f"The player [cyan]{player_name}[/] is already logged in. "
             "If this player belongs to you and you think it's been stolen, please "
             "contact the admin."

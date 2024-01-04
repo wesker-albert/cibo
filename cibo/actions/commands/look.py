@@ -12,6 +12,7 @@ from cibo.models.data.npc import Npc as NpcData
 from cibo.models.item import Item
 from cibo.models.npc import Npc
 from cibo.models.room import Room
+from cibo.output import Message
 
 
 class Look(Action):
@@ -23,7 +24,7 @@ class Look(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def room_desc_message(self, client: Client, room: Room) -> Panel:
+    def room_description_message(self, client: Client, room: Room) -> Message:
         """A stylized description of the room, including its exits and occupants."""
 
         items = self.get_formatted_items(client)
@@ -34,16 +35,18 @@ class Look(Action):
         else:
             formatted_room_contents = ""
 
-        return Panel(
-            f"  {room.description.normal}{formatted_room_contents}",
-            title=f"[blue]{room.name}[/]",
-            title_align="left",
-            subtitle=room.get_formatted_exits(),
-            subtitle_align="right",
-            padding=(1, 4),
+        return Message(
+            Panel(
+                f"  {room.description.normal}{formatted_room_contents}",
+                title=f"[blue]{room.name}[/]",
+                title_align="left",
+                subtitle=room.get_formatted_exits(),
+                subtitle_align="right",
+                padding=(1, 4),
+            )
         )
 
-    def resource_desc_message(self, client: Client, args: List[str]) -> str:
+    def resource_description_message(self, client: Client, args: List[str]) -> Message:
         """A stylized description of an item in the room, an item in the player's
         inventory, or an NPC in the room. In that order.
         """
@@ -58,9 +61,11 @@ class Look(Action):
         )
 
         if resource:
-            return f"You look at {resource.name}:\n\n  {resource.description.look}"
+            return Message(
+                f"You look at {resource.name}:\n\n  {resource.description.look}"
+            )
 
-        return "You don't see that..."
+        return Message("You don't see that...")
 
     def _get_player_occupants(self, client: Client) -> List[Client]:
         return [
@@ -147,7 +152,7 @@ class Look(Action):
                 raise ActionMissingArguments
 
             self.output.send_private_message(
-                client, self.resource_desc_message(client, args)
+                client, self.resource_description_message(client, args)
             )
 
         except ClientNotLoggedIn:
@@ -158,5 +163,5 @@ class Look(Action):
             room = self.rooms.get_by_id(client.player.current_room_id)
 
             self.output.send_private_message(
-                client, self.room_desc_message(client, room)
+                client, self.room_description_message(client, room)
             )

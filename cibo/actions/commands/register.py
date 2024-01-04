@@ -8,6 +8,7 @@ from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotFound
 from cibo.models.data.player import Player, PlayerSchema
+from cibo.output import Message
 
 
 class Register(Action):
@@ -20,24 +21,26 @@ class Register(Action):
         return ["name", "password"]
 
     @property
-    def is_logged_in_message(self) -> str:
+    def is_logged_in_message(self) -> Message:
         """Player is already logged in."""
 
-        return "You register to vote, even though both candidates aren't that great."
+        return Message(
+            "You register to vote, even though both candidates aren't that great."
+        )
 
-    def player_already_exists_message(self, player_name: str) -> str:
+    def player_already_exists_message(self, player_name: str) -> Message:
         """Player name is already taken."""
 
-        return (
+        return Message(
             f"Sorry, turns out the name [cyan]{player_name}[/] is already taken. "
             "Please [green]register[/] again with a different name."
         )
 
     @property
-    def validation_error_message(self) -> str:
+    def validation_error_message(self) -> Message:
         """Provided registration info is invalid."""
 
-        return (
+        return Message(
             "[bright_red]Your player name or password don't meet criteria.[/]\n\n"
             "Names must be 3-15 chars and only contain letters, numbers, or "
             "underscores. They are case-sensitive.\n\n"
@@ -45,10 +48,10 @@ class Register(Action):
             "Please [green]register[/] again."
         )
 
-    def confirm_finalize_message(self, player_name: str) -> str:
+    def confirm_finalize_message(self, player_name: str) -> Message:
         """Ask the client to finalize the player registration."""
 
-        return (
+        return Message(
             "Are you sure you want to create the player named "
             f"[cyan]{player_name}[/]?\n\n"
             "Type [green]finalize[/] to finalize the player creation. "

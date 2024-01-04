@@ -14,7 +14,7 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.output import Announcement
+from cibo.output import Announcement, Message
 
 
 class Open(Action):
@@ -36,15 +36,15 @@ class Open(Action):
         )
 
     @property
-    def exit_not_found_message(self) -> str:
+    def exit_not_found_message(self) -> Message:
         """No exit in the given direction."""
 
-        return "There's nothing to open."
+        return Message("There's nothing to open.")
 
-    def door_is_locked_message(self, door_name: str) -> str:
+    def door_is_locked_message(self, door_name: str) -> Message:
         """The door is locked."""
 
-        return f"{door_name.capitalize()} is locked."
+        return Message(f"{door_name.capitalize()} is locked.")
 
     def opening_door_message(self, player_name: str, door_name: str) -> Announcement:
         """Successfully opening the door."""
@@ -55,10 +55,10 @@ class Open(Action):
             f"{door_name.capitalize()} opens.",
         )
 
-    def door_is_open_message(self, door_name: str) -> str:
+    def door_is_open_message(self, door_name: str) -> Message:
         """The door is already open."""
 
-        return f"{door_name.capitalize()} is already open."
+        return Message(f"{door_name.capitalize()} is already open.")
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
         try:

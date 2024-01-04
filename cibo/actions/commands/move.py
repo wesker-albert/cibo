@@ -14,7 +14,7 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.output import Announcement
+from cibo.output import Announcement, Message
 
 
 class Move(Action):
@@ -40,15 +40,15 @@ class Move(Action):
         return []
 
     @property
-    def exit_not_found_message(self) -> str:
+    def exit_not_found_message(self) -> Message:
         """No exit in the given direction."""
 
-        return "You can't go that way."
+        return Message("You can't go that way.")
 
-    def door_is_closed_message(self, door_name: str) -> str:
+    def door_is_closed_message(self, door_name: str) -> Message:
         """There's a closed door in the way."""
 
-        return f"{door_name.capitalize()} is closed."
+        return Message(f"{door_name.capitalize()} is closed.")
 
     def moving_message(self, player_name: str, direction: str) -> Announcement:
         """Successfully moving in the direction given."""

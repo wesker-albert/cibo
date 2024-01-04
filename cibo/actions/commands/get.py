@@ -14,7 +14,7 @@ from cibo.exception import (
     RoomItemNotFound,
 )
 from cibo.models.data.item import Item
-from cibo.output import Announcement
+from cibo.output import Announcement, Message
 
 
 class Get(Action):
@@ -27,22 +27,22 @@ class Get(Action):
         return []
 
     @property
-    def missing_args_message(self) -> str:
+    def missing_args_message(self) -> Message:
         """No arguments were provided."""
 
-        return "You don't get it, and you probably never will."
+        return Message("You don't get it, and you probably never will.")
 
     @property
-    def room_item_not_found_message(self) -> str:
+    def room_item_not_found_message(self) -> Message:
         """The given item name isn't in the room."""
 
-        return "You look around, but don't see that."
+        return Message("You look around, but don't see that.")
 
     @property
-    def room_item_is_stationary_message(self) -> str:
+    def room_item_is_stationary_message(self) -> Message:
         """The specified item can't be picked up."""
 
-        return "You try, but you can't take that."
+        return Message("You try, but you can't take that.")
 
     def gotten_item_message(self, player_name: str, item_name: str) -> Announcement:
         """Player has just picked up an item."""

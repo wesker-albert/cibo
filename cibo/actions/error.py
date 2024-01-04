@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
+from cibo.output import Message
 
 
 class Error(Action):
@@ -15,5 +16,8 @@ class Error(Action):
     def required_args(self) -> List[str]:
         return ["message"]
 
+    def error_message(self, message: str) -> Message:
+        return Message(f"[bright_red]{message}[/]")
+
     def process(self, client: Client, _command: Optional[str], args: List[str]) -> None:
-        self.output.send_private_message(client, f"[bright_red]{args[0]}[/]")
+        self.output.send_private_message(client, self.error_message(args[0]))

@@ -9,6 +9,7 @@ from cibo.client import Client
 from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotRegistered
 from cibo.models.data.item import Item
 from cibo.models.data.player import Player
+from cibo.output import Message
 
 
 class Finalize(Action):
@@ -21,29 +22,33 @@ class Finalize(Action):
         return []
 
     @property
-    def is_logged_in_message(self) -> str:
+    def is_logged_in_message(self) -> Message:
         """Player is already logged in."""
 
-        return "You finalize your written will, leaving your whole estate to your cat."
+        return Message(
+            "You finalize your written will, leaving your whole estate to your cat."
+        )
 
     @property
-    def not_registered_message(self) -> str:
+    def not_registered_message(self) -> Message:
         """Didn't register first."""
 
-        return "You'll need to [green]register[/] before you can [green]finalize[/]."
+        return Message(
+            "You'll need to [green]register[/] before you can [green]finalize[/]."
+        )
 
-    def player_already_exists_message(self, player_name: str) -> str:
+    def player_already_exists_message(self, player_name: str) -> Message:
         """Player name is already taken."""
 
-        return (
+        return Message(
             f"Sorry, turns out the name [cyan]{player_name}[/] is already taken. "
             "Please [green]register[/] again with a different name."
         )
 
-    def successfully_registered_message(self, player_name: str) -> str:
+    def successfully_registered_message(self, player_name: str) -> Message:
         """Finalization was successful."""
 
-        return (
+        return Message(
             f"[cyan]{player_name}[/] has been created. You can now [green]login[/] "
             "with this player."
         )

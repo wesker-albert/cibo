@@ -5,6 +5,7 @@ from typing import List
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientNotLoggedIn
+from cibo.output import Message
 
 
 class Inventory(Action):
@@ -17,12 +18,12 @@ class Inventory(Action):
         return []
 
     @property
-    def empty_inventory_message(self) -> str:
+    def empty_inventory_message(self) -> Message:
         """The player inventory is empty."""
 
-        return "You aren't carrying anything..."
+        return Message("You aren't carrying anything...")
 
-    def get_formatted_inventory(self, client: Client) -> str:
+    def get_formatted_inventory(self, client: Client) -> Message:
         """The contents of the player inventory.
 
         Args:
@@ -38,7 +39,11 @@ class Inventory(Action):
 
         inventory = "\n".join([str(item).capitalize() for item in inventory_items])
 
-        return inventory if len(inventory_items) > 0 else self.empty_inventory_message
+        return (
+            Message(inventory)
+            if len(inventory_items) > 0
+            else self.empty_inventory_message
+        )
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
         try:

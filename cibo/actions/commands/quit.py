@@ -6,7 +6,7 @@ from typing import List, Optional
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientIsLoggedIn
-from cibo.output import Announcement
+from cibo.output import Announcement, Message
 
 
 class Quit(Action):
@@ -48,7 +48,7 @@ class Quit(Action):
 
         finally:
             self.output.send_private_message(
-                client, self.quitting_message(None).self_message, prompt=False
+                client, Message(self.quitting_message(None).self_message), prompt=False
             )
 
             sleep(sleep_time)

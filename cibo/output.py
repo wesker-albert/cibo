@@ -27,6 +27,14 @@ class Announcement:
     adjoining_room_message: Optional[str] = None
 
 
+@dataclass
+class Message:
+    body: Union[str, Columns, Markdown, Panel, Syntax, Table, Tree]
+    justify: Optional[Literal["left", "center", "right"]] = None
+    style: Optional[str] = None
+    highlight: bool = False
+
+
 class Output:
     """Responsible for constructing messages that are sent to clients.
 
@@ -38,13 +46,7 @@ class Output:
         self._telnet = telnet
         self._terminal_width = 76
 
-    def _format_message(
-        self,
-        message: Union[str, Columns, Markdown, Panel, Syntax, Table, Tree],
-        justify: Optional[Literal["left", "center", "right"]] = None,
-        style: Optional[str] = None,
-        highlight: bool = False,
-    ) -> str:
+    def _format_message(self, message: Message) -> str:
         """Leverages the rich library to pad, stylize, and format messages. Accepts
         plain strings, or a number of "renderables" that rich offers.
 
@@ -71,12 +73,14 @@ class Output:
         """
 
         formatter = Console(
-            width=self._terminal_width, style=style, highlight=highlight
+            width=self._terminal_width, style=message.style, highlight=message.highlight
         )
 
         with formatter.capture() as capture:
-            padded_message = Padding(message, (0, 2))
-            formatter.print(padded_message, end="", overflow="fold", justify=justify)
+            padded_message = Padding(message.body, (0, 2))
+            formatter.print(
+                padded_message, end="", overflow="fold", justify=message.justify
+            )
 
         return capture.get()
 
@@ -100,14 +104,10 @@ class Output:
     def prompt(self, message: str) -> str:
         return f"\r\n{self._format_prompt(message)}"
 
-    def private(
-        self,
-        message: Union[str, Columns, Markdown, Panel, Syntax, Table, Tree],
-        justify: Optional[Literal["left", "center", "right"]] = None,
-    ) -> str:
-        return f"\n{self._format_message(message, justify=justify)}"
+    def private(self, message: Message) -> str:
+        return f"\n{self._format_message(message)}"
 
-    def local(self, message: str) -> str:
+    def local(self, message: Message) -> str:
         return f"\r{self._format_message(message)}"
 
     def send_prompt(self, client: Client) -> None:
@@ -122,8 +122,7 @@ class Output:
     def send_private_message(
         self,
         client: Client,
-        message: Union[str, Columns, Markdown, Panel, Syntax, Table, Tree],
-        justify: Optional[Literal["left", "center", "right"]] = None,
+        message: Message,
         prompt: bool = True,
     ) -> None:
         """Prints a message only to the client specified.
@@ -138,7 +137,7 @@ class Output:
                 the message. Defaults to True.
         """
 
-        messages = [self.private(message, justify=justify)]
+        messages = [self.private(message)]
 
         if prompt:
             messages.append(self.prompt(client.prompt))
@@ -163,7 +162,9 @@ class Output:
                 and client.player.current_room_id == room_id
                 and client not in ignore_clients
             ):
-                client.send_message([self.local(message), self.prompt(client.prompt)])
+                client.send_message(
+                    [self.local(Message(message)), self.prompt(client.prompt)]
+                )
 
     # pylint: disable=too-many-arguments
     def send_local_announcement(
@@ -187,7 +188,9 @@ class Output:
                 a prompt. Defaults to True.
         """
 
-        self.send_private_message(client, announcement.self_message, prompt=prompt)
+        self.send_private_message(
+            client, Message(announcement.self_message), prompt=prompt
+        )
         self.send_local_message(room_id, announcement.room_message, [client])
 
         if adjoining_room_id and announcement.adjoining_room_message:
