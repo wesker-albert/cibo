@@ -5,7 +5,7 @@ from typing import List, Optional
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientNotLoggedIn, RoomNotFound
-from cibo.output import Message
+from cibo.messages.__message__ import Message
 
 
 class Exits(Action):

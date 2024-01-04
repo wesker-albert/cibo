@@ -32,10 +32,10 @@ class TestOutput(OutputFactory):
             "\n  You are tired.                                                            \n"
         )
 
-    def test_output_send_local_message(self):
+    def test_output_send_room_message(self):
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
-        self.output.send_local_message(1, "frank leaves.", [])
+        self.output.send_room_message(1, "frank leaves.", [])
 
         calls = [
             call(
@@ -46,29 +46,29 @@ class TestOutput(OutputFactory):
 
         self.mock_clients[0].send_message.assert_has_calls(calls)
 
-    def test_output_send_local_message_no_logged_in_clients(self):
+    def test_output_send_room_message_no_logged_in_clients(self):
         self.mock_clients[0].login_state = ClientLoginState.PRE_LOGIN
         self.mock_clients[0].player = Mock()
 
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
-        self.output.send_local_message(1, "frank leaves.", [])
+        self.output.send_room_message(1, "frank leaves.", [])
 
         self.mock_clients[0].send_message.assert_not_called()
 
-    def test_output_send_local_message_no_client_in_room(self):
+    def test_output_send_room_message_no_client_in_room(self):
         self.mock_clients[0].player = Mock(current_room_id=2)
 
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
-        self.output.send_local_message(1, "frank leaves.", [])
+        self.output.send_room_message(1, "frank leaves.", [])
 
         self.mock_clients[0].send_message.assert_not_called()
 
-    def test_output_send_local_message_client_ignored(self):
+    def test_output_send_room_message_client_ignored(self):
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
-        self.output.send_local_message(1, "frank leaves.", [self.mock_clients[0]])
+        self.output.send_room_message(1, "frank leaves.", [self.mock_clients[0]])
 
         self.mock_clients[0].send_message.assert_not_called()
 

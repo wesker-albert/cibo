@@ -1,6 +1,6 @@
 """Log in to an existing player on the server."""
 
-from typing import List
+from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
 from cibo.actions.commands.look import Look
@@ -11,8 +11,8 @@ from cibo.exception import (
     PlayerNotFound,
     PlayerSessionActive,
 )
+from cibo.messages.__message__ import Message, MessageRoute
 from cibo.models.data.player import Player
-from cibo.output import Announcement, Message
 
 
 class Login(Action):
@@ -56,13 +56,17 @@ class Login(Action):
             "contact the admin."
         )
 
-    def logging_in_message(self, player_name: str) -> Announcement:
+    def logging_in_message(self, player_name: str) -> Tuple[Message, Message]:
         """Successfully loggin in."""
 
-        return Announcement(
-            "You take the [red]red pill[/]. You have a look around, to see how "
-            "deep the rabbit hole goes...",
-            f"[cyan]{player_name}[/] falls from heaven. It looks like it hurt.",
+        return (
+            Message(
+                "You take the [red]red pill[/]. You have a look around, to see how "
+                "deep the rabbit hole goes..."
+            ),
+            Message(
+                f"[cyan]{player_name}[/] falls from heaven. It looks like it hurt."
+            ),
         )
 
     def check_for_player_session(self, name: str) -> None:
@@ -112,10 +116,12 @@ class Login(Action):
         else:
             client.log_in(player)
 
-            self.output.send_local_announcement(
-                self.logging_in_message(client.player.name),
+            logging_in_message = self.logging_in_message(client.player.name)
+
+            self.output.send_vicinity_message(
                 client,
-                client.player.current_room_id,
+                logging_in_message[0],
+                MessageRoute(client.player.current_room_id, logging_in_message[1]),
             )
 
             Look(self._server_config).process(client, None, [])

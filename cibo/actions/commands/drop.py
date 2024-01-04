@@ -1,6 +1,6 @@
 """Drops an item from the player's inventory, onto the ground of the current room."""
 
-from typing import List
+from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
@@ -10,8 +10,8 @@ from cibo.exception import (
     InventoryItemNotFound,
     ItemNotFound,
 )
+from cibo.messages.__message__ import Message, MessageRoute
 from cibo.models.data.item import Item
-from cibo.output import Announcement, Message
 
 
 class Drop(Action):
@@ -35,12 +35,14 @@ class Drop(Action):
 
         return Message("You scour your inventory, but can't find that.")
 
-    def dropped_item_message(self, player_name: str, item_name: str) -> Announcement:
+    def dropped_item_message(
+        self, player_name: str, item_name: str
+    ) -> Tuple[Message, Message]:
         """Player has just dropped an item."""
 
-        return Announcement(
-            f"You drop {item_name}.",
-            f"[cyan]{player_name}[/] drops {item_name}.",
+        return (
+            Message(f"You drop {item_name}."),
+            Message(f"[cyan]{player_name}[/] drops {item_name}."),
         )
 
     def find_item_in_inventory(self, client: Client, item_name: str) -> Item:
@@ -81,10 +83,14 @@ class Drop(Action):
             item.player_id = None
             item.save()
 
-            self.output.send_local_announcement(
-                self.dropped_item_message(client.player.name, item_meta.name),
+            dropped_item_message = self.dropped_item_message(
+                client.player.name, item_meta.name
+            )
+
+            self.output.send_vicinity_message(
                 client,
-                client.player.current_room_id,
+                dropped_item_message[0],
+                MessageRoute(client.player.current_room_id, dropped_item_message[1]),
             )
 
         except (ClientNotLoggedIn, ItemNotFound):

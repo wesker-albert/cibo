@@ -20,7 +20,7 @@ class TestDisconnectAction(DisconnectActionFactory):
         self.disconnect.process(self.client, None, [])
 
         self.client.player.save.assert_called_once()
-        self.output.send_local_message.assert_called_once_with(
+        self.output.send_room_message.assert_called_once_with(
             1,
             "You watch in horror as [cyan]frank[/] proceeds to slowly eat their own head. They eventually disappear into nothingness.",
             [self.client],

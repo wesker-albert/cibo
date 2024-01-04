@@ -1,6 +1,6 @@
 """Close an open door or object."""
 
-from typing import List
+from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
@@ -14,7 +14,7 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.output import Announcement, Message
+from cibo.messages.__message__ import Message, MessageRoute
 
 
 class Close(Action):
@@ -43,13 +43,15 @@ class Close(Action):
 
         return Message(f"{door_name.capitalize()} is already closed.")
 
-    def door_closes_message(self, door_name: str, player_name: str) -> Announcement:
+    def door_closes_message(
+        self, door_name: str, player_name: str
+    ) -> Tuple[Message, Message, Message]:
         """The door is closed by the player."""
 
-        return Announcement(
-            f"You close {door_name}.",
-            f"[cyan]{player_name}[/] closes {door_name}.",
-            f"{door_name.capitalize()} closes.",
+        return (
+            Message(f"You close {door_name}."),
+            Message(f"[cyan]{player_name}[/] closes {door_name}."),
+            Message(f"{door_name.capitalize()} closes."),
         )
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
@@ -83,9 +85,13 @@ class Close(Action):
         except DoorIsOpen:
             door.close()
 
-            self.output.send_local_announcement(
-                self.door_closes_message(door.name, client.player.name),
+            door_closes_message = self.door_closes_message(
+                door.name, client.player.name
+            )
+
+            self.output.send_vicinity_message(
                 client,
-                room.id_,
-                exit_.id_,
+                door_closes_message[0],
+                MessageRoute(room.id_, door_closes_message[1]),
+                MessageRoute(exit_.id_, door_closes_message[2]),
             )

@@ -1,6 +1,6 @@
 """Navigates a player between available rooms."""
 
-from typing import List
+from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
 from cibo.actions.commands.look import Look
@@ -14,7 +14,7 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.output import Announcement, Message
+from cibo.messages.__message__ import Message, MessageRoute
 
 
 class Move(Action):
@@ -50,13 +50,15 @@ class Move(Action):
 
         return Message(f"{door_name.capitalize()} is closed.")
 
-    def moving_message(self, player_name: str, direction: str) -> Announcement:
+    def moving_message(
+        self, player_name: str, direction: str
+    ) -> Tuple[Message, Message, Message]:
         """Successfully moving in the direction given."""
 
-        return Announcement(
-            f"You head {direction}.",
-            f"[cyan]{player_name}[/] arrives.",
-            f"[cyan]{player_name}[/] leaves {direction}.",
+        return (
+            Message(f"You head {direction}."),
+            Message(f"[cyan]{player_name}[/] arrives."),
+            Message(f"[cyan]{player_name}[/] leaves {direction}."),
         )
 
     def process(self, client: Client, command: str, _args: List[str]) -> None:
@@ -85,12 +87,15 @@ class Move(Action):
             # update the player's current room to the one they're navigating to
             client.player.current_room_id = exit_.id_
 
-            self.output.send_local_announcement(
-                self.moving_message(client.player.name, exit_.direction.name.lower()),
+            moving_message = self.moving_message(
+                client.player.name, exit_.direction.name.lower()
+            )
+
+            self.output.send_vicinity_message(
                 client,
-                client.player.current_room_id,
-                room.id_,
-                prompt=False,
+                moving_message[0],
+                MessageRoute(client.player.current_room_id, moving_message[1]),
+                MessageRoute(room.id_, moving_message[2]),
             )
 
             Look(self._server_config).process(client, None, [])

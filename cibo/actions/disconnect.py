@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
+from cibo.messages.__message__ import Message
 
 
 class Disconnect(Action):
@@ -21,10 +22,12 @@ class Disconnect(Action):
         if client.is_logged_in:
             client.player.save()
 
-            self.output.send_local_message(
+            self.output.send_room_message(
                 client.player.current_room_id,
-                f"You watch in horror as [cyan]{client.player.name}[/] "
-                "proceeds to slowly eat their own head. They eventually disappear "
-                "into nothingness.",
+                Message(
+                    f"You watch in horror as [cyan]{client.player.name}[/] "
+                    "proceeds to slowly eat their own head. They eventually disappear "
+                    "into nothingness."
+                ),
                 [client],
             )

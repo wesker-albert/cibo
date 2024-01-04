@@ -2,7 +2,7 @@
 inventory.
 """
 
-from typing import List
+from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
@@ -13,8 +13,8 @@ from cibo.exception import (
     ItemNotFound,
     RoomItemNotFound,
 )
+from cibo.messages.__message__ import Message, MessageRoute
 from cibo.models.data.item import Item
-from cibo.output import Announcement, Message
 
 
 class Get(Action):
@@ -44,12 +44,14 @@ class Get(Action):
 
         return Message("You try, but you can't take that.")
 
-    def gotten_item_message(self, player_name: str, item_name: str) -> Announcement:
+    def gotten_item_message(
+        self, player_name: str, item_name: str
+    ) -> Tuple[Message, Message]:
         """Player has just picked up an item."""
 
-        return Announcement(
-            f"You pick up {item_name}.",
-            f"[cyan]{player_name}[/] picks up {item_name}.",
+        return (
+            Message(f"You pick up {item_name}."),
+            Message(f"[cyan]{player_name}[/] picks up {item_name}."),
         )
 
     def find_item_in_room(self, client: Client, item_name: str) -> Item:
@@ -93,10 +95,14 @@ class Get(Action):
             item.player_id = client.player
             item.save()
 
-            self.output.send_local_announcement(
-                self.gotten_item_message(client.player.name, item_meta.name),
+            gotten_item_message = self.gotten_item_message(
+                client.player.name, item_meta.name
+            )
+
+            self.output.send_vicinity_message(
                 client,
-                client.player.current_room_id,
+                gotten_item_message[0],
+                MessageRoute(client.player.current_room_id, gotten_item_message[1]),
             )
 
         except (ClientNotLoggedIn, ItemNotFound):

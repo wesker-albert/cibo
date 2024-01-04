@@ -1,11 +1,11 @@
 """Say something to the current room."""
 
-from typing import List
+from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ActionMissingArguments, ClientNotLoggedIn
-from cibo.output import Announcement, Message
+from cibo.messages.__message__ import Message, MessageRoute
 
 
 class Say(Action):
@@ -23,12 +23,14 @@ class Say(Action):
 
         return Message("You try to think of something clever to say, but fail.")
 
-    def speech_message(self, player_name: str, player_message: str) -> Announcement:
+    def speech_message(
+        self, player_name: str, player_message: str
+    ) -> Tuple[Message, Message]:
         """Player is successfully saying something."""
 
-        return Announcement(
-            f'You say, "{player_message}"',
-            f'[cyan]{player_name}[/] says, "{player_message}"',
+        return (
+            Message(f'You say, "{player_message}"'),
+            Message(f'[cyan]{player_name}[/] says, "{player_message}"'),
         )
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
@@ -46,8 +48,12 @@ class Say(Action):
             self.output.send_private_message(client, self.missing_args_message)
 
         else:
-            self.output.send_local_announcement(
-                self.speech_message(client.player.name, self._join_args(args)),
+            speech_message = self.speech_message(
+                client.player.name, self._join_args(args)
+            )
+
+            self.output.send_vicinity_message(
                 client,
-                client.player.current_room_id,
+                speech_message[0],
+                MessageRoute(client.player.current_room_id, speech_message[1]),
             )

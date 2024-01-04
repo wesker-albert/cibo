@@ -1,13 +1,13 @@
 """Log out of the current player session."""
 
 from time import sleep
-from typing import List
+from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
 from cibo.actions.connect import Connect
 from cibo.client import Client
 from cibo.exception import ClientNotLoggedIn
-from cibo.output import Announcement
+from cibo.messages.__message__ import Message, MessageRoute
 
 
 class Logout(Action):
@@ -19,14 +19,19 @@ class Logout(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def logging_out_message(self, player_name: str) -> Announcement:
+    def logging_out_message(self, player_name: str) -> Tuple[Message, Message]:
         """Successfully logging the player out."""
 
-        return Announcement(
-            "You slowly fade away into obscurity, like you always feared you would...",
-            "A black van pulls up, and 2 large men in labcoats abduct "
-            f"[cyan]{player_name}[/]. The van speeds away. You wonder if "
-            "you'll ever see them again...",
+        return (
+            Message(
+                "You slowly fade away into obscurity, like you always feared you "
+                "would..."
+            ),
+            Message(
+                "A black van pulls up, and 2 large men in labcoats abduct "
+                f"[cyan]{player_name}[/]. The van speeds away. You wonder if "
+                "you'll ever see them again..."
+            ),
         )
 
     def process(
@@ -45,8 +50,12 @@ class Logout(Action):
 
             client.log_out()
 
-            self.output.send_local_announcement(
-                self.logging_out_message(player_name), client, player_room, prompt=False
+            logging_out_message = self.logging_out_message(player_name)
+
+            self.output.send_vicinity_message(
+                client,
+                logging_out_message[0],
+                MessageRoute(player_room, logging_out_message[1]),
             )
 
             sleep(sleep_time)

@@ -14,7 +14,7 @@ class TestQuitAction(QuitActionFactory):
 
         assert self.client.login_state is ClientLoginState.PRE_LOGIN
 
-        self.output.send_local_message.assert_called_once_with(
+        self.output.send_room_message.assert_called_once_with(
             1,
             '[cyan]frank[/] yells, "Thank you Wisconsin!" They then proceed to drop their microphone, and walk off the stage.',
             [self.client],
