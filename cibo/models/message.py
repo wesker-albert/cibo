@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Literal, Optional, Union
+from typing import List, Literal, Optional, Union
 
 from rich.columns import Columns
 from rich.console import Console
@@ -63,7 +63,7 @@ class Message:
 
 @dataclass
 class MessageRoute:
-    """Used to associate a message with a room, for routing purposes."""
+    """Used to associate a message with specific rooms, for routing purposes."""
 
-    room_id: int
+    room_ids: List[int]
     message: Message

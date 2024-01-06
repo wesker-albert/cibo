@@ -113,6 +113,6 @@ class Open(Action):
             self.output.send_vicinity_message(
                 client,
                 opening_door_message[0],
-                MessageRoute(room.id_, opening_door_message[1]),
-                MessageRoute(exit_.id_, opening_door_message[2]),
+                MessageRoute([room.id_], opening_door_message[1]),
+                MessageRoute([exit_.id_], opening_door_message[2]),
             )

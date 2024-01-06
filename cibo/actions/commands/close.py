@@ -92,6 +92,6 @@ class Close(Action):
             self.output.send_vicinity_message(
                 client,
                 door_closes_message[0],
-                MessageRoute(room.id_, door_closes_message[1]),
-                MessageRoute(exit_.id_, door_closes_message[2]),
+                MessageRoute([room.id_], door_closes_message[1]),
+                MessageRoute([exit_.id_], door_closes_message[2]),
             )
