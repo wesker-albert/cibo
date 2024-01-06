@@ -1,4 +1,4 @@
-from cibo.client import ClientLoginState
+from cibo.models.client import ClientLoginState
 from tests.conftest import ExitsActionFactory
 
 

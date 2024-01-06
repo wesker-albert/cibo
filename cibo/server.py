@@ -9,13 +9,13 @@ from time import sleep
 
 from peewee import SqliteDatabase
 
-from cibo.config import ServerConfig
 from cibo.event import EventProcessor
 from cibo.events.spawn import SpawnEvent
 from cibo.events.tick import TickEvent
 from cibo.models.data.item import Item
 from cibo.models.data.npc import Npc
 from cibo.models.data.player import Player
+from cibo.models.server_config import ServerConfig
 
 
 class Server:

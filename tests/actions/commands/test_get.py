@@ -1,4 +1,4 @@
-from cibo.client import ClientLoginState
+from cibo.models.client import ClientLoginState
 from cibo.models.data.item import Item
 from cibo.models.data.player import Player
 from cibo.output import Announcement

@@ -1,6 +1,6 @@
 from unittest.mock import ANY
 
-from cibo.client import ClientLoginState
+from cibo.models.client import ClientLoginState
 from cibo.models.data.player import Player
 from tests.conftest import LookActionFactory
 

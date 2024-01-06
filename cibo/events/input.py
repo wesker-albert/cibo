@@ -4,13 +4,13 @@ out."""
 
 from cibo.actions.error import Error
 from cibo.command import CommandProcessor
-from cibo.config import ServerConfig
 from cibo.events.__event__ import Event
 from cibo.exception import (
     CommandMissingArguments,
     CommandUnrecognized,
     InputNotReceived,
 )
+from cibo.models.server_config import ServerConfig
 
 
 class InputEvent(Event):

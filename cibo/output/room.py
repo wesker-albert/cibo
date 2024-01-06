@@ -1,6 +1,6 @@
 from typing import List
 
-from cibo.client import Client
+from cibo.models.client import Client
 from cibo.models.message import Message, MessageRoute
 from cibo.output.__output__ import Output
 

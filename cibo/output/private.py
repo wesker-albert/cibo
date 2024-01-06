@@ -1,4 +1,4 @@
-from cibo.client import Client
+from cibo.models.client import Client
 from cibo.models.message import Message
 from cibo.output.__output__ import Output
 

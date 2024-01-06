@@ -22,16 +22,14 @@ from cibo.actions.commands.say import Say
 from cibo.actions.connect import Connect
 from cibo.actions.disconnect import Disconnect
 from cibo.actions.error import Error
-from cibo.actions.prompt import Prompt
 from cibo.actions.scheduled.every_minute import EveryMinute
 from cibo.actions.scheduled.every_second import EverySecond
-from cibo.client import Client, ClientLoginState
 from cibo.command import CommandProcessor
-from cibo.config import ServerConfig
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
 from cibo.events.spawn import SpawnEvent
+from cibo.models.client import Client, ClientLoginState
 from cibo.models.data.item import Item as ItemData
 from cibo.models.data.npc import Npc as NpcData
 from cibo.models.data.player import Player
@@ -44,8 +42,8 @@ from cibo.models.npc import Npc
 from cibo.models.region import Region
 from cibo.models.room import Room, RoomExit
 from cibo.models.sector import Sector
+from cibo.models.server_config import ServerConfig
 from cibo.models.spawn import Spawn, SpawnType
-from cibo.output import Output
 from cibo.password import Password
 from cibo.resources.world import World
 
@@ -54,8 +52,7 @@ class BaseFactory:
     @fixture(autouse=True)
     def fixture_base(self):
         self.telnet = Mock()
-        self.output = Mock()
-        self.server_config = ServerConfig(self.telnet, Mock(), self.output)
+        self.server_config = ServerConfig(self.telnet, Mock())
         yield
 
 
@@ -157,13 +154,6 @@ class CommandProcessorFactory(BaseFactory):
     @fixture(autouse=True)
     def fixture_command_processor(self):
         self.command_processor = CommandProcessor(self.server_config, [self.MockAction])
-        yield
-
-
-class OutputFactory(BaseFactory, ClientFactory):
-    @fixture(autouse=True)
-    def fixture_output(self):
-        self.output = Output(self.telnet)
         yield
 
 
@@ -309,7 +299,7 @@ class DisconnectEventFactory(BaseFactory, ClientFactory):
 class SpawnEventFactory(BaseFactory, WorldFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_spawn_event(self):
-        self.server_config = ServerConfig(self.telnet, self.world, self.output)
+        self.server_config = ServerConfig(self.telnet, self.world)
         self.spawn = SpawnEvent(self.server_config)
         yield
 
@@ -327,7 +317,7 @@ class ActionFactory(ClientFactory, WorldFactory):
 
     @fixture
     def _fixture_action(self, _fixture_world):
-        self.server_config = ServerConfig(self.telnet, self.world, self.output)
+        self.server_config = ServerConfig(self.telnet, self.world)
         self.client.login_state = ClientLoginState.LOGGED_IN
         yield
 
@@ -350,13 +340,6 @@ class ErrorActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_error(self, _fixture_action):
         self.error = Error(self.server_config)
-        yield
-
-
-class PromptActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_prompt(self, _fixture_action):
-        self.prompt = Prompt(self.server_config)
         yield
 
 

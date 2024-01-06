@@ -5,8 +5,8 @@ from typing import List, Optional
 from rich.panel import Panel
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
 from cibo.exception import ActionMissingArguments, ClientNotLoggedIn
+from cibo.models.client import Client
 from cibo.models.data.item import Item as ItemData
 from cibo.models.data.npc import Npc as NpcData
 from cibo.models.item import Item

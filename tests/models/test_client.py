@@ -1,7 +1,7 @@
 import socket as socket_
 from unittest.mock import Mock
 
-from cibo.client import ClientLoginState
+from cibo.models.client import ClientLoginState
 from cibo.models.data.player import Player
 from tests.conftest import ClientFactory
 

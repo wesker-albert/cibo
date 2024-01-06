@@ -5,8 +5,8 @@ from typing import List
 from peewee import IntegrityError
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
 from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotRegistered
+from cibo.models.client import Client
 from cibo.models.data.item import Item
 from cibo.models.data.player import Player
 from cibo.models.message import Message

@@ -3,13 +3,13 @@
 from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
 from cibo.exception import (
     ActionMissingArguments,
     ClientNotLoggedIn,
     InventoryItemNotFound,
     ItemNotFound,
 )
+from cibo.models.client import Client
 from cibo.models.data.item import Item
 from cibo.models.message import Message, MessageRoute
 

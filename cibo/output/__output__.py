@@ -1,6 +1,6 @@
 from abc import ABC
 
-from cibo.config import ServerConfig
+from cibo.models.server_config import ServerConfig
 
 
 class Output(ABC):

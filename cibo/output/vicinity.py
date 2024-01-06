@@ -1,8 +1,8 @@
 from typing import Optional
 
-from cibo.client import Client
-from cibo.config import ServerConfig
+from cibo.models.client import Client
 from cibo.models.message import Message, MessageRoute
+from cibo.models.server_config import ServerConfig
 from cibo.output.__output__ import Output
 from cibo.output.private import Private
 from cibo.output.room import Room

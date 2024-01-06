@@ -3,8 +3,8 @@
 from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
 from cibo.exception import ActionMissingArguments, ClientNotLoggedIn
+from cibo.models.client import Client
 from cibo.models.message import Message, MessageRoute
 
 

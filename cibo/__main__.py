@@ -7,7 +7,7 @@ running.
 from os import getenv
 from time import sleep
 
-from cibo.config import ServerConfig
+from cibo.models.server_config import ServerConfig
 from cibo.resources.world import World
 from cibo.server import Server
 from cibo.telnet import TelnetServer

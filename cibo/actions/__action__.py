@@ -3,8 +3,8 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from cibo.client import Client
-from cibo.config import ServerConfig
+from cibo.models.client import Client
+from cibo.models.server_config import ServerConfig
 from cibo.output.private import Private
 from cibo.output.room import Room
 from cibo.output.vicinity import Vicinity

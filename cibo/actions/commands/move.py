@@ -4,7 +4,6 @@ from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
 from cibo.actions.commands.look import Look
-from cibo.client import Client
 from cibo.exception import (
     ClientNotLoggedIn,
     DoorIsClosed,
@@ -14,6 +13,7 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
+from cibo.models.client import Client
 from cibo.models.message import Message, MessageRoute
 
 

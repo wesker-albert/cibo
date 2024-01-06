@@ -1,6 +1,6 @@
 from unittest.mock import ANY
 
-from cibo.client import ClientLoginState
+from cibo.models.client import ClientLoginState
 from cibo.output import Announcement
 from tests.conftest import LogoutActionFactory
 
