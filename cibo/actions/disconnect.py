@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
-from cibo.models.message import Message
+from cibo.models.message import Message, MessageRoute
 
 
 class Disconnect(Action):
@@ -16,6 +16,12 @@ class Disconnect(Action):
     def required_args(self) -> List[str]:
         return []
 
+    def disconnect_message(self, player_name: str) -> Message:
+        return Message(
+            f"You watch in horror as [cyan]{player_name}[/] proceeds to slowly eat "
+            "their own head. They eventually disappear into nothingness."
+        )
+
     def process(
         self, client: Client, _command: Optional[str], _args: List[str]
     ) -> None:
@@ -23,11 +29,9 @@ class Disconnect(Action):
             client.player.save()
 
             self.output.send_room_message(
-                client.player.current_room_id,
-                Message(
-                    f"You watch in horror as [cyan]{client.player.name}[/] "
-                    "proceeds to slowly eat their own head. They eventually disappear "
-                    "into nothingness."
+                MessageRoute(
+                    client.player.current_room_id,
+                    self.disconnect_message(client.player.name),
                 ),
                 [client],
             )

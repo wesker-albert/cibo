@@ -24,13 +24,7 @@ class Vicinity(MessageAbstract):
     ) -> None:
         self._private.send(client, client_message)
 
-        for room_id in room_message.room_ids:
-            self._room.send(room_id, room_message.message, [client])
+        self._room.send(room_message, [client])
 
         if vicinity_message:
-            for room_id in vicinity_message.room_ids:
-                self._room.send(
-                    room_id,
-                    vicinity_message.message,
-                    [client],
-                )
+            self._room.send(vicinity_message, [client])

@@ -6,7 +6,7 @@ from typing import List, Optional, Tuple
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ClientIsLoggedIn
-from cibo.models.message import Message
+from cibo.models.message import Message, MessageRoute
 
 
 class Quit(Action):
@@ -47,8 +47,7 @@ class Quit(Action):
             client.log_out()
 
             self.output.send_room_message(
-                player_room,
-                self.quitting_message(player_name)[1],
+                MessageRoute(player_room, self.quitting_message(player_name)[1]),
                 [client],
             )
 
