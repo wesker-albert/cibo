@@ -63,5 +63,7 @@ class Message:
 
 @dataclass
 class MessageRoute:
+    """Used to associate a message with a room, for routing purposes."""
+
     room_id: int
     message: Message

@@ -1,9 +1,9 @@
 from typing import Optional
 
 from cibo.client import Client
-from cibo.messages.__message__ import Message, MessageRoute
 from cibo.messages.private import Private
 from cibo.messages.room import Room
+from cibo.models.message import Message, MessageRoute
 from cibo.telnet import TelnetServer
 
 

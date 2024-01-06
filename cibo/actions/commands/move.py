@@ -14,7 +14,7 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.messages.__message__ import Message, MessageRoute
+from cibo.models.message import Message, MessageRoute
 
 
 class Move(Action):

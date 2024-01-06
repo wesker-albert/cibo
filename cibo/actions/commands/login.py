@@ -11,8 +11,8 @@ from cibo.exception import (
     PlayerNotFound,
     PlayerSessionActive,
 )
-from cibo.messages.__message__ import Message, MessageRoute
 from cibo.models.data.player import Player
+from cibo.models.message import Message, MessageRoute
 
 
 class Login(Action):

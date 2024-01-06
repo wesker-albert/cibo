@@ -7,10 +7,10 @@ from rich.panel import Panel
 from cibo.actions.__action__ import Action
 from cibo.client import Client
 from cibo.exception import ActionMissingArguments, ClientNotLoggedIn
-from cibo.messages.__message__ import Message
 from cibo.models.data.item import Item as ItemData
 from cibo.models.data.npc import Npc as NpcData
 from cibo.models.item import Item
+from cibo.models.message import Message
 from cibo.models.npc import Npc
 from cibo.models.room import Room
 

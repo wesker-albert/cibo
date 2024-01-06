@@ -6,7 +6,7 @@ from rich.panel import Panel
 
 from cibo.actions.__action__ import Action
 from cibo.client import Client
-from cibo.messages.__message__ import Message
+from cibo.models.message import Message
 
 
 class Connect(Action):

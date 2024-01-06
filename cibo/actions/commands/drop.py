@@ -10,8 +10,8 @@ from cibo.exception import (
     InventoryItemNotFound,
     ItemNotFound,
 )
-from cibo.messages.__message__ import Message, MessageRoute
 from cibo.models.data.item import Item
+from cibo.models.message import Message, MessageRoute
 
 
 class Drop(Action):

@@ -1,8 +1,8 @@
 from typing import List
 
 from cibo.client import Client
-from cibo.messages.__message__ import Message
 from cibo.messages.prompt import Prompt
+from cibo.models.message import Message
 from cibo.telnet import TelnetServer
 
 

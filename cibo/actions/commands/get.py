@@ -13,8 +13,8 @@ from cibo.exception import (
     ItemNotFound,
     RoomItemNotFound,
 )
-from cibo.messages.__message__ import Message, MessageRoute
 from cibo.models.data.item import Item
+from cibo.models.message import Message, MessageRoute
 
 
 class Get(Action):
