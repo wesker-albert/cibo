@@ -6,8 +6,10 @@ from typing import List
 from cibo.models.client import Client
 from cibo.models.server_config import ServerConfig
 from cibo.output.private import Private
+from cibo.output.region import Region
 from cibo.output.room import Room
 from cibo.output.sector import Sector
+from cibo.output.server import Server
 from cibo.output.vicinity import Vicinity
 from cibo.password import Password
 from cibo.resources.doors import Doors
@@ -34,6 +36,8 @@ class Action(ABC):
             self.room = Room(self._server_config)
             self.vicinity = Vicinity(self._server_config)
             self.sector = Sector(self._server_config)
+            self.region = Region(self._server_config)
+            self.server = Server(self._server_config)
 
     def __init__(self, server_config: ServerConfig) -> None:
         self._server_config = server_config

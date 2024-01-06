@@ -1,18 +1,11 @@
 from typing import Optional
 
 from cibo.models.message import MessageRoute
-from cibo.models.server_config import ServerConfig
-from cibo.output.private import Private
-from cibo.output.room import Room
+from cibo.output.__output__ import OutputChain
 
 
-class Vicinity:
-    def __init__(self, server_config: ServerConfig) -> None:
-        self._server_config = server_config
-
-        self._private = Private(self._server_config)
-        self._room = Room(self._server_config)
-
+# pylint: disable=arguments-differ
+class Vicinity(OutputChain):
     def send(
         self,
         client_message: MessageRoute,
