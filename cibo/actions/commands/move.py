@@ -94,7 +94,7 @@ class Move(Action):
             )
 
             self.output.vicinity.send(
-                MessageRoute(moving_message[0], client=client),
+                MessageRoute(moving_message[0], client=client, send_prompt=False),
                 MessageRoute(moving_message[1], ids=[client.player.current_room_id]),
                 MessageRoute(moving_message[2], ids=[room.id_]),
             )
