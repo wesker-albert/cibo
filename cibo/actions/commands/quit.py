@@ -47,7 +47,7 @@ class Quit(Action):
             client.log_out()
 
             self.output.send_room_message(
-                MessageRoute(player_room, self.quitting_message(player_name)[1]),
+                MessageRoute([player_room], self.quitting_message(player_name)[1]),
                 [client],
             )
 

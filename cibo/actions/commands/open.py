@@ -84,7 +84,7 @@ class Open(Action):
             self.output.send_vicinity_message(
                 client,
                 missing_args_message[0],
-                MessageRoute(client.player.current_room_id, missing_args_message[1]),
+                MessageRoute([client.player.current_room_id], missing_args_message[1]),
             )
 
         except (ClientNotLoggedIn, RoomNotFound):

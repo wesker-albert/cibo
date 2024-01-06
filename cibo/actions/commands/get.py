@@ -102,7 +102,7 @@ class Get(Action):
             self.output.send_vicinity_message(
                 client,
                 gotten_item_message[0],
-                MessageRoute(client.player.current_room_id, gotten_item_message[1]),
+                MessageRoute([client.player.current_room_id], gotten_item_message[1]),
             )
 
         except (ClientNotLoggedIn, ItemNotFound):

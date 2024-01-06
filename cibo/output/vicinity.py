@@ -1,19 +1,19 @@
 from typing import Optional
 
 from cibo.client import Client
-from cibo.messages.__message__ import Message as MessageAbstract
-from cibo.messages.private import Private
-from cibo.messages.room import Room
+from cibo.config import ServerConfig
 from cibo.models.message import Message, MessageRoute
-from cibo.telnet import TelnetServer
+from cibo.output.__output__ import Output
+from cibo.output.private import Private
+from cibo.output.room import Room
 
 
-class Vicinity(MessageAbstract):
-    def __init__(self, telnet: TelnetServer) -> None:
-        super().__init__(telnet)
+class Vicinity(Output):
+    def __init__(self, server_config: ServerConfig) -> None:
+        super().__init__(server_config)
 
-        self._private = Private(self._telnet)
-        self._room = Room(self._telnet)
+        self._private = Private(self._server_config)
+        self._room = Room(self._server_config)
 
     def send(
         self,

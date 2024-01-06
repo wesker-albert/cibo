@@ -90,7 +90,7 @@ class Drop(Action):
             self.output.send_vicinity_message(
                 client,
                 dropped_item_message[0],
-                MessageRoute(client.player.current_room_id, dropped_item_message[1]),
+                MessageRoute([client.player.current_room_id], dropped_item_message[1]),
             )
 
         except (ClientNotLoggedIn, ItemNotFound):

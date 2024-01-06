@@ -30,7 +30,7 @@ class Disconnect(Action):
 
             self.output.send_room_message(
                 MessageRoute(
-                    client.player.current_room_id,
+                    [client.player.current_room_id],
                     self.disconnect_message(client.player.name),
                 ),
                 [client],

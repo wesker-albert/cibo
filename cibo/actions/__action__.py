@@ -5,7 +5,9 @@ from typing import List
 
 from cibo.client import Client
 from cibo.config import ServerConfig
-from cibo.output import Output
+from cibo.output.private import Private
+from cibo.output.room import Room
+from cibo.output.vicinity import Vicinity
 from cibo.password import Password
 from cibo.resources.doors import Doors
 from cibo.resources.items import Items
@@ -21,12 +23,27 @@ class Action(ABC):
         server_config (ServerConfig): The server configuration object.
     """
 
+    class Output:
+        """Responsible for constructing messages that are sent to clients.
+
+        Args:
+            telnet (TelnetServer): The telnet server to use when outputting messages.
+        """
+
+        def __init__(self, server_config: ServerConfig) -> None:
+            self._server_config = server_config
+
+            self.send_private_message = Private(self._server_config).send
+            self.send_room_message = Room(self._server_config).send
+            self.send_vicinity_message = Vicinity(self._server_config).send
+
     def __init__(self, server_config: ServerConfig) -> None:
         self._server_config = server_config
 
         self._telnet = self._server_config.telnet
         self._world = self._server_config.world
-        self._output = Output(self._telnet)
+
+        self._output = self.Output(self._server_config)
 
         self._password_hasher = Password()
 

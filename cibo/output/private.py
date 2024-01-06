@@ -1,9 +1,9 @@
 from cibo.client import Client
-from cibo.messages.__message__ import Message as MessageAbstract
 from cibo.models.message import Message
+from cibo.output.__output__ import Output
 
 
-class Private(MessageAbstract):
+class Private(Output):
     def _format(self, message: Message) -> str:
         return f"\n{message}"
 

@@ -55,7 +55,7 @@ class Logout(Action):
             self.output.send_vicinity_message(
                 client,
                 logging_out_message[0],
-                MessageRoute(player_room, logging_out_message[1]),
+                MessageRoute([player_room], logging_out_message[1]),
             )
 
             sleep(sleep_time)

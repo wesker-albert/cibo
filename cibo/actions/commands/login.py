@@ -121,7 +121,7 @@ class Login(Action):
             self.output.send_vicinity_message(
                 client,
                 logging_in_message[0],
-                MessageRoute(client.player.current_room_id, logging_in_message[1]),
+                MessageRoute([client.player.current_room_id], logging_in_message[1]),
             )
 
             Look(self._server_config).process(client, None, [])

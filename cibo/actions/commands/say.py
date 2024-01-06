@@ -55,5 +55,5 @@ class Say(Action):
             self.output.send_vicinity_message(
                 client,
                 speech_message[0],
-                MessageRoute(client.player.current_room_id, speech_message[1]),
+                MessageRoute([client.player.current_room_id], speech_message[1]),
             )
