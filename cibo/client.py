@@ -52,14 +52,14 @@ class Client:
         return bool(self.registration.is_dirty())
 
     @property
-    def prompt(self) -> str:
+    def prompt(self) -> Prompt:
         """The prompt that appears before the client's terminal input.
 
         Returns:
             str: The prompt text.
         """
 
-        return str(Prompt("> "))
+        return Prompt("> ")
 
     def send_message(self, message: str) -> None:
         """Sends the message text to the client. The text will be printed out in
@@ -78,7 +78,7 @@ class Client:
             return
 
     def send_prompt(self) -> None:
-        self.send_message(self.prompt)
+        self.send_message(str(self.prompt))
 
     def disconnect(self) -> None:
         """Disconnect the client from the server."""

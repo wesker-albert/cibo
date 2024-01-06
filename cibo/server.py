@@ -40,7 +40,6 @@ class Server:
 
         self._telnet = server_config.telnet
         self._world = server_config.world
-        self._output = server_config.output
 
         self._event_processor = EventProcessor(server_config)
 

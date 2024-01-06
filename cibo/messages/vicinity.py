@@ -23,7 +23,6 @@ class Vicinity(MessageAbstract):
         vicinity_message: Optional[MessageRoute] = None,
     ) -> None:
         self._private.send(client, client_message)
-
         self._room.send(room_message, [client])
 
         if vicinity_message:
