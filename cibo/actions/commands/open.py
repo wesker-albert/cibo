@@ -81,7 +81,7 @@ class Open(Action):
         except ActionMissingArguments:
             missing_args_message = self.missing_args_message(client.player.name)
 
-            self.output.send_vicinity_message(
+            self.output.vicinity.send(
                 MessageRoute(missing_args_message[0], client=client),
                 MessageRoute(
                     missing_args_message[1], ids=[client.player.current_room_id]
@@ -92,17 +92,17 @@ class Open(Action):
             client.send_prompt()
 
         except (ExitNotFound, DoorNotFound):
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(self.exit_not_found_message, client=client)
             )
 
         except DoorIsLocked:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(self.door_is_locked_message(door.name), client=client)
             )
 
         except DoorIsOpen:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(self.door_is_open_message(door.name), client=client)
             )
 
@@ -113,7 +113,7 @@ class Open(Action):
                 client.player.name, door.name
             )
 
-            self.output.send_vicinity_message(
+            self.output.vicinity.send(
                 MessageRoute(opening_door_message[0], client=client),
                 MessageRoute(opening_door_message[1], ids=[room.id_]),
                 MessageRoute(opening_door_message[2], ids=[exit_.id_]),

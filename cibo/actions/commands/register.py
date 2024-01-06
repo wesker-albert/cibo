@@ -98,19 +98,19 @@ class Register(Action):
             self.check_for_existing_player(player_name)
 
         except ClientIsLoggedIn:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(self.is_logged_in_message, client=client)
             )
 
         except PlayerAlreadyExists:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(
                     self.player_already_exists_message(player_name), client=client
                 )
             )
 
         except ValidationError:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(self.validation_error_message, client=client)
             )
 
@@ -123,6 +123,6 @@ class Register(Action):
                 current_room_id=1,
             )
 
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(self.confirm_finalize_message(player_name), client=client)
             )

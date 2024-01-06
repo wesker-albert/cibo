@@ -11,7 +11,7 @@ class Sector(Output):
 
         for client in self._telnet.get_connected_clients():
             if client.is_logged_in and client.player:
-                room = self._world.rooms.get_by_id(client.player.current_room_id)
+                room = self.rooms.get_by_id(client.player.current_room_id)
 
                 if (
                     room.sector.id_ in message.ids

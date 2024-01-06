@@ -92,17 +92,17 @@ class Finalize(Action):
             self.create_player_starting_inventory(client)
 
         except ClientIsLoggedIn:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(self.is_logged_in_message, client=client)
             )
 
         except PlayerNotRegistered:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(self.not_registered_message, client=client)
             )
 
         except PlayerAlreadyExists:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(
                     self.player_already_exists_message(client.registration.name),
                     client=client,
@@ -110,7 +110,7 @@ class Finalize(Action):
             )
 
         else:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(
                     self.successfully_registered_message(client.registration.name),
                     client=client,

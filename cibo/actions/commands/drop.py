@@ -87,7 +87,7 @@ class Drop(Action):
                 client.player.name, item_meta.name
             )
 
-            self.output.send_vicinity_message(
+            self.output.vicinity.send(
                 MessageRoute(dropped_item_message[0], client=client),
                 MessageRoute(
                     dropped_item_message[1], ids=[client.player.current_room_id]
@@ -98,11 +98,11 @@ class Drop(Action):
             client.send_prompt()
 
         except ActionMissingArguments:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(self.missing_args_message, client=client)
             )
 
         except InventoryItemNotFound:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(self.inventory_item_not_found_message, client=client)
             )

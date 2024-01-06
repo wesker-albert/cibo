@@ -22,7 +22,7 @@ class TestDropAction(DropActionFactory):
     def test_action_drop_process_missing_args(self):
         self.drop.process(self.client, "drop", [])
 
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client, "Drop what? Your pants? No way!"
         )
 
@@ -32,7 +32,7 @@ class TestDropAction(DropActionFactory):
 
         self.drop.process(self.client, "drop", ["spoon"])
 
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client, "You scour your inventory, but can't find that."
         )
 

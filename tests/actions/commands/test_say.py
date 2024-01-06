@@ -20,7 +20,7 @@ class TestSayAction(SayActionFactory):
     def test_action_say_process_missing_args(self):
         self.say.process(self.client, "say", [])
 
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client, "You try to think of something clever to say, but fail."
         )
 

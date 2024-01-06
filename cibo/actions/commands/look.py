@@ -151,7 +151,7 @@ class Look(Action):
             if not args:
                 raise ActionMissingArguments
 
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(
                     self.resource_description_message(client, args), client=client
                 )
@@ -164,6 +164,6 @@ class Look(Action):
             # the player is just looking at the room in general
             room = self.rooms.get_by_id(client.player.current_room_id)
 
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(self.room_description_message(client, room), client=client)
             )

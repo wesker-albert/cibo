@@ -25,7 +25,7 @@ class TestLookAction(LookActionFactory):
 
         self.look.process(self.client, "look", [])
 
-        self.output.send_private_message.assert_called_with(self.client, ANY)
+        self.output.private.send.assert_called_with(self.client, ANY)
 
         panel = self.get_private_message_panel()
 
@@ -42,46 +42,46 @@ class TestLookAction(LookActionFactory):
 
         # the resource doesn't exist in player inventory or room items and NPCs
         self.look.process(self.client, "look", ["macguffin"])
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client, "You don't see that..."
         )
 
         # the item exists, but we don't process zero indexes
         self.look.process(self.client, "look", ["0.fork"])
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client, "You don't see that..."
         )
 
         # the item exists in the room
         self.look.process(self.client, "look", ["fork"])
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client,
             "You look at a metal fork:\n\n  A pronged, metal eating utensil.",
         )
 
         # the item exists in the room, specified with index
         self.look.process(self.client, "look", ["1.fork"])
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client,
             "You look at a metal fork:\n\n  A pronged, metal eating utensil.",
         )
 
         # the item exists in the player inventory, specified with index
         self.look.process(self.client, "look", ["2.fork"])
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client,
             "You look at a metal fork:\n\n  A pronged, metal eating utensil.",
         )
 
         # the item doesn't exist, because the index is out of range
         self.look.process(self.client, "look", ["3.fork"])
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client, "You don't see that..."
         )
 
         # the npc exists in the room
         self.look.process(self.client, "look", ["man"])
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client,
             "You look at a faceless businessman:\n\n  His face is smooth and amorphis, like putty. He is wearing a suit, tie, and carrying a briefcase. Though he has no eyes, he seems to be aware of your presence.",
         )

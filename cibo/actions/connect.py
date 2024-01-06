@@ -35,4 +35,4 @@ class Connect(Action):
     def process(
         self, client: Client, _command: Optional[str], _args: List[str]
     ) -> None:
-        self.output.send_private_message(MessageRoute(self.motd_message, client=client))
+        self.output.private.send(MessageRoute(self.motd_message, client=client))

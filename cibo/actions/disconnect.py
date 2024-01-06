@@ -28,7 +28,7 @@ class Disconnect(Action):
         if client.is_logged_in:
             client.player.save()
 
-            self.output.send_room_message(
+            self.output.room.send(
                 MessageRoute(
                     self.disconnect_message(client.player.name),
                     ids=[client.player.current_room_id],

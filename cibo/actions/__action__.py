@@ -30,10 +30,10 @@ class Action(ABC):
         def __init__(self, server_config: ServerConfig) -> None:
             self._server_config = server_config
 
-            self.send_private_message = Private(self._server_config).send
-            self.send_room_message = Room(self._server_config).send
-            self.send_vicinity_message = Vicinity(self._server_config).send
-            self.send_sector_message = Sector(self._server_config).send
+            self.private = Private(self._server_config)
+            self.room = Room(self._server_config)
+            self.vicinity = Vicinity(self._server_config)
+            self.sector = Sector(self._server_config)
 
     def __init__(self, server_config: ServerConfig) -> None:
         self._server_config = server_config

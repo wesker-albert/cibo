@@ -12,7 +12,7 @@ class TestOutput(OutputFactory):
         self.mock_clients[0].send_message.assert_called_once_with("\r\n> ")
 
     def test_output_send_private_mesage(self):
-        self.output.send_private_message(self.mock_clients[0], "You are tired.")
+        self.output.private.send(self.mock_clients[0], "You are tired.")
 
         calls = [
             call(
@@ -24,9 +24,7 @@ class TestOutput(OutputFactory):
         self.mock_clients[0].send_message.assert_has_calls(calls)
 
     def test_output_send_private_message_no_prompt(self):
-        self.output.send_private_message(
-            self.mock_clients[0], "You are tired.", prompt=False
-        )
+        self.output.private.send(self.mock_clients[0], "You are tired.", prompt=False)
 
         self.mock_clients[0].send_message.assert_called_once_with(
             "\n  You are tired.                                                            \n"
@@ -35,7 +33,7 @@ class TestOutput(OutputFactory):
     def test_output_send_room_message(self):
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
-        self.output.send_room_message(1, "frank leaves.", [])
+        self.output.room.send(1, "frank leaves.", [])
 
         calls = [
             call(
@@ -52,7 +50,7 @@ class TestOutput(OutputFactory):
 
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
-        self.output.send_room_message(1, "frank leaves.", [])
+        self.output.room.send(1, "frank leaves.", [])
 
         self.mock_clients[0].send_message.assert_not_called()
 
@@ -61,14 +59,14 @@ class TestOutput(OutputFactory):
 
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
-        self.output.send_room_message(1, "frank leaves.", [])
+        self.output.room.send(1, "frank leaves.", [])
 
         self.mock_clients[0].send_message.assert_not_called()
 
     def test_output_send_room_message_client_ignored(self):
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
-        self.output.send_room_message(1, "frank leaves.", [self.mock_clients[0]])
+        self.output.room.send(1, "frank leaves.", [self.mock_clients[0]])
 
         self.mock_clients[0].send_message.assert_not_called()
 

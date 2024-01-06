@@ -46,7 +46,7 @@ class Quit(Action):
 
             client.log_out()
 
-            self.output.send_room_message(
+            self.output.room.send(
                 MessageRoute(
                     self.quitting_message(player_name)[1],
                     ids=[player_room],
@@ -55,7 +55,7 @@ class Quit(Action):
             )
 
         finally:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(
                     self.quitting_message(None)[0], client=client, send_prompt=False
                 )

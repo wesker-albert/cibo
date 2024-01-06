@@ -15,7 +15,7 @@ class TestFinalizeAction(FinalizeActionFactory):
 
         self.finalize.process(self.client, "finalize", [])
 
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client,
             "You finalize your written will, leaving your whole estate to your cat.",
         )
@@ -23,7 +23,7 @@ class TestFinalizeAction(FinalizeActionFactory):
     def test_action_finalize_process_not_registered(self):
         self.finalize.process(self.client, "finalize", [])
 
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client,
             "You'll need to [green]register[/] before you can [green]finalize[/].",
         )
@@ -35,7 +35,7 @@ class TestFinalizeAction(FinalizeActionFactory):
 
         self.finalize.process(self.client, "finalize", [])
 
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client,
             "Sorry, turns out the name [cyan]frank[/] is already taken. Please [green]register[/] again with a different name.",
         )
@@ -51,7 +51,7 @@ class TestFinalizeAction(FinalizeActionFactory):
         player = Player.get_by_name("jennifer")
         assert len(player.inventory) == 1
 
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client,
             "[cyan]jennifer[/] has been created. You can now [green]login[/] with this player.",
         )

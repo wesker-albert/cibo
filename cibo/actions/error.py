@@ -20,6 +20,6 @@ class Error(Action):
         return Message(f"[bright_red]{message}[/]")
 
     def process(self, client: Client, _command: Optional[str], args: List[str]) -> None:
-        self.output.send_private_message(
+        self.output.private.send(
             MessageRoute(self.error_message(args[0]), client=client)
         )

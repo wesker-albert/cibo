@@ -30,6 +30,6 @@ class Exits(Action):
             client.send_prompt()
 
         else:
-            self.output.send_private_message(
+            self.output.private.send(
                 MessageRoute(Message(room.get_formatted_exits()), client=client)
             )

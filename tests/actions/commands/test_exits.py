@@ -19,6 +19,6 @@ class TestExitsAction(ExitsActionFactory):
     def test_action_exits_process(self):
         self.exits.process(self.client, "exits", [])
 
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client, "[green]Exits:[/] east, north, south, west"
         )

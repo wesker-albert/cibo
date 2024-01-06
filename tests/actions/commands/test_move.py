@@ -34,21 +34,21 @@ class TestMoveAction(MoveActionFactory):
     def test_action_move_process_exit_not_found(self):
         self.move.process(self.client, "u", [])
 
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client, "You can't go that way."
         )
 
     def test_action_move_process_door_is_closed(self):
         self.move.process(self.client, "n", [])
 
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client, "A wooden door is closed."
         )
 
     def test_action_move_process_door_is_locked(self):
         self.move.process(self.client, "s", [])
 
-        self.output.send_private_message.assert_called_with(
+        self.output.private.send.assert_called_with(
             self.client, "A steel security door is closed."
         )
 

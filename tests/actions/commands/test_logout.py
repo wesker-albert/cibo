@@ -35,6 +35,6 @@ class TestLogoutAction(LogoutActionFactory):
             prompt=False,
         )
 
-        self.output.send_private_message.assert_called_once_with(
+        self.output.private.send.assert_called_once_with(
             self.client, ANY, justify="center"
         )
