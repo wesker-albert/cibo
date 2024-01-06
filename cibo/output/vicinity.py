@@ -1,29 +1,30 @@
 from typing import Optional
 
-from cibo.models.client import Client
-from cibo.models.message import Message, MessageRoute
+from cibo.models.message import MessageRoute
 from cibo.models.server_config import ServerConfig
-from cibo.output.__output__ import Output
 from cibo.output.private import Private
 from cibo.output.room import Room
 
 
-class Vicinity(Output):
+class Vicinity:
     def __init__(self, server_config: ServerConfig) -> None:
-        super().__init__(server_config)
+        self._server_config = server_config
 
         self._private = Private(self._server_config)
         self._room = Room(self._server_config)
 
     def send(
         self,
-        client: Client,
-        client_message: Message,
+        client_message: MessageRoute,
         room_message: MessageRoute,
         vicinity_message: Optional[MessageRoute] = None,
     ) -> None:
-        self._private.send(client, client_message)
-        self._room.send(room_message, [client])
+        if client_message.client:
+            self._private.send(client_message)
 
-        if vicinity_message:
-            self._room.send(vicinity_message, [client])
+            room_message.ignored_clients = [client_message.client]
+            self._room.send(room_message)
+
+            if vicinity_message:
+                vicinity_message.ignored_clients = [client_message.client]
+                self._room.send(vicinity_message)

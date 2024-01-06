@@ -6,7 +6,7 @@ from rich.panel import Panel
 
 from cibo.actions.__action__ import Action
 from cibo.models.client import Client
-from cibo.models.message import Message
+from cibo.models.message import Message, MessageRoute
 
 
 class Connect(Action):
@@ -35,4 +35,4 @@ class Connect(Action):
     def process(
         self, client: Client, _command: Optional[str], _args: List[str]
     ) -> None:
-        self.output.send_private_message(client, self.motd_message)
+        self.output.send_private_message(MessageRoute(self.motd_message, client=client))

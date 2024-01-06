@@ -2,7 +2,7 @@ from cibo.models.message import Message, MessageRoute
 from cibo.output.__output__ import Output
 
 
-class Room(Output):
+class Sector(Output):
     def _format(self, message: Message) -> str:
         return f"\r{message}"
 
@@ -11,8 +11,10 @@ class Room(Output):
 
         for client in self._telnet.get_connected_clients():
             if client.is_logged_in and client.player:
+                room = self._world.rooms.get_by_id(client.player.current_room_id)
+
                 if (
-                    client.player.current_room_id in message.ids
+                    room.sector.id_ in message.ids
                     and client not in message.ignored_clients
                 ):
                     client.send_message(self._format(message.message))

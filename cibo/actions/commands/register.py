@@ -8,7 +8,7 @@ from cibo.actions.__action__ import Action
 from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotFound
 from cibo.models.client import Client
 from cibo.models.data.player import Player, PlayerSchema
-from cibo.models.message import Message
+from cibo.models.message import Message, MessageRoute
 
 
 class Register(Action):
@@ -98,15 +98,21 @@ class Register(Action):
             self.check_for_existing_player(player_name)
 
         except ClientIsLoggedIn:
-            self.output.send_private_message(client, self.is_logged_in_message)
+            self.output.send_private_message(
+                MessageRoute(self.is_logged_in_message, client=client)
+            )
 
         except PlayerAlreadyExists:
             self.output.send_private_message(
-                client, self.player_already_exists_message(player_name)
+                MessageRoute(
+                    self.player_already_exists_message(player_name), client=client
+                )
             )
 
         except ValidationError:
-            self.output.send_private_message(client, self.validation_error_message)
+            self.output.send_private_message(
+                MessageRoute(self.validation_error_message, client=client)
+            )
 
         except PlayerNotFound:
             # a temporary Player model is set on the client, to be created in the db if
@@ -118,5 +124,5 @@ class Register(Action):
             )
 
             self.output.send_private_message(
-                client, self.confirm_finalize_message(player_name)
+                MessageRoute(self.confirm_finalize_message(player_name), client=client)
             )

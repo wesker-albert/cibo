@@ -10,7 +10,7 @@ from cibo.models.client import Client
 from cibo.models.data.item import Item as ItemData
 from cibo.models.data.npc import Npc as NpcData
 from cibo.models.item import Item
-from cibo.models.message import Message
+from cibo.models.message import Message, MessageRoute
 from cibo.models.npc import Npc
 from cibo.models.room import Room
 
@@ -152,7 +152,9 @@ class Look(Action):
                 raise ActionMissingArguments
 
             self.output.send_private_message(
-                client, self.resource_description_message(client, args)
+                MessageRoute(
+                    self.resource_description_message(client, args), client=client
+                )
             )
 
         except ClientNotLoggedIn:
@@ -163,5 +165,5 @@ class Look(Action):
             room = self.rooms.get_by_id(client.player.current_room_id)
 
             self.output.send_private_message(
-                client, self.room_description_message(client, room)
+                MessageRoute(self.room_description_message(client, room), client=client)
             )

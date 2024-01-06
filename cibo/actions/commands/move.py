@@ -76,11 +76,13 @@ class Move(Action):
             client.send_prompt()
 
         except ExitNotFound:
-            self.output.send_private_message(client, self.exit_not_found_message)
+            self.output.send_private_message(
+                MessageRoute(self.exit_not_found_message, client=client)
+            )
 
         except (DoorIsClosed, DoorIsLocked):
             self.output.send_private_message(
-                client, self.door_is_closed_message(door.name)
+                MessageRoute(self.door_is_closed_message(door.name), client=client)
             )
 
         except (DoorNotFound, DoorIsOpen):
@@ -92,10 +94,9 @@ class Move(Action):
             )
 
             self.output.send_vicinity_message(
-                client,
-                moving_message[0],
-                MessageRoute([client.player.current_room_id], moving_message[1]),
-                MessageRoute([room.id_], moving_message[2]),
+                MessageRoute(moving_message[0], client=client),
+                MessageRoute(moving_message[1], ids=[client.player.current_room_id]),
+                MessageRoute(moving_message[2], ids=[room.id_]),
             )
 
             Look(self._server_config).process(client, None, [])

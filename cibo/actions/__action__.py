@@ -7,6 +7,7 @@ from cibo.models.client import Client
 from cibo.models.server_config import ServerConfig
 from cibo.output.private import Private
 from cibo.output.room import Room
+from cibo.output.sector import Sector
 from cibo.output.vicinity import Vicinity
 from cibo.password import Password
 from cibo.resources.doors import Doors
@@ -24,11 +25,7 @@ class Action(ABC):
     """
 
     class Output:
-        """Responsible for constructing messages that are sent to clients.
-
-        Args:
-            telnet (TelnetServer): The telnet server to use when outputting messages.
-        """
+        """Responsible for constructing messages that are sent to clients."""
 
         def __init__(self, server_config: ServerConfig) -> None:
             self._server_config = server_config
@@ -36,6 +33,7 @@ class Action(ABC):
             self.send_private_message = Private(self._server_config).send
             self.send_room_message = Room(self._server_config).send
             self.send_vicinity_message = Vicinity(self._server_config).send
+            self.send_sector_message = Sector(self._server_config).send
 
     def __init__(self, server_config: ServerConfig) -> None:
         self._server_config = server_config

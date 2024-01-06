@@ -5,7 +5,7 @@ from typing import List
 from cibo.actions.__action__ import Action
 from cibo.exception import ClientNotLoggedIn
 from cibo.models.client import Client
-from cibo.models.message import Message
+from cibo.models.message import Message, MessageRoute
 
 
 class Inventory(Action):
@@ -55,5 +55,5 @@ class Inventory(Action):
 
         else:
             self.output.send_private_message(
-                client, self.get_formatted_inventory(client)
+                MessageRoute(self.get_formatted_inventory(client), client=client)
             )

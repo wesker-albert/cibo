@@ -69,17 +69,21 @@ class Close(Action):
             door.raise_status()
 
         except ActionMissingArguments:
-            self.output.send_private_message(client, self.missing_args_message)
+            self.output.send_private_message(
+                MessageRoute(self.missing_args_message, client=client)
+            )
 
         except (ClientNotLoggedIn, RoomNotFound):
             client.send_prompt()
 
         except (ExitNotFound, DoorNotFound):
-            self.output.send_private_message(client, self.exit_not_found_message)
+            self.output.send_private_message(
+                MessageRoute(self.exit_not_found_message, client=client)
+            )
 
         except (DoorIsClosed, DoorIsLocked):
             self.output.send_private_message(
-                client, self.door_is_closed_message(door.name)
+                MessageRoute(self.door_is_closed_message(door.name), client=client)
             )
 
         except DoorIsOpen:
@@ -90,8 +94,7 @@ class Close(Action):
             )
 
             self.output.send_vicinity_message(
-                client,
-                door_closes_message[0],
-                MessageRoute([room.id_], door_closes_message[1]),
-                MessageRoute([exit_.id_], door_closes_message[2]),
+                MessageRoute(door_closes_message[0], client=client),
+                MessageRoute(door_closes_message[1], ids=[room.id_]),
+                MessageRoute(door_closes_message[2], ids=[exit_.id_]),
             )

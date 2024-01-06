@@ -98,19 +98,25 @@ class Login(Action):
             self.check_for_player_session(player.name)
 
         except ClientIsLoggedIn:
-            self.output.send_private_message(client, self.is_logged_in_message)
+            self.output.send_private_message(
+                MessageRoute(self.is_logged_in_message, client=client)
+            )
 
         except PlayerNotFound:
             self.output.send_private_message(
-                client, self.player_not_found_message(player_name)
+                MessageRoute(self.player_not_found_message(player_name), client=client)
             )
 
         except PasswordIncorrect:
-            self.output.send_private_message(client, self.incorrect_password_message)
+            self.output.send_private_message(
+                MessageRoute(self.incorrect_password_message, client=client)
+            )
 
         except PlayerSessionActive:
             self.output.send_private_message(
-                client, self.player_session_active_message(player_name)
+                MessageRoute(
+                    self.player_session_active_message(player_name), client=client
+                )
             )
 
         else:
@@ -119,9 +125,10 @@ class Login(Action):
             logging_in_message = self.logging_in_message(client.player.name)
 
             self.output.send_vicinity_message(
-                client,
-                logging_in_message[0],
-                MessageRoute([client.player.current_room_id], logging_in_message[1]),
+                MessageRoute(logging_in_message[0], client=client),
+                MessageRoute(
+                    logging_in_message[1], ids=[client.player.current_room_id]
+                ),
             )
 
             Look(self._server_config).process(client, None, [])

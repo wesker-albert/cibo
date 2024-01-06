@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from cibo.actions.__action__ import Action
 from cibo.models.client import Client
-from cibo.models.message import Message
+from cibo.models.message import Message, MessageRoute
 
 
 class Error(Action):
@@ -20,4 +20,6 @@ class Error(Action):
         return Message(f"[bright_red]{message}[/]")
 
     def process(self, client: Client, _command: Optional[str], args: List[str]) -> None:
-        self.output.send_private_message(client, self.error_message(args[0]))
+        self.output.send_private_message(
+            MessageRoute(self.error_message(args[0]), client=client)
+        )

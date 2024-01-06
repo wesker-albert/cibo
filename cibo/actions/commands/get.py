@@ -100,21 +100,26 @@ class Get(Action):
             )
 
             self.output.send_vicinity_message(
-                client,
-                gotten_item_message[0],
-                MessageRoute([client.player.current_room_id], gotten_item_message[1]),
+                MessageRoute(gotten_item_message[0], client=client),
+                MessageRoute(
+                    gotten_item_message[1], ids=[client.player.current_room_id]
+                ),
             )
 
         except (ClientNotLoggedIn, ItemNotFound):
             client.send_prompt()
 
         except ActionMissingArguments:
-            self.output.send_private_message(client, self.missing_args_message)
+            self.output.send_private_message(
+                MessageRoute(self.missing_args_message, client=client)
+            )
 
         except RoomItemNotFound:
-            self.output.send_private_message(client, self.room_item_not_found_message)
+            self.output.send_private_message(
+                MessageRoute(self.room_item_not_found_message, client=client)
+            )
 
         except ItemIsStationary:
             self.output.send_private_message(
-                client, self.room_item_is_stationary_message
+                MessageRoute(self.room_item_is_stationary_message, client=client)
             )

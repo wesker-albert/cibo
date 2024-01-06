@@ -5,7 +5,7 @@ from typing import List, Optional
 from cibo.actions.__action__ import Action
 from cibo.exception import ClientNotLoggedIn, RoomNotFound
 from cibo.models.client import Client
-from cibo.models.message import Message
+from cibo.models.message import Message, MessageRoute
 
 
 class Exits(Action):
@@ -31,5 +31,5 @@ class Exits(Action):
 
         else:
             self.output.send_private_message(
-                client, Message(room.get_formatted_exits())
+                MessageRoute(Message(room.get_formatted_exits()), client=client)
             )

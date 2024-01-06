@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import KW_ONLY, dataclass, field
 from typing import List, Literal, Optional, Union
 
 from rich.columns import Columns
@@ -9,6 +9,8 @@ from rich.panel import Panel
 from rich.syntax import Syntax
 from rich.table import Table
 from rich.tree import Tree
+
+from cibo.models.client import Client
 
 
 @dataclass
@@ -63,7 +65,13 @@ class Message:
 
 @dataclass
 class MessageRoute:
-    """Used to associate a message with specific rooms, for routing purposes."""
+    """Used to associate a message with specific rooms, sectors, or regions, for
+    routing purposes.
+    """
 
-    room_ids: List[int]
     message: Message
+    _: KW_ONLY
+    client: Optional[Client] = None
+    ignored_clients: List[Client] = field(default_factory=lambda: [])
+    ids: List[int] = field(default_factory=lambda: [])
+    send_prompt: bool = True

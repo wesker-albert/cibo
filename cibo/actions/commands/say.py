@@ -45,7 +45,9 @@ class Say(Action):
             client.send_prompt()
 
         except ActionMissingArguments:
-            self.output.send_private_message(client, self.missing_args_message)
+            self.output.send_private_message(
+                MessageRoute(self.missing_args_message, client=client)
+            )
 
         else:
             speech_message = self.speech_message(
@@ -53,7 +55,6 @@ class Say(Action):
             )
 
             self.output.send_vicinity_message(
-                client,
-                speech_message[0],
-                MessageRoute([client.player.current_room_id], speech_message[1]),
+                MessageRoute(speech_message[0], client=client),
+                MessageRoute(speech_message[1], ids=[client.player.current_room_id]),
             )

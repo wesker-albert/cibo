@@ -9,7 +9,7 @@ from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotRegis
 from cibo.models.client import Client
 from cibo.models.data.item import Item
 from cibo.models.data.player import Player
-from cibo.models.message import Message
+from cibo.models.message import Message, MessageRoute
 
 
 class Finalize(Action):
@@ -92,19 +92,29 @@ class Finalize(Action):
             self.create_player_starting_inventory(client)
 
         except ClientIsLoggedIn:
-            self.output.send_private_message(client, self.is_logged_in_message)
+            self.output.send_private_message(
+                MessageRoute(self.is_logged_in_message, client=client)
+            )
 
         except PlayerNotRegistered:
-            self.output.send_private_message(client, self.not_registered_message)
+            self.output.send_private_message(
+                MessageRoute(self.not_registered_message, client=client)
+            )
 
         except PlayerAlreadyExists:
             self.output.send_private_message(
-                client, self.player_already_exists_message(client.registration.name)
+                MessageRoute(
+                    self.player_already_exists_message(client.registration.name),
+                    client=client,
+                )
             )
 
         else:
             self.output.send_private_message(
-                client, self.successfully_registered_message(client.registration.name)
+                MessageRoute(
+                    self.successfully_registered_message(client.registration.name),
+                    client=client,
+                )
             )
 
         finally:
