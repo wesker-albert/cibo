@@ -13,4 +13,4 @@ class Private(MessageAbstract):
         client.send_message(self._format(message))
 
         if prompt:
-            client.send_message(client.prompt)
+            client.send_prompt()

@@ -72,7 +72,7 @@ class Close(Action):
             self.output.send_private_message(client, self.missing_args_message)
 
         except (ClientNotLoggedIn, RoomNotFound):
-            self.output.send_prompt(client)
+            client.send_prompt()
 
         except (ExitNotFound, DoorNotFound):
             self.output.send_private_message(client, self.exit_not_found_message)

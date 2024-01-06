@@ -77,6 +77,9 @@ class Client:
         except socket_.error:
             return
 
+    def send_prompt(self) -> None:
+        self.send_message(self.prompt)
+
     def disconnect(self) -> None:
         """Disconnect the client from the server."""
 

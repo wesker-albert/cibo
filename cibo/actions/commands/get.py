@@ -106,7 +106,7 @@ class Get(Action):
             )
 
         except (ClientNotLoggedIn, ItemNotFound):
-            self.output.send_prompt(client)
+            client.send_prompt()
 
         except ActionMissingArguments:
             self.output.send_private_message(client, self.missing_args_message)
