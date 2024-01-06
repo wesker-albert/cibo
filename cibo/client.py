@@ -6,9 +6,9 @@ out interactions between the user and the server.
 import socket as socket_
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
 
 from cibo.models.data.player import Player
+from cibo.models.prompt import Prompt
 
 
 class ClientLoginState(int, Enum):
@@ -59,9 +59,9 @@ class Client:
             str: The prompt text.
         """
 
-        return "> "
+        return str(Prompt("> "))
 
-    def _send_message(self, message: str) -> None:
+    def send_message(self, message: str) -> None:
         """Sends the message text to the client. The text will be printed out in
         the client's terminal.
 
@@ -76,16 +76,6 @@ class Client:
         # in which case we want to silently fail
         except socket_.error:
             return
-
-    def send_message(self, messages: List[str]) -> None:
-        """Sends a message, or multiple messages, to the client.
-
-        Args:
-            messages (List[str]): The message(s) to send.
-        """
-
-        for message in messages:
-            self._send_message(message)
 
     def disconnect(self) -> None:
         """Disconnect the client from the server."""

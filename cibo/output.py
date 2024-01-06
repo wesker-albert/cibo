@@ -4,7 +4,6 @@ that messages have a uniform style and reach only the clients they are intended 
 
 
 from cibo.messages.private import Private
-from cibo.messages.prompt import Prompt
 from cibo.messages.room import Room
 from cibo.messages.vicinity import Vicinity
 from cibo.telnet import TelnetServer
@@ -20,7 +19,6 @@ class Output:
     def __init__(self, telnet: TelnetServer) -> None:
         self._telnet = telnet
 
-        self.send_prompt = Prompt().send
-        self.send_private_message = Private().send
+        self.send_private_message = Private(self._telnet).send
         self.send_room_message = Room(self._telnet).send
         self.send_vicinity_message = Vicinity(self._telnet).send
