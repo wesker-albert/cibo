@@ -25,7 +25,7 @@ class Login(Action):
         return ["name", "password"]
 
     @property
-    def is_logged_in_message(self) -> Message:
+    def _is_logged_in_message(self) -> Message:
         """Player is already logged in."""
 
         return Message(
@@ -33,7 +33,7 @@ class Login(Action):
             "you are."
         )
 
-    def player_not_found_message(self, player_name: str) -> Message:
+    def _player_not_found_message(self, player_name: str) -> Message:
         """Player doesn't exist."""
 
         return Message(
@@ -42,12 +42,12 @@ class Login(Action):
         )
 
     @property
-    def incorrect_password_message(self) -> Message:
+    def _incorrect_password_message(self) -> Message:
         """Incorrect password entered."""
 
         return Message("[bright_red]Incorrect password.[/]")
 
-    def player_session_active_message(self, player_name: str) -> Message:
+    def _player_session_active_message(self, player_name: str) -> Message:
         """Another client is already logged into a session with the player."""
 
         return Message(
@@ -56,7 +56,7 @@ class Login(Action):
             "contact the admin."
         )
 
-    def logging_in_message(self, player_name: str) -> Tuple[Message, Message]:
+    def _logging_in_message(self, player_name: str) -> Tuple[Message, Message]:
         """Successfully loggin in."""
 
         return (
@@ -69,19 +69,19 @@ class Login(Action):
             ),
         )
 
-    def check_for_player_session(self, name: str) -> None:
+    def _check_for_player_session(self, player_name: str) -> None:
         """Checks to see if the player is already logged into an active session, by
         a different client.
 
         Args:
-            name (str): The player name to check.
+            player_name (str): The player name to check.
 
-        Returns:
-            bool: True if the player is already logged in.
+        Raises:
+            PlayerSessionActive: There currently exists an active player session.
         """
 
         for client in self._telnet.get_connected_clients():
-            if client.is_logged_in and client.player.name == name:
+            if client.is_logged_in and client.player.name == player_name:
                 raise PlayerSessionActive
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
@@ -95,34 +95,34 @@ class Login(Action):
             player = Player.get_by_name(player_name)
 
             self._password_hasher.verify(password, player.password)
-            self.check_for_player_session(player.name)
+            self._check_for_player_session(player.name)
 
         except ClientIsLoggedIn:
             self.output.send_to_client(
-                MessageRoute(self.is_logged_in_message, client=client)
+                MessageRoute(self._is_logged_in_message, client=client)
             )
 
         except PlayerNotFound:
             self.output.send_to_client(
-                MessageRoute(self.player_not_found_message(player_name), client=client)
+                MessageRoute(self._player_not_found_message(player_name), client=client)
             )
 
         except PasswordIncorrect:
             self.output.send_to_client(
-                MessageRoute(self.incorrect_password_message, client=client)
+                MessageRoute(self._incorrect_password_message, client=client)
             )
 
         except PlayerSessionActive:
             self.output.send_to_client(
                 MessageRoute(
-                    self.player_session_active_message(player_name), client=client
+                    self._player_session_active_message(player_name), client=client
                 )
             )
 
         else:
             client.log_in(player)
 
-            logging_in_message = self.logging_in_message(client.player.name)
+            logging_in_message = self._logging_in_message(client.player.name)
 
             self.output.send_to_vicinity(
                 MessageRoute(logging_in_message[0], client=client, send_prompt=False),

@@ -26,7 +26,7 @@ class Open(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def missing_args_message(self, player_name: str) -> Tuple[Message, Message]:
+    def _missing_args_message(self, player_name: str) -> Tuple[Message, Message]:
         """No arguments were provided."""
 
         return (
@@ -38,17 +38,17 @@ class Open(Action):
         )
 
     @property
-    def exit_not_found_message(self) -> Message:
+    def _exit_not_found_message(self) -> Message:
         """No exit in the given direction."""
 
         return Message("There's nothing to open.")
 
-    def door_is_locked_message(self, door_name: str) -> Message:
+    def _door_is_locked_message(self, door_name: str) -> Message:
         """The door is locked."""
 
         return Message(f"{door_name.capitalize()} is locked.")
 
-    def opening_door_message(
+    def _opening_door_message(
         self, player_name: str, door_name: str
     ) -> Tuple[Message, Message, Message]:
         """Successfully opening the door."""
@@ -59,7 +59,7 @@ class Open(Action):
             Message(f"{door_name.capitalize()} opens."),
         )
 
-    def door_is_open_message(self, door_name: str) -> Message:
+    def _door_is_open_message(self, door_name: str) -> Message:
         """The door is already open."""
 
         return Message(f"{door_name.capitalize()} is already open.")
@@ -79,7 +79,7 @@ class Open(Action):
             door.raise_status()
 
         except ActionMissingArguments:
-            missing_args_message = self.missing_args_message(client.player.name)
+            missing_args_message = self._missing_args_message(client.player.name)
 
             self.output.send_to_vicinity(
                 MessageRoute(missing_args_message[0], client=client),
@@ -93,23 +93,23 @@ class Open(Action):
 
         except (ExitNotFound, DoorNotFound):
             self.output.send_to_client(
-                MessageRoute(self.exit_not_found_message, client=client)
+                MessageRoute(self._exit_not_found_message, client=client)
             )
 
         except DoorIsLocked:
             self.output.send_to_client(
-                MessageRoute(self.door_is_locked_message(door.name), client=client)
+                MessageRoute(self._door_is_locked_message(door.name), client=client)
             )
 
         except DoorIsOpen:
             self.output.send_to_client(
-                MessageRoute(self.door_is_open_message(door.name), client=client)
+                MessageRoute(self._door_is_open_message(door.name), client=client)
             )
 
         except DoorIsClosed:
             door.open_()
 
-            opening_door_message = self.opening_door_message(
+            opening_door_message = self._opening_door_message(
                 client.player.name, door.name
             )
 

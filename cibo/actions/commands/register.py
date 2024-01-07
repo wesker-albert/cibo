@@ -21,23 +21,15 @@ class Register(Action):
         return ["name", "password"]
 
     @property
-    def is_logged_in_message(self) -> Message:
+    def _is_logged_in_message(self) -> Message:
         """Player is already logged in."""
 
         return Message(
             "You register to vote, even though both candidates aren't that great."
         )
 
-    def player_already_exists_message(self, player_name: str) -> Message:
-        """Player name is already taken."""
-
-        return Message(
-            f"Sorry, turns out the name [cyan]{player_name}[/] is already taken. "
-            "Please [green]register[/] again with a different name."
-        )
-
     @property
-    def validation_error_message(self) -> Message:
+    def _validation_error_message(self) -> Message:
         """Provided registration info is invalid."""
 
         return Message(
@@ -48,7 +40,15 @@ class Register(Action):
             "Please [green]register[/] again."
         )
 
-    def confirm_finalize_message(self, player_name: str) -> Message:
+    def _player_already_exists_message(self, player_name: str) -> Message:
+        """Player name is already taken."""
+
+        return Message(
+            f"Sorry, turns out the name [cyan]{player_name}[/] is already taken. "
+            "Please [green]register[/] again with a different name."
+        )
+
+    def _confirm_finalize_message(self, player_name: str) -> Message:
         """Ask the client to finalize the player registration."""
 
         return Message(
@@ -61,7 +61,7 @@ class Register(Action):
             "existing player."
         )
 
-    def validate_player_info(self, name: str, password: str) -> None:
+    def _validate_player_info(self, name: str, password: str) -> None:
         """Validates the supplied player information, to see if it follows the
         requirements established by the schema.
 
@@ -72,7 +72,7 @@ class Register(Action):
 
         Player(name=name, password=password).validate(PlayerSchema)
 
-    def check_for_existing_player(self, player_name: str) -> None:
+    def _check_for_existing_player(self, player_name: str) -> None:
         """Checks to see if a player already exists witht the provided name.
 
         Args:
@@ -94,24 +94,24 @@ class Register(Action):
             player_name = args[0]
             password = args[1]
 
-            self.validate_player_info(player_name, password)
-            self.check_for_existing_player(player_name)
+            self._validate_player_info(player_name, password)
+            self._check_for_existing_player(player_name)
 
         except ClientIsLoggedIn:
             self.output.send_to_client(
-                MessageRoute(self.is_logged_in_message, client=client)
+                MessageRoute(self._is_logged_in_message, client=client)
             )
 
         except PlayerAlreadyExists:
             self.output.send_to_client(
                 MessageRoute(
-                    self.player_already_exists_message(player_name), client=client
+                    self._player_already_exists_message(player_name), client=client
                 )
             )
 
         except ValidationError:
             self.output.send_to_client(
-                MessageRoute(self.validation_error_message, client=client)
+                MessageRoute(self._validation_error_message, client=client)
             )
 
         except PlayerNotFound:
@@ -124,5 +124,5 @@ class Register(Action):
             )
 
             self.output.send_to_client(
-                MessageRoute(self.confirm_finalize_message(player_name), client=client)
+                MessageRoute(self._confirm_finalize_message(player_name), client=client)
             )

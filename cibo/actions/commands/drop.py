@@ -24,18 +24,18 @@ class Drop(Action):
         return []
 
     @property
-    def missing_args_message(self) -> Message:
+    def _missing_args_message(self) -> Message:
         """No arguments were provided."""
 
         return Message("Drop what? Your pants? No way!")
 
     @property
-    def inventory_item_not_found_message(self) -> Message:
+    def _inventory_item_not_found_message(self) -> Message:
         """The given item name isn't in the player inventory."""
 
         return Message("You scour your inventory, but can't find that.")
 
-    def dropped_item_message(
+    def _dropped_item_message(
         self, player_name: str, item_name: str
     ) -> Tuple[Message, Message]:
         """Player has just dropped an item."""
@@ -45,7 +45,7 @@ class Drop(Action):
             Message(f"[cyan]{player_name}[/] drops {item_name}."),
         )
 
-    def find_item_in_inventory(self, client: Client, item_name: str) -> Item:
+    def _find_item_in_inventory(self, client: Client, item_name: str) -> Item:
         """Locate the item in the inventory, if it exists there.
 
         Args:
@@ -76,14 +76,14 @@ class Drop(Action):
             if not args:
                 raise ActionMissingArguments
 
-            item = self.find_item_in_inventory(client, self._join_args(args))
+            item = self._find_item_in_inventory(client, self._join_args(args))
             item_meta = self.items.get_by_id(item.item_id)
 
             item.current_room_id = client.player.current_room_id
             item.player_id = None
             item.save()
 
-            dropped_item_message = self.dropped_item_message(
+            dropped_item_message = self._dropped_item_message(
                 client.player.name, item_meta.name
             )
 
@@ -99,10 +99,10 @@ class Drop(Action):
 
         except ActionMissingArguments:
             self.output.send_to_client(
-                MessageRoute(self.missing_args_message, client=client)
+                MessageRoute(self._missing_args_message, client=client)
             )
 
         except InventoryItemNotFound:
             self.output.send_to_client(
-                MessageRoute(self.inventory_item_not_found_message, client=client)
+                MessageRoute(self._inventory_item_not_found_message, client=client)
             )

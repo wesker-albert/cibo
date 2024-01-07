@@ -24,11 +24,11 @@ class Look(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def room_description_message(self, client: Client, room: Room) -> Message:
+    def _room_description_message(self, client: Client, room: Room) -> Message:
         """A stylized description of the room, including its exits and occupants."""
 
-        items = self.get_formatted_items(client)
-        occupants = self.get_formatted_occupants(client)
+        items = self._get_formatted_items(client)
+        occupants = self._get_formatted_occupants(client)
 
         if items or occupants:
             formatted_room_contents = f"\n\nLooking around you see:{items}{occupants}"
@@ -46,7 +46,7 @@ class Look(Action):
             )
         )
 
-    def resource_description_message(self, client: Client, args: List[str]) -> Message:
+    def _resource_description_message(self, client: Client, args: List[str]) -> Message:
         """A stylized description of an item in the room, an item in the player's
         inventory, or an NPC in the room. In that order.
         """
@@ -93,7 +93,7 @@ class Look(Action):
     def _get_player_items(self, client: Client) -> List[Item]:
         return self.items.get_from_dataset(client.player.inventory)
 
-    def get_formatted_occupants(self, client: Client) -> str:
+    def _get_formatted_occupants(self, client: Client) -> str:
         """Formats and lists out all occupants of the client's current room, excluding
         the client themself.
 
@@ -125,7 +125,7 @@ class Look(Action):
             else ""
         )
 
-    def get_formatted_items(self, client: Client) -> str:
+    def _get_formatted_items(self, client: Client) -> str:
         """Formats and lists all the items that are in the current room, and
         potentially interactable.
 
@@ -153,7 +153,7 @@ class Look(Action):
 
             self.output.send_to_client(
                 MessageRoute(
-                    self.resource_description_message(client, args), client=client
+                    self._resource_description_message(client, args), client=client
                 )
             )
 
@@ -165,5 +165,7 @@ class Look(Action):
             room = self.rooms.get_by_id(client.player.current_room_id)
 
             self.output.send_to_client(
-                MessageRoute(self.room_description_message(client, room), client=client)
+                MessageRoute(
+                    self._room_description_message(client, room), client=client
+                )
             )

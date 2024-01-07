@@ -18,20 +18,13 @@ class Inventory(Action):
         return []
 
     @property
-    def empty_inventory_message(self) -> Message:
+    def _empty_inventory_message(self) -> Message:
         """The player inventory is empty."""
 
         return Message("You aren't carrying anything...")
 
-    def get_formatted_inventory(self, client: Client) -> Message:
-        """The contents of the player inventory.
-
-        Args:
-            client (Client): The client whose inventory will be checked.
-
-        Returns:
-            str: The items in the player inventory.
-        """
+    def _inventory_message(self, client: Client) -> Message:
+        """The contents of the player inventory."""
 
         inventory_items = [
             item.name for item in self.items.get_from_dataset(client.player.inventory)
@@ -42,7 +35,7 @@ class Inventory(Action):
         return (
             Message(inventory)
             if len(inventory_items) > 0
-            else self.empty_inventory_message
+            else self._empty_inventory_message
         )
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
@@ -55,5 +48,5 @@ class Inventory(Action):
 
         else:
             self.output.send_to_client(
-                MessageRoute(self.get_formatted_inventory(client), client=client)
+                MessageRoute(self._inventory_message(client), client=client)
             )

@@ -83,10 +83,10 @@ class Action(ABC):
 
     @property
     def output(self) -> OutputProcessor:
-        """Access the output formatter, to send messages to clients.
+        """Access the output processor, to send messages to clients.
 
         Returns:
-            Output: The output formatter instance, and its methods.
+            OutputProcessor: The output processor, to make available its methods.
         """
 
         return self._output

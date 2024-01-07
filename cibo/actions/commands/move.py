@@ -40,17 +40,17 @@ class Move(Action):
         return []
 
     @property
-    def exit_not_found_message(self) -> Message:
+    def _exit_not_found_message(self) -> Message:
         """No exit in the given direction."""
 
         return Message("You can't go that way.")
 
-    def door_is_closed_message(self, door_name: str) -> Message:
+    def _door_is_closed_message(self, door_name: str) -> Message:
         """There's a closed door in the way."""
 
         return Message(f"{door_name.capitalize()} is closed.")
 
-    def moving_message(
+    def _moving_message(
         self, player_name: str, direction: str
     ) -> Tuple[Message, Message, Message]:
         """Successfully moving in the direction given."""
@@ -77,19 +77,19 @@ class Move(Action):
 
         except ExitNotFound:
             self.output.send_to_client(
-                MessageRoute(self.exit_not_found_message, client=client)
+                MessageRoute(self._exit_not_found_message, client=client)
             )
 
         except (DoorIsClosed, DoorIsLocked):
             self.output.send_to_client(
-                MessageRoute(self.door_is_closed_message(door.name), client=client)
+                MessageRoute(self._door_is_closed_message(door.name), client=client)
             )
 
         except (DoorNotFound, DoorIsOpen):
             # update the player's current room to the one they're navigating to
             client.player.current_room_id = exit_.id_
 
-            moving_message = self.moving_message(
+            moving_message = self._moving_message(
                 client.player.name, exit_.direction.name.lower()
             )
 

@@ -19,7 +19,7 @@ class Logout(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def logging_out_message(self, player_name: str) -> Tuple[Message, Message]:
+    def _logging_out_message(self, player_name: str) -> Tuple[Message, Message]:
         """Successfully logging the player out."""
 
         return (
@@ -50,7 +50,7 @@ class Logout(Action):
 
             client.log_out()
 
-            logging_out_message = self.logging_out_message(player_name)
+            logging_out_message = self._logging_out_message(player_name)
 
             self.output.send_to_vicinity(
                 MessageRoute(logging_out_message[0], client=client, send_prompt=False),

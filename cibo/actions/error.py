@@ -16,10 +16,12 @@ class Error(Action):
     def required_args(self) -> List[str]:
         return ["message"]
 
-    def error_message(self, message: str) -> Message:
+    def _error_message(self, message: str) -> Message:
+        """An error occurred."""
+
         return Message(f"[bright_red]{message}[/]")
 
     def process(self, client: Client, _command: Optional[str], args: List[str]) -> None:
         self.output.send_to_client(
-            MessageRoute(self.error_message(args[0]), client=client)
+            MessageRoute(self._error_message(args[0]), client=client)
         )

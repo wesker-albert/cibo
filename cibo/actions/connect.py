@@ -19,7 +19,7 @@ class Connect(Action):
         return []
 
     @property
-    def motd_message(self) -> Message:
+    def _motd_message(self) -> Message:
         return Message(
             Panel(
                 f"{self._world.motd}\n\n"
@@ -35,4 +35,4 @@ class Connect(Action):
     def process(
         self, client: Client, _command: Optional[str], _args: List[str]
     ) -> None:
-        self.output.send_to_client(MessageRoute(self.motd_message, client=client))
+        self.output.send_to_client(MessageRoute(self._motd_message, client=client))

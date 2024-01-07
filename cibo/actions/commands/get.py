@@ -27,24 +27,24 @@ class Get(Action):
         return []
 
     @property
-    def missing_args_message(self) -> Message:
+    def _missing_args_message(self) -> Message:
         """No arguments were provided."""
 
         return Message("You don't get it, and you probably never will.")
 
     @property
-    def room_item_not_found_message(self) -> Message:
+    def _room_item_not_found_message(self) -> Message:
         """The given item name isn't in the room."""
 
         return Message("You look around, but don't see that.")
 
     @property
-    def room_item_is_stationary_message(self) -> Message:
+    def _room_item_is_stationary_message(self) -> Message:
         """The specified item can't be picked up."""
 
         return Message("You try, but you can't take that.")
 
-    def gotten_item_message(
+    def _get_item_message(
         self, player_name: str, item_name: str
     ) -> Tuple[Message, Message]:
         """Player has just picked up an item."""
@@ -54,7 +54,7 @@ class Get(Action):
             Message(f"[cyan]{player_name}[/] picks up {item_name}."),
         )
 
-    def find_item_in_room(self, client: Client, item_name: str) -> Item:
+    def _find_item_in_room(self, client: Client, item_name: str) -> Item:
         """Locate the item in the current room, if it exists.
 
         Args:
@@ -85,7 +85,7 @@ class Get(Action):
             if not args:
                 raise ActionMissingArguments
 
-            item = self.find_item_in_room(client, self._join_args(args))
+            item = self._find_item_in_room(client, self._join_args(args))
             item_meta = self.items.get_by_id(item.item_id)
 
             if item_meta.is_stationary:
@@ -95,15 +95,13 @@ class Get(Action):
             item.player_id = client.player
             item.save()
 
-            gotten_item_message = self.gotten_item_message(
+            get_item_message = self._get_item_message(
                 client.player.name, item_meta.name
             )
 
             self.output.send_to_vicinity(
-                MessageRoute(gotten_item_message[0], client=client),
-                MessageRoute(
-                    gotten_item_message[1], ids=[client.player.current_room_id]
-                ),
+                MessageRoute(get_item_message[0], client=client),
+                MessageRoute(get_item_message[1], ids=[client.player.current_room_id]),
             )
 
         except (ClientNotLoggedIn, ItemNotFound):
@@ -111,15 +109,15 @@ class Get(Action):
 
         except ActionMissingArguments:
             self.output.send_to_client(
-                MessageRoute(self.missing_args_message, client=client)
+                MessageRoute(self._missing_args_message, client=client)
             )
 
         except RoomItemNotFound:
             self.output.send_to_client(
-                MessageRoute(self.room_item_not_found_message, client=client)
+                MessageRoute(self._room_item_not_found_message, client=client)
             )
 
         except ItemIsStationary:
             self.output.send_to_client(
-                MessageRoute(self.room_item_is_stationary_message, client=client)
+                MessageRoute(self._room_item_is_stationary_message, client=client)
             )

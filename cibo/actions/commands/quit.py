@@ -18,7 +18,7 @@ class Quit(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def quitting_message(self, player_name: Optional[str]) -> Tuple[Message, Message]:
+    def _quitting_message(self, player_name: Optional[str]) -> Tuple[Message, Message]:
         """Successfully quitting the game."""
 
         return (
@@ -48,7 +48,7 @@ class Quit(Action):
 
             self.output.send_to_room(
                 MessageRoute(
-                    self.quitting_message(player_name)[1],
+                    self._quitting_message(player_name)[1],
                     ids=[player_room],
                     ignored_clients=[client],
                 )
@@ -57,7 +57,7 @@ class Quit(Action):
         finally:
             self.output.send_to_client(
                 MessageRoute(
-                    self.quitting_message(None)[0], client=client, send_prompt=False
+                    self._quitting_message(None)[0], client=client, send_prompt=False
                 )
             )
 

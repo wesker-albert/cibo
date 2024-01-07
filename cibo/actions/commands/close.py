@@ -27,23 +27,23 @@ class Close(Action):
         return []
 
     @property
-    def missing_args_message(self) -> Message:
+    def _missing_args_message(self) -> Message:
         """No arguments were provided."""
 
         return Message("You close your eyes and daydream about money and success.")
 
     @property
-    def exit_not_found_message(self) -> Message:
+    def _exit_not_found_message(self) -> Message:
         """No exit in the given direction."""
 
         return Message("There's nothing to close.")
 
-    def door_is_closed_message(self, door_name: str) -> Message:
+    def _door_is_closed_message(self, door_name: str) -> Message:
         """The door is already closed."""
 
         return Message(f"{door_name.capitalize()} is already closed.")
 
-    def door_closes_message(
+    def _door_closes_message(
         self, door_name: str, player_name: str
     ) -> Tuple[Message, Message, Message]:
         """The door is closed by the player."""
@@ -70,7 +70,7 @@ class Close(Action):
 
         except ActionMissingArguments:
             self.output.send_to_client(
-                MessageRoute(self.missing_args_message, client=client)
+                MessageRoute(self._missing_args_message, client=client)
             )
 
         except (ClientNotLoggedIn, RoomNotFound):
@@ -78,18 +78,18 @@ class Close(Action):
 
         except (ExitNotFound, DoorNotFound):
             self.output.send_to_client(
-                MessageRoute(self.exit_not_found_message, client=client)
+                MessageRoute(self._exit_not_found_message, client=client)
             )
 
         except (DoorIsClosed, DoorIsLocked):
             self.output.send_to_client(
-                MessageRoute(self.door_is_closed_message(door.name), client=client)
+                MessageRoute(self._door_is_closed_message(door.name), client=client)
             )
 
         except DoorIsOpen:
             door.close()
 
-            door_closes_message = self.door_closes_message(
+            door_closes_message = self._door_closes_message(
                 door.name, client.player.name
             )
 

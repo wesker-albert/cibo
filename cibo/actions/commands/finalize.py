@@ -22,7 +22,7 @@ class Finalize(Action):
         return []
 
     @property
-    def is_logged_in_message(self) -> Message:
+    def _is_logged_in_message(self) -> Message:
         """Player is already logged in."""
 
         return Message(
@@ -30,14 +30,14 @@ class Finalize(Action):
         )
 
     @property
-    def not_registered_message(self) -> Message:
+    def _not_registered_message(self) -> Message:
         """Didn't register first."""
 
         return Message(
             "You'll need to [green]register[/] before you can [green]finalize[/]."
         )
 
-    def player_already_exists_message(self, player_name: str) -> Message:
+    def _player_already_exists_message(self, player_name: str) -> Message:
         """Player name is already taken."""
 
         return Message(
@@ -45,7 +45,7 @@ class Finalize(Action):
             "Please [green]register[/] again with a different name."
         )
 
-    def successfully_registered_message(self, player_name: str) -> Message:
+    def _successfully_registered_message(self, player_name: str) -> Message:
         """Finalization was successful."""
 
         return Message(
@@ -53,7 +53,7 @@ class Finalize(Action):
             "with this player."
         )
 
-    def save_player_registration(self, client: Client) -> None:
+    def _save_player_registration(self, client: Client) -> None:
         """Save the registered player to the database.
 
         Args:
@@ -69,7 +69,7 @@ class Finalize(Action):
         except IntegrityError as ex:
             raise PlayerAlreadyExists from ex
 
-    def create_player_starting_inventory(self, client: Client) -> None:
+    def _create_player_starting_inventory(self, client: Client) -> None:
         """Give the newly created player any starting items they may need.
 
         Args:
@@ -88,23 +88,23 @@ class Finalize(Action):
             if not client.is_registered:
                 raise PlayerNotRegistered
 
-            self.save_player_registration(client)
-            self.create_player_starting_inventory(client)
+            self._save_player_registration(client)
+            self._create_player_starting_inventory(client)
 
         except ClientIsLoggedIn:
             self.output.send_to_client(
-                MessageRoute(self.is_logged_in_message, client=client)
+                MessageRoute(self._is_logged_in_message, client=client)
             )
 
         except PlayerNotRegistered:
             self.output.send_to_client(
-                MessageRoute(self.not_registered_message, client=client)
+                MessageRoute(self._not_registered_message, client=client)
             )
 
         except PlayerAlreadyExists:
             self.output.send_to_client(
                 MessageRoute(
-                    self.player_already_exists_message(client.registration.name),
+                    self._player_already_exists_message(client.registration.name),
                     client=client,
                 )
             )
@@ -112,7 +112,7 @@ class Finalize(Action):
         else:
             self.output.send_to_client(
                 MessageRoute(
-                    self.successfully_registered_message(client.registration.name),
+                    self._successfully_registered_message(client.registration.name),
                     client=client,
                 )
             )

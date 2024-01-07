@@ -18,12 +18,12 @@ class Say(Action):
         return []
 
     @property
-    def missing_args_message(self) -> Message:
+    def _missing_args_message(self) -> Message:
         """No arguments were provided."""
 
         return Message("You try to think of something clever to say, but fail.")
 
-    def speech_message(
+    def _speech_message(
         self, player_name: str, player_message: str
     ) -> Tuple[Message, Message]:
         """Player is successfully saying something."""
@@ -46,11 +46,11 @@ class Say(Action):
 
         except ActionMissingArguments:
             self.output.send_to_client(
-                MessageRoute(self.missing_args_message, client=client)
+                MessageRoute(self._missing_args_message, client=client)
             )
 
         else:
-            speech_message = self.speech_message(
+            speech_message = self._speech_message(
                 client.player.name, self._join_args(args)
             )
 
