@@ -75,53 +75,51 @@ class TestOutput(OutputFactory):
         self.mock_clients[0].send_message.assert_not_called()
         self.mock_clients[0].send_prompt.assert_not_called()
 
-    # def test_output_send_local_announcement(self):
-    #     announcement = Announcement("You died.", "frank died.")
+    def test_output_send_vicinity_message(self):
+        self.telnet.get_connected_clients.return_value = [
+            self.mock_clients[0],
+            self.mock_clients[1],
+        ]
 
-    #     self.telnet.get_connected_clients.return_value = [
-    #         self.mock_clients[0],
-    #         self.mock_clients[1],
-    #     ]
+        self.output.send_to_vicinity(
+            MessageRoute(Message(body="You died."), client=self.mock_clients[0]),
+            MessageRoute(
+                Message(body="frank died."),
+                ids=[1],
+            ),
+        )
 
-    #     self.output.send_local_announcement(announcement, self.mock_clients[0], 1)
+        self.mock_clients[0].send_message.assert_called_once_with(
+            "\n  You died.                                                                 \n"
+        )
+        self.mock_clients[0].send_prompt.assert_called_once()
 
-    #     client_calls = [
-    #         call(
-    #             "\n  You died.                                                                 \n"
-    #         ),
-    #         call("\r\n> "),
-    #     ]
+        self.mock_clients[1].send_message.assert_called_once_with(
+            "\r  frank died.                                                               \n"
+        )
+        self.mock_clients[1].send_prompt.assert_called_once()
 
-    #     self.mock_clients[0].send_message.assert_has_calls(client_calls)
+    def test_output_send_vicinity_message_adjoining_room(self):
+        self.mock_clients[1].player = Mock(current_room_id=2)
 
-    #     additional_client_calls = [
-    #         call(
-    #             "\r  frank died.                                                               \n"
-    #         ),
-    #         call("\r\n> "),
-    #     ]
+        self.telnet.get_connected_clients.return_value = [
+            self.mock_clients[0],
+            self.mock_clients[1],
+        ]
 
-    #     self.mock_clients[1].send_message.assert_has_calls(additional_client_calls)
+        self.output.send_to_vicinity(
+            MessageRoute(Message(body="You died."), client=self.mock_clients[0]),
+            MessageRoute(
+                Message(body="frank died."),
+                ids=[1],
+            ),
+            MessageRoute(
+                Message(body="You hear a horrifying scream."),
+                ids=[2],
+            ),
+        )
 
-    # def test_output_send_local_announcement_adjoining_room(self):
-    #     announcement = Announcement(
-    #         "You died.", "frank died.", "Your hear a horrifying scream."
-    #     )
-
-    #     self.mock_clients[1].player = Mock(current_room_id=2)
-
-    #     self.telnet.get_connected_clients.return_value = [
-    #         self.mock_clients[0],
-    #         self.mock_clients[1],
-    #     ]
-
-    #     self.output.send_local_announcement(announcement, self.mock_clients[0], 1, 2)
-
-    #     additional_client_calls = [
-    #         call(
-    #             "\r  Your hear a horrifying scream.                                            \n"
-    #         ),
-    #         call("\r\n> "),
-    #     ]
-
-    #     self.mock_clients[1].send_message.assert_has_calls(additional_client_calls)
+        self.mock_clients[1].send_message.assert_called_once_with(
+            "\r  You hear a horrifying scream.                                             \n"
+        )
+        self.mock_clients[1].send_prompt.assert_called_once()

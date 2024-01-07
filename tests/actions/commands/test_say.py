@@ -30,15 +30,19 @@ class TestSayAction(SayActionFactory):
             )
         )
 
-    # def test_action_say_process(self):
-    #     self.say.process(self.client, "say", ["Hey you guys!"])
+    def test_action_say_process(self):
+        self.say.process(self.client, "say", ["Hey you guys!"])
 
-    #     self.output.send_local_announcement.assert_called_once_with(
-    #         Announcement(
-    #             self_message='You say, "Hey you guys!"',
-    #             room_message='[cyan]frank[/] says, "Hey you guys!"',
-    #             adjoining_room_message=None,
-    #         ),
-    #         self.client,
-    #         1,
-    #     )
+        self.output.send_to_vicinity.assert_called_once_with(
+            MessageRoute(
+                Message(body='You say, "Hey you guys!"', **self.default_message_args),
+                client=self.client,
+            ),
+            MessageRoute(
+                Message(
+                    body='[cyan]frank[/] says, "Hey you guys!"',
+                    **self.default_message_args,
+                ),
+                ids=[1],
+            ),
+        )

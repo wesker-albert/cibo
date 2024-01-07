@@ -17,18 +17,25 @@ class TestOpenAction(OpenActionFactory):
 
         self.output.send_prompt.assert_called_once_with(self.client)
 
-    # def test_action_open_process_missing_args(self):
-    #     self.open.process(self.client, "open", [])
+    def test_action_open_process_missing_args(self):
+        self.open.process(self.client, "open", [])
 
-    #     self.output.send_local_announcement.assert_called_once_with(
-    #         Announcement(
-    #             self_message="You open your mouth and let out a loud belch. If anyone else is in the room, they probably heard it...",
-    #             room_message="[cyan]frank[/] burps loudly. How disgusting...",
-    #             adjoining_room_message=None,
-    #         ),
-    #         self.client,
-    #         1,
-    #     )
+        self.output.send_to_vicinity.assert_called_once_with(
+            MessageRoute(
+                Message(
+                    body="You open your mouth and let out a loud belch. If anyone else is in the room, they probably heard it...",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            ),
+            MessageRoute(
+                Message(
+                    body="[cyan]frank[/] burps loudly. How disgusting...",
+                    **self.default_message_args,
+                ),
+                ids=[1],
+            ),
+        )
 
     def test_action_open_process_door_is_open(self):
         self.open.process(self.client, "open", ["e"])
@@ -65,19 +72,26 @@ class TestOpenAction(OpenActionFactory):
             )
         )
 
-    # def test_action_open_process_open_door(self):
-    #     self.open.process(self.client, "open", ["n"])
+    def test_action_open_process_open_door(self):
+        self.open.process(self.client, "open", ["n"])
 
-    #     door = self.open.doors.get_by_room_ids(1, 2)
-    #     assert door.is_open
+        door = self.open.doors.get_by_room_ids(1, 2)
+        assert door.is_open
 
-    #     self.output.send_local_announcement.assert_called_once_with(
-    #         Announcement(
-    #             self_message="You open a wooden door.",
-    #             room_message="[cyan]frank[/] opens a wooden door.",
-    #             adjoining_room_message="A wooden door opens.",
-    #         ),
-    #         self.client,
-    #         1,
-    #         2,
-    #     )
+        self.output.send_to_vicinity.assert_called_once_with(
+            MessageRoute(
+                Message(body="You open a wooden door.", **self.default_message_args),
+                client=self.client,
+            ),
+            MessageRoute(
+                Message(
+                    body="[cyan]frank[/] opens a wooden door.",
+                    **self.default_message_args,
+                ),
+                ids=[1],
+            ),
+            MessageRoute(
+                Message(body="A wooden door opens.", **self.default_message_args),
+                ids=[2],
+            ),
+        )

@@ -69,19 +69,30 @@ class TestCloseAction(CloseActionFactory):
             )
         )
 
-    # def test_action_close_process_close_door(self):
-    #     self.close.process(self.client, "close", ["e"])
+    def test_action_close_process_close_door(self):
+        self.close.process(self.client, "close", ["e"])
 
-    #     door = self.close.doors.get_by_room_ids(1, 3)
-    #     assert door.is_closed
+        door = self.close.doors.get_by_room_ids(1, 3)
+        assert door.is_closed
 
-    #     self.output.send_local_announcement.assert_called_once_with(
-    #         Announcement(
-    #             self_message="You close a propped-open door.",
-    #             room_message="[cyan]frank[/] closes a propped-open door.",
-    #             adjoining_room_message="A propped-open door closes.",
-    #         ),
-    #         self.client,
-    #         1,
-    #         3,
-    #     )
+        self.output.send_to_vicinity.assert_called_once_with(
+            MessageRoute(
+                Message(
+                    body="You close a propped-open door.", **self.default_message_args
+                ),
+                client=self.client,
+            ),
+            MessageRoute(
+                Message(
+                    body="[cyan]frank[/] closes a propped-open door.",
+                    **self.default_message_args,
+                ),
+                ids=[1],
+            ),
+            MessageRoute(
+                Message(
+                    body="A propped-open door closes.", **self.default_message_args
+                ),
+                ids=[3],
+            ),
+        )
