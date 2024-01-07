@@ -11,7 +11,7 @@ class TestConnectAction(ConnectActionFactory):
     def test_action_connect_process(self):
         self.connect.process(self.client, None, [])
 
-        panel = self.get_private_message_panel()
+        panel = self.get_message_panel()
 
         assert (
             panel.renderable

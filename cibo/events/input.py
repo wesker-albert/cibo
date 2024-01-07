@@ -45,7 +45,7 @@ class InputEvent(Event):
                 Error(self._server_config).process(client, None, [ex.message])
 
             except (InputNotReceived, Exception) as ex:
-                client.send_prompt()
+                self._output.send_prompt(client)
 
                 if not isinstance(ex, InputNotReceived):  # pytest: no cover
                     raise ex

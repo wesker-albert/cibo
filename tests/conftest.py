@@ -44,6 +44,7 @@ from cibo.models.room import Room, RoomExit
 from cibo.models.sector import Sector
 from cibo.models.server_config import ServerConfig
 from cibo.models.spawn import Spawn, SpawnType
+from cibo.output import OutputProcessor
 from cibo.password import Password
 from cibo.resources.world import World
 
@@ -52,7 +53,8 @@ class BaseFactory:
     @fixture(autouse=True)
     def fixture_base(self):
         self.telnet = Mock()
-        self.server_config = ServerConfig(self.telnet, Mock())
+        self.output = Mock()
+        self.server_config = ServerConfig(self.telnet, Mock(), self.output)
         yield
 
 
@@ -154,6 +156,13 @@ class CommandProcessorFactory(BaseFactory):
     @fixture(autouse=True)
     def fixture_command_processor(self):
         self.command_processor = CommandProcessor(self.server_config, [self.MockAction])
+        yield
+
+
+class OutputFactory(BaseFactory, ClientFactory):
+    @fixture(autouse=True)
+    def fixture_output(self):
+        self.output = OutputProcessor(self.telnet, Mock())
         yield
 
 
@@ -293,13 +302,19 @@ class DisconnectEventFactory(BaseFactory, ClientFactory):
     def fixture_disconnect_event(self):
         self.client.login_state = ClientLoginState.LOGGED_IN
         self.disconnect = DisconnectEvent(self.server_config)
+        self.default_message_args = {
+            "justify": None,
+            "style": None,
+            "highlight": False,
+            "terminal_width": 76,
+        }
         yield
 
 
 class SpawnEventFactory(BaseFactory, WorldFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_spawn_event(self):
-        self.server_config = ServerConfig(self.telnet, self.world)
+        self.server_config = ServerConfig(self.telnet, self.world, self.output)
         self.spawn = SpawnEvent(self.server_config)
         yield
 
@@ -308,17 +323,29 @@ class InputEventFactory(CommandProcessorFactory, ClientFactory):
     @fixture(autouse=True)
     def fixture_input_event(self):
         self.input = InputEvent(self.server_config, self.command_processor)
+        self.default_message_args = {
+            "justify": None,
+            "style": None,
+            "highlight": False,
+            "terminal_width": 76,
+        }
         yield
 
 
 class ActionFactory(ClientFactory, WorldFactory):
-    def get_private_message_panel(self):
-        return self.output.send_to_client.call_args.args[1]
+    def get_message_panel(self):
+        return self.output.send_to_client.call_args.args[0].message.body
 
     @fixture
     def _fixture_action(self, _fixture_world):
-        self.server_config = ServerConfig(self.telnet, self.world)
+        self.server_config = ServerConfig(self.telnet, self.world, self.output)
         self.client.login_state = ClientLoginState.LOGGED_IN
+        self.default_message_args = {
+            "justify": None,
+            "style": None,
+            "highlight": False,
+            "terminal_width": 76,
+        }
         yield
 
 

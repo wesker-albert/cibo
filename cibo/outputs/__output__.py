@@ -3,7 +3,8 @@
 from abc import ABC, abstractmethod
 
 from cibo.models.message import Message, MessageRoute
-from cibo.models.server_config import ServerConfig
+from cibo.resources.world import World
+from cibo.telnet import TelnetServer
 
 
 class Output(ABC):
@@ -13,11 +14,9 @@ class Output(ABC):
         server_config (ServerConfig): The server configuration object.
     """
 
-    def __init__(self, server_config: ServerConfig):
-        self._server_config = server_config
-
-        self._telnet = self._server_config.telnet
-        self._world = self._server_config.world
+    def __init__(self, telnet: TelnetServer, world: World):
+        self._telnet = telnet
+        self._world = world
 
     @abstractmethod
     def _format(self, message: Message) -> str:

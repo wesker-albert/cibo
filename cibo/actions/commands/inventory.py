@@ -44,7 +44,7 @@ class Inventory(Action):
                 raise ClientNotLoggedIn
 
         except ClientNotLoggedIn:
-            client.send_prompt()
+            self.output.send_prompt(client)
 
         else:
             self.output.send_to_client(

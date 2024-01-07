@@ -158,7 +158,7 @@ class Look(Action):
             )
 
         except ClientNotLoggedIn:
-            client.send_prompt()
+            self.output.send_prompt(client)
 
         except ActionMissingArguments:
             # the player is just looking at the room in general

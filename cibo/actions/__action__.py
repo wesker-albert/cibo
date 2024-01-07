@@ -26,8 +26,7 @@ class Action(ABC):
 
         self._telnet = self._server_config.telnet
         self._world = self._server_config.world
-
-        self._output = OutputProcessor(self._server_config)
+        self._output = self._server_config.output_processor
 
         self._password_hasher = Password()
 

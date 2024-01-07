@@ -17,6 +17,7 @@ class Event(ABC):
 
         self._telnet = self._server_config.telnet
         self._world = self._server_config.world
+        self._output = self._server_config.output_processor
 
     @abstractmethod
     def process(self) -> None:  # pytest: no cover

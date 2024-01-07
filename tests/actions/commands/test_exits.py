@@ -1,4 +1,5 @@
 from cibo.models.client import ClientLoginState
+from cibo.models.message import Message, MessageRoute
 from tests.conftest import ExitsActionFactory
 
 
@@ -20,5 +21,11 @@ class TestExitsAction(ExitsActionFactory):
         self.exits.process(self.client, "exits", [])
 
         self.output.send_to_client.assert_called_with(
-            self.client, "[green]Exits:[/] east, north, south, west"
+            MessageRoute(
+                Message(
+                    body="[green]Exits:[/] east, north, south, west",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )

@@ -42,7 +42,7 @@ class Logout(Action):
                 raise ClientNotLoggedIn
 
         except ClientNotLoggedIn:
-            client.send_prompt()
+            self.output.send_prompt(client)
 
         else:
             player_name = client.player.name

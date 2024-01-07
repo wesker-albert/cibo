@@ -1,4 +1,5 @@
 from cibo.models.client import ClientLoginState
+from cibo.models.message import Message, MessageRoute
 from tests.conftest import QuitActionFactory
 
 
@@ -15,14 +16,24 @@ class TestQuitAction(QuitActionFactory):
         assert self.client.login_state is ClientLoginState.PRE_LOGIN
 
         self.output.send_to_room.assert_called_once_with(
-            1,
-            '[cyan]frank[/] yells, "Thank you Wisconsin!" They then proceed to drop their microphone, and walk off the stage.',
-            [self.client],
+            MessageRoute(
+                Message(
+                    body='[cyan]frank[/] yells, "Thank you Wisconsin!" They then proceed to drop their microphone, and walk off the stage.',
+                    **self.default_message_args,
+                ),
+                ids=[1],
+                ignored_clients=[self.client],
+            )
         )
         self.output.send_to_client.assert_called_once_with(
-            self.client,
-            "You take the [blue]blue pill[/]. You wake up in your bed and believe whatever you want to believe. You choose to believe that your parents are proud of you.\n",
-            prompt=False,
+            MessageRoute(
+                Message(
+                    body="You take the [blue]blue pill[/]. You wake up in your bed and believe whatever you want to believe. You choose to believe that your parents are proud of you.\n",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+                send_prompt=False,
+            )
         )
 
         self.client.socket.close.assert_called_once()
@@ -33,9 +44,14 @@ class TestQuitAction(QuitActionFactory):
         self.quit.process(self.client, "quit", [], 0)
 
         self.output.send_to_client.assert_called_once_with(
-            self.client,
-            "You take the [blue]blue pill[/]. You wake up in your bed and believe whatever you want to believe. You choose to believe that your parents are proud of you.\n",
-            prompt=False,
+            MessageRoute(
+                Message(
+                    body="You take the [blue]blue pill[/]. You wake up in your bed and believe whatever you want to believe. You choose to believe that your parents are proud of you.\n",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+                send_prompt=False,
+            )
         )
 
         self.client.socket.close.assert_called_once()

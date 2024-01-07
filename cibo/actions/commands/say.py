@@ -42,7 +42,7 @@ class Say(Action):
                 raise ActionMissingArguments
 
         except ClientNotLoggedIn:
-            client.send_prompt()
+            self.output.send_prompt(client)
 
         except ActionMissingArguments:
             self.output.send_to_client(

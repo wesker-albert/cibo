@@ -5,13 +5,15 @@ supplied.
 
 from typing import Optional
 
+from cibo.models.client import Client
 from cibo.models.message import MessageRoute
-from cibo.models.server_config import ServerConfig
 from cibo.outputs.private import Private
 from cibo.outputs.region import Region
 from cibo.outputs.room import Room
 from cibo.outputs.sector import Sector
 from cibo.outputs.server import Server
+from cibo.resources.world import World
+from cibo.telnet import TelnetServer
 
 
 class OutputProcessor:
@@ -22,14 +24,20 @@ class OutputProcessor:
     specific use cases, where multiple output types and routes are necessary.
     """
 
-    def __init__(self, server_config: ServerConfig) -> None:
-        self._server_config = server_config
+    def __init__(self, telnet: TelnetServer, world: World) -> None:
+        self._telnet = telnet
+        self._world = world
 
-        self._private = Private(self._server_config)
-        self._room = Room(self._server_config)
-        self._sector = Sector(self._server_config)
-        self._region = Region(self._server_config)
-        self._server = Server(self._server_config)
+        self._private = Private(self._telnet, self._world)
+        self._room = Room(self._telnet, self._world)
+        self._sector = Sector(self._telnet, self._world)
+        self._region = Region(self._telnet, self._world)
+        self._server = Server(self._telnet, self._world)
+
+    def send_prompt(self, client: Client) -> None:
+        """Sends a prompt to the specified client."""
+
+        client.send_prompt()
 
     def send_to_client(self, message: MessageRoute) -> None:
         """Sends a private message, to a specific client.

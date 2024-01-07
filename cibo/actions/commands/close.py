@@ -74,7 +74,7 @@ class Close(Action):
             )
 
         except (ClientNotLoggedIn, RoomNotFound):
-            client.send_prompt()
+            self.output.send_prompt(client)
 
         except (ExitNotFound, DoorNotFound):
             self.output.send_to_client(

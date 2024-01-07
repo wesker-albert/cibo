@@ -1,5 +1,6 @@
 from cibo.models.client import ClientLoginState
 from cibo.models.data.player import Player
+from cibo.models.message import Message, MessageRoute
 from tests.conftest import FinalizeActionFactory
 
 
@@ -16,16 +17,26 @@ class TestFinalizeAction(FinalizeActionFactory):
         self.finalize.process(self.client, "finalize", [])
 
         self.output.send_to_client.assert_called_with(
-            self.client,
-            "You finalize your written will, leaving your whole estate to your cat.",
+            MessageRoute(
+                Message(
+                    body="You finalize your written will, leaving your whole estate to your cat.",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )
 
     def test_action_finalize_process_not_registered(self):
         self.finalize.process(self.client, "finalize", [])
 
         self.output.send_to_client.assert_called_with(
-            self.client,
-            "You'll need to [green]register[/] before you can [green]finalize[/].",
+            MessageRoute(
+                Message(
+                    body="You'll need to [green]register[/] before you can [green]finalize[/].",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )
 
     def test_action_finalize_process_player_already_exists(self, _fixture_database):
@@ -36,8 +47,13 @@ class TestFinalizeAction(FinalizeActionFactory):
         self.finalize.process(self.client, "finalize", [])
 
         self.output.send_to_client.assert_called_with(
-            self.client,
-            "Sorry, turns out the name [cyan]frank[/] is already taken. Please [green]register[/] again with a different name.",
+            MessageRoute(
+                Message(
+                    body="Sorry, turns out the name [cyan]frank[/] is already taken. Please [green]register[/] again with a different name.",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )
 
     def test_action_finalize_process_create_player(self, _fixture_database):
@@ -52,6 +68,11 @@ class TestFinalizeAction(FinalizeActionFactory):
         assert len(player.inventory) == 1
 
         self.output.send_to_client.assert_called_with(
-            self.client,
-            "[cyan]jennifer[/] has been created. You can now [green]login[/] with this player.",
+            MessageRoute(
+                Message(
+                    body="[cyan]jennifer[/] has been created. You can now [green]login[/] with this player.",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )

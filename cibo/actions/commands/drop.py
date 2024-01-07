@@ -95,7 +95,7 @@ class Drop(Action):
             )
 
         except (ClientNotLoggedIn, ItemNotFound):
-            client.send_prompt()
+            self.output.send_prompt(client)
 
         except ActionMissingArguments:
             self.output.send_to_client(

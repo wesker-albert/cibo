@@ -101,6 +101,7 @@
                 "python.createEnvironment.contentButton": "hide",
                 "python.defaultInterpreterPath": "/usr/local/py-utils/venvs/poetry/bin/python3.11",
                 "python.testing.pytestArgs": [
+                    "-vv",
                     "tests"
                 ],
                 "python.testing.pytestEnabled": true,
