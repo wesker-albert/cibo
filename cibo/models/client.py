@@ -56,7 +56,7 @@ class Client:
         """The prompt that appears before the client's terminal input.
 
         Returns:
-            str: The prompt text.
+            Prompt: The prompt object.
         """
 
         return Prompt("> ")
@@ -78,6 +78,8 @@ class Client:
             return
 
     def send_prompt(self) -> None:
+        """Sends the prompt text to the client."""
+
         self.send_message(str(self.prompt))
 
     def disconnect(self) -> None:

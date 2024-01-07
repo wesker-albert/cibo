@@ -1,3 +1,17 @@
+"""A stylized message to be send to the client, and displayed in their terminal.
+
+Leverages the rich library to pad, stylize, and format messages. Accepts
+plain strings, or a number of "renderables" that rich offers.
+
+Rich will process a number of color and styling markup codes, if included in
+the message.
+
+For more information and to reference ways to use rich in conjunction with
+cibo's message formatter, visit:
+
+    https://rich.readthedocs.io/en/stable/
+"""
+
 from dataclasses import KW_ONLY, dataclass, field
 from typing import List, Literal, Optional, Union
 
@@ -15,18 +29,7 @@ from cibo.models.client import Client
 
 @dataclass
 class Message:
-    """A message.
-
-    Args:
-        message (Union[str, Columns, Markdown, Panel, Syntax, Table, Tree]):
-            The message or rich renderable to format.
-        justify (Optional[Literal["left", "center", "right"]], optional):
-            Alignment of the message contents. Defaults to None.
-        style (Optional[str], optional): A style to apply to the whole message.
-            Defaults to None.
-        highlight (bool, optional): Highlight patterns in text, such as int, str,
-            etc. Defaults to False.
-    """
+    """A stylized message to be send to the client, and displayed in their terminal."""
 
     body: Union[str, Columns, Markdown, Panel, Syntax, Table, Tree]
     justify: Optional[Literal["left", "center", "right"]] = None
@@ -35,21 +38,6 @@ class Message:
     terminal_width: int = 76
 
     def __str__(self) -> str:
-        """Leverages the rich library to pad, stylize, and format messages. Accepts
-        plain strings, or a number of "renderables" that rich offers.
-
-        Rich will process a number of color and styling markup codes, if included in
-        the message.
-
-        For more information and to reference ways to use rich in conjunction with
-        cibo's message formatter, visit:
-
-            https://rich.readthedocs.io/en/stable/
-
-        Returns:
-            str: The padded and formatted message.
-        """
-
         formatter = Console(
             width=self.terminal_width, style=self.style, highlight=self.highlight
         )
@@ -65,8 +53,8 @@ class Message:
 
 @dataclass
 class MessageRoute:
-    """Used to associate a message with specific rooms, sectors, or regions, for
-    routing purposes.
+    """Used to associate a message with specific clients, rooms, sectors, or regions,
+    for routing and delivery purposes.
     """
 
     message: Message
