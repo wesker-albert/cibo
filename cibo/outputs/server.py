@@ -1,8 +1,16 @@
+"""Sends a server-wide message to clients who are current logged into a
+player session.
+"""
+
 from cibo.models.message import Message, MessageRoute
 from cibo.outputs.__output__ import Output
 
 
 class Server(Output):
+    """Sends a server-wide message to clients who are current logged into a
+    player session.
+    """
+
     def _format(self, message: Message) -> str:
         return f"\r{message}"
 

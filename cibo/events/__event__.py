@@ -6,7 +6,7 @@ from cibo.models.server_config import ServerConfig
 
 
 class Event(ABC):
-    """The base interface used by other Event classes.
+    """The base interface used by all Event classes.
 
     Args:
         server_config (ServerConfig): The server configuration object.
