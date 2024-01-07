@@ -1,4 +1,4 @@
-"""Sends a server-wide message to clients who are current logged into a
+"""Sends a server-wide message to clients who are currently logged into a
 player session.
 """
 
@@ -7,7 +7,7 @@ from cibo.outputs.__output__ import Output
 
 
 class Server(Output):
-    """Sends a server-wide message to clients who are current logged into a
+    """Sends a server-wide message to clients who are currently logged into a
     player session.
     """
 

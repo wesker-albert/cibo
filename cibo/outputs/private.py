@@ -11,7 +11,6 @@ class Private(Output):
         return f"\n{message}"
 
     def send(self, message: MessageRoute) -> None:
-        """Prints a message intended for only one recipient."""
         if message.client:
             message.client.send_message(self._format(message.message))
 
