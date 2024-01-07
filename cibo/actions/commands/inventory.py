@@ -54,6 +54,6 @@ class Inventory(Action):
             client.send_prompt()
 
         else:
-            self.output.private.send(
+            self.output.send_to_client(
                 MessageRoute(self.get_formatted_inventory(client), client=client)
             )

@@ -1,5 +1,5 @@
 from cibo.models.message import Message, MessageRoute
-from cibo.output.__output__ import Output
+from cibo.outputs.__output__ import Output
 
 
 class Sector(Output):

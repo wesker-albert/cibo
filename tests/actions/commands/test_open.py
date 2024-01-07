@@ -1,5 +1,5 @@
 from cibo.models.client import ClientLoginState
-from cibo.output import Announcement
+from cibo.outputs import Announcement
 from tests.conftest import OpenActionFactory
 
 
@@ -33,21 +33,21 @@ class TestOpenAction(OpenActionFactory):
     def test_action_open_process_door_is_open(self):
         self.open.process(self.client, "open", ["e"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "A propped-open door is already open."
         )
 
     def test_action_open_process_door_is_locked(self):
         self.open.process(self.client, "open", ["s"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "A steel security door is locked."
         )
 
     def test_action_open_process_door_not_found(self):
         self.open.process(self.client, "open", ["w"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "There's nothing to open."
         )
 

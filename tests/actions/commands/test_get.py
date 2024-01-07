@@ -1,7 +1,7 @@
 from cibo.models.client import ClientLoginState
 from cibo.models.data.item import Item
 from cibo.models.data.player import Player
-from cibo.output import Announcement
+from cibo.outputs import Announcement
 from tests.conftest import GetActionFactory
 
 
@@ -22,7 +22,7 @@ class TestGetAction(GetActionFactory):
     def test_action_get_process_missing_args(self):
         self.get.process(self.client, "get", [])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "You don't get it, and you probably never will."
         )
 
@@ -31,7 +31,7 @@ class TestGetAction(GetActionFactory):
 
         self.get.process(self.client, "get", ["spoon"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "You look around, but don't see that."
         )
 
@@ -40,7 +40,7 @@ class TestGetAction(GetActionFactory):
 
         self.get.process(self.client, "get", ["jukebox"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "You try, but you can't take that."
         )
 

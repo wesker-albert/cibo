@@ -1,7 +1,7 @@
 from cibo.models.client import ClientLoginState
 from cibo.models.data.item import Item
 from cibo.models.data.player import Player
-from cibo.output import Announcement
+from cibo.outputs import Announcement
 from tests.conftest import DropActionFactory
 
 
@@ -22,7 +22,7 @@ class TestDropAction(DropActionFactory):
     def test_action_drop_process_missing_args(self):
         self.drop.process(self.client, "drop", [])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "Drop what? Your pants? No way!"
         )
 
@@ -32,7 +32,7 @@ class TestDropAction(DropActionFactory):
 
         self.drop.process(self.client, "drop", ["spoon"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "You scour your inventory, but can't find that."
         )
 

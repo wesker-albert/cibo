@@ -1,5 +1,5 @@
 from cibo.models.client import ClientLoginState
-from cibo.output import Announcement
+from cibo.outputs import Announcement
 from tests.conftest import SayActionFactory
 
 
@@ -20,7 +20,7 @@ class TestSayAction(SayActionFactory):
     def test_action_say_process_missing_args(self):
         self.say.process(self.client, "say", [])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "You try to think of something clever to say, but fail."
         )
 

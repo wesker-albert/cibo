@@ -11,6 +11,6 @@ class TestErrorAction(ErrorActionFactory):
     def test_action_error_process(self):
         self.error.process(self.client, None, ["Something unexpected happened!"])
 
-        self.output.private.send.assert_called_once_with(
+        self.output.send_to_client.assert_called_once_with(
             self.client, "[bright_red]Something unexpected happened![/]"
         )

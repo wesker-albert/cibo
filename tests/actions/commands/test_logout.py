@@ -1,7 +1,7 @@
 from unittest.mock import ANY
 
 from cibo.models.client import ClientLoginState
-from cibo.output import Announcement
+from cibo.outputs import Announcement
 from tests.conftest import LogoutActionFactory
 
 
@@ -35,6 +35,6 @@ class TestLogoutAction(LogoutActionFactory):
             prompt=False,
         )
 
-        self.output.private.send.assert_called_once_with(
+        self.output.send_to_client.assert_called_once_with(
             self.client, ANY, justify="center"
         )

@@ -52,7 +52,7 @@ class Logout(Action):
 
             logging_out_message = self.logging_out_message(player_name)
 
-            self.output.vicinity.send(
+            self.output.send_to_vicinity(
                 MessageRoute(logging_out_message[0], client=client, send_prompt=False),
                 MessageRoute(logging_out_message[1], ids=[player_room]),
             )

@@ -1,5 +1,5 @@
 from cibo.models.client import ClientLoginState
-from cibo.output import Announcement
+from cibo.outputs import Announcement
 from tests.conftest import CloseActionFactory
 
 
@@ -20,28 +20,28 @@ class TestCloseAction(CloseActionFactory):
     def test_action_close_process_missing_args(self):
         self.close.process(self.client, "close", [])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "You close your eyes and daydream about money and success."
         )
 
     def test_action_close_process_door_is_closed(self):
         self.close.process(self.client, "close", ["n"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "A wooden door is already closed."
         )
 
     def test_action_close_process_door_is_locked(self):
         self.close.process(self.client, "close", ["s"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "A steel security door is already closed."
         )
 
     def test_action_close_process_door_not_found(self):
         self.close.process(self.client, "close", ["w"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "There's nothing to close."
         )
 

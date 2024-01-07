@@ -5,12 +5,7 @@ from typing import List
 
 from cibo.models.client import Client
 from cibo.models.server_config import ServerConfig
-from cibo.output.private import Private
-from cibo.output.region import Region
-from cibo.output.room import Room
-from cibo.output.sector import Sector
-from cibo.output.server import Server
-from cibo.output.vicinity import Vicinity
+from cibo.output import OutputProcessor
 from cibo.password import Password
 from cibo.resources.doors import Doors
 from cibo.resources.items import Items
@@ -26,26 +21,13 @@ class Action(ABC):
         server_config (ServerConfig): The server configuration object.
     """
 
-    class Output:
-        """Responsible for constructing messages that are sent to clients."""
-
-        def __init__(self, server_config: ServerConfig) -> None:
-            self._server_config = server_config
-
-            self.private = Private(self._server_config)
-            self.room = Room(self._server_config)
-            self.vicinity = Vicinity(self._server_config)
-            self.sector = Sector(self._server_config)
-            self.region = Region(self._server_config)
-            self.server = Server(self._server_config)
-
     def __init__(self, server_config: ServerConfig) -> None:
         self._server_config = server_config
 
         self._telnet = self._server_config.telnet
         self._world = self._server_config.world
 
-        self._output = self.Output(self._server_config)
+        self._output = OutputProcessor(self._server_config)
 
         self._password_hasher = Password()
 
@@ -100,7 +82,7 @@ class Action(ABC):
         return self._world.npcs
 
     @property
-    def output(self) -> Output:
+    def output(self) -> OutputProcessor:
         """Access the output formatter, to send messages to clients.
 
         Returns:

@@ -45,7 +45,7 @@ class Say(Action):
             client.send_prompt()
 
         except ActionMissingArguments:
-            self.output.private.send(
+            self.output.send_to_client(
                 MessageRoute(self.missing_args_message, client=client)
             )
 
@@ -54,7 +54,7 @@ class Say(Action):
                 client.player.name, self._join_args(args)
             )
 
-            self.output.vicinity.send(
+            self.output.send_to_vicinity(
                 MessageRoute(speech_message[0], client=client),
                 MessageRoute(speech_message[1], ids=[client.player.current_room_id]),
             )

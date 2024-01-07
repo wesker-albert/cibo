@@ -98,22 +98,22 @@ class Login(Action):
             self.check_for_player_session(player.name)
 
         except ClientIsLoggedIn:
-            self.output.private.send(
+            self.output.send_to_client(
                 MessageRoute(self.is_logged_in_message, client=client)
             )
 
         except PlayerNotFound:
-            self.output.private.send(
+            self.output.send_to_client(
                 MessageRoute(self.player_not_found_message(player_name), client=client)
             )
 
         except PasswordIncorrect:
-            self.output.private.send(
+            self.output.send_to_client(
                 MessageRoute(self.incorrect_password_message, client=client)
             )
 
         except PlayerSessionActive:
-            self.output.private.send(
+            self.output.send_to_client(
                 MessageRoute(
                     self.player_session_active_message(player_name), client=client
                 )
@@ -124,7 +124,7 @@ class Login(Action):
 
             logging_in_message = self.logging_in_message(client.player.name)
 
-            self.output.vicinity.send(
+            self.output.send_to_vicinity(
                 MessageRoute(logging_in_message[0], client=client, send_prompt=False),
                 MessageRoute(
                     logging_in_message[1], ids=[client.player.current_room_id]

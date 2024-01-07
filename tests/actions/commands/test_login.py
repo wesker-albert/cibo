@@ -1,5 +1,5 @@
 from cibo.models.client import ClientLoginState
-from cibo.output import Announcement
+from cibo.outputs import Announcement
 from tests.conftest import LoginActionFactory
 
 
@@ -15,7 +15,7 @@ class TestLoginAction(LoginActionFactory):
 
         self.login.process(self.client, "login", ["frank", "password"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client,
             "You login to Facebook, to make sure your ex isn't doing better than you are.",
         )
@@ -23,7 +23,7 @@ class TestLoginAction(LoginActionFactory):
     def test_action_login_process_player_not_found(self, _fixture_database):
         self.login.process(self.client, "login", ["jennifer", "password"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client,
             "A player by the name [cyan]jennifer[/] does not exist. If you want, you can [green]register[/] a new player with that name.",
         )
@@ -31,7 +31,7 @@ class TestLoginAction(LoginActionFactory):
     def test_action_login_process_incorrect_password(self, _fixture_database):
         self.login.process(self.client, "login", ["frank", "wrongpassword"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "[bright_red]Incorrect password.[/]"
         )
 
@@ -43,7 +43,7 @@ class TestLoginAction(LoginActionFactory):
 
         self.login.process(self.client, "login", ["frank", "abcd1234"])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client,
             "The player [cyan]frank[/] is already logged in. If this player belongs to you and you think it's been stolen, please contact the admin.",
         )

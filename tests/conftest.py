@@ -313,7 +313,7 @@ class InputEventFactory(CommandProcessorFactory, ClientFactory):
 
 class ActionFactory(ClientFactory, WorldFactory):
     def get_private_message_panel(self):
-        return self.output.private.send.call_args.args[1]
+        return self.output.send_to_client.call_args.args[1]
 
     @fixture
     def _fixture_action(self, _fixture_world):

@@ -22,7 +22,7 @@ class TestInventoryAction(InventoryActionFactory):
 
         self.inventory.process(self.client, "inv", [])
 
-        self.output.private.send.assert_called_with(
+        self.output.send_to_client.assert_called_with(
             self.client, "You aren't carrying anything..."
         )
 
@@ -32,4 +32,4 @@ class TestInventoryAction(InventoryActionFactory):
 
         self.inventory.process(self.client, "inv", [])
 
-        self.output.private.send.assert_called_with(self.client, "A metal fork")
+        self.output.send_to_client.assert_called_with(self.client, "A metal fork")

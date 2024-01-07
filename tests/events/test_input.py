@@ -29,7 +29,7 @@ class TestInputEevent(InputEventFactory):
 
         self.input.process()
 
-        self.output.private.send.assert_called_once_with(
+        self.output.send_to_client.assert_called_once_with(
             self.client,
             "[bright_red]Command is missing required arguments.\nExpected syntax: [green]login name password[/][/]",
         )
