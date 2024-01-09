@@ -45,6 +45,11 @@ from cibo.models.sector import Sector
 from cibo.models.server_config import ServerConfig
 from cibo.models.spawn import Spawn, SpawnType
 from cibo.output import OutputProcessor
+from cibo.outputs.private import Private as OutputPrivate
+from cibo.outputs.region import Region as OutputRegion
+from cibo.outputs.room import Room as OutputRoom
+from cibo.outputs.sector import Sector as OutputSector
+from cibo.outputs.server import Server as OutputServer
 from cibo.password import Password
 from cibo.resources.world import World
 
@@ -178,6 +183,12 @@ class OutputFactory(BaseFactory, ClientFactory, WorldFactory):
     @fixture(autouse=True)
     def fixture_output(self):
         self.output = OutputProcessor(self.telnet, self.world)
+        self.private = OutputPrivate(self.telnet, self.world)
+        self.room = OutputRoom(self.telnet, self.world)
+        self.sector = OutputSector(self.telnet, self.world)
+        self.region = OutputRegion(self.telnet, self.world)
+        self.server = OutputServer(self.telnet, self.world)
+        self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
         yield
 
 

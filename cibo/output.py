@@ -22,7 +22,7 @@ class OutputProcessor:
     can be used to send messages to clients.
 
     Additionally offers a place to create reusable "output chain" methods for
-    specific use cases, where multiple output types and routes are necessary.
+    specific use cases, where multiple output types and routes may be necessary.
     """
 
     def __init__(self, telnet: TelnetServer, world: World) -> None:
