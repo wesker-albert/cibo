@@ -5,7 +5,8 @@ from typing import List, Optional
 from rich.panel import Panel
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
+from cibo.models.client import Client
+from cibo.models.message import Message, MessageRoute
 
 
 class Connect(Action):
@@ -17,11 +18,9 @@ class Connect(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def process(
-        self, client: Client, _command: Optional[str], _args: List[str]
-    ) -> None:
-        self.output.send_private_message(
-            client,
+    @property
+    def _motd_message(self) -> Message:
+        return Message(
             Panel(
                 f"{self._world.motd}\n\n"
                 "Enter [green]register name password[/] to create a new player.\n"
@@ -32,3 +31,8 @@ class Connect(Action):
             ),
             justify="center",
         )
+
+    def process(
+        self, client: Client, _command: Optional[str], _args: List[str]
+    ) -> None:
+        self.output.send_to_client(MessageRoute(self._motd_message, client=client))

@@ -1,10 +1,9 @@
 """Navigates a player between available rooms."""
 
-from typing import List
+from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
 from cibo.actions.commands.look import Look
-from cibo.client import Client
 from cibo.exception import (
     ClientNotLoggedIn,
     DoorIsClosed,
@@ -14,7 +13,8 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.output import Announcement
+from cibo.models.client import Client
+from cibo.models.message import Message, MessageRoute
 
 
 class Move(Action):
@@ -40,23 +40,25 @@ class Move(Action):
         return []
 
     @property
-    def exit_not_found_message(self) -> str:
+    def _exit_not_found_message(self) -> Message:
         """No exit in the given direction."""
 
-        return "You can't go that way."
+        return Message("You can't go that way.")
 
-    def door_is_closed_message(self, door_name: str) -> str:
+    def _door_is_closed_message(self, door_name: str) -> Message:
         """There's a closed door in the way."""
 
-        return f"{door_name.capitalize()} is closed."
+        return Message(f"{door_name.capitalize()} is closed.")
 
-    def moving_message(self, player_name: str, direction: str) -> Announcement:
+    def _moving_message(
+        self, player_name: str, direction: str
+    ) -> Tuple[Message, Message, Message]:
         """Successfully moving in the direction given."""
 
-        return Announcement(
-            f"You head {direction}.",
-            f"[cyan]{player_name}[/] arrives.",
-            f"[cyan]{player_name}[/] leaves {direction}.",
+        return (
+            Message(f"You head {direction}."),
+            Message(f"[cyan]{player_name}[/] arrives."),
+            Message(f"[cyan]{player_name}[/] leaves {direction}."),
         )
 
     def process(self, client: Client, command: str, _args: List[str]) -> None:
@@ -74,23 +76,27 @@ class Move(Action):
             self.output.send_prompt(client)
 
         except ExitNotFound:
-            self.output.send_private_message(client, self.exit_not_found_message)
+            self.output.send_to_client(
+                MessageRoute(self._exit_not_found_message, client=client)
+            )
 
         except (DoorIsClosed, DoorIsLocked):
-            self.output.send_private_message(
-                client, self.door_is_closed_message(door.name)
+            self.output.send_to_client(
+                MessageRoute(self._door_is_closed_message(door.name), client=client)
             )
 
         except (DoorNotFound, DoorIsOpen):
             # update the player's current room to the one they're navigating to
             client.player.current_room_id = exit_.id_
 
-            self.output.send_local_announcement(
-                self.moving_message(client.player.name, exit_.direction.name.lower()),
-                client,
-                client.player.current_room_id,
-                room.id_,
-                prompt=False,
+            moving_message = self._moving_message(
+                client.player.name, exit_.direction.name.lower()
+            )
+
+            self.output.send_to_vicinity(
+                MessageRoute(moving_message[0], client=client, send_prompt=False),
+                MessageRoute(moving_message[1], ids=[client.player.current_room_id]),
+                MessageRoute(moving_message[2], ids=[room.id_]),
             )
 
             Look(self._server_config).process(client, None, [])

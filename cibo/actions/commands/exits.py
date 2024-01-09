@@ -3,8 +3,10 @@
 from typing import List, Optional
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
 from cibo.exception import ClientNotLoggedIn, RoomNotFound
+from cibo.models.client import Client
+from cibo.models.message import Message, MessageRoute
+from cibo.models.room import Room
 
 
 class Exits(Action):
@@ -15,6 +17,11 @@ class Exits(Action):
 
     def required_args(self) -> List[str]:
         return []
+
+    def _exits_message(self, room: Room) -> Message:
+        """The exits for the current room."""
+
+        return Message(room.get_formatted_exits())
 
     def process(
         self, client: Client, _command: Optional[str], _args: List[str]
@@ -29,4 +36,6 @@ class Exits(Action):
             self.output.send_prompt(client)
 
         else:
-            self.output.send_private_message(client, room.get_formatted_exits())
+            self.output.send_to_client(
+                MessageRoute(self._exits_message(room), client=client)
+            )

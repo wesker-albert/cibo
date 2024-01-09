@@ -1,3 +1,4 @@
+from cibo.models.message import Message, MessageRoute
 from tests.conftest import ErrorActionFactory
 
 
@@ -11,6 +12,12 @@ class TestErrorAction(ErrorActionFactory):
     def test_action_error_process(self):
         self.error.process(self.client, None, ["Something unexpected happened!"])
 
-        self.output.send_private_message.assert_called_once_with(
-            self.client, "[bright_red]Something unexpected happened![/]"
+        self.output.send_to_client.assert_called_once_with(
+            MessageRoute(
+                Message(
+                    body="[bright_red]Something unexpected happened![/]",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )

@@ -3,8 +3,9 @@
 from typing import List
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
 from cibo.exception import ClientNotLoggedIn
+from cibo.models.client import Client
+from cibo.models.message import Message, MessageRoute
 
 
 class Inventory(Action):
@@ -17,20 +18,13 @@ class Inventory(Action):
         return []
 
     @property
-    def empty_inventory_message(self) -> str:
+    def _empty_inventory_message(self) -> Message:
         """The player inventory is empty."""
 
-        return "You aren't carrying anything..."
+        return Message("You aren't carrying anything...")
 
-    def get_formatted_inventory(self, client: Client) -> str:
-        """The contents of the player inventory.
-
-        Args:
-            client (Client): The client whose inventory will be checked.
-
-        Returns:
-            str: The items in the player inventory.
-        """
+    def _inventory_message(self, client: Client) -> Message:
+        """The contents of the player inventory."""
 
         inventory_items = [
             item.name for item in self.items.get_from_dataset(client.player.inventory)
@@ -38,7 +32,11 @@ class Inventory(Action):
 
         inventory = "\n".join([str(item).capitalize() for item in inventory_items])
 
-        return inventory if len(inventory_items) > 0 else self.empty_inventory_message
+        return (
+            Message(inventory)
+            if len(inventory_items) > 0
+            else self._empty_inventory_message
+        )
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
         try:
@@ -49,6 +47,6 @@ class Inventory(Action):
             self.output.send_prompt(client)
 
         else:
-            self.output.send_private_message(
-                client, self.get_formatted_inventory(client)
+            self.output.send_to_client(
+                MessageRoute(self._inventory_message(client), client=client)
             )

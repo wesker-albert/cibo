@@ -5,10 +5,11 @@ from typing import List
 from peewee import IntegrityError
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
 from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotRegistered
+from cibo.models.client import Client
 from cibo.models.data.item import Item
 from cibo.models.data.player import Player
+from cibo.models.message import Message, MessageRoute
 
 
 class Finalize(Action):
@@ -21,34 +22,38 @@ class Finalize(Action):
         return []
 
     @property
-    def is_logged_in_message(self) -> str:
+    def _is_logged_in_message(self) -> Message:
         """Player is already logged in."""
 
-        return "You finalize your written will, leaving your whole estate to your cat."
+        return Message(
+            "You finalize your written will, leaving your whole estate to your cat."
+        )
 
     @property
-    def not_registered_message(self) -> str:
+    def _not_registered_message(self) -> Message:
         """Didn't register first."""
 
-        return "You'll need to [green]register[/] before you can [green]finalize[/]."
+        return Message(
+            "You'll need to [green]register[/] before you can [green]finalize[/]."
+        )
 
-    def player_already_exists_message(self, player_name: str) -> str:
+    def _player_already_exists_message(self, player_name: str) -> Message:
         """Player name is already taken."""
 
-        return (
+        return Message(
             f"Sorry, turns out the name [cyan]{player_name}[/] is already taken. "
             "Please [green]register[/] again with a different name."
         )
 
-    def successfully_registered_message(self, player_name: str) -> str:
+    def _successfully_registered_message(self, player_name: str) -> Message:
         """Finalization was successful."""
 
-        return (
+        return Message(
             f"[cyan]{player_name}[/] has been created. You can now [green]login[/] "
             "with this player."
         )
 
-    def save_player_registration(self, client: Client) -> None:
+    def _save_player_registration(self, client: Client) -> None:
         """Save the registered player to the database.
 
         Args:
@@ -64,7 +69,7 @@ class Finalize(Action):
         except IntegrityError as ex:
             raise PlayerAlreadyExists from ex
 
-    def create_player_starting_inventory(self, client: Client) -> None:
+    def _create_player_starting_inventory(self, client: Client) -> None:
         """Give the newly created player any starting items they may need.
 
         Args:
@@ -83,23 +88,33 @@ class Finalize(Action):
             if not client.is_registered:
                 raise PlayerNotRegistered
 
-            self.save_player_registration(client)
-            self.create_player_starting_inventory(client)
+            self._save_player_registration(client)
+            self._create_player_starting_inventory(client)
 
         except ClientIsLoggedIn:
-            self.output.send_private_message(client, self.is_logged_in_message)
+            self.output.send_to_client(
+                MessageRoute(self._is_logged_in_message, client=client)
+            )
 
         except PlayerNotRegistered:
-            self.output.send_private_message(client, self.not_registered_message)
+            self.output.send_to_client(
+                MessageRoute(self._not_registered_message, client=client)
+            )
 
         except PlayerAlreadyExists:
-            self.output.send_private_message(
-                client, self.player_already_exists_message(client.registration.name)
+            self.output.send_to_client(
+                MessageRoute(
+                    self._player_already_exists_message(client.registration.name),
+                    client=client,
+                )
             )
 
         else:
-            self.output.send_private_message(
-                client, self.successfully_registered_message(client.registration.name)
+            self.output.send_to_client(
+                MessageRoute(
+                    self._successfully_registered_message(client.registration.name),
+                    client=client,
+                )
             )
 
         finally:

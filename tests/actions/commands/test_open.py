@@ -1,5 +1,5 @@
-from cibo.client import ClientLoginState
-from cibo.output import Announcement
+from cibo.models.client import ClientLoginState
+from cibo.models.message import Message, MessageRoute
 from tests.conftest import OpenActionFactory
 
 
@@ -20,35 +20,56 @@ class TestOpenAction(OpenActionFactory):
     def test_action_open_process_missing_args(self):
         self.open.process(self.client, "open", [])
 
-        self.output.send_local_announcement.assert_called_once_with(
-            Announcement(
-                self_message="You open your mouth and let out a loud belch. If anyone else is in the room, they probably heard it...",
-                room_message="[cyan]frank[/] burps loudly. How disgusting...",
-                adjoining_room_message=None,
+        self.output.send_to_vicinity.assert_called_once_with(
+            MessageRoute(
+                Message(
+                    body="You open your mouth and let out a loud belch. If anyone else is in the room, they probably heard it...",
+                    **self.default_message_args,
+                ),
+                client=self.client,
             ),
-            self.client,
-            1,
+            MessageRoute(
+                Message(
+                    body="[cyan]frank[/] burps loudly. How disgusting...",
+                    **self.default_message_args,
+                ),
+                ids=[1],
+            ),
         )
 
     def test_action_open_process_door_is_open(self):
         self.open.process(self.client, "open", ["e"])
 
-        self.output.send_private_message.assert_called_with(
-            self.client, "A propped-open door is already open."
+        self.output.send_to_client.assert_called_with(
+            MessageRoute(
+                Message(
+                    body="A propped-open door is already open.",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )
 
     def test_action_open_process_door_is_locked(self):
         self.open.process(self.client, "open", ["s"])
 
-        self.output.send_private_message.assert_called_with(
-            self.client, "A steel security door is locked."
+        self.output.send_to_client.assert_called_with(
+            MessageRoute(
+                Message(
+                    body="A steel security door is locked.", **self.default_message_args
+                ),
+                client=self.client,
+            )
         )
 
     def test_action_open_process_door_not_found(self):
         self.open.process(self.client, "open", ["w"])
 
-        self.output.send_private_message.assert_called_with(
-            self.client, "There's nothing to open."
+        self.output.send_to_client.assert_called_with(
+            MessageRoute(
+                Message(body="There's nothing to open.", **self.default_message_args),
+                client=self.client,
+            )
         )
 
     def test_action_open_process_open_door(self):
@@ -57,13 +78,20 @@ class TestOpenAction(OpenActionFactory):
         door = self.open.doors.get_by_room_ids(1, 2)
         assert door.is_open
 
-        self.output.send_local_announcement.assert_called_once_with(
-            Announcement(
-                self_message="You open a wooden door.",
-                room_message="[cyan]frank[/] opens a wooden door.",
-                adjoining_room_message="A wooden door opens.",
+        self.output.send_to_vicinity.assert_called_once_with(
+            MessageRoute(
+                Message(body="You open a wooden door.", **self.default_message_args),
+                client=self.client,
             ),
-            self.client,
-            1,
-            2,
+            MessageRoute(
+                Message(
+                    body="[cyan]frank[/] opens a wooden door.",
+                    **self.default_message_args,
+                ),
+                ids=[1],
+            ),
+            MessageRoute(
+                Message(body="A wooden door opens.", **self.default_message_args),
+                ids=[2],
+            ),
         )

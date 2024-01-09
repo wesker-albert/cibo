@@ -5,11 +5,12 @@ from typing import List, Optional
 from rich.panel import Panel
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
 from cibo.exception import ActionMissingArguments, ClientNotLoggedIn
+from cibo.models.client import Client
 from cibo.models.data.item import Item as ItemData
 from cibo.models.data.npc import Npc as NpcData
 from cibo.models.item import Item
+from cibo.models.message import Message, MessageRoute
 from cibo.models.npc import Npc
 from cibo.models.room import Room
 
@@ -23,27 +24,29 @@ class Look(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def room_desc_message(self, client: Client, room: Room) -> Panel:
+    def _room_description_message(self, client: Client, room: Room) -> Message:
         """A stylized description of the room, including its exits and occupants."""
 
-        items = self.get_formatted_items(client)
-        occupants = self.get_formatted_occupants(client)
+        items = self._get_formatted_items(client)
+        occupants = self._get_formatted_occupants(client)
 
         if items or occupants:
             formatted_room_contents = f"\n\nLooking around you see:{items}{occupants}"
         else:
             formatted_room_contents = ""
 
-        return Panel(
-            f"  {room.description.normal}{formatted_room_contents}",
-            title=f"[blue]{room.name}[/]",
-            title_align="left",
-            subtitle=room.get_formatted_exits(),
-            subtitle_align="right",
-            padding=(1, 4),
+        return Message(
+            Panel(
+                f"  {room.description.normal}{formatted_room_contents}",
+                title=f"[blue]{room.name}[/]",
+                title_align="left",
+                subtitle=room.get_formatted_exits(),
+                subtitle_align="right",
+                padding=(1, 4),
+            )
         )
 
-    def resource_desc_message(self, client: Client, args: List[str]) -> str:
+    def _resource_description_message(self, client: Client, args: List[str]) -> Message:
         """A stylized description of an item in the room, an item in the player's
         inventory, or an NPC in the room. In that order.
         """
@@ -58,9 +61,11 @@ class Look(Action):
         )
 
         if resource:
-            return f"You look at {resource.name}:\n\n  {resource.description.look}"
+            return Message(
+                f"You look at {resource.name}:\n\n  {resource.description.look}"
+            )
 
-        return "You don't see that..."
+        return Message("You don't see that...")
 
     def _get_player_occupants(self, client: Client) -> List[Client]:
         return [
@@ -88,7 +93,7 @@ class Look(Action):
     def _get_player_items(self, client: Client) -> List[Item]:
         return self.items.get_from_dataset(client.player.inventory)
 
-    def get_formatted_occupants(self, client: Client) -> str:
+    def _get_formatted_occupants(self, client: Client) -> str:
         """Formats and lists out all occupants of the client's current room, excluding
         the client themself.
 
@@ -120,7 +125,7 @@ class Look(Action):
             else ""
         )
 
-    def get_formatted_items(self, client: Client) -> str:
+    def _get_formatted_items(self, client: Client) -> str:
         """Formats and lists all the items that are in the current room, and
         potentially interactable.
 
@@ -146,8 +151,10 @@ class Look(Action):
             if not args:
                 raise ActionMissingArguments
 
-            self.output.send_private_message(
-                client, self.resource_desc_message(client, args)
+            self.output.send_to_client(
+                MessageRoute(
+                    self._resource_description_message(client, args), client=client
+                )
             )
 
         except ClientNotLoggedIn:
@@ -157,6 +164,8 @@ class Look(Action):
             # the player is just looking at the room in general
             room = self.rooms.get_by_id(client.player.current_room_id)
 
-            self.output.send_private_message(
-                client, self.room_desc_message(client, room)
+            self.output.send_to_client(
+                MessageRoute(
+                    self._room_description_message(client, room), client=client
+                )
             )

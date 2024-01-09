@@ -2,11 +2,11 @@
 
 from abc import ABC, abstractmethod
 
-from cibo.config import ServerConfig
+from cibo.models.server_config import ServerConfig
 
 
 class Event(ABC):
-    """The base interface used by other Event classes.
+    """The base interface used by all Event classes.
 
     Args:
         server_config (ServerConfig): The server configuration object.
@@ -17,7 +17,7 @@ class Event(ABC):
 
         self._telnet = self._server_config.telnet
         self._world = self._server_config.world
-        self._output = self._server_config.output
+        self._output = self._server_config.output_processor
 
     @abstractmethod
     def process(self) -> None:  # pytest: no cover

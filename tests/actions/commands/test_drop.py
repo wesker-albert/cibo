@@ -1,7 +1,7 @@
-from cibo.client import ClientLoginState
+from cibo.models.client import ClientLoginState
 from cibo.models.data.item import Item
 from cibo.models.data.player import Player
-from cibo.output import Announcement
+from cibo.models.message import Message, MessageRoute
 from tests.conftest import DropActionFactory
 
 
@@ -22,8 +22,14 @@ class TestDropAction(DropActionFactory):
     def test_action_drop_process_missing_args(self):
         self.drop.process(self.client, "drop", [])
 
-        self.output.send_private_message.assert_called_with(
-            self.client, "Drop what? Your pants? No way!"
+        self.output.send_to_client.assert_called_with(
+            MessageRoute(
+                Message(
+                    body="Drop what? Your pants? No way!",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )
 
     def test_action_drop_process_inventory_item_not_found(self, _fixture_database):
@@ -32,8 +38,14 @@ class TestDropAction(DropActionFactory):
 
         self.drop.process(self.client, "drop", ["spoon"])
 
-        self.output.send_private_message.assert_called_with(
-            self.client, "You scour your inventory, but can't find that."
+        self.output.send_to_client.assert_called_with(
+            MessageRoute(
+                Message(
+                    body="You scour your inventory, but can't find that.",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )
 
     def test_action_drop_process_dropped_tem(self, _fixture_database):
@@ -47,12 +59,16 @@ class TestDropAction(DropActionFactory):
         assert not item.player
         assert item.current_room_id == 1
 
-        self.output.send_local_announcement.assert_called_once_with(
-            Announcement(
-                self_message="You drop a metal fork.",
-                room_message="[cyan]frank[/] drops a metal fork.",
-                adjoining_room_message=None,
+        self.output.send_to_vicinity.assert_called_once_with(
+            MessageRoute(
+                Message(body="You drop a metal fork.", **self.default_message_args),
+                client=self.client,
             ),
-            self.client,
-            1,
+            MessageRoute(
+                Message(
+                    body="[cyan]frank[/] drops a metal fork.",
+                    **self.default_message_args,
+                ),
+                ids=[1],
+            ),
         )

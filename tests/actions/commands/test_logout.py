@@ -1,7 +1,7 @@
 from unittest.mock import ANY
 
-from cibo.client import ClientLoginState
-from cibo.output import Announcement
+from cibo.models.client import ClientLoginState
+from cibo.models.message import Message, MessageRoute
 from tests.conftest import LogoutActionFactory
 
 
@@ -24,17 +24,33 @@ class TestLogoutAction(LogoutActionFactory):
 
         assert self.client.login_state is ClientLoginState.PRE_LOGIN
 
-        self.output.send_local_announcement.assert_called_once_with(
-            Announcement(
-                self_message="You slowly fade away into obscurity, like you always feared you would...",
-                room_message="A black van pulls up, and 2 large men in labcoats abduct [cyan]frank[/]. The van speeds away. You wonder if you'll ever see them again...",
-                adjoining_room_message=None,
+        self.output.send_to_vicinity.assert_called_once_with(
+            MessageRoute(
+                Message(
+                    body="You slowly fade away into obscurity, like you always feared you would...",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+                send_prompt=False,
             ),
-            self.client,
-            1,
-            prompt=False,
+            MessageRoute(
+                Message(
+                    body="A black van pulls up, and 2 large men in labcoats abduct [cyan]frank[/]. The van speeds away. You wonder if you'll ever see them again...",
+                    **self.default_message_args,
+                ),
+                ids=[1],
+            ),
         )
 
-        self.output.send_private_message.assert_called_once_with(
-            self.client, ANY, justify="center"
+        self.output.send_to_client.assert_called_once_with(
+            MessageRoute(
+                Message(
+                    body=ANY,
+                    justify="center",
+                    style=None,
+                    highlight=False,
+                    terminal_width=76,
+                ),
+                client=self.client,
+            )
         )

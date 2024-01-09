@@ -1,17 +1,17 @@
 """Drops an item from the player's inventory, onto the ground of the current room."""
 
-from typing import List
+from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
 from cibo.exception import (
     ActionMissingArguments,
     ClientNotLoggedIn,
     InventoryItemNotFound,
     ItemNotFound,
 )
+from cibo.models.client import Client
 from cibo.models.data.item import Item
-from cibo.output import Announcement
+from cibo.models.message import Message, MessageRoute
 
 
 class Drop(Action):
@@ -24,26 +24,28 @@ class Drop(Action):
         return []
 
     @property
-    def missing_args_message(self) -> str:
+    def _missing_args_message(self) -> Message:
         """No arguments were provided."""
 
-        return "Drop what? Your pants? No way!"
+        return Message("Drop what? Your pants? No way!")
 
     @property
-    def inventory_item_not_found_message(self) -> str:
+    def _inventory_item_not_found_message(self) -> Message:
         """The given item name isn't in the player inventory."""
 
-        return "You scour your inventory, but can't find that."
+        return Message("You scour your inventory, but can't find that.")
 
-    def dropped_item_message(self, player_name: str, item_name: str) -> Announcement:
+    def _dropped_item_message(
+        self, player_name: str, item_name: str
+    ) -> Tuple[Message, Message]:
         """Player has just dropped an item."""
 
-        return Announcement(
-            f"You drop {item_name}.",
-            f"[cyan]{player_name}[/] drops {item_name}.",
+        return (
+            Message(f"You drop {item_name}."),
+            Message(f"[cyan]{player_name}[/] drops {item_name}."),
         )
 
-    def find_item_in_inventory(self, client: Client, item_name: str) -> Item:
+    def _find_item_in_inventory(self, client: Client, item_name: str) -> Item:
         """Locate the item in the inventory, if it exists there.
 
         Args:
@@ -74,26 +76,33 @@ class Drop(Action):
             if not args:
                 raise ActionMissingArguments
 
-            item = self.find_item_in_inventory(client, self._join_args(args))
+            item = self._find_item_in_inventory(client, self._join_args(args))
             item_meta = self.items.get_by_id(item.item_id)
 
             item.current_room_id = client.player.current_room_id
             item.player_id = None
             item.save()
 
-            self.output.send_local_announcement(
-                self.dropped_item_message(client.player.name, item_meta.name),
-                client,
-                client.player.current_room_id,
+            dropped_item_message = self._dropped_item_message(
+                client.player.name, item_meta.name
+            )
+
+            self.output.send_to_vicinity(
+                MessageRoute(dropped_item_message[0], client=client),
+                MessageRoute(
+                    dropped_item_message[1], ids=[client.player.current_room_id]
+                ),
             )
 
         except (ClientNotLoggedIn, ItemNotFound):
             self.output.send_prompt(client)
 
         except ActionMissingArguments:
-            self.output.send_private_message(client, self.missing_args_message)
+            self.output.send_to_client(
+                MessageRoute(self._missing_args_message, client=client)
+            )
 
         except InventoryItemNotFound:
-            self.output.send_private_message(
-                client, self.inventory_item_not_found_message
+            self.output.send_to_client(
+                MessageRoute(self._inventory_item_not_found_message, client=client)
             )

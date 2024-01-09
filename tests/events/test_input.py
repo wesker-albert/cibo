@@ -1,5 +1,6 @@
 import logging
 
+from cibo.models.message import Message, MessageRoute
 from tests.conftest import InputEventFactory
 
 
@@ -29,7 +30,12 @@ class TestInputEevent(InputEventFactory):
 
         self.input.process()
 
-        self.output.send_private_message.assert_called_once_with(
-            self.client,
-            "[bright_red]Command is missing required arguments.\nExpected syntax: [green]login name password[/][/]",
+        self.output.send_to_client.assert_called_once_with(
+            MessageRoute(
+                Message(
+                    body="[bright_red]Command is missing required arguments.\nExpected syntax: [green]login name password[/][/]",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )

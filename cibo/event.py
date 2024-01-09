@@ -8,10 +8,10 @@ in a FIFO order.
 
 from cibo.actions.commands import ACTIONS
 from cibo.command import CommandProcessor
-from cibo.config import ServerConfig
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
+from cibo.models.server_config import ServerConfig
 
 
 class EventProcessor:  # pytest: no cover

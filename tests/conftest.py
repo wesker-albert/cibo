@@ -22,16 +22,14 @@ from cibo.actions.commands.say import Say
 from cibo.actions.connect import Connect
 from cibo.actions.disconnect import Disconnect
 from cibo.actions.error import Error
-from cibo.actions.prompt import Prompt
 from cibo.actions.scheduled.every_minute import EveryMinute
 from cibo.actions.scheduled.every_second import EverySecond
-from cibo.client import Client, ClientLoginState
 from cibo.command import CommandProcessor
-from cibo.config import ServerConfig
 from cibo.events.connect import ConnectEvent
 from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
 from cibo.events.spawn import SpawnEvent
+from cibo.models.client import Client, ClientLoginState
 from cibo.models.data.item import Item as ItemData
 from cibo.models.data.npc import Npc as NpcData
 from cibo.models.data.player import Player
@@ -44,8 +42,14 @@ from cibo.models.npc import Npc
 from cibo.models.region import Region
 from cibo.models.room import Room, RoomExit
 from cibo.models.sector import Sector
+from cibo.models.server_config import ServerConfig
 from cibo.models.spawn import Spawn, SpawnType
-from cibo.output import Output
+from cibo.output import OutputProcessor
+from cibo.outputs.private import Private as OutputPrivate
+from cibo.outputs.region import Region as OutputRegion
+from cibo.outputs.room import Room as OutputRoom
+from cibo.outputs.sector import Sector as OutputSector
+from cibo.outputs.server import Server as OutputServer
 from cibo.password import Password
 from cibo.resources.world import World
 
@@ -160,13 +164,6 @@ class CommandProcessorFactory(BaseFactory):
         yield
 
 
-class OutputFactory(BaseFactory, ClientFactory):
-    @fixture(autouse=True)
-    def fixture_output(self):
-        self.output = Output(self.telnet)
-        yield
-
-
 class PasswordFactory:
     @fixture(autouse=True)
     def fixture_password(self):
@@ -179,6 +176,19 @@ class WorldFactory:
     @fixture(autouse=True)
     def _fixture_world(self):
         self.world = World()
+        yield
+
+
+class OutputFactory(BaseFactory, ClientFactory, WorldFactory):
+    @fixture(autouse=True)
+    def fixture_output(self):
+        self.output = OutputProcessor(self.telnet, self.world)
+        self.private = OutputPrivate(self.telnet, self.world)
+        self.room = OutputRoom(self.telnet, self.world)
+        self.sector = OutputSector(self.telnet, self.world)
+        self.region = OutputRegion(self.telnet, self.world)
+        self.server = OutputServer(self.telnet, self.world)
+        self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
         yield
 
 
@@ -303,6 +313,12 @@ class DisconnectEventFactory(BaseFactory, ClientFactory):
     def fixture_disconnect_event(self):
         self.client.login_state = ClientLoginState.LOGGED_IN
         self.disconnect = DisconnectEvent(self.server_config)
+        self.default_message_args = {
+            "justify": None,
+            "style": None,
+            "highlight": False,
+            "terminal_width": 76,
+        }
         yield
 
 
@@ -318,17 +334,29 @@ class InputEventFactory(CommandProcessorFactory, ClientFactory):
     @fixture(autouse=True)
     def fixture_input_event(self):
         self.input = InputEvent(self.server_config, self.command_processor)
+        self.default_message_args = {
+            "justify": None,
+            "style": None,
+            "highlight": False,
+            "terminal_width": 76,
+        }
         yield
 
 
 class ActionFactory(ClientFactory, WorldFactory):
-    def get_private_message_panel(self):
-        return self.output.send_private_message.call_args.args[1]
+    def get_message_panel(self):
+        return self.output.send_to_client.call_args.args[0].message.body
 
     @fixture
     def _fixture_action(self, _fixture_world):
         self.server_config = ServerConfig(self.telnet, self.world, self.output)
         self.client.login_state = ClientLoginState.LOGGED_IN
+        self.default_message_args = {
+            "justify": None,
+            "style": None,
+            "highlight": False,
+            "terminal_width": 76,
+        }
         yield
 
 
@@ -350,13 +378,6 @@ class ErrorActionFactory(BaseFactory, ActionFactory):
     @fixture(autouse=True)
     def fixture_error(self, _fixture_action):
         self.error = Error(self.server_config)
-        yield
-
-
-class PromptActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_prompt(self, _fixture_action):
-        self.prompt = Prompt(self.server_config)
         yield
 
 

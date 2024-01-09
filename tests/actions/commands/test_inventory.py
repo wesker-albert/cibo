@@ -1,5 +1,6 @@
-from cibo.client import ClientLoginState
+from cibo.models.client import ClientLoginState
 from cibo.models.data.player import Player
+from cibo.models.message import Message, MessageRoute
 from tests.conftest import InventoryActionFactory
 
 
@@ -22,8 +23,13 @@ class TestInventoryAction(InventoryActionFactory):
 
         self.inventory.process(self.client, "inv", [])
 
-        self.output.send_private_message.assert_called_with(
-            self.client, "You aren't carrying anything..."
+        self.output.send_to_client.assert_called_with(
+            MessageRoute(
+                Message(
+                    body="You aren't carrying anything...", **self.default_message_args
+                ),
+                client=self.client,
+            )
         )
 
     def test_action_inventory_process(self, _fixture_database):
@@ -32,4 +38,9 @@ class TestInventoryAction(InventoryActionFactory):
 
         self.inventory.process(self.client, "inv", [])
 
-        self.output.send_private_message.assert_called_with(self.client, "A metal fork")
+        self.output.send_to_client.assert_called_with(
+            MessageRoute(
+                Message(body="A metal fork", **self.default_message_args),
+                client=self.client,
+            )
+        )

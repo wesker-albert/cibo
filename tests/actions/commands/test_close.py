@@ -1,5 +1,5 @@
-from cibo.client import ClientLoginState
-from cibo.output import Announcement
+from cibo.models.client import ClientLoginState
+from cibo.models.message import Message, MessageRoute
 from tests.conftest import CloseActionFactory
 
 
@@ -20,29 +20,53 @@ class TestCloseAction(CloseActionFactory):
     def test_action_close_process_missing_args(self):
         self.close.process(self.client, "close", [])
 
-        self.output.send_private_message.assert_called_with(
-            self.client, "You close your eyes and daydream about money and success."
+        self.output.send_to_client.assert_called_with(
+            MessageRoute(
+                Message(
+                    body="You close your eyes and daydream about money and success.",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )
 
     def test_action_close_process_door_is_closed(self):
         self.close.process(self.client, "close", ["n"])
 
-        self.output.send_private_message.assert_called_with(
-            self.client, "A wooden door is already closed."
+        self.output.send_to_client.assert_called_with(
+            MessageRoute(
+                Message(
+                    body="A wooden door is already closed.",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )
 
     def test_action_close_process_door_is_locked(self):
         self.close.process(self.client, "close", ["s"])
 
-        self.output.send_private_message.assert_called_with(
-            self.client, "A steel security door is already closed."
+        self.output.send_to_client.assert_called_with(
+            MessageRoute(
+                Message(
+                    body="A steel security door is already closed.",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )
 
     def test_action_close_process_door_not_found(self):
         self.close.process(self.client, "close", ["w"])
 
-        self.output.send_private_message.assert_called_with(
-            self.client, "There's nothing to close."
+        self.output.send_to_client.assert_called_with(
+            MessageRoute(
+                Message(
+                    body="There's nothing to close.",
+                    **self.default_message_args,
+                ),
+                client=self.client,
+            )
         )
 
     def test_action_close_process_close_door(self):
@@ -51,13 +75,24 @@ class TestCloseAction(CloseActionFactory):
         door = self.close.doors.get_by_room_ids(1, 3)
         assert door.is_closed
 
-        self.output.send_local_announcement.assert_called_once_with(
-            Announcement(
-                self_message="You close a propped-open door.",
-                room_message="[cyan]frank[/] closes a propped-open door.",
-                adjoining_room_message="A propped-open door closes.",
+        self.output.send_to_vicinity.assert_called_once_with(
+            MessageRoute(
+                Message(
+                    body="You close a propped-open door.", **self.default_message_args
+                ),
+                client=self.client,
             ),
-            self.client,
-            1,
-            3,
+            MessageRoute(
+                Message(
+                    body="[cyan]frank[/] closes a propped-open door.",
+                    **self.default_message_args,
+                ),
+                ids=[1],
+            ),
+            MessageRoute(
+                Message(
+                    body="A propped-open door closes.", **self.default_message_args
+                ),
+                ids=[3],
+            ),
         )

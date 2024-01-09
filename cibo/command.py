@@ -6,9 +6,9 @@ from dataclasses import dataclass
 from typing import List, Optional, Type
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
-from cibo.config import ServerConfig
 from cibo.exception import CommandMissingArguments, CommandUnrecognized
+from cibo.models.client import Client
+from cibo.models.server_config import ServerConfig
 
 
 @dataclass

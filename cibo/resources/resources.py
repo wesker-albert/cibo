@@ -21,7 +21,6 @@ class Resources:
         followed by a period, that number is used as an index assuming there are
         multiple matches.
 
-
         Args:
             resources (List[Union[Item, Npc]]): The resources to search against.
             sub (str): What to search for in the resource name.

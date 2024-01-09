@@ -1,3 +1,4 @@
+from cibo.models.message import Message, MessageRoute
 from tests.conftest import DisconnectEventFactory
 
 
@@ -8,8 +9,13 @@ class TestDisconnectEvent(DisconnectEventFactory):
         self.disconnect.process()
 
         self.client.player.save.assert_called_once()
-        self.output.send_local_message.assert_called_once_with(
-            1,
-            "You watch in horror as [cyan]frank[/] proceeds to slowly eat their own head. They eventually disappear into nothingness.",
-            [self.client],
+        self.output.send_to_room.assert_called_once_with(
+            MessageRoute(
+                Message(
+                    body="You watch in horror as [cyan]frank[/] proceeds to slowly eat their own head. They eventually disappear into nothingness.",
+                    **self.default_message_args,
+                ),
+                ids=[1],
+                ignored_clients=[self.client],
+            )
         )

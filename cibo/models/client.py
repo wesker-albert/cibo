@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from cibo.models.data.player import Player
+from cibo.models.prompt import Prompt
 
 
 class ClientLoginState(int, Enum):
@@ -51,16 +52,16 @@ class Client:
         return bool(self.registration.is_dirty())
 
     @property
-    def prompt(self) -> str:
+    def prompt(self) -> Prompt:
         """The prompt that appears before the client's terminal input.
 
         Returns:
-            str: The prompt text.
+            Prompt: The prompt object.
         """
 
-        return "> "
+        return Prompt("> ")
 
-    def _send_message(self, message: str) -> None:
+    def send_message(self, message: str) -> None:
         """Sends the message text to the client. The text will be printed out in
         the client's terminal.
 
@@ -76,14 +77,10 @@ class Client:
         except socket_.error:
             return
 
-    def send_message(self, message: str) -> None:
-        """Sends the message text to the client, and apends a prompt at the end.
+    def send_prompt(self) -> None:
+        """Sends the prompt text to the client."""
 
-        Args:
-            message (str): The body text of the message.
-        """
-
-        self._send_message(message)
+        self.send_message(str(self.prompt))
 
     def disconnect(self) -> None:
         """Disconnect the client from the server."""

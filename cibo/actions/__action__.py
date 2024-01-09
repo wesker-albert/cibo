@@ -3,9 +3,9 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from cibo.client import Client
-from cibo.config import ServerConfig
-from cibo.output import Output
+from cibo.models.client import Client
+from cibo.models.server_config import ServerConfig
+from cibo.output import OutputProcessor
 from cibo.password import Password
 from cibo.resources.doors import Doors
 from cibo.resources.items import Items
@@ -26,7 +26,7 @@ class Action(ABC):
 
         self._telnet = self._server_config.telnet
         self._world = self._server_config.world
-        self._output = self._server_config.output
+        self._output = self._server_config.output_processor
 
         self._password_hasher = Password()
 
@@ -81,11 +81,11 @@ class Action(ABC):
         return self._world.npcs
 
     @property
-    def output(self) -> Output:
-        """Access the output formatter, to send messages to clients.
+    def output(self) -> OutputProcessor:
+        """Access the output processor, to send messages to clients.
 
         Returns:
-            Output: The output formatter instance, and its methods.
+            OutputProcessor: The output processor, to make available its methods.
         """
 
         return self._output

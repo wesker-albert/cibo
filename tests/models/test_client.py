@@ -1,8 +1,9 @@
 import socket as socket_
 from unittest.mock import Mock
 
-from cibo.client import ClientLoginState
+from cibo.models.client import ClientLoginState
 from cibo.models.data.player import Player
+from cibo.models.prompt import Prompt
 from tests.conftest import ClientFactory
 
 
@@ -21,7 +22,12 @@ class TestClient(ClientFactory):
         assert not self.client.player.get_id()
 
     def test_client_prompt(self):
-        assert self.client.prompt == "> "
+        assert self.client.prompt == Prompt(body="> ", terminal_width=76)
+
+    def test_client_send_prompt(self):
+        self.client.send_prompt()
+
+        self.client.socket.sendall.assert_called_once_with(bytearray(b"\r\n> "))
 
     def test_client_send_message(self):
         self.client.send_message("Hey guys!")

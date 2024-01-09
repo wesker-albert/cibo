@@ -1,209 +1,127 @@
-"""The Output class provides message formatting and isolation logic, ensuring
-that messages have a uniform style and reach only the clients they are intended to.
+"""Outputs are types of messages that can be send to clients, connected to the server.
+Different output types will target different clients, depending on the routing
+supplied.
 """
 
-from dataclasses import dataclass
-from typing import List, Literal, Optional, Union
+from typing import Optional
 
-from rich.columns import Columns
-from rich.console import Console
-from rich.markdown import Markdown
-from rich.padding import Padding
-from rich.panel import Panel
-from rich.syntax import Syntax
-from rich.table import Table
-from rich.tree import Tree
-
-from cibo.client import Client
+from cibo.exception import MessageRouteMissingParameters
+from cibo.models.client import Client
+from cibo.models.message import MessageRoute
+from cibo.outputs.private import Private
+from cibo.outputs.region import Region
+from cibo.outputs.room import Room
+from cibo.outputs.sector import Sector
+from cibo.outputs.server import Server
+from cibo.resources.world import World
 from cibo.telnet import TelnetServer
 
 
-@dataclass
-class Announcement:
-    """The information necessary to make a localized announcement."""
+class OutputProcessor:
+    """Output processing abstraction layer. Exposes the different output types that
+    can be used to send messages to clients.
 
-    self_message: str
-    room_message: str
-    adjoining_room_message: Optional[str] = None
-
-
-class Output:
-    """Responsible for constructing messages that are sent to clients.
-
-    Args:
-        telnet (TelnetServer): The telnet server to use when outputting messages.
+    Additionally offers a place to create reusable "output chain" methods for
+    specific use cases, where multiple output types and routes may be necessary.
     """
 
-    def __init__(self, telnet: TelnetServer) -> None:
+    def __init__(self, telnet: TelnetServer, world: World) -> None:
         self._telnet = telnet
-        self._terminal_width = 76
+        self._world = world
 
-    def _format_message(
-        self,
-        message: Union[str, Columns, Markdown, Panel, Syntax, Table, Tree],
-        justify: Optional[Literal["left", "center", "right"]] = None,
-        style: Optional[str] = None,
-        highlight: bool = False,
-    ) -> str:
-        """Leverages the rich library to pad, stylize, and format messages. Accepts
-        plain strings, or a number of "renderables" that rich offers.
-
-        Rich will process a number of color and styling markup codes, if included in
-        the message.
-
-        For more information and to reference ways to use rich in conjunction with
-        cibo's message formatter, visit:
-
-            https://rich.readthedocs.io/en/stable/
-
-        Args:
-            message (Union[str, Columns, Markdown, Panel, Syntax, Table, Tree]):
-                The message or rich renderable to format.
-            justify (Optional[Literal["left", "center", "right"]], optional):
-                Alignment of the message contents. Defaults to None.
-            style (Optional[str], optional): A style to apply to the whole message.
-                Defaults to None.
-            highlight (bool, optional): Highlight patterns in text, such as int, str,
-                etc. Defaults to False.
-
-        Returns:
-            str: The padded and formatted message.
-        """
-
-        formatter = Console(
-            width=self._terminal_width, style=style, highlight=highlight
-        )
-
-        with formatter.capture() as capture:
-            padded_message = Padding(message, (0, 2))
-            formatter.print(padded_message, end="", overflow="fold", justify=justify)
-
-        return capture.get()
-
-    def _format_prompt(self, prompt: str) -> str:
-        """Applies formatting to the prompt text.
-
-        Args:
-            prompt (str): The prompt text.
-
-        Returns:
-            str: The formatted prompt.
-        """
-
-        formatter = Console(width=self._terminal_width)
-
-        with formatter.capture() as capture:
-            formatter.print(prompt, end="", overflow="fold")
-
-        return capture.get()
+        self._private = Private(self._telnet, self._world)
+        self._room = Room(self._telnet, self._world)
+        self._sector = Sector(self._telnet, self._world)
+        self._region = Region(self._telnet, self._world)
+        self._server = Server(self._telnet, self._world)
 
     def send_prompt(self, client: Client) -> None:
-        """Prints a formatted prompt to the client.
+        """Sends a prompt to the specified client."""
 
-        Args:
-            client (Client): The client to send the prompt to.
+        client.send_prompt()
+
+    def send_to_client(self, message: MessageRoute) -> None:
+        """Sends a private message, to a specific client.
+
+        Requires a `client` is specific within the routing object.
+        """
+        if not message.client:
+            raise MessageRouteMissingParameters
+
+        self._private.send(message)
+
+    def send_to_room(self, message: MessageRoute) -> None:
+        """Sends a message to clients whose player is currently located within the
+        supplied room ID(s).
+
+        Requires `ids` are specified within the routing object.
+        """
+        if not message.ids:
+            raise MessageRouteMissingParameters
+
+        self._room.send(message)
+
+    def send_to_sector(self, message: MessageRoute) -> None:
+        """Sends a message to clients whose player is currently located within the
+        supplied sector ID(s).
+
+        Requires `ids` are specified within the routing object.
+        """
+        if not message.ids:
+            raise MessageRouteMissingParameters
+
+        self._sector.send(message)
+
+    def send_to_region(self, message: MessageRoute) -> None:
+        """Sends a message to clients whose player is currently located within the
+        supplied region ID(s).
+
+        Requires `ids` are specified within the routing object.
         """
 
-        formatted_prompt = self._format_prompt(client.prompt)
-        client.send_message(f"\r\n{formatted_prompt}")
+        if not message.ids:
+            raise MessageRouteMissingParameters
 
-    def send_private_message(
+        self._region.send(message)
+
+    def send_to_server(self, message: MessageRoute) -> None:
+        """Sends a server-wide message to clients who are currently logged into a
+        player session.
+        """
+
+        self._server.send(message)
+
+    def send_to_vicinity(
         self,
-        client: Client,
-        message: Union[str, Columns, Markdown, Panel, Syntax, Table, Tree],
-        justify: Optional[Literal["left", "center", "right"]] = None,
-        prompt: bool = True,
+        client_message: MessageRoute,
+        room_message: MessageRoute,
+        adjoining_room_message: Optional[MessageRoute] = None,
     ) -> None:
-        """Prints a message only to the client specified.
+        """Sends individually specified messages to the appropriate clients, within
+        the general vicinity.
+
+        Requires a `client` is specific within the `client_message` object.
+
+        Requires `ids` are specified within the `room_message` object, as well as the
+        `adjoining_room_message` object (if included).
 
         Args:
-            client (Client): The client to send the message to.
-            message (Union[str, Columns, Markdown, Panel, Syntax, Table, Tree]):
-                The message or rich renderable to format.
-            justify (Optional[Literal["left", "center", "right"]], optional):
-                Alignment of the message contents. Defaults to None.
-            prompt (bool, optional): If a prompt should be included immediately after
-                the message. Defaults to True.
+            client_message (MessageRoute): Message intended for the client who is the
+                origin of the output.
+            room_message (MessageRoute): Message send to any clients that are in the
+                same room as the origin client.
+            adjoining_room_message (Optional[MessageRoute], optional): An optional
+                message to be sent to specified adjoining rooms. Defaults to None.
         """
 
-        formatted_message = self._format_message(message, justify=justify)
-        client.send_message(f"\n{formatted_message}")
+        if not client_message.client:
+            raise MessageRouteMissingParameters
 
-        if prompt:
-            self.send_prompt(client)
+        self.send_to_client(client_message)
 
-    def send_local_message(
-        self, room_id: int, message: str, ignore_clients: List[Client]
-    ) -> None:
-        """Prints a message to all clients whose player are within the room.
+        room_message.ignored_clients = [client_message.client]
+        self.send_to_room(room_message)
 
-        Args:
-            room_id (int): The room to send the message to.
-            message (str): The body of the message.
-            ignore_clients (List[Client]): Clients that should not receive the message.
-        """
-
-        formatted_message = self._format_message(message)
-
-        for client in self._telnet.get_connected_clients():
-            if (
-                client.is_logged_in
-                and client.player
-                and client.player.current_room_id == room_id
-                and client not in ignore_clients
-            ):
-                client.send_message(f"\r{formatted_message}")
-                self.send_prompt(client)
-
-    # pylint: disable=too-many-arguments
-    def send_local_announcement(
-        self,
-        announcement: Announcement,
-        client: Client,
-        room_id: int,
-        adjoining_room_id: Optional[int] = None,
-        prompt: bool = True,
-    ) -> None:
-        """Make a localized announcement to the player, other players in the same room,
-        and optionally any players in an adjacent room.
-
-        Args:
-            announcement (Announcement): The differing messages that will be sent.
-            client (Client): The client who is the source of the announcement.
-            room_id (int): The originating room of the announcement
-            adjoining_room_id (Optional[int], optional): An adjoining room to send a
-                message to. Defaults to None.
-            prompt (bool, optional): Whether to follow the private client message with
-                a prompt. Defaults to True.
-        """
-
-        self.send_private_message(client, announcement.self_message, prompt=prompt)
-        self.send_local_message(room_id, announcement.room_message, [client])
-
-        if adjoining_room_id and announcement.adjoining_room_message:
-            self.send_local_message(
-                adjoining_room_id,
-                announcement.adjoining_room_message,
-                [client],
-            )
-
-    def send_sector_announcement(
-        self, _sector: int, _message: str, _ignore_clients: List[Client]
-    ) -> None:  # pytest: no cover
-        """Prints a message to all clients within the sector."""
-
-        pass
-
-    def self_region_announcement(
-        self, _region: int, _message: str, _ignore_clients: List[Client]
-    ) -> None:  # pytest: no cover
-        """Prints a message to all clients within the sector."""
-
-        pass
-
-    def send_server_announcement(
-        self, _message: str, _ignore_clients: List[Client]
-    ) -> None:  # pytest: no cover
-        """Prints a message to all clients on the server."""
-
-        pass
+        if adjoining_room_message:
+            adjoining_room_message.ignored_clients = [client_message.client]
+            self.send_to_room(adjoining_room_message)

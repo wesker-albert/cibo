@@ -13,7 +13,7 @@ from enum import Enum
 from select import select
 from typing import List, Optional, Tuple
 
-from cibo.client import Client, ClientLoginState
+from cibo.models.client import Client, ClientLoginState
 from cibo.models.data.player import Player
 
 

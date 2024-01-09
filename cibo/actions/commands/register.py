@@ -5,9 +5,10 @@ from typing import List
 from marshmallow import ValidationError
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
 from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotFound
+from cibo.models.client import Client
 from cibo.models.data.player import Player, PlayerSchema
+from cibo.models.message import Message, MessageRoute
 
 
 class Register(Action):
@@ -20,24 +21,18 @@ class Register(Action):
         return ["name", "password"]
 
     @property
-    def is_logged_in_message(self) -> str:
+    def _is_logged_in_message(self) -> Message:
         """Player is already logged in."""
 
-        return "You register to vote, even though both candidates aren't that great."
-
-    def player_already_exists_message(self, player_name: str) -> str:
-        """Player name is already taken."""
-
-        return (
-            f"Sorry, turns out the name [cyan]{player_name}[/] is already taken. "
-            "Please [green]register[/] again with a different name."
+        return Message(
+            "You register to vote, even though both candidates aren't that great."
         )
 
     @property
-    def validation_error_message(self) -> str:
+    def _validation_error_message(self) -> Message:
         """Provided registration info is invalid."""
 
-        return (
+        return Message(
             "[bright_red]Your player name or password don't meet criteria.[/]\n\n"
             "Names must be 3-15 chars and only contain letters, numbers, or "
             "underscores. They are case-sensitive.\n\n"
@@ -45,10 +40,18 @@ class Register(Action):
             "Please [green]register[/] again."
         )
 
-    def confirm_finalize_message(self, player_name: str) -> str:
+    def _player_already_exists_message(self, player_name: str) -> Message:
+        """Player name is already taken."""
+
+        return Message(
+            f"Sorry, turns out the name [cyan]{player_name}[/] is already taken. "
+            "Please [green]register[/] again with a different name."
+        )
+
+    def _confirm_finalize_message(self, player_name: str) -> Message:
         """Ask the client to finalize the player registration."""
 
-        return (
+        return Message(
             "Are you sure you want to create the player named "
             f"[cyan]{player_name}[/]?\n\n"
             "Type [green]finalize[/] to finalize the player creation. "
@@ -58,7 +61,7 @@ class Register(Action):
             "existing player."
         )
 
-    def validate_player_info(self, name: str, password: str) -> None:
+    def _validate_player_info(self, name: str, password: str) -> None:
         """Validates the supplied player information, to see if it follows the
         requirements established by the schema.
 
@@ -69,7 +72,7 @@ class Register(Action):
 
         Player(name=name, password=password).validate(PlayerSchema)
 
-    def check_for_existing_player(self, player_name: str) -> None:
+    def _check_for_existing_player(self, player_name: str) -> None:
         """Checks to see if a player already exists witht the provided name.
 
         Args:
@@ -91,19 +94,25 @@ class Register(Action):
             player_name = args[0]
             password = args[1]
 
-            self.validate_player_info(player_name, password)
-            self.check_for_existing_player(player_name)
+            self._validate_player_info(player_name, password)
+            self._check_for_existing_player(player_name)
 
         except ClientIsLoggedIn:
-            self.output.send_private_message(client, self.is_logged_in_message)
+            self.output.send_to_client(
+                MessageRoute(self._is_logged_in_message, client=client)
+            )
 
         except PlayerAlreadyExists:
-            self.output.send_private_message(
-                client, self.player_already_exists_message(player_name)
+            self.output.send_to_client(
+                MessageRoute(
+                    self._player_already_exists_message(player_name), client=client
+                )
             )
 
         except ValidationError:
-            self.output.send_private_message(client, self.validation_error_message)
+            self.output.send_to_client(
+                MessageRoute(self._validation_error_message, client=client)
+            )
 
         except PlayerNotFound:
             # a temporary Player model is set on the client, to be created in the db if
@@ -114,6 +123,6 @@ class Register(Action):
                 current_room_id=1,
             )
 
-            self.output.send_private_message(
-                client, self.confirm_finalize_message(player_name)
+            self.output.send_to_client(
+                MessageRoute(self._confirm_finalize_message(player_name), client=client)
             )

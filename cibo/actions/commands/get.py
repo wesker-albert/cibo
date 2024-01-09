@@ -2,10 +2,9 @@
 inventory.
 """
 
-from typing import List
+from typing import List, Tuple
 
 from cibo.actions.__action__ import Action
-from cibo.client import Client
 from cibo.exception import (
     ActionMissingArguments,
     ClientNotLoggedIn,
@@ -13,8 +12,9 @@ from cibo.exception import (
     ItemNotFound,
     RoomItemNotFound,
 )
+from cibo.models.client import Client
 from cibo.models.data.item import Item
-from cibo.output import Announcement
+from cibo.models.message import Message, MessageRoute
 
 
 class Get(Action):
@@ -27,32 +27,34 @@ class Get(Action):
         return []
 
     @property
-    def missing_args_message(self) -> str:
+    def _missing_args_message(self) -> Message:
         """No arguments were provided."""
 
-        return "You don't get it, and you probably never will."
+        return Message("You don't get it, and you probably never will.")
 
     @property
-    def room_item_not_found_message(self) -> str:
+    def _room_item_not_found_message(self) -> Message:
         """The given item name isn't in the room."""
 
-        return "You look around, but don't see that."
+        return Message("You look around, but don't see that.")
 
     @property
-    def room_item_is_stationary_message(self) -> str:
+    def _room_item_is_stationary_message(self) -> Message:
         """The specified item can't be picked up."""
 
-        return "You try, but you can't take that."
+        return Message("You try, but you can't take that.")
 
-    def gotten_item_message(self, player_name: str, item_name: str) -> Announcement:
+    def _get_item_message(
+        self, player_name: str, item_name: str
+    ) -> Tuple[Message, Message]:
         """Player has just picked up an item."""
 
-        return Announcement(
-            f"You pick up {item_name}.",
-            f"[cyan]{player_name}[/] picks up {item_name}.",
+        return (
+            Message(f"You pick up {item_name}."),
+            Message(f"[cyan]{player_name}[/] picks up {item_name}."),
         )
 
-    def find_item_in_room(self, client: Client, item_name: str) -> Item:
+    def _find_item_in_room(self, client: Client, item_name: str) -> Item:
         """Locate the item in the current room, if it exists.
 
         Args:
@@ -83,7 +85,7 @@ class Get(Action):
             if not args:
                 raise ActionMissingArguments
 
-            item = self.find_item_in_room(client, self._join_args(args))
+            item = self._find_item_in_room(client, self._join_args(args))
             item_meta = self.items.get_by_id(item.item_id)
 
             if item_meta.is_stationary:
@@ -93,22 +95,29 @@ class Get(Action):
             item.player_id = client.player
             item.save()
 
-            self.output.send_local_announcement(
-                self.gotten_item_message(client.player.name, item_meta.name),
-                client,
-                client.player.current_room_id,
+            get_item_message = self._get_item_message(
+                client.player.name, item_meta.name
+            )
+
+            self.output.send_to_vicinity(
+                MessageRoute(get_item_message[0], client=client),
+                MessageRoute(get_item_message[1], ids=[client.player.current_room_id]),
             )
 
         except (ClientNotLoggedIn, ItemNotFound):
             self.output.send_prompt(client)
 
         except ActionMissingArguments:
-            self.output.send_private_message(client, self.missing_args_message)
+            self.output.send_to_client(
+                MessageRoute(self._missing_args_message, client=client)
+            )
 
         except RoomItemNotFound:
-            self.output.send_private_message(client, self.room_item_not_found_message)
+            self.output.send_to_client(
+                MessageRoute(self._room_item_not_found_message, client=client)
+            )
 
         except ItemIsStationary:
-            self.output.send_private_message(
-                client, self.room_item_is_stationary_message
+            self.output.send_to_client(
+                MessageRoute(self._room_item_is_stationary_message, client=client)
             )

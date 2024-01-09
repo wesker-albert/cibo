@@ -6,7 +6,7 @@ from typing import List
 
 
 class ActionMissingArguments(Exception):
-    """Raised if not arguments were supplied to an action."""
+    """Raised if no arguments were supplied to an action."""
 
     pass
 
@@ -49,6 +49,14 @@ class CommandMissingArguments(Exception):
             "Command is missing required arguments.\n"
             f"Expected syntax: [green]{command} {joined_args}[/]"
         )
+
+
+class MessageRouteMissingParameters(Exception):
+    """Raised if a message route is missing expected parameters, according to the
+    specific output type or chain.
+    """
+
+    pass
 
 
 class DoorNotFound(Exception):
