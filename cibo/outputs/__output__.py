@@ -19,7 +19,7 @@ class Output(ABC):
         self._world = world
 
     @abstractmethod
-    def _format(self, message: Message) -> str:
+    def _format(self, message: Message) -> str:  # pytest: no cover
         """Formats the message, returning it as a string.
 
         Args:
@@ -32,7 +32,7 @@ class Output(ABC):
         pass
 
     @abstractmethod
-    def send(self, message: MessageRoute) -> None:
+    def send(self, message: MessageRoute) -> None:  # pytest: no cover
         """Format and then send the message to the appropriate recipients, according
         to the output type.
 

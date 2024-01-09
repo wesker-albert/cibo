@@ -159,13 +159,6 @@ class CommandProcessorFactory(BaseFactory):
         yield
 
 
-class OutputFactory(BaseFactory, ClientFactory):
-    @fixture(autouse=True)
-    def fixture_output(self):
-        self.output = OutputProcessor(self.telnet, Mock())
-        yield
-
-
 class PasswordFactory:
     @fixture(autouse=True)
     def fixture_password(self):
@@ -178,6 +171,13 @@ class WorldFactory:
     @fixture(autouse=True)
     def _fixture_world(self):
         self.world = World()
+        yield
+
+
+class OutputFactory(BaseFactory, ClientFactory, WorldFactory):
+    @fixture(autouse=True)
+    def fixture_output(self):
+        self.output = OutputProcessor(self.telnet, self.world)
         yield
 
 

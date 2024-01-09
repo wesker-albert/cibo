@@ -5,6 +5,7 @@ supplied.
 
 from typing import Optional
 
+from cibo.exception import MessageRouteMissingParameters
 from cibo.models.client import Client
 from cibo.models.message import MessageRoute
 from cibo.outputs.private import Private
@@ -44,6 +45,8 @@ class OutputProcessor:
 
         Requires a `client` is specific within the routing object.
         """
+        if not message.client:
+            raise MessageRouteMissingParameters
 
         self._private.send(message)
 
@@ -53,6 +56,8 @@ class OutputProcessor:
 
         Requires `ids` are specified within the routing object.
         """
+        if not message.ids:
+            raise MessageRouteMissingParameters
 
         self._room.send(message)
 
@@ -62,6 +67,8 @@ class OutputProcessor:
 
         Requires `ids` are specified within the routing object.
         """
+        if not message.ids:
+            raise MessageRouteMissingParameters
 
         self._sector.send(message)
 
@@ -71,6 +78,9 @@ class OutputProcessor:
 
         Requires `ids` are specified within the routing object.
         """
+
+        if not message.ids:
+            raise MessageRouteMissingParameters
 
         self._region.send(message)
 
@@ -104,12 +114,14 @@ class OutputProcessor:
                 message to be sent to specified adjoining rooms. Defaults to None.
         """
 
-        if client_message.client:
-            self.send_to_client(client_message)
+        if not client_message.client:
+            raise MessageRouteMissingParameters
 
-            room_message.ignored_clients = [client_message.client]
-            self.send_to_room(room_message)
+        self.send_to_client(client_message)
 
-            if adjoining_room_message:
-                adjoining_room_message.ignored_clients = [client_message.client]
-                self.send_to_room(adjoining_room_message)
+        room_message.ignored_clients = [client_message.client]
+        self.send_to_room(room_message)
+
+        if adjoining_room_message:
+            adjoining_room_message.ignored_clients = [client_message.client]
+            self.send_to_room(adjoining_room_message)
