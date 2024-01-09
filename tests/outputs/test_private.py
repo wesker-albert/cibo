@@ -29,3 +29,6 @@ class TestPrivateOutput(OutputFactory):
 
     def test_output_private_send_route_missing_client(self):
         self.private.send(MessageRoute(Message("You are tired.")))
+
+        self.mock_clients[0].send_message.assert_not_called()
+        self.mock_clients[0].send_prompt.assert_not_called()
