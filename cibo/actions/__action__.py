@@ -3,15 +3,11 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from cibo.models.client import Client
+from cibo.models import Client
 from cibo.models.server_config import ServerConfig
 from cibo.output import OutputProcessor
 from cibo.password import Password
-from cibo.resources.doors import Doors
-from cibo.resources.items import Items
-from cibo.resources.npcs import Npcs
-from cibo.resources.resources import Resources
-from cibo.resources.rooms import Rooms
+from cibo.resources import Doors, Items, Npcs, Resources, Rooms
 
 
 class Action(ABC):

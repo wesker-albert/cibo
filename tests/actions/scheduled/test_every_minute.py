@@ -1,4 +1,4 @@
-from cibo.models.client import ClientLoginState
+from cibo.models import ClientLoginState
 from tests.conftest import EveryMinuteActionFactory
 
 

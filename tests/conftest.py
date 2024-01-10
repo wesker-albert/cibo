@@ -5,53 +5,56 @@ from unittest.mock import Mock
 from peewee import SqliteDatabase
 from pytest import fixture
 
-from cibo.actions.commands.close import Close
-from cibo.actions.commands.drop import Drop
-from cibo.actions.commands.exits import Exits
-from cibo.actions.commands.finalize import Finalize
-from cibo.actions.commands.get import Get
-from cibo.actions.commands.inventory import Inventory
-from cibo.actions.commands.login import Login
-from cibo.actions.commands.logout import Logout
-from cibo.actions.commands.look import Look
-from cibo.actions.commands.move import Move
-from cibo.actions.commands.open import Open
-from cibo.actions.commands.quit import Quit
-from cibo.actions.commands.register import Register
-from cibo.actions.commands.say import Say
-from cibo.actions.connect import Connect
-from cibo.actions.disconnect import Disconnect
-from cibo.actions.error import Error
-from cibo.actions.scheduled.every_minute import EveryMinute
-from cibo.actions.scheduled.every_second import EverySecond
+from cibo.actions import Connect, Disconnect, Error
+from cibo.actions.commands import (
+    Close,
+    Drop,
+    Exits,
+    Finalize,
+    Get,
+    Inventory,
+    Login,
+    Logout,
+    Look,
+    Move,
+    Open,
+    Quit,
+    Register,
+    Say,
+)
+from cibo.actions.scheduled import EveryMinute, EverySecond
 from cibo.command import CommandProcessor
-from cibo.events.connect import ConnectEvent
-from cibo.events.disconnect import DisconnectEvent
-from cibo.events.input import InputEvent
-from cibo.events.spawn import SpawnEvent
-from cibo.models.client import Client, ClientLoginState
-from cibo.models.data.item import Item as ItemData
-from cibo.models.data.npc import Npc as NpcData
-from cibo.models.data.player import Player
-from cibo.models.description import EntityDescription, RoomDescription
-from cibo.models.direction import Direction
-from cibo.models.door import Door, DoorFlag
-from cibo.models.flag import RoomFlag
-from cibo.models.item import Item
-from cibo.models.npc import Npc
-from cibo.models.region import Region
-from cibo.models.room import Room, RoomExit
-from cibo.models.sector import Sector
+from cibo.events import ConnectEvent, DisconnectEvent, InputEvent, SpawnEvent
+from cibo.models import (
+    Client,
+    ClientLoginState,
+    Direction,
+    Door,
+    DoorFlag,
+    EntityDescription,
+    Item,
+    Npc,
+    Region,
+    Room,
+    RoomDescription,
+    RoomExit,
+    RoomFlag,
+    Sector,
+    Spawn,
+    SpawnType,
+)
+from cibo.models.data import Item as ItemData
+from cibo.models.data import Npc as NpcData
+from cibo.models.data import Player
 from cibo.models.server_config import ServerConfig
-from cibo.models.spawn import Spawn, SpawnType
 from cibo.output import OutputProcessor
-from cibo.outputs.private import Private as OutputPrivate
-from cibo.outputs.region import Region as OutputRegion
-from cibo.outputs.room import Room as OutputRoom
-from cibo.outputs.sector import Sector as OutputSector
-from cibo.outputs.server import Server as OutputServer
+from cibo.outputs import Private as OutputPrivate
+from cibo.outputs import Region as OutputRegion
+from cibo.outputs import Room as OutputRoom
+from cibo.outputs import Sector as OutputSector
+from cibo.outputs import Server as OutputServer
 from cibo.password import Password
-from cibo.resources.world import World
+from cibo.resources import World
 
 
 class BaseFactory:

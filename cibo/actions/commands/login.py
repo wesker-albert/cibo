@@ -10,9 +10,8 @@ from cibo.exception import (
     PlayerNotFound,
     PlayerSessionActive,
 )
-from cibo.models.client import Client
-from cibo.models.data.player import Player
-from cibo.models.message import Message, MessageRoute
+from cibo.models import Client, Message, MessageRoute
+from cibo.models.data import Player
 
 
 class Login(Action):

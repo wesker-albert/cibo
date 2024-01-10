@@ -1,7 +1,7 @@
 """Sends a message to clients whose player is currently located within the
 supplied sector ID(s)."""
 
-from cibo.models.message import Message, MessageRoute
+from cibo.models import Message, MessageRoute
 from cibo.outputs.__output__ import Output
 
 

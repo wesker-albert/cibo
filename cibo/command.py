@@ -7,7 +7,7 @@ from typing import List, Optional, Type
 
 from cibo.actions.__action__ import Action
 from cibo.exception import CommandMissingArguments, CommandUnrecognized
-from cibo.models.client import Client
+from cibo.models import Client
 from cibo.models.server_config import ServerConfig
 
 

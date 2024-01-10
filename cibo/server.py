@@ -10,11 +10,8 @@ from time import sleep
 from peewee import SqliteDatabase
 
 from cibo.event import EventProcessor
-from cibo.events.spawn import SpawnEvent
-from cibo.events.tick import TickEvent
-from cibo.models.data.item import Item
-from cibo.models.data.npc import Npc
-from cibo.models.data.player import Player
+from cibo.events import SpawnEvent, TickEvent
+from cibo.models.data import Item, Npc, Player
 from cibo.models.server_config import ServerConfig
 
 

@@ -3,7 +3,7 @@ from unittest.mock import Mock
 from pytest import raises
 
 from cibo.exception import MessageRouteMissingParameters
-from cibo.models.message import Message, MessageRoute
+from cibo.models import Message, MessageRoute
 from tests.conftest import OutputFactory
 
 

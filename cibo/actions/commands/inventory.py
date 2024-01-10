@@ -4,8 +4,7 @@ from typing import List
 
 from cibo.actions.__action__ import Action
 from cibo.exception import ClientNotLoggedIn
-from cibo.models.client import Client
-from cibo.models.message import Message, MessageRoute
+from cibo.models import Client, Message, MessageRoute
 
 
 class Inventory(Action):

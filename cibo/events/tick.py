@@ -6,8 +6,7 @@ from threading import Thread
 from schedule import every, run_pending
 
 from cibo.actions.__action__ import Action
-from cibo.actions.scheduled.every_minute import EveryMinute
-from cibo.actions.scheduled.every_second import EverySecond
+from cibo.actions.scheduled import EveryMinute, EverySecond
 from cibo.events.__event__ import Event
 from cibo.models.server_config import ServerConfig
 

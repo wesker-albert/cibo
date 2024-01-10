@@ -1,4 +1,4 @@
-from cibo.models.data.npc import Npc
+from cibo.models.data import Npc
 from tests.conftest import DatabaseFactory
 
 
