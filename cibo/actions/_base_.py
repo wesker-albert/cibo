@@ -6,7 +6,7 @@ from typing import List
 from cibo.comms._processor_ import CommsProcessor
 from cibo.entities import Doors, Entities, Items, Npcs, Rooms
 from cibo.models import Client
-from cibo.models.server_config import ServerConfig
+from cibo.server_config import ServerConfig
 from cibo.utils.password import Password
 
 

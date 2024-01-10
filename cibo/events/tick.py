@@ -8,7 +8,7 @@ from schedule import every, run_pending
 from cibo.actions._base_ import Action
 from cibo.actions.scheduled import EveryMinute, EverySecond
 from cibo.events._base_ import Event
-from cibo.models.server_config import ServerConfig
+from cibo.server_config import ServerConfig
 
 
 class TickEvent(Event):

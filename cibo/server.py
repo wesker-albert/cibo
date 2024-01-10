@@ -12,7 +12,7 @@ from peewee import SqliteDatabase
 from cibo.events import SpawnEvent, TickEvent
 from cibo.events._processor_ import EventProcessor
 from cibo.models.data import Item, Npc, Player
-from cibo.models.server_config import ServerConfig
+from cibo.server_config import ServerConfig
 
 
 class Server:

@@ -34,7 +34,7 @@ from cibo.models import (
 from cibo.models.data import Item as ItemData
 from cibo.models.data import Npc as NpcData
 from cibo.models.data import Player
-from cibo.models.server_config import ServerConfig
+from cibo.server_config import ServerConfig
 from cibo.utils.password import Password
 
 

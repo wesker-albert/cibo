@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 
-from cibo.models.server_config import ServerConfig
+from cibo.server_config import ServerConfig
 
 
 class Event(ABC):

@@ -9,8 +9,8 @@ from time import sleep
 
 from cibo.comms._processor_ import CommsProcessor
 from cibo.entities import World
-from cibo.models.server_config import ServerConfig
 from cibo.server import Server
+from cibo.server_config import ServerConfig
 from cibo.telnet import TelnetServer
 
 if __name__ == "__main__":

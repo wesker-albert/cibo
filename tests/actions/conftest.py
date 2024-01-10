@@ -20,7 +20,7 @@ from cibo.actions.commands import (
 from cibo.actions.scheduled import EveryMinute, EverySecond
 from cibo.models import ClientLoginState
 from cibo.models.data import Player
-from cibo.models.server_config import ServerConfig
+from cibo.server_config import ServerConfig
 from tests.conftest import (
     BaseFactory,
     ClientFactory,

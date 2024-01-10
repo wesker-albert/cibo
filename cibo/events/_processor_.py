@@ -9,7 +9,7 @@ in a FIFO order.
 from cibo.actions.commands import ACTIONS
 from cibo.actions.commands._processor_ import CommandProcessor
 from cibo.events import ConnectEvent, DisconnectEvent, InputEvent
-from cibo.models.server_config import ServerConfig
+from cibo.server_config import ServerConfig
 
 
 class EventProcessor:  # pytest: no cover
