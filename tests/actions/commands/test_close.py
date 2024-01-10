@@ -14,12 +14,12 @@ class TestCloseAction(CloseActionFactory):
 
         self.close.process(self.client, "close", ["n"])
 
-        self.output.send_prompt.assert_called_once_with(self.client)
+        self.comms.send_prompt.assert_called_once_with(self.client)
 
     def test_action_close_process_missing_args(self):
         self.close.process(self.client, "close", [])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You close your eyes and daydream about money and success.",
@@ -32,7 +32,7 @@ class TestCloseAction(CloseActionFactory):
     def test_action_close_process_door_is_closed(self):
         self.close.process(self.client, "close", ["n"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="A wooden door is already closed.",
@@ -45,7 +45,7 @@ class TestCloseAction(CloseActionFactory):
     def test_action_close_process_door_is_locked(self):
         self.close.process(self.client, "close", ["s"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="A steel security door is already closed.",
@@ -58,7 +58,7 @@ class TestCloseAction(CloseActionFactory):
     def test_action_close_process_door_not_found(self):
         self.close.process(self.client, "close", ["w"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="There's nothing to close.",
@@ -74,7 +74,7 @@ class TestCloseAction(CloseActionFactory):
         door = self.close.doors.get_by_room_ids(1, 3)
         assert door.is_closed
 
-        self.output.send_to_vicinity.assert_called_once_with(
+        self.comms.send_to_vicinity.assert_called_once_with(
             MessageRoute(
                 Message(
                     body="You close a propped-open door.", **self.default_message_args

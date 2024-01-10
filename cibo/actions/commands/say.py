@@ -2,8 +2,8 @@
 
 from typing import List, Tuple
 
-from cibo.actions.__action__ import Action
-from cibo.exception import ActionMissingArguments, ClientNotLoggedIn
+from cibo.actions._base_ import Action
+from cibo.exceptions import ActionMissingArguments, ClientNotLoggedIn
 from cibo.models import Client, Message, MessageRoute
 
 
@@ -41,10 +41,10 @@ class Say(Action):
                 raise ActionMissingArguments
 
         except ClientNotLoggedIn:
-            self.output.send_prompt(client)
+            self.comms.send_prompt(client)
 
         except ActionMissingArguments:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._missing_args_message, client=client)
             )
 
@@ -53,7 +53,7 @@ class Say(Action):
                 client.player.name, self._join_args(args)
             )
 
-            self.output.send_to_vicinity(
+            self.comms.send_to_vicinity(
                 MessageRoute(speech_message[0], client=client),
                 MessageRoute(speech_message[1], ids=[client.player.current_room_id]),
             )

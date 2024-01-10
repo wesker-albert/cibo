@@ -4,8 +4,8 @@ from typing import List, Optional
 
 from rich.panel import Panel
 
-from cibo.actions.__action__ import Action
-from cibo.exception import ActionMissingArguments, ClientNotLoggedIn
+from cibo.actions._base_ import Action
+from cibo.exceptions import ActionMissingArguments, ClientNotLoggedIn
 from cibo.models import Client, Item, Message, MessageRoute, Npc, Room
 from cibo.models.data import Item as ItemData
 from cibo.models.data import Npc as NpcData
@@ -42,12 +42,12 @@ class Look(Action):
             )
         )
 
-    def _resource_description_message(self, client: Client, args: List[str]) -> Message:
+    def _entity_description_message(self, client: Client, args: List[str]) -> Message:
         """A stylized description of an item in the room, an item in the player's
         inventory, or an NPC in the room. In that order.
         """
 
-        resource = self.resources.get_by_name(
+        entity = self.entities.get_by_name(
             (
                 self._get_room_items(client)
                 + self._get_player_items(client)
@@ -56,9 +56,9 @@ class Look(Action):
             args[0],
         )
 
-        if resource:
+        if entity:
             return Message(
-                f"You look at {resource.name}:\n\n  {resource.description.look}"
+                f"You look at {entity.name}:\n\n  {entity.description.look}"
             )
 
         return Message("You don't see that...")
@@ -147,20 +147,20 @@ class Look(Action):
             if not args:
                 raise ActionMissingArguments
 
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(
-                    self._resource_description_message(client, args), client=client
+                    self._entity_description_message(client, args), client=client
                 )
             )
 
         except ClientNotLoggedIn:
-            self.output.send_prompt(client)
+            self.comms.send_prompt(client)
 
         except ActionMissingArguments:
             # the player is just looking at the room in general
             room = self.rooms.get_by_id(client.player.current_room_id)
 
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(
                     self._room_description_message(client, room), client=client
                 )

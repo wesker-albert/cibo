@@ -14,13 +14,13 @@ class TestDisconnectAction(DisconnectActionFactory):
 
         self.disconnect.process(self.client, None, [])
 
-        self.output.send_to_client.assert_not_called()
+        self.comms.send_to_client.assert_not_called()
 
     def test_action_disconnect_process(self):
         self.disconnect.process(self.client, None, [])
 
         self.client.player.save.assert_called_once()
-        self.output.send_to_room.assert_called_once_with(
+        self.comms.send_to_room.assert_called_once_with(
             MessageRoute(
                 Message(
                     body="You watch in horror as [cyan]frank[/] proceeds to slowly eat their own head. They eventually disappear into nothingness.",

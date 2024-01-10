@@ -32,11 +32,11 @@ from tests.conftest import (
 
 class ActionFactory(ClientFactory, WorldFactory, MessageFactory):
     def get_message_panel(self):
-        return self.output.send_to_client.call_args.args[0].message.body
+        return self.comms.send_to_client.call_args.args[0].message.body
 
     @fixture
     def _fixture_action(self, _fixture_world):
-        self.server_config = ServerConfig(self.telnet, self.world, self.output)
+        self.server_config = ServerConfig(self.telnet, self.world, self.comms)
         self.client.login_state = ClientLoginState.LOGGED_IN
         yield
 

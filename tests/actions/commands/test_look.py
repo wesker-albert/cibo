@@ -17,7 +17,7 @@ class TestLookAction(LookActionFactory):
 
         self.look.process(self.client, "look", [])
 
-        self.output.send_prompt.assert_called_once_with(self.client)
+        self.comms.send_prompt.assert_called_once_with(self.client)
 
     def test_action_look_process(self, _fixture_database):
         self.mock_clients[0].player.name = "jennifer"
@@ -25,7 +25,7 @@ class TestLookAction(LookActionFactory):
 
         self.look.process(self.client, "look", [])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(body=ANY, **self.default_message_args),
                 client=self.client,
@@ -45,9 +45,9 @@ class TestLookAction(LookActionFactory):
         self.client.player = Player.get_by_name("frank")
         self.give_item_to_player(2, self.client.player)
 
-        # the resource doesn't exist in player inventory or room items and NPCs
+        # the entity doesn't exist in player inventory or room items and NPCs
         self.look.process(self.client, "look", ["macguffin"])
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(body="You don't see that...", **self.default_message_args),
                 client=self.client,
@@ -56,7 +56,7 @@ class TestLookAction(LookActionFactory):
 
         # the item exists, but we don't process zero indexes
         self.look.process(self.client, "look", ["0.fork"])
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(body="You don't see that...", **self.default_message_args),
                 client=self.client,
@@ -65,7 +65,7 @@ class TestLookAction(LookActionFactory):
 
         # the item exists in the room
         self.look.process(self.client, "look", ["fork"])
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You look at a metal fork:\n\n  A pronged, metal eating utensil.",
@@ -77,7 +77,7 @@ class TestLookAction(LookActionFactory):
 
         # the item exists in the room, specified with index
         self.look.process(self.client, "look", ["1.fork"])
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You look at a metal fork:\n\n  A pronged, metal eating utensil.",
@@ -89,7 +89,7 @@ class TestLookAction(LookActionFactory):
 
         # the item exists in the player inventory, specified with index
         self.look.process(self.client, "look", ["2.fork"])
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You look at a metal fork:\n\n  A pronged, metal eating utensil.",
@@ -101,7 +101,7 @@ class TestLookAction(LookActionFactory):
 
         # the item doesn't exist, because the index is out of range
         self.look.process(self.client, "look", ["3.fork"])
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(body="You don't see that...", **self.default_message_args),
                 client=self.client,
@@ -110,7 +110,7 @@ class TestLookAction(LookActionFactory):
 
         # the npc exists in the room
         self.look.process(self.client, "look", ["man"])
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You look at a faceless businessman:\n\n  His face is smooth and amorphis, like putty. He is wearing a suit, tie, and carrying a briefcase. Though he has no eyes, he seems to be aware of your presence.",

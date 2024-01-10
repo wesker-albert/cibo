@@ -14,7 +14,7 @@ class TestLoginAction(LoginActionFactory):
 
         self.login.process(self.client, "login", ["frank", "password"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You login to Facebook, to make sure your ex isn't doing better than you are.",
@@ -27,7 +27,7 @@ class TestLoginAction(LoginActionFactory):
     def test_action_login_process_player_not_found(self, _fixture_database):
         self.login.process(self.client, "login", ["jennifer", "password"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="A player by the name [cyan]jennifer[/] does not exist. If you want, you can [green]register[/] a new player with that name.",
@@ -40,7 +40,7 @@ class TestLoginAction(LoginActionFactory):
     def test_action_login_process_incorrect_password(self, _fixture_database):
         self.login.process(self.client, "login", ["frank", "wrongpassword"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="[bright_red]Incorrect password.[/]",
@@ -58,7 +58,7 @@ class TestLoginAction(LoginActionFactory):
 
         self.login.process(self.client, "login", ["frank", "abcd1234"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="The player [cyan]frank[/] is already logged in. If this player belongs to you and you think it's been stolen, please contact the admin.",
@@ -80,7 +80,7 @@ class TestLoginAction(LoginActionFactory):
         assert self.client.player.name == "frank"
         assert self.client.is_logged_in
 
-        self.output.send_to_vicinity.assert_called_once_with(
+        self.comms.send_to_vicinity.assert_called_once_with(
             MessageRoute(
                 Message(
                     body="You take the [red]red pill[/]. You have a look around, to see how deep the rabbit hole goes...",

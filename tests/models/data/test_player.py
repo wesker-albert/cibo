@@ -1,6 +1,6 @@
 from pytest import raises
 
-from cibo.exception import PlayerNotFound
+from cibo.exceptions import PlayerNotFound
 from cibo.models.data import Player
 from tests.conftest import DatabaseFactory
 

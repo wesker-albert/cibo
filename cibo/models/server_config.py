@@ -4,8 +4,8 @@ server needs to function, and to process actions and events.
 
 from dataclasses import dataclass
 
-from cibo.output import OutputProcessor
-from cibo.resources import World
+from cibo.comms._processor_ import CommsProcessor
+from cibo.entities import World
 from cibo.telnet import TelnetServer
 
 
@@ -17,4 +17,4 @@ class ServerConfig:
 
     telnet: TelnetServer
     world: World
-    output_processor: OutputProcessor
+    comms_processor: CommsProcessor

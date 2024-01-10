@@ -16,14 +16,14 @@ class TestLogoutAction(LogoutActionFactory):
 
         self.logout.process(self.client, "logout", [])
 
-        self.output.send_prompt.assert_called_once_with(self.client)
+        self.comms.send_prompt.assert_called_once_with(self.client)
 
     def test_action_logout_process(self):
         self.logout.process(self.client, "logout", [], 0)
 
         assert self.client.login_state is ClientLoginState.PRE_LOGIN
 
-        self.output.send_to_vicinity.assert_called_once_with(
+        self.comms.send_to_vicinity.assert_called_once_with(
             MessageRoute(
                 Message(
                     body="You slowly fade away into obscurity, like you always feared you would...",
@@ -41,7 +41,7 @@ class TestLogoutAction(LogoutActionFactory):
             ),
         )
 
-        self.output.send_to_client.assert_called_once_with(
+        self.comms.send_to_client.assert_called_once_with(
             MessageRoute(
                 Message(
                     body=ANY,

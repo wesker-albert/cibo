@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import List
 
-from cibo.exception import DoorIsClosed, DoorIsLocked, DoorIsOpen
+from cibo.exceptions import DoorIsClosed, DoorIsLocked, DoorIsOpen
 
 
 class DoorFlag(str, Enum):

@@ -28,12 +28,12 @@ class TestMoveAction(MoveActionFactory):
 
         self.move.process(self.client, "n", [])
 
-        self.output.send_prompt.assert_called_once_with(self.client)
+        self.comms.send_prompt.assert_called_once_with(self.client)
 
     def test_action_move_process_exit_not_found(self):
         self.move.process(self.client, "u", [])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(body="You can't go that way.", **self.default_message_args),
                 client=self.client,
@@ -43,7 +43,7 @@ class TestMoveAction(MoveActionFactory):
     def test_action_move_process_door_is_closed(self):
         self.move.process(self.client, "n", [])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(body="A wooden door is closed.", **self.default_message_args),
                 client=self.client,
@@ -53,7 +53,7 @@ class TestMoveAction(MoveActionFactory):
     def test_action_move_process_door_is_locked(self):
         self.move.process(self.client, "s", [])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="A steel security door is closed.", **self.default_message_args
@@ -67,7 +67,7 @@ class TestMoveAction(MoveActionFactory):
 
         assert self.client.player.current_room_id == 5
 
-        self.output.send_to_vicinity.assert_called_once_with(
+        self.comms.send_to_vicinity.assert_called_once_with(
             MessageRoute(
                 Message(body="You head west.", **self.default_message_args),
                 client=self.client,

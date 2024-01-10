@@ -4,8 +4,8 @@ inventory.
 
 from typing import List, Tuple
 
-from cibo.actions.__action__ import Action
-from cibo.exception import (
+from cibo.actions._base_ import Action
+from cibo.exceptions import (
     ActionMissingArguments,
     ClientNotLoggedIn,
     ItemIsStationary,
@@ -98,25 +98,25 @@ class Get(Action):
                 client.player.name, item_meta.name
             )
 
-            self.output.send_to_vicinity(
+            self.comms.send_to_vicinity(
                 MessageRoute(get_item_message[0], client=client),
                 MessageRoute(get_item_message[1], ids=[client.player.current_room_id]),
             )
 
         except (ClientNotLoggedIn, ItemNotFound):
-            self.output.send_prompt(client)
+            self.comms.send_prompt(client)
 
         except ActionMissingArguments:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._missing_args_message, client=client)
             )
 
         except RoomItemNotFound:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._room_item_not_found_message, client=client)
             )
 
         except ItemIsStationary:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._room_item_is_stationary_message, client=client)
             )

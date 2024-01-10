@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from rich.panel import Panel
 
-from cibo.actions.__action__ import Action
+from cibo.actions._base_ import Action
 from cibo.models import Client, Message, MessageRoute
 
 
@@ -34,4 +34,4 @@ class Connect(Action):
     def process(
         self, client: Client, _command: Optional[str], _args: List[str]
     ) -> None:
-        self.output.send_to_client(MessageRoute(self._motd_message, client=client))
+        self.comms.send_to_client(MessageRoute(self._motd_message, client=client))

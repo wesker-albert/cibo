@@ -38,6 +38,6 @@ class InputEventFactory(CommandProcessorFactory, ClientFactory, MessageFactory):
 class SpawnEventFactory(BaseFactory, WorldFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_spawn_event(self):
-        self.server_config = ServerConfig(self.telnet, self.world, self.output)
+        self.server_config = ServerConfig(self.telnet, self.world, self.comms)
         self.spawn = SpawnEvent(self.server_config)
         yield

@@ -5,7 +5,14 @@ from unittest.mock import Mock
 from peewee import SqliteDatabase
 from pytest import fixture
 
-from cibo.command import CommandProcessor
+from cibo.actions.commands._processor_ import CommandProcessor
+from cibo.comms import Private as CommsPrivate
+from cibo.comms import Region as CommsRegion
+from cibo.comms import Room as CommsRoom
+from cibo.comms import Sector as CommsSector
+from cibo.comms import Server as CommsServer
+from cibo.comms._processor_ import CommsProcessor
+from cibo.entities import World
 from cibo.models import (
     Client,
     ClientLoginState,
@@ -28,22 +35,15 @@ from cibo.models.data import Item as ItemData
 from cibo.models.data import Npc as NpcData
 from cibo.models.data import Player
 from cibo.models.server_config import ServerConfig
-from cibo.output import OutputProcessor
-from cibo.outputs import Private as OutputPrivate
-from cibo.outputs import Region as OutputRegion
-from cibo.outputs import Room as OutputRoom
-from cibo.outputs import Sector as OutputSector
-from cibo.outputs import Server as OutputServer
-from cibo.password import Password
-from cibo.resources import World
+from cibo.utils.password import Password
 
 
 class BaseFactory:
     @fixture(autouse=True)
     def fixture_base(self):
         self.telnet = Mock()
-        self.output = Mock()
-        self.server_config = ServerConfig(self.telnet, Mock(), self.output)
+        self.comms = Mock()
+        self.server_config = ServerConfig(self.telnet, Mock(), self.comms)
         yield
 
 
@@ -112,7 +112,7 @@ class ClientFactory:
         yield
 
     @fixture(autouse=True)
-    def fixture_mock_clients(self):
+    def _fixture_mock_clients(self):
         default_client_params = {
             "login_state": ClientLoginState.LOGGED_IN,
             "player": Mock(current_room_id=1),
@@ -175,16 +175,16 @@ class MessageFactory:
         yield
 
 
-class OutputFactory(BaseFactory, ClientFactory, WorldFactory):
+class CommsFactory(BaseFactory, ClientFactory, WorldFactory):
     @fixture(autouse=True)
-    def fixture_output(self):
+    def fixture_comms(self, _fixture_mock_clients):
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
-        self.output = OutputProcessor(self.telnet, self.world)
-        self.private = OutputPrivate(self.telnet, self.world)
-        self.room = OutputRoom(self.telnet, self.world)
-        self.sector = OutputSector(self.telnet, self.world)
-        self.region = OutputRegion(self.telnet, self.world)
-        self.server = OutputServer(self.telnet, self.world)
+        self.comms = CommsProcessor(self.telnet, self.world)
+        self.private = CommsPrivate(self.telnet, self.world)
+        self.room = CommsRoom(self.telnet, self.world)
+        self.sector = CommsSector(self.telnet, self.world)
+        self.region = CommsRegion(self.telnet, self.world)
+        self.server = CommsServer(self.telnet, self.world)
         yield
 
 

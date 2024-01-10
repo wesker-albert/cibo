@@ -93,8 +93,7 @@
                 ],
                 "python.analysis.autoImportCompletions": true,
                 "python.analysis.fixAll": [
-                    "source.convertImportFormat",
-                    "source.unusedImports"
+                    "source.convertImportFormat"
                 ],
                 "python.analysis.importFormat": "absolute",
                 "python.analysis.typeCheckingMode": "off",

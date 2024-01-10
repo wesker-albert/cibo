@@ -2,8 +2,8 @@
 
 from typing import List, Optional
 
-from cibo.actions.__action__ import Action
-from cibo.exception import ClientNotLoggedIn, RoomNotFound
+from cibo.actions._base_ import Action
+from cibo.exceptions import ClientNotLoggedIn, RoomNotFound
 from cibo.models import Client, Message, MessageRoute, Room
 
 
@@ -31,9 +31,9 @@ class Exits(Action):
             room = self.rooms.get_by_id(client.player.current_room_id)
 
         except (ClientNotLoggedIn, RoomNotFound):
-            self.output.send_prompt(client)
+            self.comms.send_prompt(client)
 
         else:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._exits_message(room), client=client)
             )

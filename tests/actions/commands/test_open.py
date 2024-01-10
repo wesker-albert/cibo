@@ -14,12 +14,12 @@ class TestOpenAction(OpenActionFactory):
 
         self.open.process(self.client, "open", ["n"])
 
-        self.output.send_prompt.assert_called_once_with(self.client)
+        self.comms.send_prompt.assert_called_once_with(self.client)
 
     def test_action_open_process_missing_args(self):
         self.open.process(self.client, "open", [])
 
-        self.output.send_to_vicinity.assert_called_once_with(
+        self.comms.send_to_vicinity.assert_called_once_with(
             MessageRoute(
                 Message(
                     body="You open your mouth and let out a loud belch. If anyone else is in the room, they probably heard it...",
@@ -39,7 +39,7 @@ class TestOpenAction(OpenActionFactory):
     def test_action_open_process_door_is_open(self):
         self.open.process(self.client, "open", ["e"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="A propped-open door is already open.",
@@ -52,7 +52,7 @@ class TestOpenAction(OpenActionFactory):
     def test_action_open_process_door_is_locked(self):
         self.open.process(self.client, "open", ["s"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="A steel security door is locked.", **self.default_message_args
@@ -64,7 +64,7 @@ class TestOpenAction(OpenActionFactory):
     def test_action_open_process_door_not_found(self):
         self.open.process(self.client, "open", ["w"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(body="There's nothing to open.", **self.default_message_args),
                 client=self.client,
@@ -77,7 +77,7 @@ class TestOpenAction(OpenActionFactory):
         door = self.open.doors.get_by_room_ids(1, 2)
         assert door.is_open
 
-        self.output.send_to_vicinity.assert_called_once_with(
+        self.comms.send_to_vicinity.assert_called_once_with(
             MessageRoute(
                 Message(body="You open a wooden door.", **self.default_message_args),
                 client=self.client,

@@ -5,9 +5,9 @@ from threading import Thread
 
 from schedule import every, run_pending
 
-from cibo.actions.__action__ import Action
+from cibo.actions._base_ import Action
 from cibo.actions.scheduled import EveryMinute, EverySecond
-from cibo.events.__event__ import Event
+from cibo.events._base_ import Event
 from cibo.models.server_config import ServerConfig
 
 
@@ -63,6 +63,6 @@ class TickEvent(Event):
     def process(
         self,
     ) -> None:
-        # don't tick if no clients are connected, to conserve system resources
+        # don't tick if no clients are connected, to conserve system entities
         if len(self._telnet.get_connected_clients()) > 0:
             run_pending()

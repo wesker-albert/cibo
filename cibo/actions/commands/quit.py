@@ -3,8 +3,8 @@
 from time import sleep
 from typing import List, Optional, Tuple
 
-from cibo.actions.__action__ import Action
-from cibo.exception import ClientIsLoggedIn
+from cibo.actions._base_ import Action
+from cibo.exceptions import ClientIsLoggedIn
 from cibo.models import Client, Message, MessageRoute
 
 
@@ -45,7 +45,7 @@ class Quit(Action):
 
             client.log_out()
 
-            self.output.send_to_room(
+            self.comms.send_to_room(
                 MessageRoute(
                     self._quitting_message(player_name)[1],
                     ids=[player_room],
@@ -54,7 +54,7 @@ class Quit(Action):
             )
 
         finally:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(
                     self._quitting_message(None)[0], client=client, send_prompt=False
                 )

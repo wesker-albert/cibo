@@ -7,4 +7,4 @@ class TestConnectEvent(ClientFactory, ConnectEventFactory):
 
         self.connect.process()
 
-        self.output.send_to_client.assert_called_once()
+        self.comms.send_to_client.assert_called_once()
