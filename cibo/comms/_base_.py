@@ -2,8 +2,8 @@
 
 from abc import ABC, abstractmethod
 
-from cibo.models import Message, MessageRoute
-from cibo.entities import World
+from cibo.entities.world import World
+from cibo.models.message import Message, MessageRoute
 from cibo.telnet import TelnetServer
 
 

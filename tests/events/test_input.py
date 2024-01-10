@@ -1,6 +1,6 @@
 import logging
 
-from cibo.models import Message, MessageRoute
+from cibo.models.message import Message, MessageRoute
 from tests.events.conftest import InputEventFactory
 
 

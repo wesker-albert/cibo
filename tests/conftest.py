@@ -6,34 +6,27 @@ from peewee import SqliteDatabase
 from pytest import fixture
 
 from cibo.actions.commands._processor_ import CommandProcessor
-from cibo.comms import Private as CommsPrivate
-from cibo.comms import Region as CommsRegion
-from cibo.comms import Room as CommsRoom
-from cibo.comms import Sector as CommsSector
-from cibo.comms import Server as CommsServer
 from cibo.comms._processor_ import CommsProcessor
-from cibo.entities import World
-from cibo.models import (
-    Client,
-    ClientLoginState,
-    Direction,
-    Door,
-    DoorFlag,
-    EntityDescription,
-    Item,
-    Npc,
-    Region,
-    Room,
-    RoomDescription,
-    RoomExit,
-    RoomFlag,
-    Sector,
-    Spawn,
-    SpawnType,
-)
-from cibo.models.data import Item as ItemData
-from cibo.models.data import Npc as NpcData
-from cibo.models.data import Player
+from cibo.comms.private import Private as CommsPrivate
+from cibo.comms.region import Region as CommsRegion
+from cibo.comms.room import Room as CommsRoom
+from cibo.comms.sector import Sector as CommsSector
+from cibo.comms.server import Server as CommsServer
+from cibo.entities.world import World
+from cibo.models.client import Client, ClientLoginState
+from cibo.models.data.item import Item as ItemData
+from cibo.models.data.npc import Npc as NpcData
+from cibo.models.data.player import Player
+from cibo.models.description import EntityDescription, RoomDescription
+from cibo.models.direction import Direction
+from cibo.models.door import Door, DoorFlag
+from cibo.models.flag import RoomFlag
+from cibo.models.item import Item
+from cibo.models.npc import Npc
+from cibo.models.region import Region
+from cibo.models.room import Room, RoomExit
+from cibo.models.sector import Sector
+from cibo.models.spawn import Spawn, SpawnType
 from cibo.server_config import ServerConfig
 from cibo.utils.password import Password
 

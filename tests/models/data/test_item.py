@@ -1,4 +1,4 @@
-from cibo.models.data import Item
+from cibo.models.data.item import Item
 from tests.conftest import DatabaseFactory
 
 

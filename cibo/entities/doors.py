@@ -7,9 +7,9 @@ This is a collection of all the doors that exist in the world.
 
 from typing import List
 
-from cibo.exceptions import DoorNotFound
-from cibo.models import Door, DoorFlag
 from cibo.entities._base_ import Entity
+from cibo.exceptions import DoorNotFound
+from cibo.models.door import Door, DoorFlag
 
 
 class Doors(Entity):

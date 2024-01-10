@@ -1,6 +1,5 @@
 from pytest import fixture
 
-from cibo.actions import Connect, Disconnect, Error
 from cibo.actions.commands import (
     Close,
     Drop,
@@ -17,9 +16,12 @@ from cibo.actions.commands import (
     Register,
     Say,
 )
+from cibo.actions.connect import Connect
+from cibo.actions.disconnect import Disconnect
+from cibo.actions.error import Error
 from cibo.actions.scheduled import EveryMinute, EverySecond
-from cibo.models import ClientLoginState
-from cibo.models.data import Player
+from cibo.models.client import ClientLoginState
+from cibo.models.data.player import Player
 from cibo.server_config import ServerConfig
 from tests.conftest import (
     BaseFactory,

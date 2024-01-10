@@ -2,8 +2,8 @@
 CommandProcessor. If the input contains a valid command, further logic will be carried
 out."""
 
-from cibo.actions import Error
 from cibo.actions.commands._processor_ import CommandProcessor
+from cibo.actions.error import Error
 from cibo.events._base_ import Event
 from cibo.exceptions import (
     CommandMissingArguments,

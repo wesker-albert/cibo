@@ -4,8 +4,12 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from cibo.comms._processor_ import CommsProcessor
-from cibo.entities import Doors, Entities, Items, Npcs, Rooms
-from cibo.models import Client
+from cibo.entities.doors import Doors
+from cibo.entities.entities import Entities
+from cibo.entities.items import Items
+from cibo.entities.npcs import Npcs
+from cibo.entities.rooms import Rooms
+from cibo.models.client import Client
 from cibo.server_config import ServerConfig
 from cibo.utils.password import Password
 

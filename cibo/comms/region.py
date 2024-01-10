@@ -1,8 +1,8 @@
 """Sends a message to clients whose player is currently located within the
 supplied region ID(s)."""
 
-from cibo.models import Message, MessageRoute
 from cibo.comms._base_ import Comms
+from cibo.models.message import Message, MessageRoute
 
 
 class Region(Comms):

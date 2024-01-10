@@ -5,11 +5,16 @@ supplied.
 
 from typing import Optional
 
-from cibo.comms import Private, Region, Room, Sector, Server
+from cibo.comms.private import Private
+from cibo.comms.region import Region
+from cibo.comms.room import Room
+from cibo.comms.sector import Sector
+from cibo.comms.server import Server
 from cibo.comms.vicinity import Vicinity
-from cibo.entities import World
+from cibo.entities.world import World
 from cibo.exceptions import MessageRouteMissingParameters
-from cibo.models import Client, MessageRoute
+from cibo.models.client import Client
+from cibo.models.message import MessageRoute
 from cibo.telnet import TelnetServer
 
 

@@ -1,7 +1,10 @@
 from pytest import fixture
 
-from cibo.events import ConnectEvent, DisconnectEvent, InputEvent, SpawnEvent
-from cibo.models import ClientLoginState
+from cibo.events.connect import ConnectEvent
+from cibo.events.disconnect import DisconnectEvent
+from cibo.events.input import InputEvent
+from cibo.events.spawn import SpawnEvent
+from cibo.models.client import ClientLoginState
 from cibo.server_config import ServerConfig
 from tests.conftest import (
     BaseFactory,

@@ -5,7 +5,7 @@ server needs to function, and to process actions and events.
 from dataclasses import dataclass
 
 from cibo.comms._processor_ import CommsProcessor
-from cibo.entities import World
+from cibo.entities.world import World
 from cibo.telnet import TelnetServer
 
 

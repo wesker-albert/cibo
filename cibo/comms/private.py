@@ -1,7 +1,7 @@
 """Sends a private message, to a specific client."""
 
-from cibo.models import Message, MessageRoute
 from cibo.comms._base_ import Comms
+from cibo.models.message import Message, MessageRoute
 
 
 class Private(Comms):

@@ -4,7 +4,8 @@ entity type.
 
 from typing import List, Optional, Union
 
-from cibo.models import Item, Npc
+from cibo.models.item import Item
+from cibo.models.npc import Npc
 
 
 class Entities:

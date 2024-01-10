@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from cibo.models import Message, MessageRoute
+from cibo.models.message import Message, MessageRoute
 from tests.conftest import CommsFactory
 
 

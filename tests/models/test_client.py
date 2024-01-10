@@ -1,8 +1,9 @@
 import socket as socket_
 from unittest.mock import Mock
 
-from cibo.models import ClientLoginState, Prompt
-from cibo.models.data import Player
+from cibo.models.client import ClientLoginState
+from cibo.models.data.player import Player
+from cibo.models.prompt import Prompt
 from tests.conftest import ClientFactory
 
 

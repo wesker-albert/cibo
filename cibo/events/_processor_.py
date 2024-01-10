@@ -8,7 +8,9 @@ in a FIFO order.
 
 from cibo.actions.commands import ACTIONS
 from cibo.actions.commands._processor_ import CommandProcessor
-from cibo.events import ConnectEvent, DisconnectEvent, InputEvent
+from cibo.events.connect import ConnectEvent
+from cibo.events.disconnect import DisconnectEvent
+from cibo.events.input import InputEvent
 from cibo.server_config import ServerConfig
 
 

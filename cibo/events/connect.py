@@ -1,6 +1,6 @@
 """Clients who have connected to the server, since last update poll."""
 
-from cibo.actions import Connect
+from cibo.actions.connect import Connect
 from cibo.events._base_ import Event
 
 

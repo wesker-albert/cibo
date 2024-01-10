@@ -5,7 +5,8 @@ from typing import List, Optional, Tuple
 
 from cibo.actions._base_ import Action
 from cibo.exceptions import ClientIsLoggedIn
-from cibo.models import Client, Message, MessageRoute
+from cibo.models.client import Client
+from cibo.models.message import Message, MessageRoute
 
 
 class Quit(Action):

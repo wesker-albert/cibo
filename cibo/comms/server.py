@@ -2,8 +2,8 @@
 player session.
 """
 
-from cibo.models import Message, MessageRoute
 from cibo.comms._base_ import Comms
+from cibo.models.message import Message, MessageRoute
 
 
 class Server(Comms):

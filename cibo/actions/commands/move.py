@@ -13,7 +13,8 @@ from cibo.exceptions import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.models import Client, Message, MessageRoute
+from cibo.models.client import Client
+from cibo.models.message import Message, MessageRoute
 
 
 class Move(Action):
