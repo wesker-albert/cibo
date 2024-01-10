@@ -2,7 +2,7 @@ from pytest import raises
 
 from cibo.exceptions import MessageRouteMissingParameters
 from cibo.models.message import Message, MessageRoute
-from tests.conftest import CommsFactory
+from tests.comms.conftest import CommsFactory
 
 
 class TestCommsProcessor(CommsFactory):
