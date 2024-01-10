@@ -1,4 +1,4 @@
-from tests.conftest import ClientFactory, ConnectEventFactory
+from tests.events.conftest import ClientFactory, ConnectEventFactory
 
 
 class TestConnectEvent(ClientFactory, ConnectEventFactory):

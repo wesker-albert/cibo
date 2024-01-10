@@ -2,7 +2,7 @@
 player session.
 """
 
-from cibo.models.message import Message, MessageRoute
+from cibo.models import Message, MessageRoute
 from cibo.outputs.__output__ import Output
 
 

@@ -2,7 +2,7 @@
 CommandProcessor. If the input contains a valid command, further logic will be carried
 out."""
 
-from cibo.actions.error import Error
+from cibo.actions import Error
 from cibo.command import CommandProcessor
 from cibo.events.__event__ import Event
 from cibo.exception import (

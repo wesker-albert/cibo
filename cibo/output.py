@@ -6,14 +6,9 @@ supplied.
 from typing import Optional
 
 from cibo.exception import MessageRouteMissingParameters
-from cibo.models.client import Client
-from cibo.models.message import MessageRoute
-from cibo.outputs.private import Private
-from cibo.outputs.region import Region
-from cibo.outputs.room import Room
-from cibo.outputs.sector import Sector
-from cibo.outputs.server import Server
-from cibo.resources.world import World
+from cibo.models import Client, MessageRoute
+from cibo.outputs import Private, Region, Room, Sector, Server
+from cibo.resources import World
 from cibo.telnet import TelnetServer
 
 

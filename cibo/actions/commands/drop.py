@@ -9,9 +9,8 @@ from cibo.exception import (
     InventoryItemNotFound,
     ItemNotFound,
 )
-from cibo.models.client import Client
-from cibo.models.data.item import Item
-from cibo.models.message import Message, MessageRoute
+from cibo.models import Client, Message, MessageRoute
+from cibo.models.data import Item
 
 
 class Drop(Action):

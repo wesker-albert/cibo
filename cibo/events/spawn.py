@@ -5,9 +5,8 @@ spawns the appropriate entity and amount into the world.
 from typing import List
 
 from cibo.events.__event__ import Event
-from cibo.models.data.item import Item
-from cibo.models.data.npc import Npc
-from cibo.models.spawn import Spawn, SpawnType
+from cibo.models import Spawn, SpawnType
+from cibo.models.data import Item, Npc
 
 
 class SpawnEvent(Event):

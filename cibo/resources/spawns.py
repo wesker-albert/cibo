@@ -5,7 +5,7 @@ This is a collection of all the spawn rules in the world.
 """
 from typing import List
 
-from cibo.models.spawn import Spawn, SpawnType
+from cibo.models import Spawn, SpawnType
 from cibo.resources.__resource__ import Resource
 from cibo.resources.items import Items
 from cibo.resources.npcs import Npcs

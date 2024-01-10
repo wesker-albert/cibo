@@ -1,5 +1,5 @@
-from cibo.models.message import Message, MessageRoute
-from tests.conftest import ErrorActionFactory
+from cibo.models import Message, MessageRoute
+from tests.actions.conftest import ErrorActionFactory
 
 
 class TestErrorAction(ErrorActionFactory):

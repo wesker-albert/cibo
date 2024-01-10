@@ -6,13 +6,9 @@ from rich.panel import Panel
 
 from cibo.actions.__action__ import Action
 from cibo.exception import ActionMissingArguments, ClientNotLoggedIn
-from cibo.models.client import Client
-from cibo.models.data.item import Item as ItemData
-from cibo.models.data.npc import Npc as NpcData
-from cibo.models.item import Item
-from cibo.models.message import Message, MessageRoute
-from cibo.models.npc import Npc
-from cibo.models.room import Room
+from cibo.models import Client, Item, Message, MessageRoute, Npc, Room
+from cibo.models.data import Item as ItemData
+from cibo.models.data import Npc as NpcData
 
 
 class Look(Action):

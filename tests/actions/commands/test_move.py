@@ -1,6 +1,5 @@
-from cibo.models.client import ClientLoginState
-from cibo.models.message import Message, MessageRoute
-from tests.conftest import MoveActionFactory
+from cibo.models import ClientLoginState, Message, MessageRoute
+from tests.actions.conftest import MoveActionFactory
 
 
 class TestMoveAction(MoveActionFactory):
