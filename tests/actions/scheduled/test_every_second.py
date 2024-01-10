@@ -1,4 +1,4 @@
-from tests.conftest import EverySecondActionFactory
+from tests.actions.conftest import EverySecondActionFactory
 
 
 class TestEverySecondAction(EverySecondActionFactory):

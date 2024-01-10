@@ -1,5 +1,5 @@
 from cibo.models import ClientLoginState, Message, MessageRoute
-from tests.conftest import RegisterActionFactory
+from tests.actions.conftest import RegisterActionFactory
 
 
 class TestRegisterAction(RegisterActionFactory):

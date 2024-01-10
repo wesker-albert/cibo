@@ -2,7 +2,7 @@ from unittest.mock import ANY
 
 from cibo.models import ClientLoginState, Message, MessageRoute
 from cibo.models.data import Player
-from tests.conftest import LookActionFactory
+from tests.actions.conftest import LookActionFactory
 
 
 class TestLookAction(LookActionFactory):

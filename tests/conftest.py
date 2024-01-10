@@ -5,26 +5,7 @@ from unittest.mock import Mock
 from peewee import SqliteDatabase
 from pytest import fixture
 
-from cibo.actions import Connect, Disconnect, Error
-from cibo.actions.commands import (
-    Close,
-    Drop,
-    Exits,
-    Finalize,
-    Get,
-    Inventory,
-    Login,
-    Logout,
-    Look,
-    Move,
-    Open,
-    Quit,
-    Register,
-    Say,
-)
-from cibo.actions.scheduled import EveryMinute, EverySecond
 from cibo.command import CommandProcessor
-from cibo.events import ConnectEvent, DisconnectEvent, InputEvent, SpawnEvent
 from cibo.models import (
     Client,
     ClientLoginState,
@@ -182,16 +163,76 @@ class WorldFactory:
         yield
 
 
+class MessageFactory:
+    @fixture(autouse=True)
+    def _fixture_message(self):
+        self.default_message_args = {
+            "justify": None,
+            "style": None,
+            "highlight": False,
+            "terminal_width": 76,
+        }
+        yield
+
+
 class OutputFactory(BaseFactory, ClientFactory, WorldFactory):
     @fixture(autouse=True)
     def fixture_output(self):
+        self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
         self.output = OutputProcessor(self.telnet, self.world)
         self.private = OutputPrivate(self.telnet, self.world)
         self.room = OutputRoom(self.telnet, self.world)
         self.sector = OutputSector(self.telnet, self.world)
         self.region = OutputRegion(self.telnet, self.world)
         self.server = OutputServer(self.telnet, self.world)
-        self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
+        yield
+
+
+class DoorFactory(WorldFactory):
+    @fixture(autouse=True)
+    def fixture_door(self):
+        self.door_closed = Door(
+            name="a wooden door", room_ids=[1, 2], flags=[DoorFlag.CLOSED]
+        )
+        self.door_open = Door(
+            name="a wooden door", room_ids=[1, 2], flags=[DoorFlag.OPEN]
+        )
+        self.door_locked = Door(
+            name="a steel security door",
+            room_ids=[1, 4],
+            flags=[DoorFlag.LOCKED],
+        )
+        yield
+
+
+class ItemFactory(WorldFactory):
+    @fixture(autouse=True)
+    def fixture_item(self):
+        self.item = Item(
+            id_=1,
+            name="a metal fork",
+            description=EntityDescription(
+                room="glistens in the dirt.",
+                look="A pronged, metal eating utensil.",
+            ),
+            is_stationary=False,
+            carry_limit=0,
+            weight=0,
+        )
+        yield
+
+
+class NpcFactory(WorldFactory):
+    @fixture(autouse=True)
+    def fixture_npc(self):
+        self.npc = Npc(
+            id_=1,
+            name="a faceless businessman",
+            description=EntityDescription(
+                room="sits at his desk.",
+                look="His face is smooth and amorphis, like putty. He is wearing a suit, tie, and carrying a briefcase. Though he has no eyes, he seems to be aware of your presence.",
+            ),
+        )
         yield
 
 
@@ -245,40 +286,6 @@ class RoomFactory(SectorFactory):
         yield
 
 
-class DoorFactory(WorldFactory):
-    @fixture(autouse=True)
-    def fixture_door(self):
-        self.door_closed = Door(
-            name="a wooden door", room_ids=[1, 2], flags=[DoorFlag.CLOSED]
-        )
-        self.door_open = Door(
-            name="a wooden door", room_ids=[1, 2], flags=[DoorFlag.OPEN]
-        )
-        self.door_locked = Door(
-            name="a steel security door",
-            room_ids=[1, 4],
-            flags=[DoorFlag.LOCKED],
-        )
-        yield
-
-
-class ItemFactory(WorldFactory):
-    @fixture(autouse=True)
-    def fixture_item(self):
-        self.item = Item(
-            id_=1,
-            name="a metal fork",
-            description=EntityDescription(
-                room="glistens in the dirt.",
-                look="A pronged, metal eating utensil.",
-            ),
-            is_stationary=False,
-            carry_limit=0,
-            weight=0,
-        )
-        yield
-
-
 class SpawnFactory(WorldFactory):
     @fixture(autouse=True)
     def _fixture_spawn(self):
@@ -287,215 +294,4 @@ class SpawnFactory(WorldFactory):
             Spawn(type_=SpawnType.ITEM, entity_id=2, room_id=1, amount=1),
             Spawn(type_=SpawnType.NPC, entity_id=1, room_id=1, amount=1),
         ]
-        yield
-
-
-class NpcFactory(WorldFactory):
-    @fixture(autouse=True)
-    def fixture_npc(self):
-        self.npc = Npc(
-            id_=1,
-            name="a faceless businessman",
-            description=EntityDescription(
-                room="sits at his desk.",
-                look="His face is smooth and amorphis, like putty. He is wearing a suit, tie, and carrying a briefcase. Though he has no eyes, he seems to be aware of your presence.",
-            ),
-        )
-        yield
-
-
-class ConnectEventFactory(BaseFactory):
-    @fixture(autouse=True)
-    def fixture_connect_event(self):
-        self.connect = ConnectEvent(self.server_config)
-        yield
-
-
-class DisconnectEventFactory(BaseFactory, ClientFactory):
-    @fixture(autouse=True)
-    def fixture_disconnect_event(self):
-        self.client.login_state = ClientLoginState.LOGGED_IN
-        self.disconnect = DisconnectEvent(self.server_config)
-        self.default_message_args = {
-            "justify": None,
-            "style": None,
-            "highlight": False,
-            "terminal_width": 76,
-        }
-        yield
-
-
-class SpawnEventFactory(BaseFactory, WorldFactory, DatabaseFactory):
-    @fixture(autouse=True)
-    def fixture_spawn_event(self):
-        self.server_config = ServerConfig(self.telnet, self.world, self.output)
-        self.spawn = SpawnEvent(self.server_config)
-        yield
-
-
-class InputEventFactory(CommandProcessorFactory, ClientFactory):
-    @fixture(autouse=True)
-    def fixture_input_event(self):
-        self.input = InputEvent(self.server_config, self.command_processor)
-        self.default_message_args = {
-            "justify": None,
-            "style": None,
-            "highlight": False,
-            "terminal_width": 76,
-        }
-        yield
-
-
-class ActionFactory(ClientFactory, WorldFactory):
-    def get_message_panel(self):
-        return self.output.send_to_client.call_args.args[0].message.body
-
-    @fixture
-    def _fixture_action(self, _fixture_world):
-        self.server_config = ServerConfig(self.telnet, self.world, self.output)
-        self.client.login_state = ClientLoginState.LOGGED_IN
-        self.default_message_args = {
-            "justify": None,
-            "style": None,
-            "highlight": False,
-            "terminal_width": 76,
-        }
-        yield
-
-
-class ConnectActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_connect(self, _fixture_action):
-        self.connect = Connect(self.server_config)
-        yield
-
-
-class DisconnectActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_disconnect(self, _fixture_action):
-        self.disconnect = Disconnect(self.server_config)
-        yield
-
-
-class ErrorActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_error(self, _fixture_action):
-        self.error = Error(self.server_config)
-        yield
-
-
-class CloseActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_close(self, _fixture_action):
-        self.close = Close(self.server_config)
-        yield
-
-
-class OpenActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_open(self, _fixture_action):
-        self.open = Open(self.server_config)
-        yield
-
-
-class MoveActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
-    @fixture(autouse=True)
-    def fixture_move(self, _fixture_action):
-        self.telnet.get_connected_clients.return_value = []
-        self.move = Move(self.server_config)
-        yield
-
-
-class LookActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
-    @fixture(autouse=True)
-    def fixture_look(self, _fixture_action):
-        self.look = Look(self.server_config)
-        yield
-
-
-class ExitsActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_exits(self, _fixture_action):
-        self.exits = Exits(self.server_config)
-        yield
-
-
-class SayActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_say(self, _fixture_action):
-        self.say = Say(self.server_config)
-        yield
-
-
-class QuitActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_quit(self, _fixture_action):
-        self.quit = Quit(self.server_config)
-        yield
-
-
-class LogoutActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_logout(self, _fixture_action):
-        self.logout = Logout(self.server_config)
-        yield
-
-
-class RegisterActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
-    @fixture(autouse=True)
-    def fixture_register(self, _fixture_action):
-        self.client.login_state = ClientLoginState.PRE_LOGIN
-        self.register = Register(self.server_config)
-        yield
-
-
-class FinalizeActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
-    @fixture(autouse=True)
-    def fixture_finalize(self, _fixture_action):
-        self.client.login_state = ClientLoginState.PRE_LOGIN
-        self.client.registration = Player()
-        self.finalize = Finalize(self.server_config)
-        yield
-
-
-class LoginActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
-    @fixture(autouse=True)
-    def fixture_login(self, _fixture_action):
-        self.client.login_state = ClientLoginState.PRE_LOGIN
-        self.login = Login(self.server_config)
-        yield
-
-
-class InventoryActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
-    @fixture(autouse=True)
-    def fixture_inventory(self, _fixture_action):
-        self.inventory = Inventory(self.server_config)
-        yield
-
-
-class DropActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
-    @fixture(autouse=True)
-    def fixture_drop(self, _fixture_action):
-        self.drop = Drop(self.server_config)
-        yield
-
-
-class GetActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
-    @fixture(autouse=True)
-    def fixture_get(self, _fixture_action):
-        self.get = Get(self.server_config)
-        yield
-
-
-class EveryMinuteActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_every_minute(self, _fixture_action):
-        self.every_minute = EveryMinute(self.server_config)
-        yield
-
-
-class EverySecondActionFactory(BaseFactory, ActionFactory):
-    @fixture(autouse=True)
-    def fixture_every_second(self, _fixture_action):
-        self.every_second = EverySecond(self.server_config)
         yield

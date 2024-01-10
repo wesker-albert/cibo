@@ -1,4 +1,4 @@
-from tests.conftest import ConnectActionFactory
+from tests.actions.conftest import ConnectActionFactory
 
 
 class TestConnectAction(ConnectActionFactory):

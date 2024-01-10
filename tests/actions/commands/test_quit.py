@@ -1,5 +1,5 @@
 from cibo.models import ClientLoginState, Message, MessageRoute
-from tests.conftest import QuitActionFactory
+from tests.actions.conftest import QuitActionFactory
 
 
 class TestQuitAction(QuitActionFactory):

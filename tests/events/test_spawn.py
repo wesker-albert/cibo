@@ -1,5 +1,5 @@
 from cibo.models.data import Item
-from tests.conftest import SpawnEventFactory
+from tests.events.conftest import SpawnEventFactory
 
 
 class TestSpawnEvent(SpawnEventFactory):

@@ -1,5 +1,5 @@
 from cibo.models import Message, MessageRoute
-from tests.conftest import DisconnectEventFactory
+from tests.events.conftest import DisconnectEventFactory
 
 
 class TestDisconnectEvent(DisconnectEventFactory):

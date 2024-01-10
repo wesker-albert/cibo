@@ -1,5 +1,5 @@
 from cibo.models import ClientLoginState, Message, MessageRoute
-from tests.conftest import LoginActionFactory
+from tests.actions.conftest import LoginActionFactory
 
 
 class TestLoginAction(LoginActionFactory):

@@ -1,5 +1,5 @@
 from cibo.models import ClientLoginState
-from tests.conftest import EveryMinuteActionFactory
+from tests.actions.conftest import EveryMinuteActionFactory
 
 
 class TestEveryMinuteAction(EveryMinuteActionFactory):

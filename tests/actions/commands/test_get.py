@@ -1,6 +1,6 @@
 from cibo.models import ClientLoginState, Message, MessageRoute
 from cibo.models.data import Item, Player
-from tests.conftest import GetActionFactory
+from tests.actions.conftest import GetActionFactory
 
 
 class TestGetAction(GetActionFactory):

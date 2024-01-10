@@ -1,6 +1,6 @@
 from cibo.models import ClientLoginState, Message, MessageRoute
 from cibo.models.data import Item, Player
-from tests.conftest import DropActionFactory
+from tests.actions.conftest import DropActionFactory
 
 
 class TestDropAction(DropActionFactory):

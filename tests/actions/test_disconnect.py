@@ -1,5 +1,5 @@
 from cibo.models import ClientLoginState, Message, MessageRoute
-from tests.conftest import DisconnectActionFactory
+from tests.actions.conftest import DisconnectActionFactory
 
 
 class TestDisconnectAction(DisconnectActionFactory):

@@ -1,5 +1,5 @@
 from cibo.models import ClientLoginState, Message, MessageRoute
-from tests.conftest import ExitsActionFactory
+from tests.actions.conftest import ExitsActionFactory
 
 
 class TestExitsAction(ExitsActionFactory):

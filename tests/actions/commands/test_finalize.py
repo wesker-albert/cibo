@@ -1,6 +1,6 @@
 from cibo.models import ClientLoginState, Message, MessageRoute
 from cibo.models.data import Player
-from tests.conftest import FinalizeActionFactory
+from tests.actions.conftest import FinalizeActionFactory
 
 
 class TestFinalizeAction(FinalizeActionFactory):

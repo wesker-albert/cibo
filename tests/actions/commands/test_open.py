@@ -1,5 +1,5 @@
 from cibo.models import ClientLoginState, Message, MessageRoute
-from tests.conftest import OpenActionFactory
+from tests.actions.conftest import OpenActionFactory
 
 
 class TestOpenAction(OpenActionFactory):
