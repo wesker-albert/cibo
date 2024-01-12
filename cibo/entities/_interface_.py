@@ -6,7 +6,6 @@ associated with just one entity type.
 """
 
 from os import getenv
-from pathlib import Path
 from typing import List, Optional, Union
 
 from cibo.entities.doors import Doors
@@ -42,22 +41,6 @@ class EntityInterface:
         self.spawns = Spawns(
             getenv("SPAWNS_PATH", "/cibo/config/spawns.json"), self.items, self.npcs
         )
-
-    @property
-    def motd(self) -> str:
-        """Gets an MOTD from a text file, for display when clients connect to the
-        server,
-
-        Returns:
-            str: The MOTD text.
-        """
-
-        motd_path = getenv("MOTD_PATH", "/cibo/config/motd.txt")
-
-        with open(f"{Path.cwd()}{motd_path}", encoding="utf-8") as file:
-            motd = file.read()
-
-        return motd
 
     def get_by_name(
         self, entities: List[Union[Item, Npc]], sub: str
