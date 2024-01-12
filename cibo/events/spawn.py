@@ -4,9 +4,10 @@ spawns the appropriate entity and amount into the world.
 
 from typing import List
 
-from cibo.events.__event__ import Event
-from cibo.models import Spawn, SpawnType
-from cibo.models.data import Item, Npc
+from cibo.events._base_ import Event
+from cibo.models.data.item import Item
+from cibo.models.data.npc import Npc
+from cibo.models.spawn import Spawn, SpawnType
 
 
 class SpawnEvent(Event):
@@ -61,7 +62,7 @@ class SpawnEvent(Event):
         ]
 
     def process(self) -> None:
-        for spawn in self._world.spawns.get_all():
+        for spawn in self._entities.spawns.get_all():
             if spawn.type_ is SpawnType.ITEM:
                 Item.bulk_create(self._generate_item_model_list(spawn), batch_size=100)
 

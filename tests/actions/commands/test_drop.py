@@ -1,5 +1,7 @@
-from cibo.models import ClientLoginState, Message, MessageRoute
-from cibo.models.data import Item, Player
+from cibo.models.client import ClientLoginState
+from cibo.models.data.item import Item
+from cibo.models.data.player import Player
+from cibo.models.message import Message, MessageRoute
 from tests.actions.conftest import DropActionFactory
 
 
@@ -15,12 +17,12 @@ class TestDropAction(DropActionFactory):
 
         self.drop.process(self.client, "drop", [])
 
-        self.output.send_prompt.assert_called_once_with(self.client)
+        self.comms.send_prompt.assert_called_once_with(self.client)
 
     def test_action_drop_process_missing_args(self):
         self.drop.process(self.client, "drop", [])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="Drop what? Your pants? No way!",
@@ -36,7 +38,7 @@ class TestDropAction(DropActionFactory):
 
         self.drop.process(self.client, "drop", ["spoon"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You scour your inventory, but can't find that.",
@@ -57,7 +59,7 @@ class TestDropAction(DropActionFactory):
         assert not item.player
         assert item.current_room_id == 1
 
-        self.output.send_to_vicinity.assert_called_once_with(
+        self.comms.send_to_vicinity.assert_called_once_with(
             MessageRoute(
                 Message(body="You drop a metal fork.", **self.default_message_args),
                 client=self.client,

@@ -1,6 +1,5 @@
 from pytest import fixture
 
-from cibo.actions import Connect, Disconnect, Error
 from cibo.actions.commands import (
     Close,
     Drop,
@@ -17,26 +16,29 @@ from cibo.actions.commands import (
     Register,
     Say,
 )
+from cibo.actions.connect import Connect
+from cibo.actions.disconnect import Disconnect
+from cibo.actions.error import Error
 from cibo.actions.scheduled import EveryMinute, EverySecond
-from cibo.models import ClientLoginState
-from cibo.models.data import Player
-from cibo.models.server_config import ServerConfig
+from cibo.models.client import ClientLoginState
+from cibo.models.data.player import Player
+from cibo.server_config import ServerConfig
 from tests.conftest import (
     BaseFactory,
     ClientFactory,
     DatabaseFactory,
+    EntityInterfaceFactory,
     MessageFactory,
-    WorldFactory,
 )
 
 
-class ActionFactory(ClientFactory, WorldFactory, MessageFactory):
+class ActionFactory(ClientFactory, EntityInterfaceFactory, MessageFactory):
     def get_message_panel(self):
-        return self.output.send_to_client.call_args.args[0].message.body
+        return self.comms.send_to_client.call_args.args[0].message.body
 
     @fixture
-    def _fixture_action(self, _fixture_world):
-        self.server_config = ServerConfig(self.telnet, self.world, self.output)
+    def _fixture_action(self, _fixture_entities):
+        self.server_config = ServerConfig(self.telnet, self.entities, self.comms)
         self.client.login_state = ClientLoginState.LOGGED_IN
         yield
 

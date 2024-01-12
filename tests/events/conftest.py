@@ -1,15 +1,18 @@
 from pytest import fixture
 
-from cibo.events import ConnectEvent, DisconnectEvent, InputEvent, SpawnEvent
-from cibo.models import ClientLoginState
-from cibo.models.server_config import ServerConfig
+from cibo.events.connect import ConnectEvent
+from cibo.events.disconnect import DisconnectEvent
+from cibo.events.input import InputEvent
+from cibo.events.spawn import SpawnEvent
+from cibo.models.client import ClientLoginState
+from cibo.server_config import ServerConfig
 from tests.conftest import (
     BaseFactory,
     ClientFactory,
     CommandProcessorFactory,
     DatabaseFactory,
+    EntityInterfaceFactory,
     MessageFactory,
-    WorldFactory,
 )
 
 
@@ -35,9 +38,9 @@ class InputEventFactory(CommandProcessorFactory, ClientFactory, MessageFactory):
         yield
 
 
-class SpawnEventFactory(BaseFactory, WorldFactory, DatabaseFactory):
+class SpawnEventFactory(BaseFactory, EntityInterfaceFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_spawn_event(self):
-        self.server_config = ServerConfig(self.telnet, self.world, self.output)
+        self.server_config = ServerConfig(self.telnet, self.entities, self.comms)
         self.spawn = SpawnEvent(self.server_config)
         yield

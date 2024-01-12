@@ -6,7 +6,7 @@ from typing import List, Self
 
 from peewee import AutoField, IntegerField
 
-from cibo.models.data.__model__ import Model
+from cibo.models.data._base_ import Model
 
 
 class Npc(Model):

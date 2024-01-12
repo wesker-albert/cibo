@@ -4,10 +4,11 @@ from typing import List
 
 from marshmallow import ValidationError
 
-from cibo.actions.__action__ import Action
-from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotFound
-from cibo.models import Client, Message, MessageRoute
-from cibo.models.data import Player, PlayerSchema
+from cibo.actions._base_ import Action
+from cibo.exceptions import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotFound
+from cibo.models.client import Client
+from cibo.models.data.player import Player, PlayerSchema
+from cibo.models.message import Message, MessageRoute
 
 
 class Register(Action):
@@ -97,19 +98,19 @@ class Register(Action):
             self._check_for_existing_player(player_name)
 
         except ClientIsLoggedIn:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._is_logged_in_message, client=client)
             )
 
         except PlayerAlreadyExists:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(
                     self._player_already_exists_message(player_name), client=client
                 )
             )
 
         except ValidationError:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._validation_error_message, client=client)
             )
 
@@ -122,6 +123,6 @@ class Register(Action):
                 current_room_id=1,
             )
 
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._confirm_finalize_message(player_name), client=client)
             )

@@ -2,8 +2,8 @@
 
 from typing import List, Tuple
 
-from cibo.actions.__action__ import Action
-from cibo.exception import (
+from cibo.actions._base_ import Action
+from cibo.exceptions import (
     ActionMissingArguments,
     ClientNotLoggedIn,
     DoorIsClosed,
@@ -13,7 +13,8 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.models import Client, Message, MessageRoute
+from cibo.models.client import Client
+from cibo.models.message import Message, MessageRoute
 
 
 class Open(Action):
@@ -80,7 +81,7 @@ class Open(Action):
         except ActionMissingArguments:
             missing_args_message = self._missing_args_message(client.player.name)
 
-            self.output.send_to_vicinity(
+            self.comms.send_to_vicinity(
                 MessageRoute(missing_args_message[0], client=client),
                 MessageRoute(
                     missing_args_message[1], ids=[client.player.current_room_id]
@@ -88,20 +89,20 @@ class Open(Action):
             )
 
         except (ClientNotLoggedIn, RoomNotFound):
-            self.output.send_prompt(client)
+            self.comms.send_prompt(client)
 
         except (ExitNotFound, DoorNotFound):
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._exit_not_found_message, client=client)
             )
 
         except DoorIsLocked:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._door_is_locked_message(door.name), client=client)
             )
 
         except DoorIsOpen:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._door_is_open_message(door.name), client=client)
             )
 
@@ -112,7 +113,7 @@ class Open(Action):
                 client.player.name, door.name
             )
 
-            self.output.send_to_vicinity(
+            self.comms.send_to_vicinity(
                 MessageRoute(opening_door_message[0], client=client),
                 MessageRoute(opening_door_message[1], ids=[room.id_]),
                 MessageRoute(opening_door_message[2], ids=[exit_.id_]),

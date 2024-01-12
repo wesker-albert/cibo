@@ -2,16 +2,17 @@
 
 from typing import List, Tuple
 
-from cibo.actions.__action__ import Action
+from cibo.actions._base_ import Action
 from cibo.actions.commands.look import Look
-from cibo.exception import (
+from cibo.exceptions import (
     ClientIsLoggedIn,
     PasswordIncorrect,
     PlayerNotFound,
     PlayerSessionActive,
 )
-from cibo.models import Client, Message, MessageRoute
-from cibo.models.data import Player
+from cibo.models.client import Client
+from cibo.models.data.player import Player
+from cibo.models.message import Message, MessageRoute
 
 
 class Login(Action):
@@ -97,22 +98,22 @@ class Login(Action):
             self._check_for_player_session(player.name)
 
         except ClientIsLoggedIn:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._is_logged_in_message, client=client)
             )
 
         except PlayerNotFound:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._player_not_found_message(player_name), client=client)
             )
 
         except PasswordIncorrect:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._incorrect_password_message, client=client)
             )
 
         except PlayerSessionActive:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(
                     self._player_session_active_message(player_name), client=client
                 )
@@ -123,7 +124,7 @@ class Login(Action):
 
             logging_in_message = self._logging_in_message(client.player.name)
 
-            self.output.send_to_vicinity(
+            self.comms.send_to_vicinity(
                 MessageRoute(logging_in_message[0], client=client, send_prompt=False),
                 MessageRoute(
                     logging_in_message[1], ids=[client.player.current_room_id]

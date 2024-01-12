@@ -4,10 +4,12 @@ from typing import List
 
 from peewee import IntegrityError
 
-from cibo.actions.__action__ import Action
-from cibo.exception import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotRegistered
-from cibo.models import Client, Message, MessageRoute
-from cibo.models.data import Item, Player
+from cibo.actions._base_ import Action
+from cibo.exceptions import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotRegistered
+from cibo.models.client import Client
+from cibo.models.data.item import Item
+from cibo.models.data.player import Player
+from cibo.models.message import Message, MessageRoute
 
 
 class Finalize(Action):
@@ -90,17 +92,17 @@ class Finalize(Action):
             self._create_player_starting_inventory(client)
 
         except ClientIsLoggedIn:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._is_logged_in_message, client=client)
             )
 
         except PlayerNotRegistered:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._not_registered_message, client=client)
             )
 
         except PlayerAlreadyExists:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(
                     self._player_already_exists_message(client.registration.name),
                     client=client,
@@ -108,7 +110,7 @@ class Finalize(Action):
             )
 
         else:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(
                     self._successfully_registered_message(client.registration.name),
                     client=client,

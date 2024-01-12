@@ -1,7 +1,8 @@
 from pytest import raises
 
-from cibo.exception import DoorIsClosed, DoorIsLocked, DoorIsOpen
-from cibo.models import Door, DoorFlag
+from cibo.exceptions import DoorIsClosed, DoorIsLocked, DoorIsOpen
+from cibo.models.door import Door
+from cibo.models.flag import DoorFlag
 from tests.conftest import DoorFactory
 
 

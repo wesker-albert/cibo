@@ -1,4 +1,5 @@
-from cibo.models import ClientLoginState, Message, MessageRoute
+from cibo.models.client import ClientLoginState
+from cibo.models.message import Message, MessageRoute
 from tests.actions.conftest import QuitActionFactory
 
 
@@ -14,7 +15,7 @@ class TestQuitAction(QuitActionFactory):
 
         assert self.client.login_state is ClientLoginState.PRE_LOGIN
 
-        self.output.send_to_room.assert_called_once_with(
+        self.comms.send_to_room.assert_called_once_with(
             MessageRoute(
                 Message(
                     body='[cyan]frank[/] yells, "Thank you Wisconsin!" They then proceed to drop their microphone, and walk off the stage.',
@@ -24,7 +25,7 @@ class TestQuitAction(QuitActionFactory):
                 ignored_clients=[self.client],
             )
         )
-        self.output.send_to_client.assert_called_once_with(
+        self.comms.send_to_client.assert_called_once_with(
             MessageRoute(
                 Message(
                     body="You take the [blue]blue pill[/]. You wake up in your bed and believe whatever you want to believe. You choose to believe that your parents are proud of you.\n",
@@ -42,7 +43,7 @@ class TestQuitAction(QuitActionFactory):
 
         self.quit.process(self.client, "quit", [], 0)
 
-        self.output.send_to_client.assert_called_once_with(
+        self.comms.send_to_client.assert_called_once_with(
             MessageRoute(
                 Message(
                     body="You take the [blue]blue pill[/]. You wake up in your bed and believe whatever you want to believe. You choose to believe that your parents are proud of you.\n",

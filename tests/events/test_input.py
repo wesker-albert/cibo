@@ -1,6 +1,6 @@
 import logging
 
-from cibo.models import Message, MessageRoute
+from cibo.models.message import Message, MessageRoute
 from tests.events.conftest import InputEventFactory
 
 
@@ -23,14 +23,14 @@ class TestInputEevent(InputEventFactory):
 
         self.input.process()
 
-        self.output.send_prompt.assert_called_once_with(self.client)
+        self.comms.send_prompt.assert_called_once_with(self.client)
 
     def test_event_input_process_missing_args(self):
         self.telnet.get_client_input.return_value = [(self.client, "login frank")]
 
         self.input.process()
 
-        self.output.send_to_client.assert_called_once_with(
+        self.comms.send_to_client.assert_called_once_with(
             MessageRoute(
                 Message(
                     body="[bright_red]Command is missing required arguments.\nExpected syntax: [green]login name password[/][/]",

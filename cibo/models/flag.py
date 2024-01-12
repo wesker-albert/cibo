@@ -1,5 +1,5 @@
 """Flags are used to ascribe various qualities or behaviors to rooms, items, and
-entities in the World.
+entities in the EntityInterface.
 """
 
 from enum import Enum
@@ -11,3 +11,11 @@ class RoomFlag(str, Enum):
 
     INSIDE = "inside"
     OUTSIDE = "outside"
+
+
+class DoorFlag(str, Enum):
+    """States a door or object can be in."""
+
+    OPEN = "open"
+    CLOSED = "closed"
+    LOCKED = "locked"

@@ -5,45 +5,32 @@ from unittest.mock import Mock
 from peewee import SqliteDatabase
 from pytest import fixture
 
-from cibo.command import CommandProcessor
-from cibo.models import (
-    Client,
-    ClientLoginState,
-    Direction,
-    Door,
-    DoorFlag,
-    EntityDescription,
-    Item,
-    Npc,
-    Region,
-    Room,
-    RoomDescription,
-    RoomExit,
-    RoomFlag,
-    Sector,
-    Spawn,
-    SpawnType,
-)
-from cibo.models.data import Item as ItemData
-from cibo.models.data import Npc as NpcData
-from cibo.models.data import Player
-from cibo.models.server_config import ServerConfig
-from cibo.output import OutputProcessor
-from cibo.outputs import Private as OutputPrivate
-from cibo.outputs import Region as OutputRegion
-from cibo.outputs import Room as OutputRoom
-from cibo.outputs import Sector as OutputSector
-from cibo.outputs import Server as OutputServer
-from cibo.password import Password
-from cibo.resources import World
+from cibo.actions.commands._processor_ import CommandProcessor
+from cibo.entities._interface_ import EntityInterface
+from cibo.models.client import Client, ClientLoginState
+from cibo.models.data.item import Item as ItemData
+from cibo.models.data.npc import Npc as NpcData
+from cibo.models.data.player import Player
+from cibo.models.description import EntityDescription, RoomDescription
+from cibo.models.direction import Direction
+from cibo.models.door import Door
+from cibo.models.flag import DoorFlag, RoomFlag
+from cibo.models.item import Item
+from cibo.models.npc import Npc
+from cibo.models.region import Region
+from cibo.models.room import Room, RoomExit
+from cibo.models.sector import Sector
+from cibo.models.spawn import Spawn, SpawnType
+from cibo.server_config import ServerConfig
+from cibo.utils.password import Password
 
 
 class BaseFactory:
     @fixture(autouse=True)
     def fixture_base(self):
         self.telnet = Mock()
-        self.output = Mock()
-        self.server_config = ServerConfig(self.telnet, Mock(), self.output)
+        self.comms = Mock()
+        self.server_config = ServerConfig(self.telnet, Mock(), self.comms)
         yield
 
 
@@ -112,7 +99,7 @@ class ClientFactory:
         yield
 
     @fixture(autouse=True)
-    def fixture_mock_clients(self):
+    def _fixture_mock_clients(self):
         default_client_params = {
             "login_state": ClientLoginState.LOGGED_IN,
             "player": Mock(current_room_id=1),
@@ -156,10 +143,10 @@ class PasswordFactory:
         yield
 
 
-class WorldFactory:
+class EntityInterfaceFactory:
     @fixture(autouse=True)
-    def _fixture_world(self):
-        self.world = World()
+    def _fixture_entities(self):
+        self.entities = EntityInterface()
         yield
 
 
@@ -175,20 +162,7 @@ class MessageFactory:
         yield
 
 
-class OutputFactory(BaseFactory, ClientFactory, WorldFactory):
-    @fixture(autouse=True)
-    def fixture_output(self):
-        self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
-        self.output = OutputProcessor(self.telnet, self.world)
-        self.private = OutputPrivate(self.telnet, self.world)
-        self.room = OutputRoom(self.telnet, self.world)
-        self.sector = OutputSector(self.telnet, self.world)
-        self.region = OutputRegion(self.telnet, self.world)
-        self.server = OutputServer(self.telnet, self.world)
-        yield
-
-
-class DoorFactory(WorldFactory):
+class DoorFactory(EntityInterfaceFactory):
     @fixture(autouse=True)
     def fixture_door(self):
         self.door_closed = Door(
@@ -205,7 +179,7 @@ class DoorFactory(WorldFactory):
         yield
 
 
-class ItemFactory(WorldFactory):
+class ItemFactory(EntityInterfaceFactory):
     @fixture(autouse=True)
     def fixture_item(self):
         self.item = Item(
@@ -222,7 +196,7 @@ class ItemFactory(WorldFactory):
         yield
 
 
-class NpcFactory(WorldFactory):
+class NpcFactory(EntityInterfaceFactory):
     @fixture(autouse=True)
     def fixture_npc(self):
         self.npc = Npc(
@@ -236,7 +210,7 @@ class NpcFactory(WorldFactory):
         yield
 
 
-class RegionFactory(WorldFactory):
+class RegionFactory(EntityInterfaceFactory):
     @fixture(autouse=True)
     def _fixture_region(self):
         self.region = Region(
@@ -286,7 +260,7 @@ class RoomFactory(SectorFactory):
         yield
 
 
-class SpawnFactory(WorldFactory):
+class SpawnFactory(EntityInterfaceFactory):
     @fixture(autouse=True)
     def _fixture_spawn(self):
         self.spawns = [

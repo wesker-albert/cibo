@@ -9,8 +9,8 @@ from typing import Self
 from marshmallow import Schema, fields, validate
 from peewee import AutoField, CharField, DoesNotExist, IntegerField, TextField
 
-from cibo.exception import PlayerNotFound
-from cibo.models.data.__model__ import Model
+from cibo.exceptions import PlayerNotFound
+from cibo.models.data._base_ import Model
 
 
 class Player(Model):

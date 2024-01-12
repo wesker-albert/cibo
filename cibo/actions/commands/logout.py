@@ -3,10 +3,11 @@
 from time import sleep
 from typing import List, Tuple
 
-from cibo.actions.__action__ import Action
+from cibo.actions._base_ import Action
 from cibo.actions.connect import Connect
-from cibo.exception import ClientNotLoggedIn
-from cibo.models import Client, Message, MessageRoute
+from cibo.exceptions import ClientNotLoggedIn
+from cibo.models.client import Client
+from cibo.models.message import Message, MessageRoute
 
 
 class Logout(Action):
@@ -41,7 +42,7 @@ class Logout(Action):
                 raise ClientNotLoggedIn
 
         except ClientNotLoggedIn:
-            self.output.send_prompt(client)
+            self.comms.send_prompt(client)
 
         else:
             player_name = client.player.name
@@ -51,7 +52,7 @@ class Logout(Action):
 
             logging_out_message = self._logging_out_message(player_name)
 
-            self.output.send_to_vicinity(
+            self.comms.send_to_vicinity(
                 MessageRoute(logging_out_message[0], client=client, send_prompt=False),
                 MessageRoute(logging_out_message[1], ids=[player_room]),
             )

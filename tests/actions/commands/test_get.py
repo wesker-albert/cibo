@@ -1,5 +1,7 @@
-from cibo.models import ClientLoginState, Message, MessageRoute
-from cibo.models.data import Item, Player
+from cibo.models.client import ClientLoginState
+from cibo.models.data.item import Item
+from cibo.models.data.player import Player
+from cibo.models.message import Message, MessageRoute
 from tests.actions.conftest import GetActionFactory
 
 
@@ -15,12 +17,12 @@ class TestGetAction(GetActionFactory):
 
         self.get.process(self.client, "get", [])
 
-        self.output.send_prompt.assert_called_once_with(self.client)
+        self.comms.send_prompt.assert_called_once_with(self.client)
 
     def test_action_get_process_missing_args(self):
         self.get.process(self.client, "get", [])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You don't get it, and you probably never will.",
@@ -35,7 +37,7 @@ class TestGetAction(GetActionFactory):
 
         self.get.process(self.client, "get", ["spoon"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You look around, but don't see that.",
@@ -50,7 +52,7 @@ class TestGetAction(GetActionFactory):
 
         self.get.process(self.client, "get", ["jukebox"])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You try, but you can't take that.",
@@ -70,7 +72,7 @@ class TestGetAction(GetActionFactory):
         assert item.player == self.client.player
         assert not item.current_room_id
 
-        self.output.send_to_vicinity.assert_called_once_with(
+        self.comms.send_to_vicinity.assert_called_once_with(
             MessageRoute(
                 Message(body="You pick up a metal fork.", **self.default_message_args),
                 client=self.client,

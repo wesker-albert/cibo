@@ -5,7 +5,7 @@ occupy as well as navigate through.
 from dataclasses import dataclass
 from typing import List, Optional
 
-from cibo.exception import ExitNotFound
+from cibo.exceptions import ExitNotFound
 from cibo.models.description import RoomDescription
 from cibo.models.direction import Direction
 from cibo.models.flag import RoomFlag

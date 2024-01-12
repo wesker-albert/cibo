@@ -2,8 +2,8 @@
 
 from typing import List, Optional
 
-from cibo.actions.__action__ import Action
-from cibo.models import Client
+from cibo.actions._base_ import Action
+from cibo.models.client import Client
 
 
 class EveryMinute(Action):

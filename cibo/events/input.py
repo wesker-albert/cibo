@@ -2,15 +2,15 @@
 CommandProcessor. If the input contains a valid command, further logic will be carried
 out."""
 
-from cibo.actions import Error
-from cibo.command import CommandProcessor
-from cibo.events.__event__ import Event
-from cibo.exception import (
+from cibo.actions.commands._processor_ import CommandProcessor
+from cibo.actions.error import Error
+from cibo.events._base_ import Event
+from cibo.exceptions import (
     CommandMissingArguments,
     CommandUnrecognized,
     InputNotReceived,
 )
-from cibo.models.server_config import ServerConfig
+from cibo.server_config import ServerConfig
 
 
 class InputEvent(Event):
@@ -45,7 +45,7 @@ class InputEvent(Event):
                 Error(self._server_config).process(client, None, [ex.message])
 
             except (InputNotReceived, Exception) as ex:
-                self._output.send_prompt(client)
+                self._comms.send_prompt(client)
 
                 if not isinstance(ex, InputNotReceived):  # pytest: no cover
                     raise ex

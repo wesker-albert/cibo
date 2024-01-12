@@ -4,18 +4,10 @@ be impassible until certain events are triggered.
 """
 
 from dataclasses import dataclass
-from enum import Enum
 from typing import List
 
-from cibo.exception import DoorIsClosed, DoorIsLocked, DoorIsOpen
-
-
-class DoorFlag(str, Enum):
-    """States a door or object can be in."""
-
-    OPEN = "open"
-    CLOSED = "closed"
-    LOCKED = "locked"
+from cibo.exceptions import DoorIsClosed, DoorIsLocked, DoorIsOpen
+from cibo.models.flag import DoorFlag
 
 
 @dataclass

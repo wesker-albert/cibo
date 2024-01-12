@@ -2,9 +2,9 @@
 
 from typing import List, Tuple
 
-from cibo.actions.__action__ import Action
+from cibo.actions._base_ import Action
 from cibo.actions.commands.look import Look
-from cibo.exception import (
+from cibo.exceptions import (
     ClientNotLoggedIn,
     DoorIsClosed,
     DoorIsLocked,
@@ -13,7 +13,8 @@ from cibo.exception import (
     ExitNotFound,
     RoomNotFound,
 )
-from cibo.models import Client, Message, MessageRoute
+from cibo.models.client import Client
+from cibo.models.message import Message, MessageRoute
 
 
 class Move(Action):
@@ -72,15 +73,15 @@ class Move(Action):
             door.raise_status()
 
         except (ClientNotLoggedIn, RoomNotFound):
-            self.output.send_prompt(client)
+            self.comms.send_prompt(client)
 
         except ExitNotFound:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._exit_not_found_message, client=client)
             )
 
         except (DoorIsClosed, DoorIsLocked):
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._door_is_closed_message(door.name), client=client)
             )
 
@@ -92,7 +93,7 @@ class Move(Action):
                 client.player.name, exit_.direction.name.lower()
             )
 
-            self.output.send_to_vicinity(
+            self.comms.send_to_vicinity(
                 MessageRoute(moving_message[0], client=client, send_prompt=False),
                 MessageRoute(moving_message[1], ids=[client.player.current_room_id]),
                 MessageRoute(moving_message[2], ids=[room.id_]),

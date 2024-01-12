@@ -1,5 +1,6 @@
-from cibo.models import ClientLoginState, Message, MessageRoute
-from cibo.models.data import Player
+from cibo.models.client import ClientLoginState
+from cibo.models.data.player import Player
+from cibo.models.message import Message, MessageRoute
 from tests.actions.conftest import FinalizeActionFactory
 
 
@@ -15,7 +16,7 @@ class TestFinalizeAction(FinalizeActionFactory):
 
         self.finalize.process(self.client, "finalize", [])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You finalize your written will, leaving your whole estate to your cat.",
@@ -28,7 +29,7 @@ class TestFinalizeAction(FinalizeActionFactory):
     def test_action_finalize_process_not_registered(self):
         self.finalize.process(self.client, "finalize", [])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You'll need to [green]register[/] before you can [green]finalize[/].",
@@ -45,7 +46,7 @@ class TestFinalizeAction(FinalizeActionFactory):
 
         self.finalize.process(self.client, "finalize", [])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="Sorry, turns out the name [cyan]frank[/] is already taken. Please [green]register[/] again with a different name.",
@@ -66,7 +67,7 @@ class TestFinalizeAction(FinalizeActionFactory):
         player = Player.get_by_name("jennifer")
         assert len(player.inventory) == 1
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="[cyan]jennifer[/] has been created. You can now [green]login[/] with this player.",

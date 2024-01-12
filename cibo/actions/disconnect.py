@@ -2,8 +2,9 @@
 
 from typing import List, Optional
 
-from cibo.actions.__action__ import Action
-from cibo.models import Client, Message, MessageRoute
+from cibo.actions._base_ import Action
+from cibo.models.client import Client
+from cibo.models.message import Message, MessageRoute
 
 
 class Disconnect(Action):
@@ -27,7 +28,7 @@ class Disconnect(Action):
         if client.is_logged_in:
             client.player.save()
 
-            self.output.send_to_room(
+            self.comms.send_to_room(
                 MessageRoute(
                     self._disconnect_message(client.player.name),
                     ids=[client.player.current_room_id],

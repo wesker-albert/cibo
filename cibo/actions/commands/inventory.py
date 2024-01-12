@@ -2,9 +2,10 @@
 
 from typing import List
 
-from cibo.actions.__action__ import Action
-from cibo.exception import ClientNotLoggedIn
-from cibo.models import Client, Message, MessageRoute
+from cibo.actions._base_ import Action
+from cibo.exceptions import ClientNotLoggedIn
+from cibo.models.client import Client
+from cibo.models.message import Message, MessageRoute
 
 
 class Inventory(Action):
@@ -43,9 +44,9 @@ class Inventory(Action):
                 raise ClientNotLoggedIn
 
         except ClientNotLoggedIn:
-            self.output.send_prompt(client)
+            self.comms.send_prompt(client)
 
         else:
-            self.output.send_to_client(
+            self.comms.send_to_client(
                 MessageRoute(self._inventory_message(client), client=client)
             )

@@ -1,4 +1,5 @@
-from cibo.models import ClientLoginState, Message, MessageRoute
+from cibo.models.client import ClientLoginState
+from cibo.models.message import Message, MessageRoute
 from tests.actions.conftest import SayActionFactory
 
 
@@ -14,12 +15,12 @@ class TestSayAction(SayActionFactory):
 
         self.say.process(self.client, "say", ["Hey you guys!"])
 
-        self.output.send_prompt.assert_called_once_with(self.client)
+        self.comms.send_prompt.assert_called_once_with(self.client)
 
     def test_action_say_process_missing_args(self):
         self.say.process(self.client, "say", [])
 
-        self.output.send_to_client.assert_called_with(
+        self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
                     body="You try to think of something clever to say, but fail.",
@@ -32,7 +33,7 @@ class TestSayAction(SayActionFactory):
     def test_action_say_process(self):
         self.say.process(self.client, "say", ["Hey you guys!"])
 
-        self.output.send_to_vicinity.assert_called_once_with(
+        self.comms.send_to_vicinity.assert_called_once_with(
             MessageRoute(
                 Message(body='You say, "Hey you guys!"', **self.default_message_args),
                 client=self.client,
