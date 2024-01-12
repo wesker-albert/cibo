@@ -11,3 +11,11 @@ class RoomFlag(str, Enum):
 
     INSIDE = "inside"
     OUTSIDE = "outside"
+
+
+class DoorFlag(str, Enum):
+    """States a door or object can be in."""
+
+    OPEN = "open"
+    CLOSED = "closed"
+    LOCKED = "locked"

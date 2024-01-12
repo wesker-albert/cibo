@@ -12,7 +12,7 @@ cibo's message formatter, visit:
     https://rich.readthedocs.io/en/stable/
 """
 
-from dataclasses import dataclass
+from dataclasses import KW_ONLY, dataclass
 
 from rich.console import Console
 
@@ -22,6 +22,7 @@ class Prompt:
     """A stylized prompt to be send to the client, and displayed in their terminal."""
 
     body: str
+    _: KW_ONLY
     terminal_width: int = 76
 
     def _format(self, prompt: str) -> str:

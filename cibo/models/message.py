@@ -32,6 +32,7 @@ class Message:
     """A stylized message to be send to the client, and displayed in their terminal."""
 
     body: Union[str, Columns, Markdown, Panel, Syntax, Table, Tree]
+    _: KW_ONLY
     justify: Optional[Literal["left", "center", "right"]] = None
     style: Optional[str] = None
     highlight: bool = False

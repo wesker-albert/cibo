@@ -9,7 +9,8 @@ from typing import List
 
 from cibo.entities._base_ import Entity
 from cibo.exceptions import DoorNotFound
-from cibo.models.door import Door, DoorFlag
+from cibo.models.door import Door
+from cibo.models.flag import DoorFlag
 
 
 class Doors(Entity):
