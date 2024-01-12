@@ -18,9 +18,9 @@ from cibo.models.message import MessageRoute
 from cibo.telnet import TelnetServer
 
 
-class CommsProcessor:
-    """Comms processing abstraction layer. Exposes the different comms types that
-    can be used to send messages to clients.
+class CommsInterface:
+    """Comms interface layer. Exposes the different comms types that can be used to
+    send messages to clients.
 
     Additionally offers a place to create reusable "comms chain" methods for
     specific use cases, where multiple comms types and routes may be necessary.

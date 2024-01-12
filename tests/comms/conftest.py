@@ -1,6 +1,6 @@
 from pytest import fixture
 
-from cibo.comms._processor_ import CommsProcessor
+from cibo.comms._interface_ import CommsInterface
 from cibo.comms.private import Private as CommsPrivate
 from cibo.comms.region import Region as CommsRegion
 from cibo.comms.room import Room as CommsRoom
@@ -13,7 +13,7 @@ class CommsFactory(BaseFactory, ClientFactory, WorldFactory):
     @fixture(autouse=True)
     def fixture_comms(self, _fixture_mock_clients):
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
-        self.comms = CommsProcessor(self.telnet, self.world)
+        self.comms = CommsInterface(self.telnet, self.world)
         self.private = CommsPrivate(self.telnet, self.world)
         self.room = CommsRoom(self.telnet, self.world)
         self.sector = CommsSector(self.telnet, self.world)

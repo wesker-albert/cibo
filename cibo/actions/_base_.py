@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from cibo.comms._processor_ import CommsProcessor
+from cibo.comms._interface_ import CommsInterface
 from cibo.entities.doors import Doors
 from cibo.entities.entities import Entities
 from cibo.entities.items import Items
@@ -26,7 +26,7 @@ class Action(ABC):
 
         self._telnet = self._server_config.telnet
         self._world = self._server_config.world
-        self._comms = self._server_config.comms_processor
+        self._comms = self._server_config.comms_interface
 
         self._password_hasher = Password()
 
@@ -81,11 +81,11 @@ class Action(ABC):
         return self._world.npcs
 
     @property
-    def comms(self) -> CommsProcessor:
-        """Access the comms processor, to send messages to clients.
+    def comms(self) -> CommsInterface:
+        """Access the comms interface, to send messages to clients.
 
         Returns:
-            CommsProcessor: The comms processor, to make available its methods.
+            CommsInterface: The comms interface, to make available its methods.
         """
 
         return self._comms

@@ -7,7 +7,7 @@ running.
 from os import getenv
 from time import sleep
 
-from cibo.comms._processor_ import CommsProcessor
+from cibo.comms._interface_ import CommsInterface
 from cibo.entities.world import World
 from cibo.server import Server
 from cibo.server_config import ServerConfig
@@ -16,9 +16,9 @@ from cibo.telnet import TelnetServer
 if __name__ == "__main__":
     telnet = TelnetServer(port=int(getenv("SERVER_PORT", "51234")))
     world = World()
-    comms_processor = CommsProcessor(telnet, world)
+    comms_interface = CommsInterface(telnet, world)
 
-    server_config = ServerConfig(telnet, world, comms_processor)
+    server_config = ServerConfig(telnet, world, comms_interface)
     server = Server(server_config)
 
     print(
