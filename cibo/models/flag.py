@@ -1,5 +1,5 @@
 """Flags are used to ascribe various qualities or behaviors to rooms, items, and
-entities in the World.
+entities in the EntityInterface.
 """
 
 from enum import Enum

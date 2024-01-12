@@ -11,7 +11,7 @@ from cibo.comms.room import Room
 from cibo.comms.sector import Sector
 from cibo.comms.server import Server
 from cibo.comms.vicinity import Vicinity
-from cibo.entities.world import World
+from cibo.entities._interface_ import EntityInterface
 from cibo.exceptions import MessageRouteMissingParameters
 from cibo.models.client import Client
 from cibo.models.message import MessageRoute
@@ -26,16 +26,16 @@ class CommsInterface:
     specific use cases, where multiple comms types and routes may be necessary.
     """
 
-    def __init__(self, telnet: TelnetServer, world: World) -> None:
+    def __init__(self, telnet: TelnetServer, entity_interface: EntityInterface) -> None:
         self._telnet = telnet
-        self._world = world
+        self._entities = entity_interface
 
-        self._private = Private(self._telnet, self._world)
-        self._room = Room(self._telnet, self._world)
-        self._sector = Sector(self._telnet, self._world)
-        self._region = Region(self._telnet, self._world)
-        self._server = Server(self._telnet, self._world)
-        self._vicinity = Vicinity(self._telnet, self._world)
+        self._private = Private(self._telnet, self._entities)
+        self._room = Room(self._telnet, self._entities)
+        self._sector = Sector(self._telnet, self._entities)
+        self._region = Region(self._telnet, self._entities)
+        self._server = Server(self._telnet, self._entities)
+        self._vicinity = Vicinity(self._telnet, self._entities)
 
     def send_prompt(self, client: Client) -> None:
         """Sends a prompt to the specified client."""

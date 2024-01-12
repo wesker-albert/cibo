@@ -16,7 +16,7 @@ class Event(ABC):
         self._server_config = server_config
 
         self._telnet = self._server_config.telnet
-        self._world = self._server_config.world
+        self._entities = self._server_config.entity_interface
         self._comms = self._server_config.comms_interface
 
     @abstractmethod

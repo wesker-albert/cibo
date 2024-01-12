@@ -22,7 +22,7 @@ class Connect(Action):
     def _motd_message(self) -> Message:
         return Message(
             Panel(
-                f"{self._world.motd}\n\n"
+                f"{self._entities.motd}\n\n"
                 "Enter [green]register name password[/] to create a new player.\n"
                 "Enter [green]login name password[/] to log in to an existing player.",
                 title="Welcome to",

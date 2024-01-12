@@ -6,7 +6,7 @@ from peewee import SqliteDatabase
 from pytest import fixture
 
 from cibo.actions.commands._processor_ import CommandProcessor
-from cibo.entities.world import World
+from cibo.entities._interface_ import EntityInterface
 from cibo.models.client import Client, ClientLoginState
 from cibo.models.data.item import Item as ItemData
 from cibo.models.data.npc import Npc as NpcData
@@ -143,10 +143,10 @@ class PasswordFactory:
         yield
 
 
-class WorldFactory:
+class EntityInterfaceFactory:
     @fixture(autouse=True)
-    def _fixture_world(self):
-        self.world = World()
+    def _fixture_entities(self):
+        self.entities = EntityInterface()
         yield
 
 
@@ -162,7 +162,7 @@ class MessageFactory:
         yield
 
 
-class DoorFactory(WorldFactory):
+class DoorFactory(EntityInterfaceFactory):
     @fixture(autouse=True)
     def fixture_door(self):
         self.door_closed = Door(
@@ -179,7 +179,7 @@ class DoorFactory(WorldFactory):
         yield
 
 
-class ItemFactory(WorldFactory):
+class ItemFactory(EntityInterfaceFactory):
     @fixture(autouse=True)
     def fixture_item(self):
         self.item = Item(
@@ -196,7 +196,7 @@ class ItemFactory(WorldFactory):
         yield
 
 
-class NpcFactory(WorldFactory):
+class NpcFactory(EntityInterfaceFactory):
     @fixture(autouse=True)
     def fixture_npc(self):
         self.npc = Npc(
@@ -210,7 +210,7 @@ class NpcFactory(WorldFactory):
         yield
 
 
-class RegionFactory(WorldFactory):
+class RegionFactory(EntityInterfaceFactory):
     @fixture(autouse=True)
     def _fixture_region(self):
         self.region = Region(
@@ -260,7 +260,7 @@ class RoomFactory(SectorFactory):
         yield
 
 
-class SpawnFactory(WorldFactory):
+class SpawnFactory(EntityInterfaceFactory):
     @fixture(autouse=True)
     def _fixture_spawn(self):
         self.spawns = [

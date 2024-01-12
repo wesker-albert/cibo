@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 
-from cibo.entities.world import World
+from cibo.entities._interface_ import EntityInterface
 from cibo.models.message import Message, MessageRoute
 from cibo.telnet import TelnetServer
 
@@ -14,9 +14,9 @@ class Comms(ABC):
         server_config (ServerConfig): The server configuration object.
     """
 
-    def __init__(self, telnet: TelnetServer, world: World):
+    def __init__(self, telnet: TelnetServer, entity_interface: EntityInterface):
         self._telnet = telnet
-        self._world = world
+        self._entities = entity_interface
 
     @abstractmethod
     def _format(self, message: Message) -> str:  # pytest: no cover

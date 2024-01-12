@@ -5,7 +5,6 @@ from typing import List
 
 from cibo.comms._interface_ import CommsInterface
 from cibo.entities.doors import Doors
-from cibo.entities.entities import Entities
 from cibo.entities.items import Items
 from cibo.entities.npcs import Npcs
 from cibo.entities.rooms import Rooms
@@ -25,21 +24,10 @@ class Action(ABC):
         self._server_config = server_config
 
         self._telnet = self._server_config.telnet
-        self._world = self._server_config.world
+        self._entities = self._server_config.entity_interface
         self._comms = self._server_config.comms_interface
 
         self._password_hasher = Password()
-
-    @property
-    def entities(self) -> Entities:
-        """Entity helper methods that aren't necesarily associated with just one
-        entity type.
-
-        Returns:
-            Entities: The helper methods.
-        """
-
-        return self._world.entities
 
     @property
     def rooms(self) -> Rooms:
@@ -48,7 +36,7 @@ class Action(ABC):
         Returns:
             Rooms: The rooms.
         """
-        return self._world.rooms
+        return self._entities.rooms
 
     @property
     def doors(self) -> Doors:
@@ -58,7 +46,7 @@ class Action(ABC):
             Doors: The doors, without Jim Morrison.
         """
 
-        return self._world.doors
+        return self._entities.doors
 
     @property
     def items(self) -> Items:
@@ -68,7 +56,7 @@ class Action(ABC):
             Items: The items.
         """
 
-        return self._world.items
+        return self._entities.items
 
     @property
     def npcs(self) -> Npcs:
@@ -78,7 +66,7 @@ class Action(ABC):
             Npcs: The NPCs.
         """
 
-        return self._world.npcs
+        return self._entities.npcs
 
     @property
     def comms(self) -> CommsInterface:

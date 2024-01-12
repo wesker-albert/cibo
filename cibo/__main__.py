@@ -8,17 +8,17 @@ from os import getenv
 from time import sleep
 
 from cibo.comms._interface_ import CommsInterface
-from cibo.entities.world import World
+from cibo.entities._interface_ import EntityInterface
 from cibo.server import Server
 from cibo.server_config import ServerConfig
 from cibo.telnet import TelnetServer
 
 if __name__ == "__main__":
     telnet = TelnetServer(port=int(getenv("SERVER_PORT", "51234")))
-    world = World()
-    comms_interface = CommsInterface(telnet, world)
+    entity_interface = EntityInterface()
+    comms_interface = CommsInterface(telnet, entity_interface)
 
-    server_config = ServerConfig(telnet, world, comms_interface)
+    server_config = ServerConfig(telnet, entity_interface, comms_interface)
     server = Server(server_config)
 
     print(

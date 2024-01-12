@@ -15,7 +15,7 @@ class Sector(Comms):
     def send(self, message: MessageRoute) -> None:
         for client in self._telnet.get_connected_clients():
             if client.is_logged_in:
-                room = self._world.rooms.get_by_id(client.player.current_room_id)
+                room = self._entities.rooms.get_by_id(client.player.current_room_id)
 
                 if (
                     room.sector.id_ in message.ids

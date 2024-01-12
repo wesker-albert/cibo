@@ -62,7 +62,7 @@ class SpawnEvent(Event):
         ]
 
     def process(self) -> None:
-        for spawn in self._world.spawns.get_all():
+        for spawn in self._entities.spawns.get_all():
             if spawn.type_ is SpawnType.ITEM:
                 Item.bulk_create(self._generate_item_model_list(spawn), batch_size=100)
 

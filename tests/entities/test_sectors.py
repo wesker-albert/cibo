@@ -6,10 +6,10 @@ from tests.conftest import SectorFactory
 
 class TestSectors(SectorFactory):
     def test_sectors_get_by_id(self):
-        fetched_sector = self.world.sectors.get_by_id(1)
+        fetched_sector = self.entities.sectors.get_by_id(1)
 
         assert fetched_sector == self.sector
 
     def test_sectors_get_by_id_not_found(self):
         with raises(SectorNotFound):
-            _sector = self.world.sectors.get_by_id(98736)
+            _sector = self.entities.sectors.get_by_id(98736)

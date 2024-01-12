@@ -11,8 +11,8 @@ from tests.conftest import (
     ClientFactory,
     CommandProcessorFactory,
     DatabaseFactory,
+    EntityInterfaceFactory,
     MessageFactory,
-    WorldFactory,
 )
 
 
@@ -38,9 +38,9 @@ class InputEventFactory(CommandProcessorFactory, ClientFactory, MessageFactory):
         yield
 
 
-class SpawnEventFactory(BaseFactory, WorldFactory, DatabaseFactory):
+class SpawnEventFactory(BaseFactory, EntityInterfaceFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_spawn_event(self):
-        self.server_config = ServerConfig(self.telnet, self.world, self.comms)
+        self.server_config = ServerConfig(self.telnet, self.entities, self.comms)
         self.spawn = SpawnEvent(self.server_config)
         yield

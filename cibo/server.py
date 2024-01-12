@@ -39,7 +39,7 @@ class Server:
         self._database = SqliteDatabase(getenv("DATABASE_PATH", "cibo_database.db"))
 
         self._telnet = server_config.telnet
-        self._world = server_config.world
+        self._entities = server_config.entity_interface
 
         self._event_processor = EventProcessor(server_config)
 

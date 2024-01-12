@@ -7,7 +7,7 @@ from typing import Optional
 from cibo.comms._base_ import Comms
 from cibo.comms.private import Private
 from cibo.comms.room import Room
-from cibo.entities.world import World
+from cibo.entities._interface_ import EntityInterface
 from cibo.exceptions import MessageRouteMissingParameters
 from cibo.models.message import Message, MessageRoute
 from cibo.telnet import TelnetServer
@@ -18,11 +18,11 @@ class Vicinity(Comms):
     the general vicinity.
     """
 
-    def __init__(self, telnet: TelnetServer, world: World) -> None:
-        super().__init__(telnet, world)
+    def __init__(self, telnet: TelnetServer, entity_interface: EntityInterface) -> None:
+        super().__init__(telnet, entity_interface)
 
-        self._private = Private(telnet, world)
-        self._room = Room(telnet, world)
+        self._private = Private(telnet, entity_interface)
+        self._room = Room(telnet, entity_interface)
 
     def _format(self, _message: Message) -> str:  # pytest: no cover
         return str()
