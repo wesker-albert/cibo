@@ -30,54 +30,5 @@ about but haven't gotten the professional opportunity to try.
 
 ## Current state:
 
-### 2024-01-01
-* Happy new year!
-* Added the ability to `look <target>` at items in the current room, player inventory,
-or NPCs in the current room, to see their descriptions.
-
-### 2023-09-06
-* Added basic, stationary NPCs. They can't be interacted with yet, but soon enough.
-* Added the ability to create item and NPC spawning rules, to populate specific rooms
-with either entity type. Currently spawning only happens upon server startup.
-* Improved room descriptions for items and NPCs.
-
-### 2023-08-19
-* New commands available: `inventory`, `drop`, `get`
-* New players are given a fork, to test the new commands.
-* Dropped items persist in the world until picked up again. They can be seen in a room
-during movement, or using the `look` command.
-
-### 2023-07-18
-* New commands available: `up`, `down`, `open`, `close`
-* Introduced interactive doors. If you run into a door you can use `open` or `close`
-followed by the direction the door is in. For example `open w` or `close west`
-* Doors can also be locked. Currently there's no mechanism to unlock them, but that
-functionality will arrive soon enough.
-
-### 2023-07-16
-* New command available: `quit`
-* Server now has the ability to schedule "tick" timers, that are processed with varying
-frequency.
-* The current player room is persisted every minute, if a disconnection occurs, or when
-`quit` and `logout` are used.
-* Thanks to the above, when a player reconnects they will spawn in the last room they
-occupied.
-* Server command `stop` was discovered to be broken, in the sense that once stopped,
-the server cannot be `start`ed again without terminating the program and running it
-again. This will be fixed later, as it doesn't currently pose a development
-complication.
-
-### 2023-07-15
-* New commands available: `look, exits, north, south, east, west`
-* A small set of sample rooms were created to test navigation.
-* Basic player navigation has been implemented, with the exceptions of `up` and `down`.
-* "Local" messages have been completed, and now only print to occupants of the room they
-were executed within.
-
-### 2023-07-13
-* The project can be loaded via Dev Container in VSCode.
-* In terminal, `make start` will fire up the server.
-* Once fired up, you can control the server. Make sure to `create_db` before trying
-to `start` the server.
-* Connect via telnet to: `127.0.0.1 51234`
-* Currently available commands:  `register, finalize, login, say, logout`
+All changes can now be viewed in the [CHANGELOG](https://github.com/wesker-albert/cibo/CHANGELOG.md),
+which is automatically generated in-house via a fork of [gitchangelog](https://github.com/wesker-albert/gitchangelog).

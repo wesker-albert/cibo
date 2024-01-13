@@ -1,0 +1,34 @@
+# -*- coding: utf-8; mode: python -*-
+
+ignore_regexps = [
+    r'!minor',
+    r'!cosmetic',
+    r'!refactor',
+    r'!wip',
+    r'^(.{3,3}\s*:)?\s*[fF]irst commit.?\s*$',
+    r'^$'
+]
+
+section_regexps = [
+    ('Added', [r'^([aA]dd|[cC]reate)\s*']),
+    ('Changed', [r'^([cC]hange|[rR]efactor|[uU]pdate|[mM]ove)\s*']),
+    ('Deprecated', [r'^[dD]eprecate\s*']),
+    ('Removed', [r'^([rR]emove|[dD]elete)\s*']),
+    ('Fixed', [r'^[fF]ix\s*']),
+    ('Security', [r'^[sS]ecure\s*']),
+    ('Other', None)
+]
+
+body_process = ReSub(r'((^|\n)[A-Z]\w+(-\w+)*: .*(\n\s+.*)*)+$', r'') | strip
+
+tag_filter_regexp = r'^[0-9]+\.[0-9]+(\.[0-9]+)?'
+
+unreleased_version_label = "[Unreleased]"
+
+revs = []
+
+output_engine = mustache("./.gitchangelog/.gitchangelog.tpl")
+
+include_merge = True
+
+publish = stdout
