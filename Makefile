@@ -33,6 +33,9 @@ coverage:
 	@poetry run pytest --cov-report term --cov-report xml:../coverage.xml --cov=cibo
 	@rm .coverage
 
+generate_changelog:
+	gitchangelog | tee CHANGELOG.md
+
 
 # Quality Control
 
