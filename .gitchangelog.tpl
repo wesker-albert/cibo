@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### {{{label}}}
 
 {{#commits}}
-- {{{subject}}} [{{{author_github}}}]
+- [{{{subject}}}](https://github.com/wesker-albert/cibo/commit/{{{sha1}}})
 {{/commits}}
 
 {{/sections}}

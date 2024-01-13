@@ -314,7 +314,7 @@ testing = ["hatch", "pre-commit", "pytest", "tox"]
 
 [[package]]
 name = "gitchangelog"
-version = "3.1.4"
+version = "3.1.5"
 description = "generates a changelog file from a local git checkout"
 optional = false
 python-versions = ">=3.6"
@@ -334,8 +334,8 @@ test = ["minimock", "pytest", "pytest-cov"]
 [package.source]
 type = "git"
 url = "https://github.com/wesker-albert/gitchangelog.git"
-reference = "3.1.4"
-resolved_reference = "cce2237441a07daa3d46a8bd755e39b7b2ff1211"
+reference = "3.1.5"
+resolved_reference = "15098ad3127b137cb58dabccccdb55d60c0bc860"
 
 [[package]]
 name = "idna"
@@ -1150,4 +1150,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11.4"
-content-hash = "a13bedaa1a99c5ff4587a73c18fda5dce6d591329fc625e77ef8bbb67440af77"
+content-hash = "0d0a3c496285d2f4b20473f24592de2bfe4875c1a396a5fb46eebbd8ffa338ce"
