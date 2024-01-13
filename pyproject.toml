@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cibo"
-version = "0.0.0"
+version = "1.0.0-pre-alpha.1+80f9676"
 description = "An experimental MUD server, written in Python. Object-oriented and event driven."
 authors = ["Albert Wesker <albert.wesker@umbrellacorp.io>"]
 license = "MIT"
@@ -17,6 +17,7 @@ schedule = "1.2.0"
 [tool.poetry.dev-dependencies]
 black = "23.7.0"
 coverage = "7.2.7"
+dunamai = "1.19.0"
 gitchangelog = { git = "https://github.com/wesker-albert/gitchangelog.git", tag = "3.1.5" }
 mypy = "1.4.1"
 pylint = "2.17.4"
@@ -104,5 +105,5 @@ disable = [
 "./tests/" = "missing-function-docstring,missing-class-docstring,missing-module-docstring,line-too-long,no-member,attribute-defined-outside-init,logging-too-many-args"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"

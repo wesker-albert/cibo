@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- [Add naming section to guide.](https://github.com/wesker-albert/cibo/commit/338a47c62fd10252c9237c35f229e2ab0cb5ad98)
+- [Add LICENSE.](https://github.com/wesker-albert/cibo/commit/f87eb70f62258de87e687ca1c413a6d7c7d8a647)
 - [Add gitchangelog, generate log with make.](https://github.com/wesker-albert/cibo/commit/0bcdca13f83ae1e20b0401db27af013795129b6e)
 - [Create sector, region, and server messages (#34)](https://github.com/wesker-albert/cibo/commit/8a38bb799ba3cb49001614b54573b1719e316c8b)
 - [Create basic NPC and spawning functionality (#26)](https://github.com/wesker-albert/cibo/commit/9501f880cc9a9ab2d7098e5feee838acf397cd99)
@@ -24,16 +26,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- [Update readme.](https://github.com/wesker-albert/cibo/commit/910b7f0bef3589ff74cf765156917e083c5b53b8)
+- [Move gitchangelog config into subfolder.](https://github.com/wesker-albert/cibo/commit/1e961c5c611e9a264ba9aa9806596619f248b85d)
 - [Move methods into models (#18)](https://github.com/wesker-albert/cibo/commit/642e04156a900cf7416232cf44053c320caceb6f)
 - [Refactor announcements (#16)](https://github.com/wesker-albert/cibo/commit/7ce0630ea31964a39ff6ac89eb068dc43f1ab674)
 - [Update readme (#4)](https://github.com/wesker-albert/cibo/commit/5429ea016b99a0cdb633055b2a2d82e7e859e8ba)
 
 ### Removed
 
+- [Remove undesired section from gitchangelog.rc.](https://github.com/wesker-albert/cibo/commit/2e023f8527618661ae29d9d324abed797d467ad1)
 - [Remove configs, fix deprecations (#24)](https://github.com/wesker-albert/cibo/commit/e604a74e873e6e8cd32ac829700e3a6e464440ba)
+
+### Fixed
+
+- [Fix typo.](https://github.com/wesker-albert/cibo/commit/65310f30c389e1e5a441243c2ea6d82392995c25)
 
 ### Other
 
+- [Python style additions.](https://github.com/wesker-albert/cibo/commit/80f9676939c2e494e613bdb9c042bfca2629783d)
+- [More typo fixes in styleguide.](https://github.com/wesker-albert/cibo/commit/204b2d2d873641587579b5f056824cc1f29ae405)
+- [Introduce styleguide.](https://github.com/wesker-albert/cibo/commit/78bf2a10ef13a30ffeb3df834b27f8c2bce33494)
 - [Finalize changelog template.](https://github.com/wesker-albert/cibo/commit/23c48a7334c6926a78a0a14887bf4d135937c4f0)
 - [Unplanned directory and filename reorg (#38)](https://github.com/wesker-albert/cibo/commit/cc01986e791eca0fda79f65cd4f217c7a0c4656b)
 - [Clean up imports (#36)](https://github.com/wesker-albert/cibo/commit/b8fa727500ab0ec5c732e29a939362015467f0a1)

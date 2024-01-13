@@ -1,5 +1,5 @@
 .PHONY: init init_poetry python test_all test_verbose coverage generate_changelog \
-	safety_check lint type_check formatting test coverage_ci start
+	generate_version safety_check lint type_check formatting test coverage_ci start
 
 .DEFAULT_GOAL := init
 
@@ -34,7 +34,13 @@ coverage:
 	@rm .coverage
 
 generate_changelog:
-	GITCHANGELOG_CONFIG_FILENAME=./.gitchangelog/.gitchangelog.rc gitchangelog | tee CHANGELOG.md
+	@GITCHANGELOG_CONFIG_FILENAME=./.gitchangelog/.gitchangelog.rc \
+		gitchangelog | tee CHANGELOG.md
+
+generate_version:
+	@dunamai from git --bump --no-metadata \
+	--pattern "^(?P<base>\d+(\.\d+)*)([-]?(?P<stage>[a-zA-Z-]+))(\.)(?P<revision>[0-9]+)" \
+	--format "{base}-{stage}.{revision}"
 
 
 # Quality Control
