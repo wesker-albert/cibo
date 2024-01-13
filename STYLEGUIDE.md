@@ -19,9 +19,9 @@ keep lines of code under 300 per file. Within reason, of course.
 Directory structure is also preferred to be kept as flat as possible, without being
 cluttersome. Introducing sub-directories should be thoughtfully planned.
 
-## CHANGLOG
+## CHANGELOG
 
-The changelog is automatically generated with the command:
+The CHANGELOG is automatically generated with the command:
 
 ```bash
 make generate_changelog
