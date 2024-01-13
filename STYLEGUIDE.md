@@ -27,9 +27,36 @@ The CHANGELOG is automatically generated with the command:
 make generate_changelog
 ```
 
-Always, always, **always** make sure to do this as the last step before submitting a
-PR. Any PR where the CHANGELOG isn't updated should have that change requested by
-reviewers.
+Always, always, **always** make sure to do this as the last step before requesting a
+PR review. Any PR where the CHANGELOG isn't updated should have that change requested
+by reviewers.
+
+**! Note:** For best results, run the command and commit the change after opening a draft
+PR, or after marking your PR ready for review. This seems to produce the most accurate
+results in the log.
+
+## Pull-Request Naming
+
+PR naming is kind of important, for reasons I'll later point out.
+
+- First letter should be capitalized.
+- No period at the end necessary.
+- Should be no langer than a brief sentence.
+
+Names should begin with one of the following *present-tense* verbs:
+- Add, Create
+- Change, Refactor, Update, Move
+- Deprecate
+- Remove, Delete
+- Fix
+- Secure
+
+One reason for the above, is the CHANGELOG generator looks for these terms, and then
+will categorize the merge commits accordingly. The second reason is that it makes
+git log searching much easier and more reliable.
+
+Naming of individual branch commits don't adhere to any specific requirements, just
+don't go too wild.
 
 ## Makefile
 
