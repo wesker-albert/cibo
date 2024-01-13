@@ -21,7 +21,7 @@ section_regexps = [
 
 body_process = ReSub(r'((^|\n)[A-Z]\w+(-\w+)*: .*(\n\s+.*)*)+$', r'') | strip
 
-tag_filter_regexp = r'^[0-9]+\.[0-9]+(\.[0-9]+)?$'
+tag_filter_regexp = r'^[0-9]+\.[0-9]+(\.[0-9]+)?'
 
 unreleased_version_label = "[Unreleased]"
 
