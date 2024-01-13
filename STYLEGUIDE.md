@@ -76,7 +76,21 @@ In-code disabling of linting or checking rules is highly frowned upon. Very, ver
 seldomly it may be necessary, primarily due to bugs or limitations with the tools we
 use. Explore all avenues to avoid it, however.
 
-Docstrings are enforced (with the exception of tests) and follow the Google style
-standard. You can quickly generate a docstring template by typing ` ``` ` followed by
+### Docstrings
+
+Docstrings are enforced (with the exception of tests) and follow Google-style
+templating.
+
+You can quickly generate a docstring template by typing ` ``` ` followed by
 pressing `Enter`. A blank template will be generated, which includes existing args,
 returns, and raises if performed below a method.
+
+One-line docstrings are acceptable for classes, exceptions, and simple methods that
+require no more than one argument.
+
+### Comments
+
+Comments are encouraged at developer discretion. If a comment helps explain some
+unusual concept or chain of code, go for it. Just don't comment every single step in
+a module. As much as this repository should be friendly to those looking to learn,
+code-coddling shouldn't necessary.
