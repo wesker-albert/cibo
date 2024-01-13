@@ -10,7 +10,7 @@ ignore_regexps = [
 ]
 
 section_regexps = [
-    ('Added', [r'^([aA]dd|[nN]ew|[cC]reate)\s*']),
+    ('Added', [r'^([aA]dd|[cC]reate)\s*']),
     ('Changed', [r'^([cC]hange|[rR]efactor|[uU]pdate|[mM]ove)\s*']),
     ('Deprecated', [r'^[dD]eprecate\s*']),
     ('Removed', [r'^([rR]emove|[dD]elete)\s*']),
