@@ -1,5 +1,5 @@
-.PHONY: init init_poetry python test_all test_verbose coverage safety_check \
-	lint type_check formatting test coverage_ci start
+.PHONY: init init_poetry python test_all test_verbose coverage generate_changelog \
+	safety_check lint type_check formatting test coverage_ci start
 
 .DEFAULT_GOAL := init
 
@@ -34,7 +34,7 @@ coverage:
 	@rm .coverage
 
 generate_changelog:
-	gitchangelog | tee CHANGELOG.md
+	GITCHANGELOG_CONFIG_FILENAME=./.gitchangelog/.gitchangelog.rc gitchangelog | tee CHANGELOG.md
 
 
 # Quality Control

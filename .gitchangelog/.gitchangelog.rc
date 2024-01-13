@@ -27,7 +27,7 @@ unreleased_version_label = "[Unreleased]"
 
 revs = []
 
-output_engine = mustache(".gitchangelog.tpl")
+output_engine = mustache("./.gitchangelog/.gitchangelog.tpl")
 
 include_merge = True
 

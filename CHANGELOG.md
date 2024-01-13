@@ -34,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Other
 
+- [Finalize changelog template.](https://github.com/wesker-albert/cibo/commit/23c48a7334c6926a78a0a14887bf4d135937c4f0)
 - [Unplanned directory and filename reorg (#38)](https://github.com/wesker-albert/cibo/commit/cc01986e791eca0fda79f65cd4f217c7a0c4656b)
 - [Clean up imports (#36)](https://github.com/wesker-albert/cibo/commit/b8fa727500ab0ec5c732e29a939362015467f0a1)
 - [Look at items and NPCs (#33)](https://github.com/wesker-albert/cibo/commit/0610c37d3fe81317229d3024151780d292e482ba)
