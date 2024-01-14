@@ -13,11 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: 'Generate Token'
+      uses: actions/create-github-app-token@v1
+      id: token-generator
+      with:
+        app-id: ${{ secrets.TOKEN_GENERATOR_APP_ID }}
+        private-key: ${{ secrets.TOKEN_GENERATOR_PRIVATE_KEY }}
+
     - name: 'Checkout Branch'
       uses: actions/checkout@v4
       with:
         ref: master
         fetch-depth: 0
+        token: ${{ steps.token-generator.outputs.token }}
 
     - name: 'Initialize Environment'
       uses: ./.github/actions/initialize-environment
@@ -25,13 +33,6 @@ jobs:
     - name: 'Generate Changelog'
       run: |
         make generate_changelog
-
-    - name: 'Generate Token'
-      uses: actions/create-github-app-token@v1
-      id: token-generator
-      with:
-        app-id: ${{ secrets.TOKEN_GENERATOR_APP_ID }}
-        private-key: ${{ secrets.TOKEN_GENERATOR_PRIVATE_KEY }}
 
     - uses: GuillaumeFalourd/git-commit-push@v1.3
       with:
