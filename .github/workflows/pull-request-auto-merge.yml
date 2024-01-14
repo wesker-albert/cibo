@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   merge:
-    name: 'Run'
+    name: 'Evaluate'
     runs-on: ubuntu-latest
 
     steps:
