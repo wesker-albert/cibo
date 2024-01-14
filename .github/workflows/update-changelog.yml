@@ -3,13 +3,15 @@ name: 'Update Changelog'
 on:
   pull_request:
     types: [closed]
+  release:
+    types: [published]
 
 permissions:
   contents: write
 
 jobs:
   push-updated-changelog:
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true || github.event_name == 'release'
     name: "Update Changelog"
     runs-on: ubuntu-latest
 
