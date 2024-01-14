@@ -21,19 +21,8 @@ cluttersome. Introducing sub-directories should be thoughtfully planned, and dis
 
 ## CHANGELOG
 
-The CHANGELOG is automatically generated with the command:
-
-```bash
-make generate_changelog
-```
-
-Always, always, **always** make sure to do this as the last step before requesting a
-PR review. Any PR where the CHANGELOG isn't updated should have that change requested
-by reviewers.
-
-**! Note:** For best results, run the command and commit the change after opening a draft
-PR, or after marking your PR ready for review. This seems to produce the most accurate
-results in the log.
+The CHANGELOG is automatically generated  when a PR is merged to `master`, or a new
+release is published. Don't worry about updating it manually.
 
 ## Pull-Request Naming
 
