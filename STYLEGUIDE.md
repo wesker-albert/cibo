@@ -21,7 +21,7 @@ cluttersome. Introducing sub-directories should be thoughtfully planned, and dis
 
 ## CHANGELOG
 
-The CHANGELOG is automatically generated  when a PR is merged to `master`, or a new
+The CHANGELOG is automatically generated when a PR is merged to `master`, or a new
 release is published. Don't worry about updating it manually.
 
 ## Pull-Request Naming
