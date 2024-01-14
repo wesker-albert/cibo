@@ -1,23 +1,32 @@
 name: 'Release Published'
 
 on:
-  release:
-    types: [published]
+  pull_request:
+    types: [closed]
 
 permissions:
-  pull-requests: write
   contents: write
 
 jobs:
-  release-published:
+  push-updated-changelog:
+    if: github.event.pull_request.merged == true
+    name: "Update Changelog"
     runs-on: ubuntu-latest
 
     steps:
+    - name: 'Generate Token'
+      uses: actions/create-github-app-token@v1
+      id: token-generator
+      with:
+        app-id: ${{ secrets.TOKEN_GENERATOR_APP_ID }}
+        private-key: ${{ secrets.TOKEN_GENERATOR_PRIVATE_KEY }}
+
     - name: 'Checkout Branch'
       uses: actions/checkout@v4
       with:
         ref: master
         fetch-depth: 0
+        token: ${{ steps.token-generator.outputs.token }}
 
     - name: 'Initialize Environment'
       uses: ./.github/actions/initialize-environment
@@ -26,13 +35,8 @@ jobs:
       run: |
         make generate_changelog
 
-    - name: 'Create Pull Request'
-      uses: peter-evans/create-pull-request@v5
-      with: 
-        commit-message: 'update changelog'
-        branch: automated-update-changelog
-        title: 'Update CHANGELOG !automated'
-        body: 'Contains automated changes, generated when a new release is published'
-        labels: |
-          automated
-          merge
+    - uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'Update Changelog !automated'
+        branch: master
+        commit_user_name: '[AI] The Red Queen'
