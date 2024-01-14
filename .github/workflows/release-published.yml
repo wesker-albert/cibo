@@ -2,13 +2,14 @@ name: 'Release Published'
 
 on:
   pull_request:
-    types: [synchronize]
+    types: [closed]
 
 permissions:
   contents: write
 
 jobs:
   push-updated-changelog:
+    if: github.event.pull_request.merged == true
     name: "Update Changelog"
     runs-on: ubuntu-latest
 
