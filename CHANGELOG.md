@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
+- [Fix Workflow Name (#45)](https://github.com/wesker-albert/cibo/commit/747a4d0c7d5d21bc1b2121ae23f3ccc4e425130a)
 - [Fix Release Workflow (#42)](https://github.com/wesker-albert/cibo/commit/ee41f190c6b273a99408dbb3bee902f97334a31f)
 
 ## [1.0.0-pre-alpha.1] - 2024-01-12
