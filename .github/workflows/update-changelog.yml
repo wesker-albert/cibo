@@ -1,15 +1,17 @@
-name: 'Release Published'
+name: 'Update Changelog'
 
 on:
   pull_request:
     types: [closed]
+  release:
+    types: [published]
 
 permissions:
   contents: write
 
 jobs:
   push-updated-changelog:
-    if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true || github.event_name == 'release'
     name: "Update Changelog"
     runs-on: ubuntu-latest
 
@@ -35,8 +37,8 @@ jobs:
       run: |
         make generate_changelog
 
-    - uses: stefanzweifel/git-auto-commit-action@v5
+    - name: 'Push Changes'
+      uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: 'Update Changelog !automated'
         branch: master
-        commit_user_name: '[AI] The Red Queen'
