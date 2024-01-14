@@ -35,6 +35,7 @@ jobs:
 
     - uses: GuillaumeFalourd/git-commit-push@v1.3
       with:
+          target_branch: master
           commit_message: 'Update CHANGELOG !automated'
           files: CHANGELOG.md
           access_token: ${{ steps.token-generator.outputs.token }}
