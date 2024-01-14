@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- [Add Github App Integration (#44)](https://github.com/wesker-albert/cibo/commit/79ea4c485b734fc7f51b8b7c7d355fc711d42b37)
 - [Add Published Release Workflow (#41)](https://github.com/wesker-albert/cibo/commit/f0e621723ad42ec4857090b8ecc2d5724f354cf6)
 - [Add CHANGELOG, LICENSE, and STYLEGUIDE (#39)](https://github.com/wesker-albert/cibo/commit/a53a2bd4d8a38fca100c82fee837d2b3c27d1c20)
 
