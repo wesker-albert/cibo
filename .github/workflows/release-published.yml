@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  release-oublished:
+  release-published:
     runs-on: ubuntu-latest
 
     steps:
