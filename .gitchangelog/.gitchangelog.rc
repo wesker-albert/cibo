@@ -1,10 +1,8 @@
 # -*- coding: utf-8; mode: python -*-
 
 ignore_regexps = [
-    r'!minor',
-    r'!cosmetic',
-    r'!refactor',
-    r'!wip',
+    r'!ignore',
+    r'!automated',
     r'^(.{3,3}\s*:)?\s*[fF]irst commit.?\s*$',
     r'^$'
 ]
