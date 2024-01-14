@@ -1,8 +1,8 @@
 name: 'Release Published'
 
 on:
-  release:
-    types: [published]
+  pull_request:
+    types: [synchronize]
 
 permissions:
   contents: write
@@ -35,8 +35,6 @@ jobs:
 
     - uses: GuillaumeFalourd/git-commit-push@v1.3
       with:
-          email: ${{ github.actor }}@users.noreply.github.com
-          name: ${{ github.actor }}
           commit_message: 'Update CHANGELOG !automated'
           files: CHANGELOG.md
           access_token: ${{ steps.token-generator.outputs.token }}
