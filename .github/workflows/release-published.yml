@@ -38,5 +38,4 @@ jobs:
       with:
           target_branch: master
           commit_message: 'Update CHANGELOG !automated'
-          files: CHANGELOG.md
           access_token: ${{ steps.token-generator.outputs.token }}
