@@ -34,8 +34,7 @@ jobs:
       run: |
         make generate_changelog
 
-    - uses: GuillaumeFalourd/git-commit-push@v1.3
+    - uses: stefanzweifel/git-auto-commit-action@v5
       with:
-          target_branch: master
-          commit_message: 'Update CHANGELOG !automated'
-          access_token: ${{ steps.token-generator.outputs.token }}
+        commit_message: 'Update Changelog !automated'
+        branch: master
