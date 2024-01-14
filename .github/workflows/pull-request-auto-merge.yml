@@ -1,0 +1,21 @@
+name: 'Auto-Merge Pull Request'
+
+on:
+  pull_request:
+    types: [synchronize]
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 'Validate PR'
+      uses: squalrus/merge-bot@v0.4.5
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        test: true
+        reviewers: false
+        labels: automated, merge
+        checks_enabled: true
+        method: squash
+        delete_source_branch: true

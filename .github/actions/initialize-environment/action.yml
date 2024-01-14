@@ -1,0 +1,24 @@
+name: 'Initialize Environment'
+description: 'Installs poetry, python, and dependencies.'
+
+runs:
+  using: 'composite'
+
+  steps:
+    - name: 'Install Poetry'
+      shell: bash
+      run: |
+        pipx install poetry==1.5.1
+
+    - name: 'Setup Python'
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11.4
+        cache: poetry
+        cache-dependency-path: |
+          poetry.lock
+
+    - name: 'Install Dependencies'
+      shell: bash
+      run: |
+        poetry install

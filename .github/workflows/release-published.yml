@@ -1,0 +1,31 @@
+name: 'Update Changelog'
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  push-changelog-to-master:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 'Checkout Branch'
+      uses: actions/checkout@v4
+
+    - name: 'Initialize Environment'
+      uses: ./.github/actions/initialize-environment
+
+    - name: 'Generate Changelog'
+      run: |
+        make generate_changelog
+
+    - name: 'Create Pull Request'
+      uses: peter-evans/create-pull-request@v5
+      with: 
+        commit-message: 'update changelog'
+        branch: automated-update-changelog
+        title: 'Update CHANGELOG !automated'
+        body: 'Contains automated changes, generated when a new release is published'
+        labels: |
+          automated
+          merge
