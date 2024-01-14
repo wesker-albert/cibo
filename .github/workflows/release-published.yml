@@ -33,8 +33,10 @@ jobs:
         app-id: ${{ secrets.TOKEN_GENERATOR_APP_ID }}
         private-key: ${{ secrets.TOKEN_GENERATOR_PRIVATE_KEY }}
 
-    - name: 'Push Changes'
-      uses: CasperWA/push-protected@v2
+    - uses: GuillaumeFalourd/git-commit-push@v1.3
       with:
-        token: ${{ steps.token-generator.outputs.token }}
-        branch: master
+          email: ${{ github.actor }}@users.noreply.github.com
+          name: ${{ github.actor }}
+          commit_message: 'Update CHANGELOG !automated'
+          files: CHANGELOG.md
+          access_token: ${{ steps.token-generator.outputs.token }}
