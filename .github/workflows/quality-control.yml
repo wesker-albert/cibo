@@ -9,7 +9,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  lint-format-test:
+  run-suite:
     name: "Run Suite"
     runs-on: ubuntu-latest
 

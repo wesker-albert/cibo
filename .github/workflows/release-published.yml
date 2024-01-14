@@ -5,11 +5,11 @@ on:
     types: [published]
 
 permissions:
-  pull-requests: write
   contents: write
 
 jobs:
-  release-published:
+  push-updated-changelog:
+    name: "Update Changelog"
     runs-on: ubuntu-latest
 
     steps:
@@ -26,13 +26,15 @@ jobs:
       run: |
         make generate_changelog
 
-    - name: 'Create Pull Request'
-      uses: peter-evans/create-pull-request@v5
-      with: 
-        commit-message: 'update changelog'
-        branch: automated-update-changelog
-        title: 'Update CHANGELOG !automated'
-        body: 'Contains automated changes, generated when a new release is published'
-        labels: |
-          automated
-          merge
+    - name: 'Generate Token'
+      uses: actions/create-github-app-token@v1
+      id: token-generator
+      with:
+        app-id: ${{ secrets.TOKEN_GENERATOR_APP_ID }}
+        private-key: ${{ secrets.TOKEN_GENERATOR_PRIVATE_KEY }}
+
+    - name: 'Push Changes'
+      uses: CasperWA/push-protected@v2
+      with:
+        token: ${{ steps.token-generator.outputs.token }}
+        branch: master
