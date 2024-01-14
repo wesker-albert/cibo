@@ -38,3 +38,4 @@ jobs:
       with:
         commit_message: 'Update Changelog !automated'
         branch: master
+        commit_user_name: '[AI] The Red Queen'
