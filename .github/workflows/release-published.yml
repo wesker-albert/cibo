@@ -5,7 +5,7 @@ on:
     types: [published]
 
 jobs:
-  push-changelog-to-master:
+  release-oublished:
     runs-on: ubuntu-latest
 
     steps:

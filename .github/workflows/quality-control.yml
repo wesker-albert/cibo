@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   lint-format-test:
+    name: "Run"
     runs-on: ubuntu-latest
 
     steps:

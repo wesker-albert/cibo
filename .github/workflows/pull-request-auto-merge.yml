@@ -1,11 +1,16 @@
-name: 'Auto-Merge Pull Request'
+name: 'Auto-Merge'
 
 on:
   pull_request:
     types: [synchronize]
 
+permissions:
+    contents: read
+    pull-requests: write
+
 jobs:
   merge:
+    name: 'Run'
     runs-on: ubuntu-latest
 
     steps:
