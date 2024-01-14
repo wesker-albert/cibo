@@ -35,10 +35,10 @@ coverage:
 
 generate_changelog:
 	@GITCHANGELOG_CONFIG_FILENAME=./.gitchangelog/.gitchangelog.rc \
-		gitchangelog | tee CHANGELOG.md
+		poetry run gitchangelog | tee CHANGELOG.md
 
 generate_version:
-	@dunamai from git --bump --no-metadata \
+	@poetry run dunamai from git --bump --no-metadata \
 	--pattern "^(?P<base>\d+(\.\d+)*)([-]?(?P<stage>[a-zA-Z-]+))(\.)(?P<revision>[0-9]+)" \
 	--format "{base}-{stage}.{revision}"
 
