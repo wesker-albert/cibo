@@ -29,10 +29,6 @@ jobs:
         ref: '1.0.0-pre-alpha.2'
         fetch-depth: 0
         token: ${{ steps.token-generator.outputs.token }}
-    
-    - name: 'Pull Tags'
-      run: |
-        git pull --tags -f
 
     - name: 'Initialize Environment'
       uses: ./.github/actions/initialize-environment
@@ -46,6 +42,9 @@ jobs:
       with:
         commit_message: 'Update Changelog (!automated)'
         branch: '1.0.0-pre-alpha.2'
+        skip_dirty_check: true    
+        skip_fetch: true    
+        skip_checkout: true
 
   release-update-changelog:
     if: github.event_name == 'release'
