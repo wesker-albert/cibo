@@ -2,7 +2,7 @@ name: 'Quality Control'
 
 on: 
   pull_request:
-    types: [synchronize]
+    types: [opened, synchronize]
 
 permissions:
   contents: read
