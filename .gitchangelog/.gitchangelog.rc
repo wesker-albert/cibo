@@ -8,11 +8,11 @@ ignore_regexps = [
 ]
 
 section_regexps = [
-    ('Added', [r'^([aA]dd|[cC]reate)\s*']),
-    ('Changed', [r'^([cC]hange|[rR]efactor|[uU]pdate|[mM]ove)\s*']),
+    ('Added', [r'^([aA]dd|[cC]reate|[iI]mplement)\s*']),
+    ('Changed', [r'^([cC]hange|[rR]efactor|[uU]pdate|[mM]ove|[rR]evise)\s*']),
     ('Deprecated', [r'^[dD]eprecate\s*']),
     ('Removed', [r'^([rR]emove|[dD]elete)\s*']),
-    ('Fixed', [r'^[fF]ix\s*']),
+    ('Fixed', [r'^([fF]ix|[rR]epair)\s*']),
     ('Security', [r'^[sS]ecure\s*']),
     ('Other', None)
 ]

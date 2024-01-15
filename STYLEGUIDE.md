@@ -47,11 +47,11 @@ Including the substrings `!ignore` or `!automated` will result in the PR not sho
 up in the CHANGELOG.
 
 **Names should begin with one of the following *present-tense* verbs**:
-- Add, Create
-- Change, Refactor, Update, Move
+- Add, Create, Implement
+- Change, Refactor, Update, Move, Revise
 - Deprecate
 - Remove, Delete
-- Fix
+- Fix, Repair
 - Secure
 
 One reason for the above, is the CHANGELOG generator looks for these terms, and then
