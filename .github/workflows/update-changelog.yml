@@ -38,6 +38,7 @@ jobs:
         make generate_changelog
 
     - name: 'Push Changes'
+      if: success()
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: 'Update Changelog (!automated)'
@@ -71,12 +72,14 @@ jobs:
         make generate_changelog
 
     - name: 'Push Changes'
+      if: success()
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: 'Update Changelog (!automated)'
         branch: master
 
     - name: 'Retag Release'
+      if: success()
       uses: EndBug/latest-tag@latest
       with:
         ref: ${{ github.event.release.tag_name }}
