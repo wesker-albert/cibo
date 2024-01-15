@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- [Revise README and STYLEGUIDE (#48)](https://github.com/wesker-albert/cibo/commit/be804142b49d319bdde7baf4460aa717a712d11f)
+
 ## [1.0.0-pre-alpha.2] - 2024-01-15
 
 ### Added
