@@ -29,6 +29,10 @@ jobs:
         ref: '1.0.0-pre-alpha.2'
         fetch-depth: 0
         token: ${{ steps.token-generator.outputs.token }}
+    
+    - name: 'Pull Tags'
+      run: |
+        git pull --tags -f
 
     - name: 'Initialize Environment'
       uses: ./.github/actions/initialize-environment
