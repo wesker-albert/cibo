@@ -10,8 +10,8 @@ permissions:
   contents: write
 
 jobs:
-  pull-request-update-changelog:
-    if: github.event_name == 'pull_request' || github.event.pull_request.merged == true
+  update-changelog:
+    if: github.event.pull_request.merged == true || github.event_name == 'release'
     name: "Update Changelog"
     runs-on: ubuntu-latest
 
@@ -44,42 +44,8 @@ jobs:
         commit_message: 'Update Changelog (!automated)'
         branch: master
 
-  release-update-changelog:
-    if: github.event_name == 'release'
-    name: "Update Changelog (Release)"
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: 'Generate Token'
-      uses: actions/create-github-app-token@v1
-      id: token-generator
-      with:
-        app-id: ${{ secrets.TOKEN_GENERATOR_APP_ID }}
-        private-key: ${{ secrets.TOKEN_GENERATOR_PRIVATE_KEY }}
-
-    - name: 'Checkout Branch'
-      uses: actions/checkout@v4
-      with:
-        ref: master
-        fetch-depth: 0
-        token: ${{ steps.token-generator.outputs.token }}
-
-    - name: 'Initialize Environment'
-      uses: ./.github/actions/initialize-environment
-
-    - name: 'Generate Changelog'
-      run: |
-        make generate_changelog
-
-    - name: 'Push Changes'
-      if: success()
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: 'Update Changelog (!automated)'
-        branch: master
-
     - name: 'Retag Release'
-      if: success()
+      if: github.event_name == 'release' && success()
       uses: EndBug/latest-tag@latest
       with:
         ref: ${{ github.event.release.tag_name }}
