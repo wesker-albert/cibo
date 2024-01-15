@@ -30,5 +30,5 @@ about but haven't gotten the professional opportunity to try.
 
 ## Current state:
 
-All changes can now be viewed in the [CHANGELOG](https://github.com/wesker-albert/cibo/CHANGELOG.md),
+All changes can now be viewed in the [CHANGELOG](CHANGELOG.md),
 which is automatically generated in-house via a fork of [gitchangelog](https://github.com/wesker-albert/gitchangelog).

@@ -1,6 +1,6 @@
 # Style Guide
 
-Nitpicking is welcomed and encouraged, just as much as pushback.
+Nitpicking is welcomed and encouraged, and so is pushback.
 
 ## General Principles
 
@@ -10,14 +10,25 @@ Nitpicking is welcomed and encouraged, just as much as pushback.
 existing patterns, please suggest them.
 - Always be ` a e s t h e t i c `.
 
+## Editor
+
+This project is fully intended to be worked on using VS Code.
+
+We leverage dev containers to make sure the local dev environment is clean and
+homogenous. There are also a bunch of meticulously curated stylistic settings, rules
+and recommended extensions included.
+
+Please use VS Code when interacting with this project.
+
 ## File Structure
 
 We don't like huge monolithic files here. We prefer thoughtful, bitesized files that
 preferably contain reusable patterns. With the exception of text or JSON documents,
-and within reason, please try to keep lines of code under 300 per file.
+and within reason, please try to keep under 300 lines of code per file.
 
 Directory structure is also preferred to be kept as flat as possible, without being
-cluttersome. Introducing sub-directories should be thoughtfully planned, and discussed.
+cluttersome. Introducing sub-directories should be thoughtfully planned, and
+discussed.
 
 ## CHANGELOG
 
@@ -28,24 +39,26 @@ release is published. Don't worry about updating it manually.
 
 PR naming is kind of important, for reasons I'll later point out.
 
-- First letter should be capitalized.
-- No period at the end necessary.
-- Should be no langer than a brief sentence.
+- Follow [APA-style title case](https://apastyle.apa.org/style-grammar-guidelines/capitalization/title-case).
+- No period at the end.
+- No longer than a brief sentence.
 
-Names should begin with one of the following *present-tense* verbs:
-- Add, Create
-- Change, Refactor, Update, Move
+Including the substrings `!ignore` or `!automated` will result in the PR not showing
+up in the CHANGELOG.
+
+**Names should begin with one of the following *present-tense* verbs**:
+- Add, Create, Implement
+- Change, Refactor, Update, Move, Revise
 - Deprecate
 - Remove, Delete
-- Fix
+- Fix, Repair
 - Secure
 
 One reason for the above, is the CHANGELOG generator looks for these terms, and then
-will categorize the merge commits accordingly. The second reason is that it makes
-git log searching much easier and more reliable.
+will [categorize the merge commits](.gitchangelog/.gitchangelog.rc#L10-L18)
+accordingly.
 
-Naming of individual branch commits don't adhere to any specific requirements, just
-don't go too wild.
+Another reason is that it makes git log searching much easier and more reliable.
 
 ## Makefile
 
@@ -53,13 +66,13 @@ Make the Makefile work for you. If you find you're constantly reusing a specific
 terminal command while working in this repository, it may be a good addition and
 useful alias for others.
 
-
 ## Python
 
 OOP is king.
 
 This project leverages some pretty strong automated linting, formatting, and type
-checking libraries. PR requests should be denied if there are any failures within.
+checking libraries. Pull requests will not pass checks if there are any failures
+within.
 
 In-code disabling of linting or checking rules is highly frowned upon. Very, very
 seldomly it may be necessary, primarily due to bugs or limitations with the tools we
