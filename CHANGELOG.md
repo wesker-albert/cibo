@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0-pre-alpha.2] - 2024-01-15
+## [Unreleased]
 
 ### Added
 
@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
+- [Fix Changelog Push Branch Target (#47)](https://github.com/wesker-albert/cibo/commit/ef1fd4b59dbc086ec995bd691d8075ff9b6371a8)
 - [Fix Workflow Name (#45)](https://github.com/wesker-albert/cibo/commit/747a4d0c7d5d21bc1b2121ae23f3ccc4e425130a)
 - [Fix Release Workflow (#42)](https://github.com/wesker-albert/cibo/commit/ee41f190c6b273a99408dbb3bee902f97334a31f)
 
