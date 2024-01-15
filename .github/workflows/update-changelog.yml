@@ -41,8 +41,7 @@ jobs:
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: 'Update Changelog (!automated)'
-        branch: master
-        tagging_message: '1.0.0-pre-alpha.2'
+        branch: '1.0.0-pre-alpha.2'
 
   release-update-changelog:
     if: github.event_name == 'release'
