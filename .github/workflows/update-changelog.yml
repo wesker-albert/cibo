@@ -26,7 +26,7 @@ jobs:
     - name: 'Checkout Branch'
       uses: actions/checkout@v4
       with:
-        ref: '1.0.0-pre-alpha.2'
+        ref: master
         fetch-depth: 0
         token: ${{ steps.token-generator.outputs.token }}
 
@@ -39,12 +39,17 @@ jobs:
 
     - name: 'Push Changes'
       uses: stefanzweifel/git-auto-commit-action@v5
+      id: auto-commit
       with:
         commit_message: 'Update Changelog (!automated)'
-        branch: '1.0.0-pre-alpha.2'
-        skip_dirty_check: true    
-        skip_fetch: true    
-        skip_checkout: true
+        branch: master
+
+    - name: 'Update Tag'
+      if: steps.auto-commit.outputs.changes_detected == 'true'
+      run: |
+        git fetch —tags -f
+        git tag -f 1.0.0-pre-alpha.2 ${{ steps.auto-commit.outputs.commit_hash }}
+        git push origin 1.0.0-pre-alpha.2 --force
 
   release-update-changelog:
     if: github.event_name == 'release'
