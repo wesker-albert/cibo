@@ -26,7 +26,7 @@ class Open(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def _missing_args_message(self, player_name: str) -> Tuple[Message, Message]:
+    def _missing_args_message(self, user_name: str) -> Tuple[Message, Message]:
         """No arguments were provided."""
 
         return (
@@ -34,7 +34,7 @@ class Open(Action):
                 "You open your mouth and let out a loud belch. If anyone else is in "
                 "the room, they probably heard it..."
             ),
-            Message(f"[cyan]{player_name}[/] burps loudly. How disgusting..."),
+            Message(f"[cyan]{user_name}[/] burps loudly. How disgusting..."),
         )
 
     @property
@@ -49,13 +49,13 @@ class Open(Action):
         return Message(f"{door_name.capitalize()} is locked.")
 
     def _opening_door_message(
-        self, player_name: str, door_name: str
+        self, user_name: str, door_name: str
     ) -> Tuple[Message, Message, Message]:
         """Successfully opening the door."""
 
         return (
             Message(f"You open {door_name}."),
-            Message(f"[cyan]{player_name}[/] opens {door_name}."),
+            Message(f"[cyan]{user_name}[/] opens {door_name}."),
             Message(f"{door_name.capitalize()} opens."),
         )
 
@@ -72,19 +72,19 @@ class Open(Action):
             if not args:
                 raise ActionMissingArguments
 
-            room = self.rooms.get_by_id(client.player.current_room_id)
+            room = self.rooms.get_by_id(client.user.current_room_id)
             exit_ = room.get_direction_exit(args[0])
             door = self.doors.get_by_room_ids(room.id_, exit_.id_)
 
             door.raise_status()
 
         except ActionMissingArguments:
-            missing_args_message = self._missing_args_message(client.player.name)
+            missing_args_message = self._missing_args_message(client.user.name)
 
             self.comms.send_to_vicinity(
                 MessageRoute(missing_args_message[0], client=client),
                 MessageRoute(
-                    missing_args_message[1], ids=[client.player.current_room_id]
+                    missing_args_message[1], ids=[client.user.current_room_id]
                 ),
             )
 
@@ -110,7 +110,7 @@ class Open(Action):
             door.open_()
 
             opening_door_message = self._opening_door_message(
-                client.player.name, door.name
+                client.user.name, door.name
             )
 
             self.comms.send_to_vicinity(

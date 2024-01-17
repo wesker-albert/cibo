@@ -1,18 +1,18 @@
-"""Register a new player with the server."""
+"""Register a new user with the server."""
 
 from typing import List
 
 from marshmallow import ValidationError
 
 from cibo.actions._base_ import Action
-from cibo.exceptions import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotFound
+from cibo.exceptions import ClientIsLoggedIn, UserAlreadyExists, UserNotFound
 from cibo.models.client import Client
-from cibo.models.data.player import Player, PlayerSchema
+from cibo.models.data.user import User, UserSchema
 from cibo.models.message import Message, MessageRoute
 
 
 class Register(Action):
-    """Register a new player with the server."""
+    """Register a new user with the server."""
 
     def aliases(self) -> List[str]:
         return ["register"]
@@ -22,7 +22,7 @@ class Register(Action):
 
     @property
     def _is_logged_in_message(self) -> Message:
-        """Player is already logged in."""
+        """User is already logged in."""
 
         return Message(
             "You register to vote, even though both candidates aren't that great."
@@ -33,79 +33,79 @@ class Register(Action):
         """Provided registration info is invalid."""
 
         return Message(
-            "[bright_red]Your player name or password don't meet criteria.[/]\n\n"
+            "[bright_red]Your user name or password don't meet criteria.[/]\n\n"
             "Names must be 3-15 chars and only contain letters, numbers, or "
             "underscores. They are case-sensitive.\n\n"
             "Passwords must be minimum 8 chars.\n\n"
             "Please [green]register[/] again."
         )
 
-    def _player_already_exists_message(self, player_name: str) -> Message:
-        """Player name is already taken."""
+    def _user_already_exists_message(self, user_name: str) -> Message:
+        """User name is already taken."""
 
         return Message(
-            f"Sorry, turns out the name [cyan]{player_name}[/] is already taken. "
+            f"Sorry, turns out the name [cyan]{user_name}[/] is already taken. "
             "Please [green]register[/] again with a different name."
         )
 
-    def _confirm_finalize_message(self, player_name: str) -> Message:
-        """Ask the client to finalize the player registration."""
+    def _confirm_finalize_message(self, user_name: str) -> Message:
+        """Ask the client to finalize the user registration."""
 
         return Message(
-            "Are you sure you want to create the player named "
-            f"[cyan]{player_name}[/]?\n\n"
-            "Type [green]finalize[/] to finalize the player creation. "
+            "Are you sure you want to create the user named "
+            f"[cyan]{user_name}[/]?\n\n"
+            "Type [green]finalize[/] to finalize the user creation. "
             "If you want to use a different name or password, you can "
             "[green]register[/] again.\n\n"
             "Otherwise, feel free to [green]login[/] to an already "
-            "existing player."
+            "existing user."
         )
 
-    def _validate_player_info(self, name: str, password: str) -> None:
-        """Validates the supplied player information, to see if it follows the
+    def _validate_user_info(self, name: str, password: str) -> None:
+        """Validates the supplied user information, to see if it follows the
         requirements established by the schema.
 
         Args:
-            name (str): The player name to validate.
+            name (str): The user name to validate.
             password (str): The password to validate.
         """
 
-        Player(name=name, password=password).validate(PlayerSchema)
+        User(name=name, password=password).validate(UserSchema)
 
-    def _check_for_existing_player(self, player_name: str) -> None:
-        """Checks to see if a player already exists witht the provided name.
+    def _check_for_existing_user(self, user_name: str) -> None:
+        """Checks to see if a user already exists witht the provided name.
 
         Args:
-            player_name (str): The name to check against.
+            user_name (str): The name to check against.
 
         Raises:
-            PlayerAlreadyExists: A player with that name exists.
+            UserAlreadyExists: A user with that name exists.
         """
 
-        _existing_player = Player.get_by_name(player_name)
+        _existing_user = User.get_by_name(user_name)
 
-        raise PlayerAlreadyExists
+        raise UserAlreadyExists
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
         try:
             if client.is_logged_in:
                 raise ClientIsLoggedIn
 
-            player_name = args[0]
+            user_name = args[0]
             password = args[1]
 
-            self._validate_player_info(player_name, password)
-            self._check_for_existing_player(player_name)
+            self._validate_user_info(user_name, password)
+            self._check_for_existing_user(user_name)
 
         except ClientIsLoggedIn:
             self.comms.send_to_client(
                 MessageRoute(self._is_logged_in_message, client=client)
             )
 
-        except PlayerAlreadyExists:
+        except UserAlreadyExists:
             self.comms.send_to_client(
                 MessageRoute(
-                    self._player_already_exists_message(player_name), client=client
+                    self._user_already_exists_message(user_name), client=client
                 )
             )
 
@@ -114,15 +114,15 @@ class Register(Action):
                 MessageRoute(self._validation_error_message, client=client)
             )
 
-        except PlayerNotFound:
-            # a temporary Player model is set on the client, to be created in the db if
+        except UserNotFound:
+            # a temporary User model is set on the client, to be created in the db if
             # they call the Finalize action
-            client.registration = Player(
-                name=player_name,
+            client.registration = User(
+                name=user_name,
                 password=self._password_hasher.hash_(password),
                 current_room_id=1,
             )
 
             self.comms.send_to_client(
-                MessageRoute(self._confirm_finalize_message(player_name), client=client)
+                MessageRoute(self._confirm_finalize_message(user_name), client=client)
             )

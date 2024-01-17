@@ -1,4 +1,4 @@
-"""Log out of the current player session."""
+"""Log out of the current user session."""
 
 from time import sleep
 from typing import List, Tuple
@@ -11,7 +11,7 @@ from cibo.models.message import Message, MessageRoute
 
 
 class Logout(Action):
-    """Log out of the current player session."""
+    """Log out of the current user session."""
 
     def aliases(self) -> List[str]:
         return ["logout"]
@@ -19,8 +19,8 @@ class Logout(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def _logging_out_message(self, player_name: str) -> Tuple[Message, Message]:
-        """Successfully logging the player out."""
+    def _logging_out_message(self, user_name: str) -> Tuple[Message, Message]:
+        """Successfully logging the user out."""
 
         return (
             Message(
@@ -29,7 +29,7 @@ class Logout(Action):
             ),
             Message(
                 "A black van pulls up, and 2 large men in labcoats abduct "
-                f"[cyan]{player_name}[/]. The van speeds away. You wonder if "
+                f"[cyan]{user_name}[/]. The van speeds away. You wonder if "
                 "you'll ever see them again..."
             ),
         )
@@ -45,16 +45,16 @@ class Logout(Action):
             self.comms.send_prompt(client)
 
         else:
-            player_name = client.player.name
-            player_room = client.player.current_room_id
+            user_name = client.user.name
+            user_room = client.user.current_room_id
 
             client.log_out()
 
-            logging_out_message = self._logging_out_message(player_name)
+            logging_out_message = self._logging_out_message(user_name)
 
             self.comms.send_to_vicinity(
                 MessageRoute(logging_out_message[0], client=client, send_prompt=False),
-                MessageRoute(logging_out_message[1], ids=[player_room]),
+                MessageRoute(logging_out_message[1], ids=[user_room]),
             )
 
             sleep(sleep_time)

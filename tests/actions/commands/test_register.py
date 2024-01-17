@@ -25,7 +25,7 @@ class TestRegisterAction(RegisterActionFactory):
             )
         )
 
-    def test_action_register_process_player_already_exists(self, _fixture_database):
+    def test_action_register_process_user_already_exists(self, _fixture_database):
         self.register.process(self.client, "register", ["frank", "password"])
 
         self.comms.send_to_client.assert_called_with(
@@ -38,20 +38,20 @@ class TestRegisterAction(RegisterActionFactory):
             )
         )
 
-    def test_action_register_process_player_validation_error(self, _fixture_database):
+    def test_action_register_process_user_validation_error(self, _fixture_database):
         self.register.process(self.client, "register", ["jennifer", "123"])
 
         self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
-                    body="[bright_red]Your player name or password don't meet criteria.[/]\n\nNames must be 3-15 chars and only contain letters, numbers, or underscores. They are case-sensitive.\n\nPasswords must be minimum 8 chars.\n\nPlease [green]register[/] again.",
+                    body="[bright_red]Your user name or password don't meet criteria.[/]\n\nNames must be 3-15 chars and only contain letters, numbers, or underscores. They are case-sensitive.\n\nPasswords must be minimum 8 chars.\n\nPlease [green]register[/] again.",
                     **self.default_message_args,
                 ),
                 client=self.client,
             )
         )
 
-    def test_action_register_process_player_registered(self, _fixture_database):
+    def test_action_register_process_user_registered(self, _fixture_database):
         self.register.process(self.client, "register", ["jennifer", "password"])
 
         assert self.client.registration.name == "jennifer"
@@ -60,7 +60,7 @@ class TestRegisterAction(RegisterActionFactory):
         self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
-                    body="Are you sure you want to create the player named [cyan]jennifer[/]?\n\nType [green]finalize[/] to finalize the player creation. If you want to use a different name or password, you can [green]register[/] again.\n\nOtherwise, feel free to [green]login[/] to an already existing player.",
+                    body="Are you sure you want to create the user named [cyan]jennifer[/]?\n\nType [green]finalize[/] to finalize the user creation. If you want to use a different name or password, you can [green]register[/] again.\n\nOtherwise, feel free to [green]login[/] to an already existing user.",
                     **self.default_message_args,
                 ),
                 client=self.client,

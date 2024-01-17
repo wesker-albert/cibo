@@ -1,5 +1,5 @@
 """An item is an in-game piece of inventory, that can be picked up, carried, and
-often used by a player.
+often used by a user.
 """
 
 from dataclasses import dataclass

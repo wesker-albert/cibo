@@ -1,5 +1,5 @@
 """An item is an in-game piece of inventory, that can be picked up, carried, and
-often used by a player.
+often used by a user.
 
 This is a collection of all the items that exist in the world.
 """

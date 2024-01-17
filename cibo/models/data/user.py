@@ -1,5 +1,5 @@
-"""A Player represents a playable character, which a client logs into and assumes in
-order to interact with the world. Player information is persistent, allowing the client
+"""A User represents a playable character, which a client logs into and assumes in
+order to interact with the world. User information is persistent, allowing the client
 to resume their adventure where they left off.
 """
 
@@ -9,12 +9,12 @@ from typing import Self
 from marshmallow import Schema, fields, validate
 from peewee import AutoField, CharField, DoesNotExist, IntegerField, TextField
 
-from cibo.exceptions import PlayerNotFound
+from cibo.exceptions import UserNotFound
 from cibo.models.data._base_ import Model
 
 
-class Player(Model):
-    """Represents a human-controlled player character."""
+class User(Model):
+    """Represents a human-controlled user character."""
 
     id_ = AutoField()
     name = CharField(unique=True)
@@ -23,26 +23,26 @@ class Player(Model):
 
     @classmethod
     def get_by_name(cls, name: str) -> Self:
-        """Find a player by name, if they already exist.
+        """Find a user by name, if they already exist.
 
         Args:
-            name (str): The player name to search.
+            name (str): The user name to search.
 
         Returns:
-            Self: The player, if one exists with the given name.
+            Self: The user, if one exists with the given name.
         """
 
         try:
-            player: Self = cls.get(cls.name == name)
-            return player
+            user: Self = cls.get(cls.name == name)
+            return user
 
-        # a Player doesn't exist with the entered name
+        # a User doesn't exist with the entered name
         except DoesNotExist as ex:
-            raise PlayerNotFound from ex
+            raise UserNotFound from ex
 
 
-class PlayerSchema(Schema):
-    """Schema for the player model."""
+class UserSchema(Schema):
+    """Schema for the user model."""
 
     id_ = fields.Int()
     name = fields.Str(

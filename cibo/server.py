@@ -14,7 +14,7 @@ from cibo.events.spawn import SpawnEvent
 from cibo.events.tick import TickEvent
 from cibo.models.data.item import Item
 from cibo.models.data.npc import Npc
-from cibo.models.data.player import Player
+from cibo.models.data.user import User
 from cibo.server_config import ServerConfig
 
 
@@ -92,7 +92,7 @@ class Server:
         """Create the sqlite DB and necessary tables."""
 
         self._database.connect()
-        self._database.create_tables([Player, Item, Npc])
+        self._database.create_tables([User, Item, Npc])
 
     def start(self) -> None:
         """Create a thread and start the server."""

@@ -1,5 +1,5 @@
 """Sends a server-wide message to clients who are currently logged into a
-player session.
+user session.
 """
 
 from cibo.comms._base_ import Comms
@@ -8,7 +8,7 @@ from cibo.models.message import Message, MessageRoute
 
 class Server(Comms):
     """Sends a server-wide message to clients who are currently logged into a
-    player session.
+    user session.
     """
 
     def _format(self, message: Message) -> str:

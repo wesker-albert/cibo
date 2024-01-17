@@ -25,8 +25,8 @@ class Connect(Action):
         return Message(
             Panel(
                 f"{self._get_motd()}\n\n"
-                "Enter [green]register name password[/] to create a new player.\n"
-                "Enter [green]login name password[/] to log in to an existing player.",
+                "Enter [green]register name password[/] to create a new user.\n"
+                "Enter [green]login name password[/] to log in to an existing user.",
                 title="Welcome to",
                 title_align="left",
                 padding=(1, 4),

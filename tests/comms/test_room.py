@@ -32,7 +32,7 @@ class TestCommsRoom(CommsFactory):
         self.mock_clients[0].send_prompt.assert_not_called()
 
     def test_comms_room_send_no_client_in_room(self):
-        self.mock_clients[0].player = Mock(current_room_id=2)
+        self.mock_clients[0].user = Mock(current_room_id=2)
 
         self.room.send(MessageRoute(Message("frank leaves."), ids=[1]))
 

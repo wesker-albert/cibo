@@ -1,6 +1,6 @@
 from cibo.models.client import ClientLoginState
 from cibo.models.data.item import Item
-from cibo.models.data.player import Player
+from cibo.models.data.user import User
 from cibo.models.message import Message, MessageRoute
 from tests.actions.conftest import DropActionFactory
 
@@ -33,8 +33,8 @@ class TestDropAction(DropActionFactory):
         )
 
     def test_action_drop_process_inventory_item_not_found(self, _fixture_database):
-        self.client.player = Player.get_by_name("frank")
-        self.give_item_to_player(2, self.client.player)
+        self.client.user = User.get_by_name("frank")
+        self.give_item_to_user(2, self.client.user)
 
         self.drop.process(self.client, "drop", ["spoon"])
 
@@ -49,14 +49,14 @@ class TestDropAction(DropActionFactory):
         )
 
     def test_action_drop_process_dropped_tem(self, _fixture_database):
-        self.client.player = Player.get_by_name("frank")
-        self.give_item_to_player(2, self.client.player)
+        self.client.user = User.get_by_name("frank")
+        self.give_item_to_user(2, self.client.user)
 
         self.drop.process(self.client, "drop", ["fork"])
 
         item = Item.get_by_id(2)
 
-        assert not item.player
+        assert not item.user
         assert item.current_room_id == 1
 
         self.comms.send_to_vicinity.assert_called_once_with(

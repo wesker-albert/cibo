@@ -30,7 +30,7 @@ class Exits(Action):
             if not client.is_logged_in:
                 raise ClientNotLoggedIn
 
-            room = self.rooms.get_by_id(client.player.current_room_id)
+            room = self.rooms.get_by_id(client.user.current_room_id)
 
         except (ClientNotLoggedIn, RoomNotFound):
             self.comms.send_prompt(client)

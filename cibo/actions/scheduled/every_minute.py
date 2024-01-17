@@ -19,4 +19,4 @@ class EveryMinute(Action):
         self, client: Client, _command: Optional[str], _args: List[str]
     ) -> None:
         if client.is_logged_in:
-            client.player.save()
+            client.user.save()

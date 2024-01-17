@@ -18,7 +18,7 @@ class Quit(Action):
     def required_args(self) -> List[str]:
         return []
 
-    def _quitting_message(self, player_name: Optional[str]) -> Tuple[Message, Message]:
+    def _quitting_message(self, user_name: Optional[str]) -> Tuple[Message, Message]:
         """Successfully quitting the game."""
 
         return (
@@ -28,7 +28,7 @@ class Quit(Action):
                 "parents are proud of you.\n"
             ),
             Message(
-                f'[cyan]{player_name}[/] yells, "Thank you Wisconsin!" They '
+                f'[cyan]{user_name}[/] yells, "Thank you Wisconsin!" They '
                 "then proceed to drop their microphone, and walk off the stage."
             ),
         )
@@ -41,15 +41,15 @@ class Quit(Action):
                 raise ClientIsLoggedIn
 
         except ClientIsLoggedIn:
-            player_name = client.player.name
-            player_room = client.player.current_room_id
+            user_name = client.user.name
+            user_room = client.user.current_room_id
 
             client.log_out()
 
             self.comms.send_to_room(
                 MessageRoute(
-                    self._quitting_message(player_name)[1],
-                    ids=[player_room],
+                    self._quitting_message(user_name)[1],
+                    ids=[user_room],
                     ignored_clients=[client],
                 )
             )

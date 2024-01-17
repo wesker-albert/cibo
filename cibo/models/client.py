@@ -7,7 +7,7 @@ import socket as socket_
 from dataclasses import dataclass
 from enum import Enum
 
-from cibo.models.data.player import Player
+from cibo.models.data.user import User
 from cibo.models.prompt import Prompt
 
 
@@ -28,8 +28,8 @@ class Client:
     buffer: str
     last_check: float
     login_state: ClientLoginState
-    registration: Player
-    player: Player
+    registration: User
+    user: User
 
     @property
     def is_logged_in(self) -> bool:
@@ -46,7 +46,7 @@ class Client:
         """Check if the client has registration information.
 
         Returns:
-            bool: Does the client have player regisration info.
+            bool: Does the client have user regisration info.
         """
 
         return bool(self.registration.is_dirty())
@@ -89,20 +89,20 @@ class Client:
         self.socket.close()
 
     def log_out(self) -> None:
-        """Log the client out of their current player session."""
+        """Log the client out of their current user session."""
 
         self.login_state = ClientLoginState.PRE_LOGIN
 
-        self.player.save()
+        self.user.save()
 
-        self.player = Player()
+        self.user = User()
 
-    def log_in(self, player: Player) -> None:
-        """Log the client in as the given player.
+    def log_in(self, user: User) -> None:
+        """Log the client in as the given user.
 
         Args:
-            player (Player): The player the client will assume.
+            user (User): The user the client will assume.
         """
 
-        self.player = player
+        self.user = user
         self.login_state = ClientLoginState.LOGGED_IN

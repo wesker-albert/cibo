@@ -10,7 +10,7 @@ from cibo.entities._interface_ import EntityInterface
 from cibo.models.client import Client, ClientLoginState
 from cibo.models.data.item import Item as ItemData
 from cibo.models.data.npc import Npc as NpcData
-from cibo.models.data.player import Player
+from cibo.models.data.user import User
 from cibo.models.description import EntityDescription, RoomDescription
 from cibo.models.direction import Direction
 from cibo.models.door import Door
@@ -35,21 +35,21 @@ class BaseFactory:
 
 
 class DatabaseFactory:
-    def give_item_to_player(self, item_id: int, player: Player) -> None:
+    def give_item_to_user(self, item_id: int, user: User) -> None:
         item = ItemData.get_by_id(item_id)
-        item.player = player
+        item.user = user
         item.save()
 
     @fixture(scope="module")
     def _fixture_database(self):
         database = SqliteDatabase(getenv("DATABASE_PATH"))
-        tables = (Player, ItemData, NpcData)
+        tables = (User, ItemData, NpcData)
 
         with database.bind_ctx(tables):
             database.create_tables(tables)
 
             hashed_password = Password().hash_("abcd1234")
-            players = [
+            users = [
                 {
                     "name": "frank",
                     "password": hashed_password,
@@ -72,7 +72,7 @@ class DatabaseFactory:
 
             # pylint: disable=no-value-for-parameter
             with database.atomic():
-                Player.insert_many(players).execute()
+                User.insert_many(users).execute()
                 ItemData.insert_many(items).execute()
                 NpcData.insert_many(npcs).execute()
 
@@ -93,16 +93,16 @@ class ClientFactory:
             last_check=2.5,
             login_state=ClientLoginState.PRE_LOGIN,
             registration=None,
-            player=Mock(current_room_id=1),
+            user=Mock(current_room_id=1),
         )
-        self.client.player.name = "frank"
+        self.client.user.name = "frank"
         yield
 
     @fixture(autouse=True)
     def _fixture_mock_clients(self):
         default_client_params = {
             "login_state": ClientLoginState.LOGGED_IN,
-            "player": Mock(current_room_id=1),
+            "user": Mock(current_room_id=1),
             "prompt": "> ",
         }
         self.mock_clients = [

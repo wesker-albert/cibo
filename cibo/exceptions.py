@@ -12,13 +12,13 @@ class ActionMissingArguments(Exception):
 
 
 class ClientNotLoggedIn(Exception):
-    """Raised if the client isn't logged into a player."""
+    """Raised if the client isn't logged into a user."""
 
     pass
 
 
 class ClientIsLoggedIn(Exception):
-    """Raised if the client is already logged into a player."""
+    """Raised if the client is already logged into a user."""
 
     pass
 
@@ -108,7 +108,7 @@ class ItemIsStationary(Exception):
 
 
 class InventoryItemNotFound(Exception):
-    """Raised if no item with the given name is found in the player inventory."""
+    """Raised if no item with the given name is found in the user inventory."""
 
     pass
 
@@ -120,31 +120,31 @@ class NpcNotFound(Exception):
 
 
 class PasswordIncorrect(Exception):
-    """Raised if a given player password doesn't match the stored hash."""
+    """Raised if a given user password doesn't match the stored hash."""
 
     pass
 
 
-class PlayerNotRegistered(Exception):
-    """Raised if no player is yet registered by the client."""
+class UserNotRegistered(Exception):
+    """Raised if no user is yet registered by the client."""
 
     pass
 
 
-class PlayerAlreadyExists(Exception):
-    """Raised if no a player already exists with the name given."""
+class UserAlreadyExists(Exception):
+    """Raised if no a user already exists with the name given."""
 
     pass
 
 
-class PlayerNotFound(Exception):
-    """Raised if no player with the given name is found to exist."""
+class UserNotFound(Exception):
+    """Raised if no user with the given name is found to exist."""
 
     pass
 
 
-class PlayerSessionActive(Exception):
-    """Raised if a client is already logged into a session with the player."""
+class UserSessionActive(Exception):
+    """Raised if a client is already logged into a session with the user."""
 
     pass
 
@@ -162,7 +162,7 @@ class RoomItemNotFound(Exception):
 
 
 class RoomNotFound(Exception):
-    """Raised if the player isn't currently in a room."""
+    """Raised if the user isn't currently in a room."""
 
     pass
 

@@ -1,4 +1,4 @@
-"""An NPC is a non-player character, that a player might encounter while exploring
+"""An NPC is a non-user character, that a user might encounter while exploring
 the world. Some NPCs can be interacted with, in varying ways.
 """
 
@@ -9,7 +9,7 @@ from cibo.models.description import EntityDescription
 
 @dataclass
 class Npc:
-    """Represents a non-player character."""
+    """Represents a non-user character."""
 
     id_: int
     name: str

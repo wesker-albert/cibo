@@ -66,7 +66,7 @@ class TestMoveAction(MoveActionFactory):
     def test_action_move_process(self, _fixture_database):
         self.move.process(self.client, "w", [])
 
-        assert self.client.player.current_room_id == 5
+        assert self.client.user.current_room_id == 5
 
         self.comms.send_to_vicinity.assert_called_once_with(
             MessageRoute(

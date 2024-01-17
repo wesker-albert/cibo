@@ -1,7 +1,7 @@
 from unittest.mock import ANY
 
 from cibo.models.client import ClientLoginState
-from cibo.models.data.player import Player
+from cibo.models.data.user import User
 from cibo.models.message import Message, MessageRoute
 from tests.actions.conftest import LookActionFactory
 
@@ -21,7 +21,7 @@ class TestLookAction(LookActionFactory):
         self.comms.send_prompt.assert_called_once_with(self.client)
 
     def test_action_look_process(self, _fixture_database):
-        self.mock_clients[0].player.name = "jennifer"
+        self.mock_clients[0].user.name = "jennifer"
         self.telnet.get_connected_clients.return_value = [self.mock_clients[0]]
 
         self.look.process(self.client, "look", [])
@@ -43,10 +43,10 @@ class TestLookAction(LookActionFactory):
         )
 
     def test_action_look_process_items_and_npcs(self, _fixture_database):
-        self.client.player = Player.get_by_name("frank")
-        self.give_item_to_player(2, self.client.player)
+        self.client.user = User.get_by_name("frank")
+        self.give_item_to_user(2, self.client.user)
 
-        # the entity doesn't exist in player inventory or room items and NPCs
+        # the entity doesn't exist in user inventory or room items and NPCs
         self.look.process(self.client, "look", ["macguffin"])
         self.comms.send_to_client.assert_called_with(
             MessageRoute(
@@ -88,7 +88,7 @@ class TestLookAction(LookActionFactory):
             )
         )
 
-        # the item exists in the player inventory, specified with index
+        # the item exists in the user inventory, specified with index
         self.look.process(self.client, "look", ["2.fork"])
         self.comms.send_to_client.assert_called_with(
             MessageRoute(

@@ -1,19 +1,19 @@
-"""Finalizes the creation of a new player."""
+"""Finalizes the creation of a new user."""
 
 from typing import List
 
 from peewee import IntegrityError
 
 from cibo.actions._base_ import Action
-from cibo.exceptions import ClientIsLoggedIn, PlayerAlreadyExists, PlayerNotRegistered
+from cibo.exceptions import ClientIsLoggedIn, UserAlreadyExists, UserNotRegistered
 from cibo.models.client import Client
 from cibo.models.data.item import Item
-from cibo.models.data.player import Player
+from cibo.models.data.user import User
 from cibo.models.message import Message, MessageRoute
 
 
 class Finalize(Action):
-    """Finalizes the creation of a new player."""
+    """Finalizes the creation of a new user."""
 
     def aliases(self) -> List[str]:
         return ["finalize"]
@@ -23,7 +23,7 @@ class Finalize(Action):
 
     @property
     def _is_logged_in_message(self) -> Message:
-        """Player is already logged in."""
+        """User is already logged in."""
 
         return Message(
             "You finalize your written will, leaving your whole estate to your cat."
@@ -37,47 +37,47 @@ class Finalize(Action):
             "You'll need to [green]register[/] before you can [green]finalize[/]."
         )
 
-    def _player_already_exists_message(self, player_name: str) -> Message:
-        """Player name is already taken."""
+    def _user_already_exists_message(self, user_name: str) -> Message:
+        """User name is already taken."""
 
         return Message(
-            f"Sorry, turns out the name [cyan]{player_name}[/] is already taken. "
+            f"Sorry, turns out the name [cyan]{user_name}[/] is already taken. "
             "Please [green]register[/] again with a different name."
         )
 
-    def _successfully_registered_message(self, player_name: str) -> Message:
+    def _successfully_registered_message(self, user_name: str) -> Message:
         """Finalization was successful."""
 
         return Message(
-            f"[cyan]{player_name}[/] has been created. You can now [green]login[/] "
-            "with this player."
+            f"[cyan]{user_name}[/] has been created. You can now [green]login[/] "
+            "with this user."
         )
 
-    def _save_player_registration(self, client: Client) -> None:
-        """Save the registered player to the database.
+    def _save_user_registration(self, client: Client) -> None:
+        """Save the registered user to the database.
 
         Args:
             client (Client): The client containing the registration info.
 
         Raises:
-            PlayerAlreadyExists: A player with the same name already exists.
+            UserAlreadyExists: A user with the same name already exists.
         """
 
         try:
             client.registration.save()
 
         except IntegrityError as ex:
-            raise PlayerAlreadyExists from ex
+            raise UserAlreadyExists from ex
 
-    def _create_player_starting_inventory(self, client: Client) -> None:
-        """Give the newly created player any starting items they may need.
+    def _create_user_starting_inventory(self, client: Client) -> None:
+        """Give the newly created user any starting items they may need.
 
         Args:
-            client (Client): The client whose new player needs swag.
+            client (Client): The client whose new user needs swag.
         """
 
-        # give the player a fork, for now
-        item = Item(item_id=1, player_id=client.registration)
+        # give the user a fork, for now
+        item = Item(item_id=1, user_id=client.registration)
         item.save()
 
     def process(self, client: Client, _command: str, _args: List[str]) -> None:
@@ -86,25 +86,25 @@ class Finalize(Action):
                 raise ClientIsLoggedIn
 
             if not client.is_registered:
-                raise PlayerNotRegistered
+                raise UserNotRegistered
 
-            self._save_player_registration(client)
-            self._create_player_starting_inventory(client)
+            self._save_user_registration(client)
+            self._create_user_starting_inventory(client)
 
         except ClientIsLoggedIn:
             self.comms.send_to_client(
                 MessageRoute(self._is_logged_in_message, client=client)
             )
 
-        except PlayerNotRegistered:
+        except UserNotRegistered:
             self.comms.send_to_client(
                 MessageRoute(self._not_registered_message, client=client)
             )
 
-        except PlayerAlreadyExists:
+        except UserAlreadyExists:
             self.comms.send_to_client(
                 MessageRoute(
-                    self._player_already_exists_message(client.registration.name),
+                    self._user_already_exists_message(client.registration.name),
                     client=client,
                 )
             )
@@ -118,4 +118,4 @@ class Finalize(Action):
             )
 
         finally:
-            client.registration = Player()
+            client.registration = User()

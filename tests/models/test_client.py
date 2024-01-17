@@ -2,7 +2,7 @@ import socket as socket_
 from unittest.mock import Mock
 
 from cibo.models.client import ClientLoginState
-from cibo.models.data.player import Player
+from cibo.models.data.user import User
 from cibo.models.prompt import Prompt
 from tests.conftest import ClientFactory
 
@@ -19,7 +19,7 @@ class TestClient(ClientFactory):
         self.client.log_out()
 
         assert not self.client.is_logged_in
-        assert not self.client.player.get_id()
+        assert not self.client.user.get_id()
 
     def test_client_prompt(self):
         assert self.client.prompt == Prompt(body="> ", terminal_width=76)
@@ -46,6 +46,6 @@ class TestClient(ClientFactory):
         self.client.socket.close.assert_called_once()
 
     def test_client_is_registered(self):
-        self.client.registration = Player(name="frank")
+        self.client.registration = User(name="frank")
 
         assert self.client.is_registered

@@ -53,7 +53,7 @@ class CommsInterface:
         self._private.send(message)
 
     def send_to_room(self, message: MessageRoute) -> None:
-        """Sends a message to clients whose player is currently located within the
+        """Sends a message to clients whose user is currently located within the
         supplied room ID(s).
 
         Requires `ids` are specified within the routing object.
@@ -64,7 +64,7 @@ class CommsInterface:
         self._room.send(message)
 
     def send_to_sector(self, message: MessageRoute) -> None:
-        """Sends a message to clients whose player is currently located within the
+        """Sends a message to clients whose user is currently located within the
         supplied sector ID(s).
 
         Requires `ids` are specified within the routing object.
@@ -75,7 +75,7 @@ class CommsInterface:
         self._sector.send(message)
 
     def send_to_region(self, message: MessageRoute) -> None:
-        """Sends a message to clients whose player is currently located within the
+        """Sends a message to clients whose user is currently located within the
         supplied region ID(s).
 
         Requires `ids` are specified within the routing object.
@@ -88,7 +88,7 @@ class CommsInterface:
 
     def send_to_server(self, message: MessageRoute) -> None:
         """Sends a server-wide message to clients who are currently logged into a
-        player session.
+        user session.
         """
 
         self._server.send(message)

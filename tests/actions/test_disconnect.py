@@ -20,7 +20,7 @@ class TestDisconnectAction(DisconnectActionFactory):
     def test_action_disconnect_process(self):
         self.disconnect.process(self.client, None, [])
 
-        self.client.player.save.assert_called_once()
+        self.client.user.save.assert_called_once()
         self.comms.send_to_room.assert_called_once_with(
             MessageRoute(
                 Message(

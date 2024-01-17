@@ -24,13 +24,13 @@ class Say(Action):
         return Message("You try to think of something clever to say, but fail.")
 
     def _speech_message(
-        self, player_name: str, player_message: str
+        self, user_name: str, user_message: str
     ) -> Tuple[Message, Message]:
-        """Player is successfully saying something."""
+        """User is successfully saying something."""
 
         return (
-            Message(f'You say, "{player_message}"'),
-            Message(f'[cyan]{player_name}[/] says, "{player_message}"'),
+            Message(f'You say, "{user_message}"'),
+            Message(f'[cyan]{user_name}[/] says, "{user_message}"'),
         )
 
     def process(self, client: Client, _command: str, args: List[str]) -> None:
@@ -51,10 +51,10 @@ class Say(Action):
 
         else:
             speech_message = self._speech_message(
-                client.player.name, self._join_args(args)
+                client.user.name, self._join_args(args)
             )
 
             self.comms.send_to_vicinity(
                 MessageRoute(speech_message[0], client=client),
-                MessageRoute(speech_message[1], ids=[client.player.current_room_id]),
+                MessageRoute(speech_message[1], ids=[client.user.current_room_id]),
             )

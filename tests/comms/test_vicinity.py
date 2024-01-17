@@ -33,7 +33,7 @@ class TestCommsVicinity(CommsFactory):
         self.mock_clients[1].send_prompt.assert_called_once()
 
     def test_comms_vicinity_send_adjoining_room(self):
-        self.mock_clients[1].player = Mock(current_room_id=2)
+        self.mock_clients[1].user = Mock(current_room_id=2)
 
         self.telnet.get_connected_clients.return_value = [
             self.mock_clients[0],

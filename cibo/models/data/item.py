@@ -1,5 +1,5 @@
 """An item is an in-game piece of inventory, that can be picked up, carried, and
-often used by a player.
+often used by a user.
 """
 
 
@@ -8,11 +8,11 @@ from typing import List, Self
 from peewee import AutoField, ForeignKeyField, IntegerField
 
 from cibo.models.data._base_ import Model
-from cibo.models.data.player import Player
+from cibo.models.data.user import User
 
 
 class Item(Model):
-    """Represents a persisted world item, that could belong to a player, located in
+    """Represents a persisted world item, that could belong to a user, located in
     a room, etc.
     """
 
@@ -20,7 +20,7 @@ class Item(Model):
     item_id = IntegerField()
     spawn_room_id = IntegerField(null=True)
     current_room_id = IntegerField(null=True)
-    player = ForeignKeyField(Player, backref="inventory", null=True)
+    user = ForeignKeyField(User, backref="inventory", null=True)
 
     @classmethod
     def get_by_current_room_id(cls, room_id: int) -> List[Self]:

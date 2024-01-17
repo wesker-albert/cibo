@@ -15,5 +15,5 @@ class TestConnectAction(ConnectActionFactory):
 
         assert (
             panel.renderable
-            == "Welcome to the server!\n\nEnter [green]register name password[/] to create a new player.\nEnter [green]login name password[/] to log in to an existing player."
+            == "Welcome to the server!\n\nEnter [green]register name password[/] to create a new user.\nEnter [green]login name password[/] to log in to an existing user."
         )

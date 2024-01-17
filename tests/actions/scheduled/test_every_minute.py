@@ -14,9 +14,9 @@ class TestEveryMinuteAction(EveryMinuteActionFactory):
 
         self.every_minute.process(self.client, None, [])
 
-        self.client.player.save.assert_not_called()
+        self.client.user.save.assert_not_called()
 
     def test_action_every_minute_process(self):
         self.every_minute.process(self.client, None, [])
 
-        self.client.player.save.assert_called_once()
+        self.client.user.save.assert_called_once()

@@ -21,7 +21,7 @@ from cibo.actions.disconnect import Disconnect
 from cibo.actions.error import Error
 from cibo.actions.scheduled import EveryMinute, EverySecond
 from cibo.models.client import ClientLoginState
-from cibo.models.data.player import Player
+from cibo.models.data.user import User
 from cibo.server_config import ServerConfig
 from tests.conftest import (
     BaseFactory,
@@ -133,7 +133,7 @@ class FinalizeActionFactory(BaseFactory, ActionFactory, DatabaseFactory):
     @fixture(autouse=True)
     def fixture_finalize(self, _fixture_action):
         self.client.login_state = ClientLoginState.PRE_LOGIN
-        self.client.registration = Player()
+        self.client.registration = User()
         self.finalize = Finalize(self.server_config)
         yield
 

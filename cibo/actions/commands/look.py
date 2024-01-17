@@ -47,14 +47,14 @@ class Look(Action):
         )
 
     def _entity_description_message(self, client: Client, args: List[str]) -> Message:
-        """A stylized description of an item in the room, an item in the player's
+        """A stylized description of an item in the room, an item in the user's
         inventory, or an NPC in the room. In that order.
         """
 
         entity = self._entities.get_by_name(
             (
                 self._get_room_items(client)
-                + self._get_player_items(client)
+                + self._get_user_items(client)
                 + self._get_npc_occupants(client)
             ),
             args[0],
@@ -65,31 +65,30 @@ class Look(Action):
 
         return Message("You don't see that...")
 
-    def _get_player_occupants(self, client: Client) -> List[Client]:
+    def _get_user_occupants(self, client: Client) -> List[Client]:
         return [
             occupant_client
             for occupant_client in self._telnet.get_connected_clients()
             if (
-                occupant_client.player
-                and client.player
-                and occupant_client.player.current_room_id
-                == client.player.current_room_id
+                occupant_client.user
+                and client.user
+                and occupant_client.user.current_room_id == client.user.current_room_id
                 and occupant_client is not client
             )
         ]
 
     def _get_npc_occupants(self, client: Client) -> List[Npc]:
         return self.npcs.get_from_dataset(
-            NpcData.get_by_current_room_id(client.player.current_room_id)
+            NpcData.get_by_current_room_id(client.user.current_room_id)
         )
 
     def _get_room_items(self, client: Client) -> List[Item]:
         return self.items.get_from_dataset(
-            ItemData.get_by_current_room_id(client.player.current_room_id)
+            ItemData.get_by_current_room_id(client.user.current_room_id)
         )
 
-    def _get_player_items(self, client: Client) -> List[Item]:
-        return self.items.get_from_dataset(client.player.inventory)
+    def _get_user_items(self, client: Client) -> List[Item]:
+        return self.items.get_from_dataset(client.user.inventory)
 
     def _get_formatted_occupants(self, client: Client) -> str:
         """Formats and lists out all occupants of the client's current room, excluding
@@ -103,14 +102,14 @@ class Look(Action):
             str: The occupants for the room.
         """
 
-        player_occupants = [
-            f"[cyan]{occupant_client.player.name}[/] is standing here."
-            for occupant_client in self._get_player_occupants(client)
+        user_occupants = [
+            f"[cyan]{occupant_client.user.name}[/] is standing here."
+            for occupant_client in self._get_user_occupants(client)
         ]
         npc_occupants = [
             npc.room_description for npc in self._get_npc_occupants(client)
         ]
-        combined_occupants = player_occupants + npc_occupants
+        combined_occupants = user_occupants + npc_occupants
 
         joined_occupants = "\n• ".join(
             [str(occupant) for occupant in combined_occupants]
@@ -159,8 +158,8 @@ class Look(Action):
             self.comms.send_prompt(client)
 
         except ActionMissingArguments:
-            # the player is just looking at the room in general
-            room = self.rooms.get_by_id(client.player.current_room_id)
+            # the user is just looking at the room in general
+            room = self.rooms.get_by_id(client.user.current_room_id)
 
             self.comms.send_to_client(
                 MessageRoute(

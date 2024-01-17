@@ -1,4 +1,4 @@
-"""Navigates a player between available rooms."""
+"""Navigates a user between available rooms."""
 
 from typing import List, Tuple
 
@@ -18,7 +18,7 @@ from cibo.models.message import Message, MessageRoute
 
 
 class Move(Action):
-    """Navigates a player between available rooms."""
+    """Navigates a user between available rooms."""
 
     def aliases(self) -> List[str]:
         return [
@@ -51,14 +51,14 @@ class Move(Action):
         return Message(f"{door_name.capitalize()} is closed.")
 
     def _moving_message(
-        self, player_name: str, direction: str
+        self, user_name: str, direction: str
     ) -> Tuple[Message, Message, Message]:
         """Successfully moving in the direction given."""
 
         return (
             Message(f"You head {direction}."),
-            Message(f"[cyan]{player_name}[/] arrives."),
-            Message(f"[cyan]{player_name}[/] leaves {direction}."),
+            Message(f"[cyan]{user_name}[/] arrives."),
+            Message(f"[cyan]{user_name}[/] leaves {direction}."),
         )
 
     def process(self, client: Client, command: str, _args: List[str]) -> None:
@@ -66,7 +66,7 @@ class Move(Action):
             if not client.is_logged_in:
                 raise ClientNotLoggedIn
 
-            room = self.rooms.get_by_id(client.player.current_room_id)
+            room = self.rooms.get_by_id(client.user.current_room_id)
             exit_ = room.get_direction_exit(command)
             door = self.doors.get_by_room_ids(room.id_, exit_.id_)
 
@@ -86,16 +86,16 @@ class Move(Action):
             )
 
         except (DoorNotFound, DoorIsOpen):
-            # update the player's current room to the one they're navigating to
-            client.player.current_room_id = exit_.id_
+            # update the user's current room to the one they're navigating to
+            client.user.current_room_id = exit_.id_
 
             moving_message = self._moving_message(
-                client.player.name, exit_.direction.name.lower()
+                client.user.name, exit_.direction.name.lower()
             )
 
             self.comms.send_to_vicinity(
                 MessageRoute(moving_message[0], client=client, send_prompt=False),
-                MessageRoute(moving_message[1], ids=[client.player.current_room_id]),
+                MessageRoute(moving_message[1], ids=[client.user.current_room_id]),
                 MessageRoute(moving_message[2], ids=[room.id_]),
             )
 

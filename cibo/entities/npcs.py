@@ -1,4 +1,4 @@
-"""An NPC is a non-player character, that a player might encounter while exploring
+"""An NPC is a non-user character, that a user might encounter while exploring
 the world. Some NPCs can be interacted with, in varying ways.
 
 This is a collection of all the NPCs that exist in the world.

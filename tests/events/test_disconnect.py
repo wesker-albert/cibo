@@ -8,7 +8,7 @@ class TestDisconnectEvent(DisconnectEventFactory):
 
         self.disconnect.process()
 
-        self.client.player.save.assert_called_once()
+        self.client.user.save.assert_called_once()
         self.comms.send_to_room.assert_called_once_with(
             MessageRoute(
                 Message(

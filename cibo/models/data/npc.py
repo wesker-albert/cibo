@@ -1,4 +1,4 @@
-"""An NPC is a non-player character, that a player might encounter while exploring
+"""An NPC is a non-user character, that a user might encounter while exploring
 the world. Some NPCs can be interacted with, in varying ways.
 """
 
@@ -10,7 +10,7 @@ from cibo.models.data._base_ import Model
 
 
 class Npc(Model):
-    """Represents a non-player character that has been spawned into the world,
+    """Represents a non-user character that has been spawned into the world,
     and may be interacted with.
     """
 

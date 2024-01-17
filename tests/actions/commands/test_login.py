@@ -25,13 +25,13 @@ class TestLoginAction(LoginActionFactory):
             )
         )
 
-    def test_action_login_process_player_not_found(self, _fixture_database):
+    def test_action_login_process_user_not_found(self, _fixture_database):
         self.login.process(self.client, "login", ["jennifer", "password"])
 
         self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
-                    body="A player by the name [cyan]jennifer[/] does not exist. If you want, you can [green]register[/] a new player with that name.",
+                    body="A user by the name [cyan]jennifer[/] does not exist. If you want, you can [green]register[/] a new user with that name.",
                     **self.default_message_args,
                 ),
                 client=self.client,
@@ -52,7 +52,7 @@ class TestLoginAction(LoginActionFactory):
         )
 
     def test_action_login_process_session_active(self, _fixture_database):
-        self.mock_clients[0].player.name = "frank"
+        self.mock_clients[0].user.name = "frank"
         self.telnet.get_connected_clients.return_value = [
             self.mock_clients[0],
         ]
@@ -62,7 +62,7 @@ class TestLoginAction(LoginActionFactory):
         self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
-                    body="The player [cyan]frank[/] is already logged in. If this player belongs to you and you think it's been stolen, please contact the admin.",
+                    body="The user [cyan]frank[/] is already logged in. If this user belongs to you and you think it's been stolen, please contact the admin.",
                     **self.default_message_args,
                 ),
                 client=self.client,
@@ -70,7 +70,7 @@ class TestLoginAction(LoginActionFactory):
         )
 
     def test_action_login_process_logging_in(self, _fixture_database):
-        self.mock_clients[0].player.name = "jennifer"
+        self.mock_clients[0].user.name = "jennifer"
         self.mock_clients[0].login_state = ClientLoginState.PRE_LOGIN
         self.telnet.get_connected_clients.return_value = [
             self.mock_clients[0],
@@ -78,7 +78,7 @@ class TestLoginAction(LoginActionFactory):
 
         self.login.process(self.client, "login", ["frank", "abcd1234"])
 
-        assert self.client.player.name == "frank"
+        assert self.client.user.name == "frank"
         assert self.client.is_logged_in
 
         self.comms.send_to_vicinity.assert_called_once_with(

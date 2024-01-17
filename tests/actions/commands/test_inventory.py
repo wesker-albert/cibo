@@ -1,5 +1,5 @@
 from cibo.models.client import ClientLoginState
-from cibo.models.data.player import Player
+from cibo.models.data.user import User
 from cibo.models.message import Message, MessageRoute
 from tests.actions.conftest import InventoryActionFactory
 
@@ -19,7 +19,7 @@ class TestInventoryAction(InventoryActionFactory):
         self.comms.send_prompt.assert_called_once_with(self.client)
 
     def test_action_inventory_process_empty_inventory(self, _fixture_database):
-        self.client.player = Player.get_by_name("john")
+        self.client.user = User.get_by_name("john")
 
         self.inventory.process(self.client, "inv", [])
 
@@ -33,8 +33,8 @@ class TestInventoryAction(InventoryActionFactory):
         )
 
     def test_action_inventory_process(self, _fixture_database):
-        self.client.player = Player.get_by_name("frank")
-        self.give_item_to_player(2, self.client.player)
+        self.client.user = User.get_by_name("frank")
+        self.give_item_to_user(2, self.client.user)
 
         self.inventory.process(self.client, "inv", [])
 

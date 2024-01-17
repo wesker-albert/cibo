@@ -1,5 +1,5 @@
 from cibo.models.client import ClientLoginState
-from cibo.models.data.player import Player
+from cibo.models.data.user import User
 from cibo.models.message import Message, MessageRoute
 from tests.actions.conftest import FinalizeActionFactory
 
@@ -39,8 +39,8 @@ class TestFinalizeAction(FinalizeActionFactory):
             )
         )
 
-    def test_action_finalize_process_player_already_exists(self, _fixture_database):
-        self.client.registration = Player(
+    def test_action_finalize_process_user_already_exists(self, _fixture_database):
+        self.client.registration = User(
             name="frank", password="abcd1234", current_room_id=1
         )
 
@@ -56,21 +56,21 @@ class TestFinalizeAction(FinalizeActionFactory):
             )
         )
 
-    def test_action_finalize_process_create_player(self, _fixture_database):
-        self.client.registration = Player(
+    def test_action_finalize_process_create_user(self, _fixture_database):
+        self.client.registration = User(
             name="jennifer", password="abcd1234", current_room_id=1
         )
 
         self.finalize.process(self.client, "finalize", [])
 
         assert not self.client.is_registered
-        player = Player.get_by_name("jennifer")
-        assert len(player.inventory) == 1
+        user = User.get_by_name("jennifer")
+        assert len(user.inventory) == 1
 
         self.comms.send_to_client.assert_called_with(
             MessageRoute(
                 Message(
-                    body="[cyan]jennifer[/] has been created. You can now [green]login[/] with this player.",
+                    body="[cyan]jennifer[/] has been created. You can now [green]login[/] with this user.",
                     **self.default_message_args,
                 ),
                 client=self.client,

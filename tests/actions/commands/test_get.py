@@ -1,6 +1,6 @@
 from cibo.models.client import ClientLoginState
 from cibo.models.data.item import Item
-from cibo.models.data.player import Player
+from cibo.models.data.user import User
 from cibo.models.message import Message, MessageRoute
 from tests.actions.conftest import GetActionFactory
 
@@ -33,7 +33,7 @@ class TestGetAction(GetActionFactory):
         )
 
     def test_action_get_process_room_item_not_found(self, _fixture_database):
-        self.client.player = Player.get_by_name("frank")
+        self.client.user = User.get_by_name("frank")
 
         self.get.process(self.client, "get", ["spoon"])
 
@@ -48,7 +48,7 @@ class TestGetAction(GetActionFactory):
         )
 
     def test_action_get_process_item_is_stationary(self, _fixture_database):
-        self.client.player = Player.get_by_name("frank")
+        self.client.user = User.get_by_name("frank")
 
         self.get.process(self.client, "get", ["jukebox"])
 
@@ -63,13 +63,13 @@ class TestGetAction(GetActionFactory):
         )
 
     def test_action_get_process_dropped_tem(self, _fixture_database):
-        self.client.player = Player.get_by_name("frank")
+        self.client.user = User.get_by_name("frank")
 
         self.get.process(self.client, "get", ["fork"])
 
         item = Item.get_by_id(1)
 
-        assert item.player == self.client.player
+        assert item.user == self.client.user
         assert not item.current_room_id
 
         self.comms.send_to_vicinity.assert_called_once_with(

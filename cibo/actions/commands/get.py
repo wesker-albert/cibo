@@ -1,4 +1,4 @@
-"""Picks up an item from the player's current room, and adds it to the player
+"""Picks up an item from the user's current room, and adds it to the user
 inventory.
 """
 
@@ -45,13 +45,13 @@ class Get(Action):
         return Message("You try, but you can't take that.")
 
     def _get_item_message(
-        self, player_name: str, item_name: str
+        self, user_name: str, item_name: str
     ) -> Tuple[Message, Message]:
-        """Player has just picked up an item."""
+        """User has just picked up an item."""
 
         return (
             Message(f"You pick up {item_name}."),
-            Message(f"[cyan]{player_name}[/] picks up {item_name}."),
+            Message(f"[cyan]{user_name}[/] picks up {item_name}."),
         )
 
     def _find_item_in_room(self, client: Client, item_name: str) -> Item:
@@ -68,7 +68,7 @@ class Get(Action):
             Item: The item entry from the database.
         """
 
-        room_items = Item.get_by_current_room_id(client.player.current_room_id)
+        room_items = Item.get_by_current_room_id(client.user.current_room_id)
 
         for item in room_items:
             item_meta = self.items.get_by_id(item.item_id)
@@ -92,16 +92,14 @@ class Get(Action):
                 raise ItemIsStationary
 
             item.current_room_id = None
-            item.player_id = client.player
+            item.user_id = client.user
             item.save()
 
-            get_item_message = self._get_item_message(
-                client.player.name, item_meta.name
-            )
+            get_item_message = self._get_item_message(client.user.name, item_meta.name)
 
             self.comms.send_to_vicinity(
                 MessageRoute(get_item_message[0], client=client),
-                MessageRoute(get_item_message[1], ids=[client.player.current_room_id]),
+                MessageRoute(get_item_message[1], ids=[client.user.current_room_id]),
             )
 
         except (ClientNotLoggedIn, ItemNotFound):

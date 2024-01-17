@@ -1,4 +1,4 @@
-"""Display the itemized contents of the player inventory."""
+"""Display the itemized contents of the user inventory."""
 
 from typing import List
 
@@ -19,15 +19,15 @@ class Inventory(Action):
 
     @property
     def _empty_inventory_message(self) -> Message:
-        """The player inventory is empty."""
+        """The user inventory is empty."""
 
         return Message("You aren't carrying anything...")
 
     def _inventory_message(self, client: Client) -> Message:
-        """The contents of the player inventory."""
+        """The contents of the user inventory."""
 
         inventory_items = [
-            item.name for item in self.items.get_from_dataset(client.player.inventory)
+            item.name for item in self.items.get_from_dataset(client.user.inventory)
         ]
 
         inventory = "\n".join([str(item).capitalize() for item in inventory_items])

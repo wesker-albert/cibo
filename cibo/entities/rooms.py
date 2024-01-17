@@ -1,4 +1,4 @@
-"""A Room is a space that exists within the world, and which players and NPCs can
+"""A Room is a space that exists within the world, and which users and NPCs can
 occupy as well as navigate through.
 
 This is a collection of all the rooms that exist in the world.
