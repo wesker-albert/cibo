@@ -14,6 +14,7 @@ from select import select
 from typing import List, Optional, Tuple
 
 from cibo.models.client import Client, ClientLoginState
+from cibo.models.data.character import Character
 from cibo.models.data.user import User
 
 
@@ -225,6 +226,7 @@ class TelnetServer:
                 login_state=ClientLoginState.PRE_LOGIN,
                 registration=User(),
                 user=User(),
+                character=Character(),
             )
 
             self._clients.append(new_client)

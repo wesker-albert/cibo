@@ -11,6 +11,12 @@ class ActionMissingArguments(Exception):
     pass
 
 
+class CharacterNotFound(Exception):
+    """Raised if no character with the given name is found to exist."""
+
+    pass
+
+
 class ClientNotLoggedIn(Exception):
     """Raised if the client isn't logged into a user."""
 

@@ -7,6 +7,7 @@ import socket as socket_
 from dataclasses import dataclass
 from enum import Enum
 
+from cibo.models.data.character import Character
 from cibo.models.data.user import User
 from cibo.models.prompt import Prompt
 
@@ -30,6 +31,7 @@ class Client:
     login_state: ClientLoginState
     registration: User
     user: User
+    character: Character
 
     @property
     def is_logged_in(self) -> bool:
