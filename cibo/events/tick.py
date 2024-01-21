@@ -2,6 +2,7 @@
 
 
 from threading import Thread
+from typing import Any
 
 from schedule import every, run_pending
 
@@ -60,9 +61,7 @@ class TickEvent(Event):
         for client in server_config.telnet.get_connected_clients():
             EveryMinute(server_config).process(client, None, [])
 
-    def process(
-        self,
-    ) -> None:
+    def process(self, _sender: Any = None) -> None:
         # don't tick if no clients are connected, to conserve system entities
         if len(self._telnet.get_connected_clients()) > 0:
             run_pending()

@@ -1,6 +1,9 @@
 """Abstraction to be used as a base class for every event."""
 
 from abc import ABC, abstractmethod
+from typing import Any
+
+from blinker import signal
 
 from cibo.server_config import ServerConfig
 
@@ -19,8 +22,10 @@ class Event(ABC):
         self._entities = self._server_config.entity_interface
         self._comms = self._server_config.comms_interface
 
+        self._process = signal("process")
+
     @abstractmethod
-    def process(self) -> None:  # pytest: no cover
+    def process(self, sender: Any) -> None:  # pytest: no cover
         """Processes the logic for the specific event type."""
 
         pass
