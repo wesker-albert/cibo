@@ -1,3 +1,7 @@
+"""Event models are used by signal-driven events, to help establish reliable payload
+structure and protocols.
+"""
+
 from dataclasses import dataclass
 from typing import Optional
 
