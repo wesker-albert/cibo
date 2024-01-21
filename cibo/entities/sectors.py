@@ -5,7 +5,7 @@ This is a collection of all the sectors that exist in the world.
 
 from typing import List
 
-from cibo.entities._base_ import Entity
+from cibo.entities import Entity
 from cibo.entities.regions import Regions
 from cibo.exceptions import SectorNotFound
 from cibo.models.flag import RoomFlag

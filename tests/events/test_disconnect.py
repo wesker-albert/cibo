@@ -1,12 +1,11 @@
+from cibo.models.event import EventPayload
 from cibo.models.message import Message, MessageRoute
 from tests.events.conftest import DisconnectEventFactory
 
 
 class TestDisconnectEvent(DisconnectEventFactory):
     def test_event_disconnect_process(self):
-        self.telnet.get_disconnected_clients.return_value = [self.client]
-
-        self.disconnect.process()
+        self.signal.send(self, payload=EventPayload(self.client))
 
         self.client.player.save.assert_called_once()
         self.comms.send_to_room.assert_called_once_with(
@@ -19,3 +18,9 @@ class TestDisconnectEvent(DisconnectEventFactory):
                 ignored_clients=[self.client],
             )
         )
+
+    def test_event_disconnect_process_no_payload(self):
+        self.signal.send(self, payload=None)
+
+        self.client.player.save.assert_not_called()
+        self.comms.send_to_room.assert_not_called()

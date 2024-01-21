@@ -24,6 +24,11 @@ class CommsInterface:
 
     Additionally offers a place to create reusable "comms chain" methods for
     specific use cases, where multiple comms types and routes may be necessary.
+
+    Args:
+        telnet (TelnetServer): The configured telnet server to use.
+        entity_interface (EntityInterface): The interface instance to use, when
+            referencing entities in a comms message.
     """
 
     def __init__(self, telnet: TelnetServer, entity_interface: EntityInterface) -> None:

@@ -2,16 +2,16 @@
 well as methods to control the server state.
 """
 
+import concurrent.futures
 from enum import Enum
 from os import getenv
 from threading import Thread
 from time import sleep
 
+from blinker import signal
 from peewee import SqliteDatabase
 
-from cibo.events._processor_ import EventProcessor
-from cibo.events.spawn import SpawnEvent
-from cibo.events.tick import TickEvent
+from cibo.events._interface_ import EventInterface
 from cibo.models.data.item import Item
 from cibo.models.data.npc import Npc
 from cibo.models.data.player import Player
@@ -39,16 +39,12 @@ class Server:
         self._database = SqliteDatabase(getenv("DATABASE_PATH", "cibo_database.db"))
 
         self._telnet = server_config.telnet
-        self._entities = server_config.entity_interface
 
-        self._event_processor = EventProcessor(server_config)
+        self._event_interface = EventInterface(server_config)
 
-        self._tick = TickEvent(server_config)
         self._tick_thread = Thread(target=self._start_tick_timers)
+        self._main_thread = Thread(target=self._start_server)
 
-        self._spawn = SpawnEvent(server_config)
-
-        self._thread = Thread(target=self._start_server)
         self._status = self.Status.STOPPED
 
     @property
@@ -65,7 +61,7 @@ class Server:
         """Start the tick timers, that carry out scheduled actions."""
 
         while self.is_running:
-            self._tick.process()
+            signal("event-tick").send()
 
             sleep(1)
 
@@ -78,13 +74,19 @@ class Server:
         self._telnet.listen()
         self._status = self.Status.RUNNING
 
+        signal("event-spawn").send()
+
         self._tick_thread.start()
 
-        self._spawn.process()
-
         while self.is_running:
-            self._telnet.update()
-            self._event_processor.process()
+            client_count = len(self._telnet.get_connected_clients())
+
+            # we use the client count to determine the max number of workers, so that
+            # we always scale up and down according to capacity
+            executor = concurrent.futures.ThreadPoolExecutor(
+                client_count if client_count else 1
+            )
+            executor.submit(self._telnet.update)
 
             sleep(0.05)
 
@@ -98,17 +100,17 @@ class Server:
         """Create a thread and start the server."""
 
         if self._status is self.Status.STOPPED:
-            self._thread.start()
+            self._main_thread.start()
 
     def stop(self) -> None:
         """Stop the currently running server and end the thread."""
 
-        if self.is_running and self._thread:
+        if self.is_running and self._main_thread:
             self._status = self.Status.SHUTTING_DOWN
 
             self._tick_thread.join()
 
             self._telnet.shutdown()
-            self._thread.join()
+            self._main_thread.join()
 
             self._status = self.Status.STOPPED

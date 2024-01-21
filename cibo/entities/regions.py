@@ -5,7 +5,7 @@ This is a collection of all the regions that exist in the world.
 
 from typing import List
 
-from cibo.entities._base_ import Entity
+from cibo.entities import Entity
 from cibo.exceptions import RegionNotFound
 from cibo.models.flag import RoomFlag
 from cibo.models.region import Region
