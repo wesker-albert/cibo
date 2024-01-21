@@ -2,6 +2,7 @@
 well as methods to control the server state.
 """
 
+import concurrent.futures
 from enum import Enum
 from os import getenv
 from threading import Thread
@@ -43,10 +44,10 @@ class Server:
 
         self._event_processor = EventProcessor(server_config)
 
-        self._tick = TickEvent(server_config)
+        self._tick = TickEvent(server_config, "event-tick")
         self._tick_thread = Thread(target=self._start_tick_timers)
 
-        self._spawn = SpawnEvent(server_config)
+        self._spawn = SpawnEvent(server_config, "event-spawn")
 
         self._thread = Thread(target=self._start_server)
         self._status = self.Status.STOPPED
@@ -83,8 +84,14 @@ class Server:
         self._spawn.process()
 
         while self.is_running:
-            self._telnet.update()
-            self._event_processor.process()
+            client_count = len(self._telnet.get_connected_clients())
+
+            # we use the client count to determine the max number of workers, so that
+            # we always scale up and down according to capacity
+            executor = concurrent.futures.ThreadPoolExecutor(
+                client_count if client_count else 1
+            )
+            executor.submit(self._telnet.update)
 
             sleep(0.05)
 

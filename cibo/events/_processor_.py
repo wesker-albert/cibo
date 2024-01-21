@@ -6,7 +6,6 @@ The EventProcessor allows for the different event types to be processed as a bat
 in a FIFO order.
 """
 
-from blinker import signal
 
 from cibo.actions.commands import ACTIONS
 from cibo.actions.commands._processor_ import CommandProcessor
@@ -27,13 +26,6 @@ class EventProcessor:  # pytest: no cover
     def __init__(self, server_config: ServerConfig) -> None:
         self._command_processor = CommandProcessor(server_config, ACTIONS)
 
-        self._connect = ConnectEvent(server_config)
-        self._disconnect = DisconnectEvent(server_config)
-        self._input = InputEvent(server_config, self._command_processor)
-
-        self._process = signal("process")
-
-    def process(self) -> None:
-        """Processes the different event types."""
-
-        self._process.send(self)
+        self._connect = ConnectEvent(server_config, "event-connect")
+        self._disconnect = DisconnectEvent(server_config, "event-disconnect")
+        self._input = InputEvent(server_config, "event-input", self._command_processor)

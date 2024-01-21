@@ -2,11 +2,11 @@
 CommandProcessor. If the input contains a valid command, further logic will be carried
 out."""
 
-from typing import Any
+from typing import Any, Optional
 
 from cibo.actions.commands._processor_ import CommandProcessor
 from cibo.actions.error import Error
-from cibo.events._base_ import Event
+from cibo.events._base_ import Event, EventPayload
 from cibo.exceptions import (
     CommandMissingArguments,
     CommandUnrecognized,
@@ -29,27 +29,26 @@ class InputEvent(Event):
     def __init__(
         self,
         server_config: ServerConfig,
+        signal_name: str,
         command_processor: CommandProcessor,
     ) -> None:
-        super().__init__(server_config)
+        super().__init__(server_config, signal_name)
 
         self._command_processor = command_processor
 
-        self._process.connect(self.process)
-
-    def process(self, _sender: Any) -> None:
-        for client, input_ in self._telnet.get_client_input():
+    def process(self, _sender: Any, payload: Optional[EventPayload]) -> None:
+        if payload and payload.client:
             try:
-                if not input_:
+                if not payload.input_:
                     raise InputNotReceived
 
-                self._command_processor.process(client, input_)
+                self._command_processor.process(payload.client, payload.input_)
 
             except (CommandUnrecognized, CommandMissingArguments) as ex:
-                Error(self._server_config).process(client, None, [ex.message])
+                Error(self._server_config).process(payload.client, None, [ex.message])
 
             except (InputNotReceived, Exception) as ex:
-                self._comms.send_prompt(client)
+                self._comms.send_prompt(payload.client)
 
                 if not isinstance(ex, InputNotReceived):  # pytest: no cover
                     raise ex

@@ -2,13 +2,13 @@
 
 
 from threading import Thread
-from typing import Any
+from typing import Any, Optional
 
 from schedule import every, run_pending
 
 from cibo.actions._base_ import Action
 from cibo.actions.scheduled import EveryMinute, EverySecond
-from cibo.events._base_ import Event
+from cibo.events._base_ import Event, EventPayload
 from cibo.server_config import ServerConfig
 
 
@@ -19,8 +19,8 @@ class TickEvent(Event):
         server_config (ServerConfig): The server configuration object.
     """
 
-    def __init__(self, server_config: ServerConfig):
-        super().__init__(server_config)
+    def __init__(self, server_config: ServerConfig, signal_name: str):
+        super().__init__(server_config, signal_name)
 
         # schedule each of our tick actions for processing
         every().second.do(
@@ -61,7 +61,9 @@ class TickEvent(Event):
         for client in server_config.telnet.get_connected_clients():
             EveryMinute(server_config).process(client, None, [])
 
-    def process(self, _sender: Any = None) -> None:
+    def process(
+        self, _sender: Any = None, _payload: Optional[EventPayload] = None
+    ) -> None:
         # don't tick if no clients are connected, to conserve system entities
         if len(self._telnet.get_connected_clients()) > 0:
             run_pending()
