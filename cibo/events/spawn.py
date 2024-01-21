@@ -4,7 +4,7 @@ spawns the appropriate entity and amount into the world.
 
 from typing import Any, List, Optional
 
-from cibo.events._base_ import Event, EventPayload
+from cibo.events import Event, EventPayload
 from cibo.models.data.item import Item
 from cibo.models.data.npc import Npc
 from cibo.models.spawn import Spawn, SpawnType

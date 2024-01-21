@@ -3,7 +3,7 @@
 from typing import Any, Optional
 
 from cibo.actions.connect import Connect
-from cibo.events._base_ import Event, EventPayload
+from cibo.events import Event, EventPayload
 
 
 class ConnectEvent(Event):

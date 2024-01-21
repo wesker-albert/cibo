@@ -57,6 +57,10 @@ class TelnetServer:
 
         self._listen_socket: Optional[socket.socket] = None
 
+        self._connect_signal = signal("event-connect")
+        self._disconnect_signal = signal("event-disconnect")
+        self._input_signal = signal("event-input")
+
         self._clients: List[Client] = []
 
     def listen(self) -> None:
@@ -156,8 +160,7 @@ class TelnetServer:
 
             self._clients.append(new_client)
 
-            signal_ = signal("event-connect")
-            signal_.send(self, payload=EventPayload(new_client))
+            self._connect_signal.send(self, payload=EventPayload(new_client))
 
     def _check_for_disconnected(self) -> None:
         # go through all the clients
@@ -220,8 +223,7 @@ class TelnetServer:
                     # the message
                     message = message.strip()
 
-                    signal_ = signal("event-input")
-                    signal_.send(self, payload=EventPayload(client, message))
+                    self._input_signal.send(self, payload=EventPayload(client, message))
 
             # if there is a problem reading from the socket (e.g. the client
             # has disconnected) a socket error will be raised
@@ -232,8 +234,7 @@ class TelnetServer:
         # remove the client from the clients list
         self._clients.remove(client)
 
-        signal_ = signal("event-disconnect")
-        signal_.send(self, payload=EventPayload(client))
+        self._disconnect_signal.send(self, payload=EventPayload(client))
 
     def _process_sent_data(self, client: Client, data: str) -> str:
         # the Telnet protocol allows special message codes to be inserted into

@@ -6,7 +6,7 @@ from typing import Any, Optional
 
 from cibo.actions.commands._processor_ import CommandProcessor
 from cibo.actions.error import Error
-from cibo.events._base_ import Event, EventPayload
+from cibo.events import Event, EventPayload
 from cibo.exceptions import (
     CommandMissingArguments,
     CommandUnrecognized,

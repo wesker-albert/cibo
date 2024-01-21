@@ -1,10 +1,11 @@
 """Sends a private message, to a specific client."""
 
-from cibo.comms._base_ import Comms
+
+from cibo.comms import Comm
 from cibo.models.message import Message, MessageRoute
 
 
-class Private(Comms):
+class Private(Comm):
     """Sends a private message, to a specific client."""
 
     def _format(self, message: Message) -> str:

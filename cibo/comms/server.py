@@ -2,11 +2,11 @@
 player session.
 """
 
-from cibo.comms._base_ import Comms
+from cibo.comms import Comm
 from cibo.models.message import Message, MessageRoute
 
 
-class Server(Comms):
+class Server(Comm):
     """Sends a server-wide message to clients who are currently logged into a
     player session.
     """

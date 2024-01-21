@@ -1,11 +1,11 @@
 """Sends a message to clients whose player is currently located within the
 supplied room ID(s)."""
 
-from cibo.comms._base_ import Comms
+from cibo.comms import Comm
 from cibo.models.message import Message, MessageRoute
 
 
-class Room(Comms):
+class Room(Comm):
     """Sends a message to clients whose player is currently located within the
     supplied room ID(s)."""
 

@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from rich.panel import Panel
 
-from cibo.actions._base_ import Action
+from cibo.actions import Action
 from cibo.exceptions import ActionMissingArguments, ClientNotLoggedIn
 from cibo.models.client import Client
 from cibo.models.data.item import Item as ItemData

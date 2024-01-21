@@ -4,7 +4,7 @@
 from typing import Any, Optional
 
 from cibo.actions.disconnect import Disconnect
-from cibo.events._base_ import Event, EventPayload
+from cibo.events import Event, EventPayload
 
 
 class DisconnectEvent(Event):

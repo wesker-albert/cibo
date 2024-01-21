@@ -8,11 +8,10 @@ from os import getenv
 from threading import Thread
 from time import sleep
 
+from blinker import signal
 from peewee import SqliteDatabase
 
-from cibo.events._processor_ import EventProcessor
-from cibo.events.spawn import SpawnEvent
-from cibo.events.tick import TickEvent
+from cibo.events._interface_ import EventInterface
 from cibo.models.data.item import Item
 from cibo.models.data.npc import Npc
 from cibo.models.data.player import Player
@@ -42,12 +41,9 @@ class Server:
         self._telnet = server_config.telnet
         self._entities = server_config.entity_interface
 
-        self._event_processor = EventProcessor(server_config)
+        self._event_interface = EventInterface(server_config)
 
-        self._tick = TickEvent(server_config, "event-tick")
         self._tick_thread = Thread(target=self._start_tick_timers)
-
-        self._spawn = SpawnEvent(server_config, "event-spawn")
 
         self._thread = Thread(target=self._start_server)
         self._status = self.Status.STOPPED
@@ -66,7 +62,7 @@ class Server:
         """Start the tick timers, that carry out scheduled actions."""
 
         while self.is_running:
-            self._tick.process()
+            signal("event-tick").send()
 
             sleep(1)
 
@@ -81,7 +77,7 @@ class Server:
 
         self._tick_thread.start()
 
-        self._spawn.process()
+        signal("event-spawn").send()
 
         while self.is_running:
             client_count = len(self._telnet.get_connected_clients())
