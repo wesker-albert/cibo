@@ -11,10 +11,12 @@ from cibo.telnet import TelnetServer
 
 
 class Comm(ABC):
-    """The base interface used by all Comms classes.
+    """The base interface used by all Comm classes.
 
     Args:
         server_config (ServerConfig): The server configuration object.
+        entity_interface (EntityInterface): The interface instance to use, when
+            referencing entities in a comms message.
     """
 
     def __init__(self, telnet: TelnetServer, entity_interface: EntityInterface):

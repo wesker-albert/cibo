@@ -39,13 +39,12 @@ class Server:
         self._database = SqliteDatabase(getenv("DATABASE_PATH", "cibo_database.db"))
 
         self._telnet = server_config.telnet
-        self._entities = server_config.entity_interface
 
         self._event_interface = EventInterface(server_config)
 
         self._tick_thread = Thread(target=self._start_tick_timers)
+        self._main_thread = Thread(target=self._start_server)
 
-        self._thread = Thread(target=self._start_server)
         self._status = self.Status.STOPPED
 
     @property
@@ -75,9 +74,9 @@ class Server:
         self._telnet.listen()
         self._status = self.Status.RUNNING
 
-        self._tick_thread.start()
-
         signal("event-spawn").send()
+
+        self._tick_thread.start()
 
         while self.is_running:
             client_count = len(self._telnet.get_connected_clients())
@@ -101,17 +100,17 @@ class Server:
         """Create a thread and start the server."""
 
         if self._status is self.Status.STOPPED:
-            self._thread.start()
+            self._main_thread.start()
 
     def stop(self) -> None:
         """Stop the currently running server and end the thread."""
 
-        if self.is_running and self._thread:
+        if self.is_running and self._main_thread:
             self._status = self.Status.SHUTTING_DOWN
 
             self._tick_thread.join()
 
             self._telnet.shutdown()
-            self._thread.join()
+            self._main_thread.join()
 
             self._status = self.Status.STOPPED

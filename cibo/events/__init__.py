@@ -20,6 +20,7 @@ class Event(ABC):
 
     Args:
         server_config (ServerConfig): The server configuration object.
+        signal_name (str): The event signal name to subscribe to.
     """
 
     def __init__(self, server_config: ServerConfig, signal_name: str) -> None:

@@ -1,9 +1,11 @@
-"""Basic Telnet server module.
+"""An event-driven Telnet server. Utilizes the `blinker` package, to send signals,
+which can then be subscribed to in order to carry out event logic elsewhere.
 
-Based on a generalization made by Oliver L. Sanz from Mark Frimston's mud-py server.
+Initially based on a generalization made by Oliver L. Sanz from Mark Frimston's
+mud-py server.
 https://github.com/OliverLSanz/python-telnetserver/blob/master/telnetserver
 
-Further modified as needed, to accommodate the cibo project.
+Further modified and expanded upon as needed, to accommodate the cibo project.
 """
 
 import socket
@@ -20,12 +22,13 @@ from cibo.models.event import EventPayload
 
 
 class TelnetServer:
-    """A basic Telnet server.
+    """A Telnet server.
 
     Once created, the server will listen for clients connecting using Telnet. Messages
     can then be sent to and from multiple connected clients.
 
-    The 'update' method should be called in a loop to keep the server running.
+    The 'update' method should be called in a loop to keep the server running, as well
+    as send event signals.
 
     Args:
         port (int): Port the server will listen to.

@@ -22,6 +22,7 @@ class InputEvent(Event):
 
     Args:
         server_config (ServerConfig): The server configuration object.
+        signal_name (str): The event signal name to subscribe to.
         command_processor (CommandProcessor): The processor to use when evaluating the
             given input.
     """
