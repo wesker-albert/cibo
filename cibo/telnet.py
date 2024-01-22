@@ -9,16 +9,14 @@ Further modified and expanded upon as needed, to accommodate the cibo project.
 """
 
 import socket
-import time
 from enum import Enum
 from select import select
+from time import time
 from typing import List, Optional
 
 from blinker import signal
 
-from cibo.models.client import Client, ClientLoginState
-from cibo.models.data.character import Character
-from cibo.models.data.user import User
+from cibo.models.client import Client
 from cibo.models.event import EventPayload, EventType
 
 
@@ -151,28 +149,18 @@ class TelnetServer:
 
             # construct a new Client object to hold info about the newly connected
             # client.
-            new_client = Client(
-                socket=joined_socket,
-                address=addr[0],
-                encoding=self._encoding,
-                buffer="",
-                last_check=time.time(),
-                login_state=ClientLoginState.PRE_LOGIN,
-                registration=User(),
-                user=User(),
-                character=Character(),
-            )
+            client = Client.create_new_client(joined_socket, addr[0], self._encoding)
 
-            self._clients.append(new_client)
+            self._clients.append(client)
 
-            self._connect_signal.send(self, payload=EventPayload(new_client))
+            self._connect_signal.send(self, payload=EventPayload(client))
 
     def _check_for_disconnected(self) -> None:
         # go through all the clients
         for client in self._clients:
             # if we last checked the client less than 5 seconds ago, skip this
             # client and move on to the next one
-            if time.time() - client.last_check < 5.0:
+            if time() - client.last_check < 5.0:
                 continue
 
             # send the client an invisible character. It doesn't actually
@@ -190,7 +178,7 @@ class TelnetServer:
                 self._handle_disconnect(client)
 
             # update the last check time
-            client.last_check = time.time()
+            client.last_check = time()
 
     def _check_for_messages(self) -> None:
         # go through all the clients

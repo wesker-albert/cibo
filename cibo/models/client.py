@@ -6,9 +6,12 @@ out interactions between the user and the server.
 import socket as socket_
 from dataclasses import dataclass
 from enum import Enum
+from time import time
+from typing import List, Self
 
 from cibo.models.data.character import Character
 from cibo.models.data.user import User
+from cibo.models.input import InputHistoryEntry
 from cibo.models.prompt import Prompt
 
 
@@ -29,9 +32,38 @@ class Client:
     buffer: str
     last_check: float
     login_state: ClientLoginState
-    registration: User
+    registration: User  # TODO: deprecate
     user: User
     character: Character
+    input_history: List[InputHistoryEntry]
+
+    @classmethod
+    def create_new_client(
+        cls, socket: socket_.socket, address: str, encoding: str
+    ) -> Self:
+        """Create a brand new client, in a pre-login state.
+
+        Args:
+            socket (socket_.socket): Socket to attach the client to.
+            address (str): Return address for the client.
+            encoding (str): Character encoding to use.
+
+        Returns:
+            Self: A fresh, new client object.
+        """
+
+        return cls(
+            socket=socket,
+            address=address,
+            encoding=encoding,
+            buffer="",
+            last_check=time(),
+            login_state=ClientLoginState.PRE_LOGIN,
+            registration=User(),
+            user=User(),
+            character=Character(),
+            input_history=[],
+        )
 
     @property
     def is_logged_in(self) -> bool:
@@ -108,3 +140,15 @@ class Client:
 
         self.user = user
         self.login_state = ClientLoginState.LOGGED_IN
+
+    def add_input_history_entry(self, entry: InputHistoryEntry) -> None:
+        """Add an entry to the input history, and trim the list so that it is never
+        larger than the last 50 entries.
+
+        Args:
+            entry (InputHistoryEntry): The entry, including the command and arguments.
+        """
+
+        del self.input_history[:-50]
+
+        self.input_history.append(entry)

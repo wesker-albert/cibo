@@ -8,6 +8,7 @@ from typing import List, Optional, Type
 from cibo.actions import Action
 from cibo.exceptions import CommandMissingArguments, CommandUnrecognized
 from cibo.models.client import Client
+from cibo.models.input import InputHistoryEntry
 from cibo.server_config import ServerConfig
 
 
@@ -93,6 +94,8 @@ class CommandProcessor:
         split_args = args.split(" ") if args else []
 
         action = self._get_command_action(command)
+
+        client.add_input_history_entry(InputHistoryEntry(command, split_args))
 
         if action is None:
             raise CommandUnrecognized(command)

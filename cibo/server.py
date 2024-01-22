@@ -12,6 +12,7 @@ from blinker import signal
 from peewee import SqliteDatabase
 
 from cibo.events._interface_ import EventInterface
+from cibo.models.data.character import Character
 from cibo.models.data.item import Item
 from cibo.models.data.npc import Npc
 from cibo.models.data.user import User
@@ -95,7 +96,7 @@ class Server:
         """Create the sqlite DB and necessary tables."""
 
         self._database.connect()
-        self._database.create_tables([User, Item, Npc])
+        self._database.create_tables([User, Character, Item, Npc])
 
     def start(self) -> None:
         """Create a thread and start the server."""
