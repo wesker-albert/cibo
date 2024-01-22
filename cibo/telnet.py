@@ -19,7 +19,7 @@ from blinker import signal
 from cibo.models.client import Client, ClientLoginState
 from cibo.models.data.character import Character
 from cibo.models.data.user import User
-from cibo.models.event import EventPayload
+from cibo.models.event import EventPayload, EventType
 
 
 class TelnetServer:
@@ -61,9 +61,9 @@ class TelnetServer:
 
         self._listen_socket: Optional[socket.socket] = None
 
-        self._connect_signal = signal("event-connect")
-        self._disconnect_signal = signal("event-disconnect")
-        self._input_signal = signal("event-input")
+        self._connect_signal = signal(str(EventType.CONNECT))
+        self._disconnect_signal = signal(str(EventType.DISCONNECT))
+        self._input_signal = signal(str(EventType.INPUT))
 
         self._clients: List[Client] = []
 

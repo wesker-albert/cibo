@@ -11,7 +11,7 @@ from typing import Any, Optional
 
 from blinker import signal
 
-from cibo.models.event import EventPayload
+from cibo.models.event import EventPayload, EventType
 from cibo.server_config import ServerConfig
 
 
@@ -20,17 +20,17 @@ class Event(ABC):
 
     Args:
         server_config (ServerConfig): The server configuration object.
-        signal_name (str): The event signal name to subscribe to.
+        event_type (EventType): The event type to subscribe to.
     """
 
-    def __init__(self, server_config: ServerConfig, signal_name: str) -> None:
+    def __init__(self, server_config: ServerConfig, event_type: EventType) -> None:
         self._server_config = server_config
 
         self._telnet = self._server_config.telnet
         self._entities = self._server_config.entity_interface
         self._comms = self._server_config.comms_interface
 
-        self.signal_name = signal_name
+        self.signal_name = str(event_type)
         self._signal = signal(self.signal_name)
         self._signal.connect(self.process)
 

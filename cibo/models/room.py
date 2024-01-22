@@ -73,7 +73,7 @@ class Room:
 
         for exit_ in self.exits:
             if (
-                direction == exit_.direction.value
+                direction == str(exit_.direction)
                 or direction == exit_.direction.name.lower()
             ):
                 return exit_

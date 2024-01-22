@@ -15,6 +15,7 @@ from cibo.events._interface_ import EventInterface
 from cibo.models.data.item import Item
 from cibo.models.data.npc import Npc
 from cibo.models.data.user import User
+from cibo.models.event import EventType
 from cibo.server_config import ServerConfig
 
 
@@ -61,7 +62,7 @@ class Server:
         """Start the tick timers, that carry out scheduled actions."""
 
         while self.is_running:
-            signal("event-tick").send()
+            signal(str(EventType.TICK)).send()
 
             sleep(1)
 
@@ -74,7 +75,7 @@ class Server:
         self._telnet.listen()
         self._status = self.Status.RUNNING
 
-        signal("event-spawn").send()
+        signal(str(EventType.SPAWN)).send()
 
         self._tick_thread.start()
 

@@ -12,6 +12,7 @@ from cibo.events.disconnect import DisconnectEvent
 from cibo.events.input import InputEvent
 from cibo.events.spawn import SpawnEvent
 from cibo.events.tick import TickEvent
+from cibo.models.event import EventType
 from cibo.server_config import ServerConfig
 
 
@@ -26,8 +27,10 @@ class EventInterface:  # pytest: no cover
     def __init__(self, server_config: ServerConfig) -> None:
         self._command_processor = CommandProcessor(server_config, ACTIONS)
 
-        self._connect = ConnectEvent(server_config, "event-connect")
-        self._disconnect = DisconnectEvent(server_config, "event-disconnect")
-        self._input = InputEvent(server_config, "event-input", self._command_processor)
-        self._tick = TickEvent(server_config, "event-tick")
-        self._spawn = SpawnEvent(server_config, "event-spawn")
+        self._connect = ConnectEvent(server_config, EventType.CONNECT)
+        self._disconnect = DisconnectEvent(server_config, EventType.DISCONNECT)
+        self._input = InputEvent(
+            server_config, EventType.INPUT, self._command_processor
+        )
+        self._tick = TickEvent(server_config, EventType.TICK)
+        self._spawn = SpawnEvent(server_config, EventType.SPAWN)

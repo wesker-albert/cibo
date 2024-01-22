@@ -3,9 +3,23 @@ structure and protocols.
 """
 
 from dataclasses import dataclass
+from enum import Enum
 from typing import Optional
 
 from cibo.models.client import Client
+
+
+class EventType(str, Enum):
+    """The kinds of events that can be dispatches and subscribed to."""
+
+    CONNECT = "event-connect"
+    DISCONNECT = "event-disconnect"
+    INPUT = "event-input"
+    TICK = "event-tick"
+    SPAWN = "event-spawn"
+
+    def __str__(self) -> str:
+        return self.value
 
 
 @dataclass

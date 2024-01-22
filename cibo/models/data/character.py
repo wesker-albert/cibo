@@ -10,7 +10,7 @@ from marshmallow import Schema, fields, validate
 from peewee import AutoField, CharField, DoesNotExist, ForeignKeyField, IntegerField
 
 from cibo.exceptions import CharacterNotFound
-from cibo.models.data._base_ import Model
+from cibo.models.data import Model
 from cibo.models.data.user import User, UserSchema
 
 

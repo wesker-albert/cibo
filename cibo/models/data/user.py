@@ -9,7 +9,7 @@ from marshmallow import Schema, fields, validate
 from peewee import AutoField, CharField, DoesNotExist, TextField
 
 from cibo.exceptions import UserNotFound
-from cibo.models.data._base_ import Model
+from cibo.models.data import Model
 
 
 class User(Model):

@@ -12,3 +12,6 @@ class Direction(str, Enum):
     WEST = "w"
     UP = "u"
     DOWN = "d"
+
+    def __str__(self) -> str:
+        return self.value

@@ -12,6 +12,7 @@ from cibo.exceptions import (
     CommandUnrecognized,
     InputNotReceived,
 )
+from cibo.models.event import EventType
 from cibo.server_config import ServerConfig
 
 
@@ -22,7 +23,7 @@ class InputEvent(Event):
 
     Args:
         server_config (ServerConfig): The server configuration object.
-        signal_name (str): The event signal name to subscribe to.
+        event_type (EventType): The event type to subscribe to.
         command_processor (CommandProcessor): The processor to use when evaluating the
             given input.
     """
@@ -30,10 +31,10 @@ class InputEvent(Event):
     def __init__(
         self,
         server_config: ServerConfig,
-        signal_name: str,
+        event_type: EventType,
         command_processor: CommandProcessor,
     ) -> None:
-        super().__init__(server_config, signal_name)
+        super().__init__(server_config, event_type)
 
         self._command_processor = command_processor
 
