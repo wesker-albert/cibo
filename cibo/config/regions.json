@@ -1,10 +1,10 @@
 {
-    "regions": [
-        {
-            "id": 1,
-            "name": "The Simulation",
-            "description": "It's powered by people, but not in a good way.",
-            "flags": []
-        }
-    ]
+  "regions": [
+    {
+      "id": 1,
+      "name": "The Simulation",
+      "description": "It's powered by people, but not in a good way.",
+      "flags": []
+    }
+  ]
 }

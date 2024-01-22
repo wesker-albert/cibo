@@ -1,142 +1,178 @@
 {
-	"name": "cibo",
-	"build": {
-		"dockerfile": "Dockerfile",
-		"args": {
-			"VARIANT": "3.11-bullseye",
-			"PIPX_VER": "1.2.0",
-			"POETRY_VER": "1.5.1"
-		}
-	},
-	"remoteUser": "vscode",
-	"workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode/cibo,type=bind,consistency=delegated",
-	"workspaceFolder": "/home/vscode/cibo",
-	"postCreateCommand": "bash .devcontainer/postCreate.sh",
-	"postAttachCommand": "bash .devcontainer/postAttach.sh",
-	"appPort": 51234,
-	"customizations": {
-		"vscode": {
-            "settings": {
-                "[json]": {
-                    "editor.detectIndentation": false,
-                    "editor.formatOnSave": true,
-                    "editor.insertSpaces": true,
-                    "editor.tabSize": 4
-                },
-                "[python]": {
-                    "editor.codeActionsOnSave": {
-                        "source.fixAll": true,
-                        "source.organizeImports": true
-                    },
-                    "editor.defaultFormatter": "ms-python.black-formatter",
-                    "editor.formatOnSave": true,
-                    "editor.rulers": [
-                        88
-                    ]
-                },
-                "autoDocstring.docstringFormat": "google",
-                "coverage-gutters.coverageBaseDir": "**",
-                "coverage-gutters.coverageFileNames": [
-                    "../coverage.xml"
-                ],
-                "coverage-gutters.coverageReportFileName": "coverage/**/index.html",
-                "coverage-gutters.ignoredPathGlobs": "**/{node_modules}/**",
-                "coverage-gutters.showGutterCoverage": false,
-                "coverage-gutters.showLineCoverage": true,
-                "emeraldwalk.runonsave": {
-                    "commands": [
-                        {
-                            "cmd": "make init_poetry",
-                            "match": "poetry.lock|pyproject.toml"
-                        },
-                        {
-                            "cmd": "make coverage",
-                            "match": "cibo/.*\\.py"
-                        }
-                    ]
-                },
-                "errorLens.enabledDiagnosticLevels": [
-                    "error",
-                    "hint",
-                    "info",
-                    "warning"
-                ],
-                "errorLens.exclude": [
-                    "\"_.+\" is not accessed",
-                    "\"args\" is not accessed",
-                    "\"kwargs\" is not accessed"
-                ],
-                "files.associations": {
-                    ".env*": "env"
-                },
-                "git.branchProtection": [
-                    "master"
-                ],
-                "git.branchProtectionPrompt": "alwaysCommitToNewBranch",
-                "gitlens.currentLine.enabled": false,
-                "gitlens.telemetry.enabled": false,
-                "isort.args": [
-                    "--settings-path",
-                    "${workspaceFolder}/pyproject.toml",
-                    "--profile",
-                    "black"
-                ],
-                "mypy.targets": [
-                    "cibo/"
-                ],
-                "pylint.args": [
-                    "--rcfile",
-                    "pyproject.toml"
-                ],
-                "pylint.path": [
-                    "/usr/local/py-utils/venvs/poetry/bin/pylint"
-                ],
-                "python.analysis.autoImportCompletions": true,
-                "python.analysis.fixAll": [
-                    "source.convertImportFormat",
-                    "source.unusedImports"
-                ],
-                "python.analysis.importFormat": "absolute",
-                "python.analysis.typeCheckingMode": "off",
-                "python.createEnvironment.contentButton": "hide",
-                "python.defaultInterpreterPath": "/usr/local/py-utils/venvs/poetry/bin/python3.11",
-                "python.testing.pytestArgs": [
-                    "tests"
-                ],
-                "python.testing.pytestEnabled": true,
-                "python.testing.unittestEnabled": false,
-                "telemetry.telemetryLevel": "off",
-                "terminal.integrated.defaultProfile.linux": "zsh",
-                "terminal.integrated.profiles.linux": {
-                    "zsh": {
-                        "path": "/bin/zsh"
-                    }
-                },
-                "testing.openTesting": "neverOpen",
-                "workbench.editorAssociations": {
-                    "*.db": "sqlite-viewer.option"
-                }
+  "name": "cibo",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "VARIANT": "3.11-bullseye",
+      "PIPX_VER": "1.2.0",
+      "POETRY_VER": "1.5.1"
+    }
+  },
+  "remoteUser": "vscode",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode/cibo,type=bind,consistency=delegated",
+  "workspaceFolder": "/home/vscode/cibo",
+  "postCreateCommand": "bash .devcontainer/postCreate.sh",
+  "postAttachCommand": "bash .devcontainer/postAttach.sh",
+  "appPort": 51234,
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "[github-actions-workflow][yaml]": {
+          "editor.autoIndent": "keep",
+          "editor.detectIndentation": false,
+          "editor.insertSpaces": true,
+          "editor.tabSize": 2
+        },
+        "[json][jsonc]": {
+          "editor.detectIndentation": false,
+          "editor.formatOnSave": true,
+          "editor.insertSpaces": true,
+          "editor.tabSize": 2
+        },
+        "[makefile]": {
+          "editor.detectIndentation": false,
+          "editor.insertSpaces": false,
+          "editor.tabSize": 4
+        },
+        "[python]": {
+          "editor.codeActionsOnSave": {
+            "source.fixAll": true,
+            "source.organizeImports": true
+          },
+          "editor.defaultFormatter": "ms-python.black-formatter",
+          "editor.detectIndentation": false,
+          "editor.formatOnSave": true,
+          "editor.insertSpaces": true,
+          "editor.rulers": [
+            88
+          ],
+          "editor.tabSize": 4
+        },
+        "[toml]": {
+          "editor.detectIndentation": false,
+          "editor.insertSpaces": true,
+          "editor.tabSize": 4
+        },
+        "autoDocstring.docstringFormat": "google",
+        "coverage-gutters.coverageBaseDir": "**",
+        "coverage-gutters.coverageFileNames": [
+          "../coverage.xml"
+        ],
+        "coverage-gutters.coverageReportFileName": "coverage/**/index.html",
+        "coverage-gutters.ignoredPathGlobs": "**/{node_modules}/**",
+        "coverage-gutters.showGutterCoverage": false,
+        "coverage-gutters.showLineCoverage": true,
+        "emeraldwalk.runonsave": {
+          "commands": [
+            {
+              "cmd": "make init_poetry",
+              "match": "poetry.lock|pyproject.toml"
             },
-			"extensions": [
-				"davidhouchin.whitespace-plus",
-				"eamodio.gitlens",
-				"emeraldwalk.RunOnSave",
-				"IronGeek.vscode-env",
-				"magicstack.MagicPython",
-				"matangover.mypy",
-				"ms-python.black-formatter",
-				"ms-python.isort",
-				"ms-python.pylint",
-				"ms-python.python",
-				"ms-python.vscode-pylance",
-				"njpwerner.autodocstring",
-				"patrick91.python-dependencies-vscode",
-				"qwtel.sqlite-viewer",
-				"ryanluker.vscode-coverage-gutters",
-				"tamasfe.even-better-toml",
-				"usernamehw.errorlens",
-				"VisualStudioExptTeam.vscodeintellicode"
-			]
-		}
-	}
+            {
+              "cmd": "make coverage",
+              "match": "cibo/.*\\.py"
+            }
+          ]
+        },
+        "errorLens.enabledDiagnosticLevels": [
+          "error",
+          "hint",
+          "info",
+          "warning"
+        ],
+        "errorLens.exclude": [
+          "\"_.+\" is not accessed",
+          "\"args\" is not accessed",
+          "\"kwargs\" is not accessed"
+        ],
+        "files.associations": {
+          ".env*": "env",
+          "*.rc": "ini",
+          "**/.github/workflows/*.yml": "github-actions-workflow"
+        },
+        "files.insertFinalNewline": true,
+        "git.branchProtection": [
+          "master"
+        ],
+        "git.branchProtectionPrompt": "alwaysCommitToNewBranch",
+        "gitlens.currentLine.enabled": false,
+        "gitlens.telemetry.enabled": false,
+        "isort.args": [
+          "--settings-path",
+          "${workspaceFolder}/pyproject.toml",
+          "--profile",
+          "black"
+        ],
+        "json.schemas": [
+          {
+            "fileMatch": [
+              "**/.github/actions/**/action.yml"
+            ],
+            "url": "https://json.schemastore.org/github-action.json"
+          }
+        ],
+        "mypy.targets": [
+          "cibo/"
+        ],
+        "pylint.args": [
+          "--rcfile",
+          "pyproject.toml"
+        ],
+        "pylint.path": [
+          "/usr/local/py-utils/venvs/poetry/bin/pylint"
+        ],
+        "python.analysis.autoImportCompletions": true,
+        "python.analysis.fixAll": [
+          "source.convertImportFormat",
+          "source.unusedImports"
+        ],
+        "python.analysis.importFormat": "absolute",
+        "python.analysis.typeCheckingMode": "off",
+        "python.createEnvironment.contentButton": "hide",
+        "python.defaultInterpreterPath": "/usr/local/py-utils/venvs/poetry/bin/python3.11",
+        "python.testing.pytestArgs": [
+          "tests"
+        ],
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "telemetry.telemetryLevel": "off",
+        "terminal.integrated.allowChords": false,
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/bin/zsh"
+          }
+        },
+        "testing.openTesting": "neverOpen",
+        "workbench.editorAssociations": {
+          "*.db": "sqlite-viewer.option"
+        },
+        "yaml.schemas": {
+          "https://json.schemastore.org/github-action.json": "**/.github/actions/**/action.yml"
+        }
+      },
+      "extensions": [
+        "davidhouchin.whitespace-plus",
+        "eamodio.gitlens",
+        "emeraldwalk.RunOnSave",
+        "GitHub.vscode-github-actions",
+        "IronGeek.vscode-env",
+        "magicstack.MagicPython",
+        "matangover.mypy",
+        "me-dutour-mathieu.vscode-github-actions",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-python.pylint",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "njpwerner.autodocstring",
+        "patrick91.python-dependencies-vscode",
+        "qwtel.sqlite-viewer",
+        "ryanluker.vscode-coverage-gutters",
+        "tamasfe.even-better-toml",
+        "usernamehw.errorlens",
+        "VisualStudioExptTeam.vscodeintellicode"
+      ]
+    }
+  }
 }

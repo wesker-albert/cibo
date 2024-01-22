@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- [Add QOL VS Code Container and Github Settings (#52)](https://github.com/wesker-albert/cibo/commit/edc79c1081cf96db64bd7b5eaf1bf0904e6f13ba)
+
 ### Changed
 
 - [Refactor Events to Use Signals (#51)](https://github.com/wesker-albert/cibo/commit/a2a202e0be0809524a84979ce7567b5561a32719)

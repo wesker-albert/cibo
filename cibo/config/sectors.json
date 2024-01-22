@@ -1,22 +1,22 @@
 {
-    "sectors": [
-        {
-            "id": 1,
-            "name": "The Backrooms",
-            "description": "A handful of rooms that make you feel uneasy.",
-            "region_id": 1,
-            "flags": [
-                "inside"
-            ]
-        },
-        {
-            "id": 2,
-            "name": "The Outdoor Environment",
-            "description": "It's like outside, but also not.",
-            "region_id": 1,
-            "flags": [
-                "outside"
-            ]
-        }
-    ]
+  "sectors": [
+    {
+      "id": 1,
+      "name": "The Backrooms",
+      "description": "A handful of rooms that make you feel uneasy.",
+      "region_id": 1,
+      "flags": [
+        "inside"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "The Outdoor Environment",
+      "description": "It's like outside, but also not.",
+      "region_id": 1,
+      "flags": [
+        "outside"
+      ]
+    }
+  ]
 }
