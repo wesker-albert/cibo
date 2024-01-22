@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- [Refactor Events to Use Signals (#51)](https://github.com/wesker-albert/cibo/commit/a2a202e0be0809524a84979ce7567b5561a32719)
 - [Revise README and STYLEGUIDE (#48)](https://github.com/wesker-albert/cibo/commit/be804142b49d319bdde7baf4460aa717a712d11f)
 
 ## [1.0.0-pre-alpha.2] - 2024-01-15

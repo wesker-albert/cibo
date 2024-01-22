@@ -6,7 +6,7 @@ from typing import List, Optional
 
 from rich.panel import Panel
 
-from cibo.actions._base_ import Action
+from cibo.actions import Action
 from cibo.models.client import Client
 from cibo.models.message import Message, MessageRoute
 

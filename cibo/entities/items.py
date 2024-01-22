@@ -6,7 +6,7 @@ This is a collection of all the items that exist in the world.
 
 from typing import List
 
-from cibo.entities._base_ import Entity
+from cibo.entities import Entity
 from cibo.exceptions import ItemNotFound
 from cibo.models.data.item import Item as ItemData
 from cibo.models.item import EntityDescription, Item

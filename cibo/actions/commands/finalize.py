@@ -4,7 +4,7 @@ from typing import List
 
 from peewee import IntegrityError
 
-from cibo.actions._base_ import Action
+from cibo.actions import Action
 from cibo.exceptions import ClientIsLoggedIn, UserAlreadyExists, UserNotRegistered
 from cibo.models.client import Client
 from cibo.models.data.item import Item

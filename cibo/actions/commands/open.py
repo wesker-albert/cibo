@@ -2,7 +2,7 @@
 
 from typing import List, Tuple
 
-from cibo.actions._base_ import Action
+from cibo.actions import Action
 from cibo.exceptions import (
     ActionMissingArguments,
     ClientNotLoggedIn,

@@ -1,47 +1,35 @@
-"""Basic Telnet server module.
+"""An event-driven Telnet server. Utilizes the `blinker` package, to send signals,
+which can then be subscribed to in order to carry out event logic elsewhere.
 
-Based on a generalization made by Oliver L. Sanz from Mark Frimston's mud-py server.
+Initially based on a generalization made by Oliver L. Sanz from Mark Frimston's
+mud-py server.
 https://github.com/OliverLSanz/python-telnetserver/blob/master/telnetserver
 
-Further modified as needed, to accommodate the cibo project.
+Further modified and expanded upon as needed, to accommodate the cibo project.
 """
 
 import socket
 import time
-from dataclasses import dataclass
 from enum import Enum
 from select import select
-from typing import List, Optional, Tuple
+from typing import List, Optional
+
+from blinker import signal
 
 from cibo.models.client import Client, ClientLoginState
 from cibo.models.data.character import Character
 from cibo.models.data.user import User
-
-
-class TelnetEventType(int, Enum):
-    """Different types of incoming events from clients."""
-
-    NEW_CLIENT = 1
-    CLIENT_LEFT = 2
-    MESSAGE = 3
-
-
-@dataclass
-class TelnetEvent:
-    """An incoming telnet event, including important data."""
-
-    type_: TelnetEventType
-    client: Client
-    message: Optional[str] = None
+from cibo.models.event import EventPayload
 
 
 class TelnetServer:
-    """A basic Telnet server.
+    """A Telnet server.
 
     Once created, the server will listen for clients connecting using Telnet. Messages
     can then be sent to and from multiple connected clients.
 
-    The 'update' method should be called in a loop to keep the server running.
+    The 'update' method should be called in a loop to keep the server running, as well
+    as send event signals.
 
     Args:
         port (int): Port the server will listen to.
@@ -72,8 +60,10 @@ class TelnetServer:
         self._error_policy = "replace"
 
         self._listen_socket: Optional[socket.socket] = None
-        self._events: List[TelnetEvent] = []
-        self._new_events: List[TelnetEvent] = []
+
+        self._connect_signal = signal("event-connect")
+        self._disconnect_signal = signal("event-disconnect")
+        self._input_signal = signal("event-input")
 
         self._clients: List[Client] = []
 
@@ -103,37 +93,14 @@ class TelnetServer:
 
     def update(self) -> None:
         """Checks for new clients, disconnected clients, and new messages sent from
-        clients. This method must be called before up-to-date info can be obtained
-        from the 'get_new_clients', 'get_disconnected_clients' and 'get_messages'
-        methods. It should be called in a loop to keep the server running.
+        clients. It then dispatches any new corresponding events. It should be called
+        in a loop to keep the server running.
         """
 
         # check for new stuff
         self._check_for_new_connections()
         self._check_for_disconnected()
         self._check_for_messages()
-
-        # move the new events into the main events list so that they can be
-        # obtained with 'get_new_clients', 'get_disconnected_clients' and
-        # 'get_messages'. The previous events are discarded
-        self._events = self._new_events
-        self._new_events = []
-
-    def get_new_clients(self) -> List[Client]:
-        """Returns a list containing any new clients that have connected to the server
-        since the last call to 'update'.
-
-        Returns:
-            List[Client]: All newly connected clients.
-        """
-
-        clients = [
-            event.client
-            for event in self._events
-            if event.type_ is TelnetEventType.NEW_CLIENT
-        ]
-
-        return clients
 
     def get_connected_clients(self) -> List[Client]:
         """Returns a list of all currently connected clients, as of last call to
@@ -144,39 +111,6 @@ class TelnetServer:
         """
 
         return self._clients
-
-    def get_disconnected_clients(self) -> List[Client]:
-        """Returns a list containing the clients that have left the server since the
-        last call to 'update'.
-
-        Returns:
-            List[Client]: Clients who have disconnected.
-        """
-
-        clients = [
-            event.client
-            for event in self._events
-            if event.type_ is TelnetEventType.CLIENT_LEFT
-        ]
-
-        return clients
-
-    def get_client_input(self) -> List[Tuple[Client, Optional[str]]]:
-        """Returns a list containing any messages sent from clients since the last call
-        to 'update'.
-
-        Returns:
-            List[Tuple[Client, Optional[str]]]: The client and the incoming message
-                they sent.
-        """
-
-        client_messages = [
-            (event.client, event.message)
-            for event in self._events
-            if event.type_ is TelnetEventType.MESSAGE
-        ]
-
-        return client_messages
 
     def shutdown(self) -> None:
         """Closes down the server, disconnecting all clients and closing the listen
@@ -231,8 +165,7 @@ class TelnetServer:
 
             self._clients.append(new_client)
 
-            # add a new client occurence to the new events list with the client
-            self._new_events.append(TelnetEvent(TelnetEventType.NEW_CLIENT, new_client))
+            self._connect_signal.send(self, payload=EventPayload(new_client))
 
     def _check_for_disconnected(self) -> None:
         # go through all the clients
@@ -295,11 +228,7 @@ class TelnetServer:
                     # the message
                     message = message.strip()
 
-                    # add a message occurence to the new events list with the
-                    # client, and the message
-                    self._new_events.append(
-                        TelnetEvent(TelnetEventType.MESSAGE, client, message)
-                    )
+                    self._input_signal.send(self, payload=EventPayload(client, message))
 
             # if there is a problem reading from the socket (e.g. the client
             # has disconnected) a socket error will be raised
@@ -310,8 +239,7 @@ class TelnetServer:
         # remove the client from the clients list
         self._clients.remove(client)
 
-        # add a 'client left' occurence to the new events list, with the client
-        self._new_events.append(TelnetEvent(TelnetEventType.CLIENT_LEFT, client))
+        self._disconnect_signal.send(self, payload=EventPayload(client))
 
     def _process_sent_data(self, client: Client, data: str) -> str:
         # the Telnet protocol allows special message codes to be inserted into

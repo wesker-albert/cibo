@@ -6,7 +6,7 @@ This is a collection of all the NPCs that exist in the world.
 
 from typing import List
 
-from cibo.entities._base_ import Entity
+from cibo.entities import Entity
 from cibo.exceptions import NpcNotFound
 from cibo.models.data.npc import Npc as NpcData
 from cibo.models.description import EntityDescription

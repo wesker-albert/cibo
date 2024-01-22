@@ -4,7 +4,7 @@ the general vicinity.
 
 from typing import Optional
 
-from cibo.comms._base_ import Comms
+from cibo.comms import Comm
 from cibo.comms.private import Private
 from cibo.comms.room import Room
 from cibo.entities._interface_ import EntityInterface
@@ -13,7 +13,7 @@ from cibo.models.message import Message, MessageRoute
 from cibo.telnet import TelnetServer
 
 
-class Vicinity(Comms):
+class Vicinity(Comm):
     """Sends individually specified messages to the appropriate clients, within
     the general vicinity.
     """
