@@ -62,7 +62,7 @@ if __name__ == "__main__":
                     print("Stopped server.")
 
                 print("Goodbye!")
-                
+
                 break
 
         sleep(1)
