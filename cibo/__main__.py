@@ -32,36 +32,37 @@ if __name__ == "__main__":
     while True:
         user_input = input("> ").lower()
 
-        if user_input == "create_db":
-            server.create_db()
+        match user_input:
+            case "create_db":
+                server.create_db()
 
-        if user_input == "start":
-            if not server.is_running:
-                server.start()
+            case "start":
+                if not server.is_running:
+                    server.start()
+                    print("Started server.")
 
-                print("Started server.")
+                    continue
 
-                continue
+                if server.is_running:
+                    print("Server is already running.")
 
-            if server.is_running:
-                print("Server is already running.")
+            case "stop":
+                if server.is_running:
+                    server.stop()
+                    print("Stopped server.")
 
-        if user_input == "stop":
-            if server.is_running:
-                server.stop()
-                print("Stopped server.")
+                    continue
 
-                continue
+                if not server.is_running:
+                    print("Server is not running.")
 
-            if not server.is_running:
-                print("Server is not running.")
+            case "exit":
+                if server.is_running:
+                    server.stop()
+                    print("Stopped server.")
 
-        if user_input == "exit":
-            if server.is_running:
-                server.stop()
-                print("Stopped server.")
-
-            print("Goodbye!")
-            break
+                print("Goodbye!")
+                
+                break
 
         sleep(1)

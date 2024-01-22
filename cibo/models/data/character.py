@@ -34,8 +34,8 @@ class Character(Model):
         """
 
         try:
-            user: Self = cls.get(cls.name == name)
-            return user
+            character: Self = cls.get(cls.name == name)
+            return character
 
         # a User doesn't exist with the entered name
         except DoesNotExist as ex:

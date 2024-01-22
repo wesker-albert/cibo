@@ -6,7 +6,7 @@ such as create playable characters associated with the user account.
 from typing import Self
 
 from marshmallow import Schema, fields, validate
-from peewee import AutoField, CharField, DoesNotExist, TextField
+from peewee import AutoField, CharField, DoesNotExist, IntegerField, TextField
 
 from cibo.exceptions import UserNotFound
 from cibo.models.data import Model
@@ -18,6 +18,7 @@ class User(Model):
     id_ = AutoField()
     name = CharField(unique=True)
     password = TextField()
+    current_room_id = IntegerField()  # TODO: deprecate
 
     @classmethod
     def get_by_name(cls, name: str) -> Self:
@@ -47,3 +48,4 @@ class UserSchema(Schema):
         validate=[validate.Length(min=3, max=15), validate.Regexp("^[a-zA-Z0-9_]*$")]
     )
     password = fields.Str(validate=validate.Length(min=8))
+    current_room_id = fields.Int()  # TODO: deprecate
