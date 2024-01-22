@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   run-suite:
-    name: "Run Suite"
+    name: 'Run Suite'
     runs-on: ubuntu-latest
 
     steps:

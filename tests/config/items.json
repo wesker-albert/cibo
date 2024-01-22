@@ -1,22 +1,22 @@
 {
-    "items": [
-        {
-            "id": 1,
-            "name": "a metal fork",
-            "description": {
-                "room": "glistens in the dirt.",
-                "look": "A pronged, metal eating utensil."
-            },
-            "is_stationary": false
-        },
-        {
-            "id": 2,
-            "name": "a large jukebox",
-            "description": {
-                "room": "is plugged into the wall.",
-                "look": "It has lots of blinking lights, and plays music."
-            },
-            "is_stationary": true
-        }
-    ]
+  "items": [
+    {
+      "id": 1,
+      "name": "a metal fork",
+      "description": {
+        "room": "glistens in the dirt.",
+        "look": "A pronged, metal eating utensil."
+      },
+      "is_stationary": false
+    },
+    {
+      "id": 2,
+      "name": "a large jukebox",
+      "description": {
+        "room": "is plugged into the wall.",
+        "look": "It has lots of blinking lights, and plays music."
+      },
+      "is_stationary": true
+    }
+  ]
 }

@@ -1,16 +1,16 @@
 {
-    "spawns": [
-        {
-            "type": "item",
-            "entity_id": 2,
-            "room_id": 1,
-            "amount": 1
-        },
-        {
-            "type": "npc",
-            "entity_id": 1,
-            "room_id": 4,
-            "amount": 1
-        }
-    ]
+  "spawns": [
+    {
+      "type": "item",
+      "entity_id": 2,
+      "room_id": 1,
+      "amount": 1
+    },
+    {
+      "type": "npc",
+      "entity_id": 1,
+      "room_id": 4,
+      "amount": 1
+    }
+  ]
 }

@@ -1,91 +1,91 @@
 {
-    "rooms": [
+  "rooms": [
+    {
+      "id": 1,
+      "name": "A Room Marked #1",
+      "description": {
+        "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
+      },
+      "exits": [
         {
-            "id": 1,
-            "name": "A Room Marked #1",
-            "description": {
-                "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
-            },
-            "exits": [
-                {
-                    "direction": "n",
-                    "id": 2
-                },
-                {
-                    "direction": "e",
-                    "id": 3
-                },
-                {
-                    "direction": "s",
-                    "id": 4
-                },
-                {
-                    "direction": "w",
-                    "id": 5
-                }
-            ],
-            "sector_id": 1,
-            "flags": []
+          "direction": "n",
+          "id": 2
         },
         {
-            "id": 2,
-            "name": "A Room Marked #2",
-            "description": {
-                "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
-            },
-            "exits": [
-                {
-                    "direction": "s",
-                    "id": 1
-                }
-            ],
-            "sector_id": 1,
-            "flags": []
+          "direction": "e",
+          "id": 3
         },
         {
-            "id": 3,
-            "name": "A Bright Courtyard",
-            "description": {
-                "normal": "The small courtyard is surrounded by very tall, featureless, concrete walls. The sun is an unnatural color and seems to emit a low, buzzing hum."
-            },
-            "exits": [
-                {
-                    "direction": "w",
-                    "id": 1
-                }
-            ],
-            "sector_id": 2,
-            "flags": []
+          "direction": "s",
+          "id": 4
         },
         {
-            "id": 4,
-            "name": "A Room Marked #4",
-            "description": {
-                "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
-            },
-            "exits": [
-                {
-                    "direction": "n",
-                    "id": 1
-                }
-            ],
-            "sector_id": 1,
-            "flags": []
-        },
-        {
-            "id": 5,
-            "name": "A Room Marked #5",
-            "description": {
-                "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
-            },
-            "exits": [
-                {
-                    "direction": "e",
-                    "id": 1
-                }
-            ],
-            "sector_id": 1,
-            "flags": []
+          "direction": "w",
+          "id": 5
         }
-    ]
+      ],
+      "sector_id": 1,
+      "flags": []
+    },
+    {
+      "id": 2,
+      "name": "A Room Marked #2",
+      "description": {
+        "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
+      },
+      "exits": [
+        {
+          "direction": "s",
+          "id": 1
+        }
+      ],
+      "sector_id": 1,
+      "flags": []
+    },
+    {
+      "id": 3,
+      "name": "A Bright Courtyard",
+      "description": {
+        "normal": "The small courtyard is surrounded by very tall, featureless, concrete walls. The sun is an unnatural color and seems to emit a low, buzzing hum."
+      },
+      "exits": [
+        {
+          "direction": "w",
+          "id": 1
+        }
+      ],
+      "sector_id": 2,
+      "flags": []
+    },
+    {
+      "id": 4,
+      "name": "A Room Marked #4",
+      "description": {
+        "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
+      },
+      "exits": [
+        {
+          "direction": "n",
+          "id": 1
+        }
+      ],
+      "sector_id": 1,
+      "flags": []
+    },
+    {
+      "id": 5,
+      "name": "A Room Marked #5",
+      "description": {
+        "normal": "The walls and floor of this room are a bright, sterile white. You feel as if you are inside a simulation."
+      },
+      "exits": [
+        {
+          "direction": "e",
+          "id": 1
+        }
+      ],
+      "sector_id": 1,
+      "flags": []
+    }
+  ]
 }
