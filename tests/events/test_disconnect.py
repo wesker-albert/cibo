@@ -22,5 +22,5 @@ class TestDisconnectEvent(DisconnectEventFactory):
     def test_event_disconnect_process_no_payload(self):
         self.signal.send(self, payload=None)
 
-        self.client.player.save.assert_not_called()
+        self.client.user.save.assert_not_called()
         self.comms.send_to_room.assert_not_called()

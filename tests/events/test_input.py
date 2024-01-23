@@ -7,7 +7,7 @@ from tests.events.conftest import InputEventFactory
 
 class TestInputEvent(InputEventFactory):
     def test_event_input_process(self, caplog):
-        with caplog.at_level(logging.INFO):
+        with caplog.at_level(logging.DEBUG):
             self.signal.send(
                 self, payload=EventPayload(self.client, "login frank ClevaGuhl!")
             )

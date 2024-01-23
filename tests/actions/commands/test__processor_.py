@@ -9,7 +9,7 @@ from tests.conftest import CommandProcessorFactory
 
 class TestCommandProcessor(CommandProcessorFactory):
     def test_command_processor_process(self, caplog):
-        with caplog.at_level(logging.INFO):
+        with caplog.at_level(logging.DEBUG):
             self.command_processor.process(Mock(), "login frank ClevaGuhl!")
 
             assert caplog.records[0].args == {

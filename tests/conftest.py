@@ -119,9 +119,11 @@ class CommandProcessorFactory(BaseFactory):
         def __init__(self, _server_config):
             pass
 
+        @property
         def aliases(self):
             return ["login"]
 
+        @property
         def required_args(self):
             return ["name", "password"]
 
@@ -129,7 +131,7 @@ class CommandProcessorFactory(BaseFactory):
             _name = args[0]
             _password = args[1]
 
-            logging.info("Action processed", {"command": command, "args": args})
+            logging.debug("Action processed", {"command": command, "args": args})
 
     @fixture(autouse=True)
     def fixture_command_processor(self):
