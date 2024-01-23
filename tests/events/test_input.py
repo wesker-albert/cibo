@@ -5,7 +5,7 @@ from cibo.models.message import Message, MessageRoute
 from tests.events.conftest import InputEventFactory
 
 
-class TestInputEevent(InputEventFactory):
+class TestInputEvent(InputEventFactory):
     def test_event_input_process(self, caplog):
         with caplog.at_level(logging.INFO):
             self.signal.send(
