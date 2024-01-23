@@ -94,6 +94,8 @@ class ClientFactory:
             login_state=ClientLoginState.PRE_LOGIN,
             registration=None,
             user=Mock(current_room_id=1),
+            character=Mock(),
+            input_history=[],
         )
         self.client.user.name = "frank"
         yield

@@ -11,9 +11,11 @@ from cibo.models.message import Message, MessageRoute
 class Inventory(Action):
     """Check what items you're carrying."""
 
+    @property
     def aliases(self) -> List[str]:
         return ["inventory", "inv", "i"]
 
+    @property
     def required_args(self) -> List[str]:
         return []
 

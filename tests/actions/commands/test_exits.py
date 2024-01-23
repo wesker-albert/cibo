@@ -5,10 +5,10 @@ from tests.actions.conftest import ExitsActionFactory
 
 class TestExitsAction(ExitsActionFactory):
     def test_action_exits_aliases(self):
-        assert self.exits.aliases() == ["exits"]
+        assert self.exits.aliases == ["exits"]
 
     def test_action_exits_required_args(self):
-        assert not self.exits.required_args()
+        assert not self.exits.required_args
 
     def test_action_exits_process_not_logged_in(self):
         self.client.login_state = ClientLoginState.PRE_LOGIN

@@ -5,10 +5,10 @@ from tests.actions.conftest import OpenActionFactory
 
 class TestOpenAction(OpenActionFactory):
     def test_action_open_aliases(self):
-        assert self.open.aliases() == ["open"]
+        assert self.open.aliases == ["open"]
 
     def test_action_open_required_args(self):
-        assert not self.open.required_args()
+        assert not self.open.required_args
 
     def test_action_open_process_not_logged_in(self):
         self.client.login_state = ClientLoginState.PRE_LOGIN

@@ -13,9 +13,11 @@ from cibo.models.message import Message, MessageRoute
 class Logout(Action):
     """Log out of the current user session."""
 
+    @property
     def aliases(self) -> List[str]:
         return ["logout"]
 
+    @property
     def required_args(self) -> List[str]:
         return []
 

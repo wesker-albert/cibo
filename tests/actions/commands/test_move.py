@@ -6,7 +6,7 @@ from tests.actions.conftest import MoveActionFactory
 class TestMoveAction(MoveActionFactory):
     # pylint: disable=duplicate-code
     def test_action_move_aliases(self):
-        assert self.move.aliases() == [
+        assert self.move.aliases == [
             "d",
             "down",
             "e",
@@ -22,7 +22,7 @@ class TestMoveAction(MoveActionFactory):
         ]
 
     def test_action_move_required_args(self):
-        assert not self.move.required_args()
+        assert not self.move.required_args
 
     def test_action_move_process_not_logged_in(self):
         self.client.login_state = ClientLoginState.PRE_LOGIN

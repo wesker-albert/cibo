@@ -5,10 +5,10 @@ from tests.actions.conftest import RegisterActionFactory
 
 class TestRegisterAction(RegisterActionFactory):
     def test_action_register_aliases(self):
-        assert self.register.aliases() == ["register"]
+        assert self.register.aliases == ["register"]
 
     def test_action_register_required_args(self):
-        assert self.register.required_args() == ["name", "password"]
+        assert self.register.required_args == ["name", "password"]
 
     def test_action_register_process_logged_in(self):
         self.client.login_state = ClientLoginState.LOGGED_IN

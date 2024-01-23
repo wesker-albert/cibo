@@ -5,10 +5,10 @@ from tests.actions.conftest import DisconnectActionFactory
 
 class TestDisconnectAction(DisconnectActionFactory):
     def test_action_disconnect_aliases(self):
-        assert not self.disconnect.aliases()
+        assert not self.disconnect.aliases
 
     def test_action_disconnect_required_args(self):
-        assert not self.disconnect.required_args()
+        assert not self.disconnect.required_args
 
     def test_action_disconnect_process_not_logged_in(self):
         self.client.login_state = ClientLoginState.PRE_LOGIN

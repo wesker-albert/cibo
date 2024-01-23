@@ -7,10 +7,10 @@ from tests.actions.conftest import LogoutActionFactory
 
 class TestLogoutAction(LogoutActionFactory):
     def test_action_logout_aliases(self):
-        assert self.logout.aliases() == ["logout"]
+        assert self.logout.aliases == ["logout"]
 
     def test_action_logout_required_args(self):
-        assert not self.logout.required_args()
+        assert not self.logout.required_args
 
     def test_action_logout_process_not_logged_in(self):
         self.client.login_state = ClientLoginState.PRE_LOGIN

@@ -20,9 +20,11 @@ from cibo.models.message import Message, MessageRoute
 class Get(Action):
     """Pick up an item from the current room."""
 
+    @property
     def aliases(self) -> List[str]:
         return ["get"]
 
+    @property
     def required_args(self) -> List[str]:
         return []
 

@@ -7,10 +7,10 @@ from tests.actions.conftest import GetActionFactory
 
 class TestGetAction(GetActionFactory):
     def test_action_get_aliases(self):
-        assert self.get.aliases() == ["get"]
+        assert self.get.aliases == ["get"]
 
     def test_action_get_required_args(self):
-        assert not self.get.required_args()
+        assert not self.get.required_args
 
     def test_action_get_process_not_logged_in(self):
         self.client.login_state = ClientLoginState.PRE_LOGIN

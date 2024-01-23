@@ -5,10 +5,10 @@ from tests.actions.conftest import QuitActionFactory
 
 class TestQuitAction(QuitActionFactory):
     def test_action_quit_aliases(self):
-        assert self.quit.aliases() == ["quit"]
+        assert self.quit.aliases == ["quit"]
 
     def test_action_quit_required_args(self):
-        assert not self.quit.required_args()
+        assert not self.quit.required_args
 
     def test_action_quit_process_logged_in(self):
         self.quit.process(self.client, "quit", [], 0)

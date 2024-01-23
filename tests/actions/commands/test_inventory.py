@@ -6,10 +6,10 @@ from tests.actions.conftest import InventoryActionFactory
 
 class TestInventoryAction(InventoryActionFactory):
     def test_action_inventory_aliases(self):
-        assert self.inventory.aliases() == ["inventory", "inv", "i"]
+        assert self.inventory.aliases == ["inventory", "inv", "i"]
 
     def test_action_inventory_required_args(self):
-        assert not self.inventory.required_args()
+        assert not self.inventory.required_args
 
     def test_action_inventory_process_not_logged_in(self):
         self.client.login_state = ClientLoginState.PRE_LOGIN

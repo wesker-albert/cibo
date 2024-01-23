@@ -10,9 +10,11 @@ from cibo.models.message import Message, MessageRoute
 class Disconnect(Action):
     """Make others aware that a user has abruptly disconnected."""
 
+    @property
     def aliases(self) -> List[str]:
         return []
 
+    @property
     def required_args(self) -> List[str]:
         return []
 

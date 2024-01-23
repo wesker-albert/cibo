@@ -28,7 +28,7 @@ Office Crawler. But this time it's a new learning project, where I can practice 
 advanced architectural designs and patterns that I've learned since, or been curious
 about but haven't gotten the professional opportunity to try.
 
-## Current state:
+## Current State
 
 All changes can now be viewed in the [CHANGELOG](CHANGELOG.md),
 which is automatically generated in-house via a fork of [gitchangelog](https://github.com/wesker-albert/gitchangelog).

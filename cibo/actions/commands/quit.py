@@ -12,9 +12,11 @@ from cibo.models.message import Message, MessageRoute
 class Quit(Action):
     """Quits the game and disconnects the client."""
 
+    @property
     def aliases(self) -> List[str]:
         return ["quit"]
 
+    @property
     def required_args(self) -> List[str]:
         return []
 

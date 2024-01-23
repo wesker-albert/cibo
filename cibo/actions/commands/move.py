@@ -20,6 +20,7 @@ from cibo.models.message import Message, MessageRoute
 class Move(Action):
     """Navigates a user between available rooms."""
 
+    @property
     def aliases(self) -> List[str]:
         return [
             "d",
@@ -36,6 +37,7 @@ class Move(Action):
             "west",
         ]
 
+    @property
     def required_args(self) -> List[str]:
         return []
 

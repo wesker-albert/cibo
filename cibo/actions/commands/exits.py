@@ -12,9 +12,11 @@ from cibo.models.room import Room
 class Exits(Action):
     """Returns the available exits."""
 
+    @property
     def aliases(self) -> List[str]:
         return ["exits"]
 
+    @property
     def required_args(self) -> List[str]:
         return []
 

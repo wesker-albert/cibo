@@ -18,9 +18,11 @@ from cibo.models.message import Message, MessageRoute
 class Login(Action):
     """Log in to an existing user on the server."""
 
+    @property
     def aliases(self) -> List[str]:
         return ["login"]
 
+    @property
     def required_args(self) -> List[str]:
         return ["name", "password"]
 

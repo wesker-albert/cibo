@@ -5,10 +5,10 @@ from tests.actions.conftest import LoginActionFactory
 
 class TestLoginAction(LoginActionFactory):
     def test_action_login_aliases(self):
-        assert self.login.aliases() == ["login"]
+        assert self.login.aliases == ["login"]
 
     def test_action_login_required_args(self):
-        assert self.login.required_args() == ["name", "password"]
+        assert self.login.required_args == ["name", "password"]
 
     def test_action_login_process_already_logged_in(self):
         self.client.login_state = ClientLoginState.LOGGED_IN

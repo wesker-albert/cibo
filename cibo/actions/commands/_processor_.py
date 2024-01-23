@@ -47,7 +47,7 @@ class CommandProcessor:
 
         return [
             Command(
-                aliases=action(self._server_config).aliases(),
+                aliases=action(self._server_config).aliases,
                 action=action,
             )
             for action in self._actions
@@ -109,5 +109,5 @@ class CommandProcessor:
         # that this specific action requires
         except IndexError as ex:
             raise CommandMissingArguments(
-                command, action_instance.required_args()
+                command, action_instance.required_args
             ) from ex

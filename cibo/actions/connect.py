@@ -14,9 +14,11 @@ from cibo.models.message import Message, MessageRoute
 class Connect(Action):
     """Inform the client they have connected to the server."""
 
+    @property
     def aliases(self) -> List[str]:
         return []
 
+    @property
     def required_args(self) -> List[str]:
         return []
 

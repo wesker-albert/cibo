@@ -98,6 +98,7 @@ class Action(ABC):
 
         return " ".join([str(x) for x in args])
 
+    @property
     @abstractmethod
     def aliases(self) -> List[str]:  # pytest: no cover
         """Command aliases mapped to the action. Clients can input these text
@@ -112,6 +113,7 @@ class Action(ABC):
 
         pass
 
+    @property
     @abstractmethod
     def required_args(self) -> List[str]:  # pytest: no cover
         """Descriptions of the args required for the action.

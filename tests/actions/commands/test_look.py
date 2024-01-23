@@ -8,10 +8,10 @@ from tests.actions.conftest import LookActionFactory
 
 class TestLookAction(LookActionFactory):
     def test_action_look_aliases(self):
-        assert self.look.aliases() == ["l", "look"]
+        assert self.look.aliases == ["l", "look"]
 
     def test_action_look_required_args(self):
-        assert not self.look.required_args()
+        assert not self.look.required_args
 
     def test_action_look_process_not_logged_in(self):
         self.client.login_state = ClientLoginState.PRE_LOGIN

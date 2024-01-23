@@ -15,9 +15,11 @@ from cibo.models.message import Message, MessageRoute
 class Finalize(Action):
     """Finalizes the creation of a new user."""
 
+    @property
     def aliases(self) -> List[str]:
         return ["finalize"]
 
+    @property
     def required_args(self) -> List[str]:
         return []
 

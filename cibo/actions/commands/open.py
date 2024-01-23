@@ -20,9 +20,11 @@ from cibo.models.message import Message, MessageRoute
 class Open(Action):
     """Open a closed door or object."""
 
+    @property
     def aliases(self) -> List[str]:
         return ["open"]
 
+    @property
     def required_args(self) -> List[str]:
         return []
 

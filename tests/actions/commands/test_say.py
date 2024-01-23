@@ -5,10 +5,10 @@ from tests.actions.conftest import SayActionFactory
 
 class TestSayAction(SayActionFactory):
     def test_action_say_aliases(self):
-        assert self.say.aliases() == ["say"]
+        assert self.say.aliases == ["say"]
 
     def test_action_say_required_args(self):
-        assert not self.say.required_args()
+        assert not self.say.required_args
 
     def test_action_say_process_not_logged_in(self):
         self.client.login_state = ClientLoginState.PRE_LOGIN

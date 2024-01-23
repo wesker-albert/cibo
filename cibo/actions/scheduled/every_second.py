@@ -9,9 +9,11 @@ from cibo.models.client import Client
 class EverySecond(Action):
     """Repetative logic that is carried out every second."""
 
+    @property
     def aliases(self) -> List[str]:
         return []
 
+    @property
     def required_args(self) -> List[str]:
         return []
 

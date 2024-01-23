@@ -17,9 +17,11 @@ from cibo.models.message import Message, MessageRoute
 class Drop(Action):
     """Drop an item currently in your inventory."""
 
+    @property
     def aliases(self) -> List[str]:
         return ["drop"]
 
+    @property
     def required_args(self) -> List[str]:
         return []
 

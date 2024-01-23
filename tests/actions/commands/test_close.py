@@ -5,10 +5,10 @@ from tests.actions.conftest import CloseActionFactory
 
 class TestCloseAction(CloseActionFactory):
     def test_action_close_aliases(self):
-        assert self.close.aliases() == ["close"]
+        assert self.close.aliases == ["close"]
 
     def test_action_close_required_args(self):
-        assert not self.close.required_args()
+        assert not self.close.required_args
 
     def test_action_close_process_not_logged_in(self):
         self.client.login_state = ClientLoginState.PRE_LOGIN

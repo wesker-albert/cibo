@@ -14,9 +14,11 @@ from cibo.models.message import Message, MessageRoute
 class Register(Action):
     """Register a new user with the server."""
 
+    @property
     def aliases(self) -> List[str]:
         return ["register"]
 
+    @property
     def required_args(self) -> List[str]:
         return ["name", "password"]
 

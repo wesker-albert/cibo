@@ -6,10 +6,10 @@ from tests.actions.conftest import FinalizeActionFactory
 
 class TestFinalizeAction(FinalizeActionFactory):
     def test_action_finalize_aliases(self):
-        assert self.finalize.aliases() == ["finalize"]
+        assert self.finalize.aliases == ["finalize"]
 
     def test_action_finalize_required_args(self):
-        assert not self.finalize.required_args()
+        assert not self.finalize.required_args
 
     def test_action_finalize_process_logged_in(self):
         self.client.login_state = ClientLoginState.LOGGED_IN

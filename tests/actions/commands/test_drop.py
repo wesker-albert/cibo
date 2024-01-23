@@ -7,10 +7,10 @@ from tests.actions.conftest import DropActionFactory
 
 class TestDropAction(DropActionFactory):
     def test_action_drop_aliases(self):
-        assert self.drop.aliases() == ["drop"]
+        assert self.drop.aliases == ["drop"]
 
     def test_action_drop_required_args(self):
-        assert not self.drop.required_args()
+        assert not self.drop.required_args
 
     def test_action_drop_process_not_logged_in(self):
         self.client.login_state = ClientLoginState.PRE_LOGIN

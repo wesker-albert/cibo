@@ -18,9 +18,11 @@ from cibo.models.room import Room
 class Look(Action):
     """Returns information about the room or object targeted."""
 
+    @property
     def aliases(self) -> List[str]:
         return ["l", "look"]
 
+    @property
     def required_args(self) -> List[str]:
         return []
 
