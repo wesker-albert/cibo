@@ -5,6 +5,7 @@ running.
 """
 
 from os import getenv
+from pprint import pprint
 from time import sleep
 
 from cibo.comms._interface_ import CommsInterface
@@ -64,5 +65,10 @@ if __name__ == "__main__":
                 print("Goodbye!")
 
                 break
+
+            case "clients":
+                pprint(telnet.get_connected_clients())
+
+                continue
 
         sleep(1)

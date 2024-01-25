@@ -39,12 +39,11 @@ class InputEvent(Event):
         self._command_processor = command_processor
 
     def process(self, _sender: Any, payload: Optional[EventPayload]) -> None:
-        if payload and payload.client:
+        if payload:
             try:
-                if not payload.input_:
-                    raise InputNotReceived
-
-                self._command_processor.process(payload.client, payload.input_)
+                self._command_processor.process(
+                    payload.client, payload.input_ if payload.input_ else ""
+                )
 
             except (CommandUnrecognized, CommandMissingArguments) as ex:
                 Error(self._server_config).process(payload.client, None, [ex.message])

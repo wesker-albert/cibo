@@ -4,14 +4,14 @@ out interactions between the user and the server.
 """
 
 import socket as socket_
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from time import time
-from typing import List, Self
+from typing import List, Optional, Self
 
+from cibo.models.command import CommandFlowState, CommandHistoryEntry
 from cibo.models.data.character import Character
 from cibo.models.data.user import User
-from cibo.models.input import InputHistoryEntry
 from cibo.models.prompt import Prompt
 
 
@@ -29,13 +29,14 @@ class Client:
     socket: socket_.socket
     address: str
     encoding: str
-    buffer: str
     last_check: float
-    login_state: ClientLoginState
-    registration: User  # TODO: deprecate
-    user: User
-    character: Character
-    input_history: List[InputHistoryEntry]
+    buffer: str = ""
+    login_state: ClientLoginState = ClientLoginState.PRE_LOGIN
+    registration: User = User()  # TODO: deprecate
+    user: User = User()
+    character: Character = Character()
+    command_history: List[CommandHistoryEntry] = field(default_factory=lambda: [])
+    command_flow_state: Optional[CommandFlowState] = None
 
     @classmethod
     def create_new_client(
@@ -56,13 +57,7 @@ class Client:
             socket=socket,
             address=address,
             encoding=encoding,
-            buffer="",
             last_check=time(),
-            login_state=ClientLoginState.PRE_LOGIN,
-            registration=User(),
-            user=User(),
-            character=Character(),
-            input_history=[],
         )
 
     @property
@@ -141,14 +136,14 @@ class Client:
         self.user = user
         self.login_state = ClientLoginState.LOGGED_IN
 
-    def add_input_history_entry(self, entry: InputHistoryEntry) -> None:
+    def add_command_history_entry(self, entry: CommandHistoryEntry) -> None:
         """Add an entry to the input history, and trim the list so that it is never
         larger than the last 50 entries.
 
         Args:
-            entry (InputHistoryEntry): The entry, including the command and arguments.
+            entry (CommandHistoryEntry): The entry, including the command and arguments.
         """
 
-        del self.input_history[:-50]
+        del self.command_history[:-50]
 
-        self.input_history.append(entry)
+        self.command_history.append(entry)

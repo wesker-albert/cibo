@@ -89,13 +89,10 @@ class ClientFactory:
             socket=Mock(),
             address="127.0.0.1",
             encoding="utf-8",
-            buffer="",
             last_check=2.5,
-            login_state=ClientLoginState.PRE_LOGIN,
             registration=None,
             user=Mock(current_room_id=1),
             character=Mock(),
-            input_history=[],
         )
         self.client.user.name = "frank"
         yield

@@ -1,12 +1,19 @@
 """Register a new user with the server."""
 
-from typing import List
+from typing import Any, List
 
 from marshmallow import ValidationError
 
 from cibo.actions import Action
-from cibo.exceptions import ClientIsLoggedIn, UserAlreadyExists, UserNotFound
+from cibo.actions.commands.finalize import Finalize
+from cibo.exceptions import (
+    ClientIsLoggedIn,
+    CommandFlowStateExists,
+    UserAlreadyExists,
+    UserNotFound,
+)
 from cibo.models.client import Client
+from cibo.models.command import CommandFlowState
 from cibo.models.data.user import User, UserSchema
 from cibo.models.message import Message, MessageRoute
 
@@ -55,12 +62,7 @@ class Register(Action):
 
         return Message(
             "Are you sure you want to create the user named "
-            f"[cyan]{user_name}[/]?\n\n"
-            "Type [green]finalize[/] to finalize the user creation. "
-            "If you want to use a different name or password, you can "
-            "[green]register[/] again.\n\n"
-            "Otherwise, feel free to [green]login[/] to an already "
-            "existing user."
+            f"[cyan]{user_name}[/]? [Y/n]"
         )
 
     def _validate_user_info(self, name: str, password: str) -> None:
@@ -88,8 +90,14 @@ class Register(Action):
 
         raise UserAlreadyExists
 
-    def process(self, client: Client, _command: str, args: List[str]) -> None:
+    def process(self, client: Client, command: str, args: List[str]) -> None:
         try:
+            if (
+                client.command_flow_state
+                and client.command_flow_state.target_action is Register
+            ):
+                raise CommandFlowStateExists
+
             if client.is_logged_in:
                 raise ClientIsLoggedIn
 
@@ -125,6 +133,31 @@ class Register(Action):
                 current_room_id=1,
             )
 
+            client.command_flow_state = CommandFlowState(
+                Register, "needs-confirmation", ["Y", "n"]
+            )
+
             self.comms.send_to_client(
                 MessageRoute(self._confirm_finalize_message(user_name), client=client)
             )
+
+        except CommandFlowStateExists:
+            match client.command_flow_state.state_id:
+                case "needs-confirmation":
+                    if command == "Y":
+                        Finalize(self._server_config).process(client, "", [])
+                        client.command_flow_state = None
+
+                    if command == "n":
+                        self._comms.send_prompt(client)
+                        client.command_flow_state = None
+
+                    if command not in client.command_flow_state.expected_responses:
+                        self.comms.send_to_client(
+                            MessageRoute(
+                                self._confirm_finalize_message(
+                                    client.registration.name
+                                ),
+                                client=client,
+                            )
+                        )

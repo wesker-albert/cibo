@@ -16,7 +16,7 @@ rich = "13.4.2"
 schedule = "1.2.0"
 
 [tool.poetry.dev-dependencies]
-black = "23.7.0"
+black = "23.12.1"
 coverage = "7.2.7"
 dunamai = "1.19.0"
 gitchangelog = { git = "https://github.com/wesker-albert/gitchangelog.git", tag = "3.1.5" }
@@ -53,7 +53,7 @@ exclude_lines = [
 ]
 
 [tool.black]
-target_version = ["py38"]
+target_version = ["py310"]
 
 [tool.isort]
 include_trailing_comma = true

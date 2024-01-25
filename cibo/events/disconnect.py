@@ -11,5 +11,5 @@ class DisconnectEvent(Event):
     """Clients who have disconnected from the server, since last update poll."""
 
     def process(self, _sender: Any, payload: Optional[EventPayload]) -> None:
-        if payload and payload.client:
+        if payload:
             Disconnect(self._server_config).process(payload.client, None, [])

@@ -10,5 +10,5 @@ class ConnectEvent(Event):
     """Clients who have connected to the server, since last update poll."""
 
     def process(self, _sender: Any, payload: Optional[EventPayload]) -> None:
-        if payload and payload.client:
+        if payload:
             Connect(self._server_config).process(payload.client, None, [])

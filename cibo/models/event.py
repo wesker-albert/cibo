@@ -10,7 +10,7 @@ from cibo.models.client import Client
 
 
 class EventType(str, Enum):
-    """The kinds of events that can be dispatches and subscribed to."""
+    """The kinds of events that can be dispatched and subscribed to."""
 
     CONNECT = "event-connect"
     DISCONNECT = "event-disconnect"
@@ -26,5 +26,5 @@ class EventType(str, Enum):
 class EventPayload:
     """A payload that supplies the event with any data it may need."""
 
-    client: Optional[Client] = None
+    client: Client
     input_: Optional[str] = None

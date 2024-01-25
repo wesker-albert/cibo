@@ -6,9 +6,13 @@ from dataclasses import dataclass
 from typing import List, Optional, Type
 
 from cibo.actions import Action
-from cibo.exceptions import CommandMissingArguments, CommandUnrecognized
+from cibo.exceptions import (
+    CommandMissingArguments,
+    CommandUnrecognized,
+    InputNotReceived,
+)
 from cibo.models.client import Client
-from cibo.models.input import InputHistoryEntry
+from cibo.models.command import CommandHistoryEntry
 from cibo.server_config import ServerConfig
 
 
@@ -84,18 +88,28 @@ class CommandProcessor:
             CommandMissingArguments: The client command is missing required args.
         """
 
+        if not input_ and not client.command_flow_state:
+            raise InputNotReceived
+
         # separate the command from the args, then also split each of the individual
         # args into a list
         command, _separator, args = input_.partition(" ")
         # convert the command to lowercase, to avoid case sensitivity
-        command = command.lower()
+        # command = command.lower()
         # partition returns a blank string if no args are found after the command
         # in that case, we want to drop the blank string and just return an empty list
         split_args = args.split(" ") if args else []
 
-        action = self._get_command_action(command)
+        if client.command_flow_state:
+            action_instance = client.command_flow_state.target_action(
+                self._server_config
+            )
+            action_instance.process(client, command, split_args)
+            return
 
-        client.add_input_history_entry(InputHistoryEntry(command, split_args))
+        action = self._get_command_action(command.lower())
+
+        client.add_command_history_entry(CommandHistoryEntry(command, split_args))
 
         if action is None:
             raise CommandUnrecognized(command)

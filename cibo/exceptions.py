@@ -57,6 +57,12 @@ class CommandMissingArguments(Exception):
         )
 
 
+class CommandFlowStateExists(Exception):
+    """Raised if an exising flow state is detected."""
+
+    pass
+
+
 class MessageRouteMissingParameters(Exception):
     """Raised if a message route is missing expected parameters, according to the
     specific comms type or chain.
